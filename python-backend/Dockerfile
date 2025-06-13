@@ -36,7 +36,14 @@
     COPY --from=base /usr/lib /usr/lib
     
     COPY --chown=django_user:django_user . .
-    
+
+    # Copy the healthcheck script
+    COPY --chown=django_user:django_user healthcheck.py ./healthcheck.py
+
+    # Set the health check command
+    HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD python healthcheck.py || exit 1
+
     USER django_user
     
     EXPOSE 8088
