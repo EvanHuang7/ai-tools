@@ -1,0 +1,47 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment folders
+venv/
+env/
+.venv/
+.env/
+
+# Django migration files (optional: usually you want to commit migrations, but can ignore if you prefer)
+# ** Uncomment if you want to ignore migration files **
+# */migrations/
+# */migrations/*.py
+# */migrations/*.pyc
+
+# SQLite database (ignore if you use SQLite locally)
+db.sqlite3
+
+# Djongo does not create local DB files, so no need to ignore MongoDB files here
+
+# VSCode or other editor folders
+.vscode/
+.idea/
+
+# MacOS files
+.DS_Store
+
+# Logs
+*.log
+
+# Static files (collectstatic output)
+staticfiles/
+
+# Pytest cache
+.pytest_cache/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Env variables file (if you use one)
+.env
+
+# Pipenv files
+Pipfile.lock
