@@ -11,6 +11,10 @@ app.get("/", (req, res) => {
   res.json({ api: "node backend", currentTime: new Date().toISOString() });
 });
 
+app.get("/ping", async (_, res) => {
+  res.send("pong");
+});
+
 const server = app.listen(port, () => {
   console.log(`Node server listening on port ${port}`);
 });
