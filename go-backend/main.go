@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 1 of Clis to run app: air OR go run main.go
 func main() {
     r := gin.Default() // Creates a Gin router with Logger and Recovery middleware
 
