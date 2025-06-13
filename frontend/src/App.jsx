@@ -36,6 +36,7 @@ export function App() {
       <h1>AI Tools App 👋</h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
+      <CurrentTime api="/api/python/" />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

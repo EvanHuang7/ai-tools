@@ -18,6 +18,12 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api\/go/, ""),
         secure: false,
       },
+      "/api/python": {
+        target: "http://localhost:8088",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/python/, ""),
+        secure: false,
+      },
     },
   },
 });
