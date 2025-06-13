@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import axios from "axios";
 
-function App() {
-  const [count, setCount] = useState(0)
+import "./App.css";
+
+const queryClient = new QueryClient();
+
+function CurrentTime(props) {
+  const { isLoading, error, data, isFetching } = useQuery({
+    queryKey: [props.api],
+    queryFn: () => axios.get(`${props.api}`).then((res) => res.data),
+  });
+
+  if (isLoading) return `Loading ${props.api}... `;
+
+  if (error) return "An error has occurred: " + error.message;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="App">
+      <p>---</p>
+      <p>API: {data.api}</p>
+      <p>Time from DB: {data.currentTime}</p>
+      <div>{isFetching ? "Updating..." : ""}</div>
+    </div>
+  );
 }
 
-export default App
+export function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <h1>AI Tools App 👋</h1>
+      <CurrentTime api="/api/node/" />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+
+export default App;
