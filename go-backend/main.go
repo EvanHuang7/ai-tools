@@ -18,6 +18,10 @@ func main() {
         })
     })
 
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, "pong")
+	})
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		// Defaulting to 8000 to deconflict with unprivileged nginx container
