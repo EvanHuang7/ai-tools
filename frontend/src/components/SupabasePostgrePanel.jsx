@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { usePostgreRead, usePostgreWrite } from "../hooks/usePostgre";
+import {
+  useSupabasePostgreRead,
+  useSupabasePostgreWrite,
+} from "../hooks/useSupabasePostgre";
 
-const PostgrePanel = () => {
+const SupabasePostgrePanel = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
-  const { data, isLoading } = usePostgreRead(); // optional read by email
-  const { mutate, isPending } = usePostgreWrite();
+  const { data, isLoading } = useSupabasePostgreRead(); // optional read by email
+  const { mutate, isPending } = useSupabasePostgreWrite();
 
   const handleSubmit = () => {
     if (name.trim() && email.trim()) {
@@ -16,7 +19,7 @@ const PostgrePanel = () => {
 
   return (
     <div>
-      <h2>Postgre Test</h2>
+      <h2>Supabase Postgre Test</h2>
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
@@ -47,4 +50,4 @@ const PostgrePanel = () => {
   );
 };
 
-export default PostgrePanel;
+export default SupabasePostgrePanel;
