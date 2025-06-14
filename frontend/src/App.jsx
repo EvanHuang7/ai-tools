@@ -5,7 +5,7 @@ import CurrentTime from "./components/CurrentTime";
 import RedisPanel from "./components/RedisPanel";
 import SupabasePostgrePanel from "./components/SupabasePostgrePanel";
 import NeonPostgrePanel from "./components/NeonPostgrePanel";
-
+import MongoPanel from "./components/MongoPanel";
 import "./App.css";
 
 export function App() {
@@ -16,6 +16,7 @@ export function App() {
       <CurrentTime api="/api/go/" />
       <CurrentTime api="/api/python/" />
       <RedisPanel />
+      <MongoPanel />
       <SupabasePostgrePanel />
       <NeonPostgrePanel />
       <ReactQueryDevtools initialIsOpen={false} />
