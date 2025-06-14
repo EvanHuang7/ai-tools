@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import queryClient from "./lib/queryClient";
 import CurrentTime from "./components/CurrentTime";
 import RedisPanel from "./components/RedisPanel";
+import PostgrePanel from "./components/PostgrePanel";
 import "./App.css";
 
 export function App() {
@@ -13,6 +14,7 @@ export function App() {
       <CurrentTime api="/api/go/" />
       <CurrentTime api="/api/python/" />
       <RedisPanel />
+      <PostgrePanel />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
