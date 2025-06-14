@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.5
 
 # ---- Base image for building ----
-FROM python:3.11-slim AS base
+FROM python:3.12-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
@@ -21,7 +21,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --no-cache-dir -r requirements.txt
 
 # ---- Final runtime image ----
-FROM python:3.11-slim AS runtime
+FROM python:3.12-slim AS runtime
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
@@ -31,7 +31,7 @@ RUN useradd -u 1001 django_user
 
 WORKDIR /app
 
-COPY --from=base /usr/local/lib/python3.11 /usr/local/lib/python3.11
+COPY --from=base /usr/local/lib/python3.12 /usr/local/lib/python3.12
 COPY --from=base /usr/local/bin /usr/local/bin
 COPY --from=base /usr/lib /usr/lib
 
