@@ -1,4 +1,7 @@
 bin/
 **/.DS_STORE
+
 .devbox/
 .venv/
+
+kind-config.yaml

@@ -19,8 +19,9 @@
    - [⭐ Create a Cluster in MongoDB](#create-mongodb-cluster)
    - [⭐ Set Up Environment Variables](#set-up-env-variables)
    - [⭐ Running the Project](#running-project)
-6. ☁️ [Deploy App in Render](#deploy-app)
-7. 👨‍💼 [About the Author](#about-the-author)
+6. ☁️ [Deploy App in GKE](#deploy-app)
+7. 🛠️ [Develop App in Kind Cluster Locally](#develop-app)
+8. 👨‍💼 [About the Author](#about-the-author)
 
 ## <a name="introduction">📋 Introduction</a>
 
@@ -191,6 +192,39 @@ Follow these steps to deploy app in GKE:
 
 1. Go to GCP
 2. Deploy app
+
+## <a name="develop-app">🛠️ Develop App in Kind Cluster Locally</a>
+
+Develop app in kind cluster locally is esay way to find out any issue in k8s during development process
+
+You need Docker Desktop, devbox installed
+
+1. Install devbox and run `devbox shell` cli to create isolated enviroment for project
+2. Deploy a Kind cluster via Task command lines in `Taskfile.yaml`
+
+- Generate Kind config file based on you file absolute path and create Kind cluster that is actually Docker containers in Docker Desktop VM locally
+
+  ```
+  task kind:01-generate-config
+  task kind:02-create-cluster
+  ```
+
+- Check your kind cluster (This cli allows you to view and select existing created cluster)
+
+  ```
+  kubectx
+  ```
+
+- Check your nodes and system pods in kind cluster
+
+  ```
+  kubectl get nodes
+  kubectl get pods -A
+  ```
+
+-
+
+3.
 
 ## <a name="about-the-author">👨‍💼 About the Author</a>
 
