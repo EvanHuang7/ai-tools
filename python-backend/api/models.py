@@ -1,3 +1,5 @@
-from django.db import models
+from mongoengine import Document, IntField, StringField
 
-# Create your models here.
+class Plan(Document):
+    userId = IntField(required=True)
+    plan = StringField(required=True)

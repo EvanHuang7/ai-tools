@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import redis
+from mongoengine import connect
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -134,3 +135,9 @@ load_dotenv()
 # Set up redis client
 REDIS_URL = os.getenv('REDIS_URL')
 redis_client = redis.from_url(REDIS_URL)
+
+# Set up mongodb client
+connect(
+    db="ai_tools_db",
+    host=os.getenv('MONGODB_URL')
+)
