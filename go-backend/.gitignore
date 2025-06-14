@@ -26,3 +26,6 @@ go.work
 
 # tmp file from air hot reload
 tmp/
+
+# other
+.env

@@ -1,14 +1,27 @@
 package main
 
 import (
+	"log"
 	"os"
 	"time"
 
+	"go-backend/handlers"
+	"go-backend/internal/db"
+
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 // 1 of Clis to run app: air OR go run main.go
 func main() {
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+	log.Println("No .env file found, relying on environment variables")
+	}
+
+	// Connect Postgre db
+	db.Init()
+
     r := gin.Default() // Creates a Gin router with Logger and Recovery middleware
 
     r.GET("/", func(c *gin.Context) {
@@ -21,6 +34,10 @@ func main() {
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, "pong")
 	})
+
+	// Add your message APIs here:
+	r.POST("/messages", handlers.CreateMessage)
+	r.GET("/messages", handlers.GetMessages)
 
 	port := os.Getenv("PORT")
 	if port == "" {
