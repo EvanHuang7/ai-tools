@@ -4,7 +4,7 @@ import postgres from "postgres";
 import * as schema from "../db/schema.js";
 import fs from "fs";
 
-databaseUrl =
+const databaseUrl =
   process.env.DATABASE_URL ||
   fs.readFileSync(process.env.DATABASE_URL_FILE, "utf8");
 
