@@ -47,5 +47,5 @@ USER python_user
 
 EXPOSE 8088
 
-CMD ["python", "manage.py", "runserver", "--skip-checks", "0.0.0.0:8088"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8088"]
     
