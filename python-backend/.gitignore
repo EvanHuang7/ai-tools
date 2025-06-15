@@ -16,7 +16,7 @@ env/
 # */migrations/*.pyc
 
 # SQLite database (ignore if you use SQLite locally)
-db.sqlite3
+# db.sqlite3
 
 # Djongo does not create local DB files, so no need to ignore MongoDB files here
 
