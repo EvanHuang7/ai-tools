@@ -1,5 +1,19 @@
 version: "3"
 
+includes:
+  go-backend:
+    taskfile: ./go-backend/Taskfile.yaml
+    dir: ./go-backend
+  node-backend:
+    taskfile: ./node-backend/Taskfile.yaml
+    dir: ./node-backend
+  python-backend:
+    taskfile: ./python-backend/Taskfile.yaml
+    dir: ./python-backend
+  frontend:
+    taskfile: ./frontend/Taskfile.yaml
+    dir: ./frontend
+
 env:
   CLUSTER_NAME: devops-directive-kubernetes-course
   GCP_REGION: us-central1
@@ -11,7 +25,7 @@ env:
   MARGIN: "1 1"
 
 tasks:
-  # K8s in GCP
+  # Create K8s cluster in GCP
   gcp:01-init-cli:
     cmds:
       - gcloud init
@@ -86,7 +100,7 @@ tasks:
       - gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${GCP_ZONE}
     desc: "Connect to the GKE cluster"
 
-    # K8s in Kind locally
+  # Create Kind K8s cluster locally
   kind:01-generate-config:
     cmds:
       - REPLACE_WITH_ABSOLUTE_PATH=${PWD} envsubst < kind-config.yaml.TEMPLATE > kind-config.yaml
@@ -106,3 +120,11 @@ tasks:
     cmds:
       - kind delete cluster
     desc: Delete and existing a kind Kubernetes cluster
+
+  # Set up Docker buildx for building multiple architecture images
+  bootstrap-buildx-builder:
+    desc: Bootstrap the builder
+    cmds:
+      - docker buildx create --name mybuilder --driver docker-container --driver-opt network=host --use
+      - docker buildx inspect mybuilder --bootstrap
+      - docker buildx use mybuilder
