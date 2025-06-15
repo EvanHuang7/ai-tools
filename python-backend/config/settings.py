@@ -129,15 +129,28 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
- # This will load variables from a .env file if exists
+# This will load variables from a .env file if exists
 load_dotenv()
 
+def get_env_var(key):
+    val = os.getenv(key)
+    if val:
+        return val
+
+    file_path = os.getenv(f"{key}_FILE")
+    if file_path and os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            return f.read().strip()
+
+    return None
+
 # Set up redis client
-REDIS_URL = os.getenv('REDIS_URL')
+REDIS_URL = get_env_var('REDIS_URL')
 redis_client = redis.from_url(REDIS_URL)
 
 # Set up mongodb client
+MONGODB_URL = get_env_var('MONGODB_URL')
 connect(
     db="ai_tools_db",
-    host=os.getenv('MONGODB_URL')
+    host=MONGODB_URL
 )
