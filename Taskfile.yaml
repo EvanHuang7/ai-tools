@@ -13,6 +13,9 @@ includes:
   frontend:
     taskfile: ./frontend/Taskfile.yaml
     dir: ./frontend
+  common:
+    taskfile: ./common/Taskfile.yaml
+    dir: ./common
 
 env:
   CLUSTER_NAME: devops-directive-kubernetes-course
@@ -111,6 +114,8 @@ tasks:
       - kind create cluster --config kind-config.yaml
     desc: Create a Kubernetes cluster using kind
 
+  # It is used to get an ExternalIP for Load Balancer in Local Kind Cluster
+  # Remember to run it in a sepearte terminal
   kind:03-run-cloud-provider-kind:
     desc: "Run sigs.k8s.io/cloud-provider-kind@latest to enable load balancer services with KinD"
     cmds:

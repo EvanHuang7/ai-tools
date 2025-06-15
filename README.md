@@ -47,6 +47,12 @@
 
 - **⚙️ Other Tools**:
 
+  - Docker
+  - Devbox
+  - Kind Cluster
+  - Helm (use it to install a Helm chart as app or tool in k8s cluster from Helm repository or OCI repository)
+  - Oras (use it interact with OCI registry (such as Docker Hub) repos)
+
 ## <a name="features">🚀 Features</a>
 
 **🔐 Authentication**: Secure sign-up and sign-in with email and password, handled by **xx**.
@@ -200,7 +206,7 @@ Develop app in kind cluster locally is esay way to find out any issue in k8s dur
 You need Docker Desktop, devbox installed
 
 1. Install devbox and run `devbox shell` cli to create isolated enviroment for project
-2. Deploy a Kind cluster via Task command lines in `Taskfile.yaml`
+2. Create a Kind cluster via Task command lines in `Taskfile.yaml` locally
 
 - Generate Kind config file based on you file absolute path and create Kind cluster that is actually Docker containers in Docker Desktop VM locally
 
@@ -222,9 +228,81 @@ You need Docker Desktop, devbox installed
   kubectl get pods -A
   ```
 
--
+- Enable Load Balancer service in Local Kind Cluster by opening a 2nd terminal in proejct and running (Remember switch back to 1st terminal and leave 2nd terminal running in the background):
 
-3.
+  ```
+  devbox shell
+  task kind:03-run-cloud-provider-kind
+  ```
+
+3. Open Docker Desktop app manually, then set up Docker buildx used to build container image for multiple architecture and Login Docker for pushing images to Docker hub by running:
+
+```
+task bootstrap-buildx-builder
+docker login
+```
+
+4. Build container images of services and push to Docker hub
+
+- go-backend serivce
+
+```
+cd go-backend
+task build-container-image-multi-arch
+```
+
+- node-backend serivce
+
+```
+cd node-backend
+task build-container-image-multi-arch
+```
+
+- python-backend serivce
+
+```
+cd python-backend
+task build-container-image-multi-arch
+```
+
+- frontend serivce
+
+```
+cd frontend
+task build-container-image-multi-arch
+```
+
+5. Deploy all services in Kind Cluster locally by using K8s resource definition that are using container images
+
+- Make sure you are using Kind cluster by running:
+
+  ```
+  kubectx
+  ```
+
+- Create namespace
+
+  ```
+  task common:apply-namespace
+  ```
+
+- Deploy Traefik ingress controller in Local Kind cluster with Load Balancer serivce (Remember to only use it in local Kind Cluster intead of in GKE to aviod a Load Balancer to. Remember to uncomment this cli in file)
+
+  ```
+  task common:deploy-traefik-in-Kind
+  ```
+
+- Check all resources in traefik namespace (Note: the ExternalIP of LoadBalancer will stay `pending` forever if you don't run cli, `task kind:03-run-cloud-provider-kind`, to enable ExternalIP for Load Balancer in Local Kind Cluster in a seperate terminal)
+
+  ```
+  kubectl get all -n traefik
+  ```
+
+- Apply the Traefik middleware to strip path prefix for all incoming requests by ingress controller
+
+  ```
+  task common:apply-traefik-middleware
+  ```
 
 ## <a name="about-the-author">👨‍💼 About the Author</a>
 
