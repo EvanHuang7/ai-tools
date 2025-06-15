@@ -12,6 +12,7 @@ spec:
       # record for the ExternalIP and your own domain
 
       # match: Host(`your-domain-name`)
+      match: PathPrefix(`/`)
       services:
         - kind: Service
           name: frontend
