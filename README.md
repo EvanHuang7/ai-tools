@@ -326,6 +326,19 @@ task frontend:build-container-image-multi-arch
   kubectl get svc
   ```
 
+- Deploy python backend app in Local Kind cluster
+
+  ```
+  task python-k8s-resource-defins:apply
+  ```
+
+- Check pod and service in ai-tools namespace after deploying python backend app
+
+  ```
+  kubectl get pods -n ai-tools
+  kubectl get svc
+  ```
+
 ## <a name="about-the-author">👨‍💼 About the Author</a>
 
 Hi! I'm Evan Huang — a full-stack software developer with 4+ years of experience in web applications, real-time systems, and cloud integration. I’m passionate about building scalable products with clean architecture, elegant UI/UX, and modern technologies like React, Node.js, MongoDB.

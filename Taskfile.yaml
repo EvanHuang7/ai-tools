@@ -145,3 +145,9 @@ tasks:
     desc: "Apply kubernetes resource manifests for node backend application"
     cmds:
       - "kubectl apply -f ./node-backend/node-k8s-resource-defins"
+
+  # Deploy python backend app in cluster
+  python-k8s-resource-defins:apply:
+    desc: "Apply kubernetes resource manifests for python backend application"
+    cmds:
+      - "kubectl apply -f ./python-backend/python-k8s-resource-defins"

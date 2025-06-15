@@ -1,37 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-backend
+  name: python-backend
   namespace: ai-tools
   labels:
-    app: go-backend
+    app: python-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: go-backend
+      app: python-backend
   template:
     metadata:
       labels:
-        app: go-backend
+        app: python-backend
     spec:
       containers:
-        - name: go-backend
+        - name: python-backend
           # Remeber to change to your own Docker hub repo
-          image: evanhuang7/ai-tools-go-backend:developing
+          image: evanhuang7/ai-tools-python-backend:developing
           env:
             - name: PORT
-              value: "8000"
+              value: "8088"
           envFrom:
             - secretRef:
-                name: go-backend-database-url
+                name: python-backend-database-url
           ports:
-            - containerPort: 8000
+            - containerPort: 8088
               protocol: TCP
           readinessProbe:
             httpGet:
               path: /ping
-              port: 8000
+              port: 8088
           resources:
             limits:
               memory: "120Mi"

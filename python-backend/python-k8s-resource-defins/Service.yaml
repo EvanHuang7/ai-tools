@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-backend
+  namespace: ai-tools
+spec:
+  selector:
+    app: python-backend
+  ports:
+    - protocol: TCP
+      port: 8088
+      targetPort: 8088
