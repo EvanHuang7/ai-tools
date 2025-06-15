@@ -1,0 +1,6 @@
+docker_build(
+  'docker.io/evanhuang7/ai-tools-node-backend', 
+  './',
+)
+k8s_yaml('./node-k8s-resource-defins/Deployment.yaml')
+k8s_resource('node-backend', port_forwards=3000)

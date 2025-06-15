@@ -199,7 +199,7 @@ Follow these steps to deploy app in GKE:
 1. Go to GCP
 2. Deploy app
 
-## <a name="develop-app">🛠️ Develop App in Kind Cluster Locally</a>
+## <a name="develop-app">⚙️ Deploy App in Kind Cluster Locally</a>
 
 Develop app in kind cluster locally is esay way to find out any issue in k8s during development process
 
@@ -351,6 +351,24 @@ task frontend:build-container-image-multi-arch
   kubectl get pods -n ai-tools
   kubectl get svc
   ```
+
+## <a name="develop-app">🛠️ Develop App in Kind Cluster Locally</a>
+
+Deploy apps by using Tilt to better detact file changes and auto rebuild and push imamges to enable these changes in local cluster envriomeent as quickly as possbile.
+
+Use Tilt, we can develop against a k8s config that will match as close as possbile to what we are going to run in production, which will allow us to identify and debug issues that live not only at application layer but also at k8s layeer or maybe in ingress controller.
+
+1. Make sure all apps are running in local kind cluster by finishing previous step, ⚙️ Deploy App in Kind Cluster Locally
+
+2. Run Tilt and access Tilt page, `http://localhost:10350/`
+
+```
+task tilt-up
+```
+
+3. Set up Sync live update by following `https://docs.tilt.dev/tutorial/5-live-update.html` and `https://docs.tilt.dev/example_go.html` (set up instrcutions for different langauages)
+
+4. Work on your code, save files and the change will auto applied
 
 ## <a name="about-the-author">👨‍💼 About the Author</a>
 

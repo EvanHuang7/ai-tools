@@ -1,0 +1,8 @@
+load('ext://ko', 'ko_build')
+ko_build(
+  'docker.io/evanhuang7/ai-tools-go-backend', 
+  './',
+  deps=['.']
+)
+k8s_yaml('./go-k8s-resource-defins/Deployment.yaml')
+k8s_resource('go-backend', port_forwards=8000)

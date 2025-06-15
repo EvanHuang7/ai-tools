@@ -157,3 +157,9 @@ tasks:
     desc: "Apply kubernetes resource manifests for frontend application"
     cmds:
       - "kubectl apply -f ./frontend/frontend-k8s-resource-defins"
+
+  # Tilt cli to
+  tilt-up:
+    desc: "Start the applications using the top level tilt file"
+    cmds:
+      - tilt up
