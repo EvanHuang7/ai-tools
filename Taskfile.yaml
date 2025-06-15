@@ -139,3 +139,9 @@ tasks:
     desc: "Apply kubernetes resource manifests for go backend application"
     cmds:
       - "kubectl apply -f ./go-backend/go-k8s-resource-defins"
+
+  # Deploy node backend app in cluster
+  node-k8s-resource-defins:apply:
+    desc: "Apply kubernetes resource manifests for node backend application"
+    cmds:
+      - "kubectl apply -f ./node-backend/node-k8s-resource-defins"

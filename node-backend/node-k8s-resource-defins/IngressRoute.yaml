@@ -1,0 +1,22 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: node-backend
+  namespace: ai-tools
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      # match: Host(`your-domain-name`) && PathPrefix(`/api/node`)
+
+      # Remove Host(`your-domain-name`) if you don't set a DNS
+      # record for the ExternalIP and your own domain
+      match: PathPrefix(`/api/node`)
+      middlewares:
+        - name: strip-api-prefixes
+      services:
+        - kind: Service
+          name: node-backend
+          port: 3000
+          scheme: http

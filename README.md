@@ -313,7 +313,18 @@ task frontend:build-container-image-multi-arch
   kubectl get svc
   ```
 
-- Deploy
+- Deploy node backend app in Local Kind cluster
+
+  ```
+  task node-k8s-resource-defins:apply
+  ```
+
+- Check pod and service in ai-tools namespace after deploying node backend app
+
+  ```
+  kubectl get pods -n ai-tools
+  kubectl get svc
+  ```
 
 ## <a name="about-the-author">👨‍💼 About the Author</a>
 
