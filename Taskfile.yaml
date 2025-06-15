@@ -151,3 +151,9 @@ tasks:
     desc: "Apply kubernetes resource manifests for python backend application"
     cmds:
       - "kubectl apply -f ./python-backend/python-k8s-resource-defins"
+
+  # Deploy frontend app in cluster
+  frontend-k8s-resource-defins:apply:
+    desc: "Apply kubernetes resource manifests for frontend application"
+    cmds:
+      - "kubectl apply -f ./frontend/frontend-k8s-resource-defins"

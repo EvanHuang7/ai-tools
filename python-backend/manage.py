@@ -4,7 +4,7 @@ import os
 import sys
 
 # Cli to start virtual env: source venv/bin/activate
-# Cli to run app: python manage.py runserver 8088
+# Cli to run app: python manage.py runserver --skip-checks 8088
 
 # Cli to update requirement.text after install new package: 
 # pip freeze > requirements.txt

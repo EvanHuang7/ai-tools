@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         # Remeber to change to your own Docker hub repo
-        - image: evanhuang7/ai-tools-node-backend:developing
+        - image: evanhuang7/ai-tools-frontend:developing
           name: frontend
           ports:
             - containerPort: 8080
