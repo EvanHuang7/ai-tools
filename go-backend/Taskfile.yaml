@@ -1,0 +1,37 @@
+version: "3"
+
+vars:
+  DATABASE_URL: ""
+  # Use your own Docker hub username and repo name
+  IMAGE_REPO: docker.io/evanhuang7/ai-tools-go-backend
+  IMAGE_TAG: developing
+
+tasks:
+  install:
+    desc: "download dependencies"
+    cmds:
+      - go mod tidy
+
+  run:
+    desc: "run go backend service"
+    cmds:
+      - echo $PWD
+      - ls
+      - DATABASE_URL={{.DATABASE_URL}} go run main.go
+
+  # We use ko instead of docker to build image, which allow us
+  # build the container image without writing a Dockerfile
+  build-container-image:
+    desc: Build container image
+    cmds:
+      - |
+        KO_DOCKER_REPO='{{.IMAGE_REPO}}' \
+          ko build \
+          --bare \
+          --tags={{.IMAGE_TAG}} \
+          --platform=all
+
+  build-container-image-multi-arch:
+    desc: Build multi-arch container image
+    cmds:
+      - task: build-container-image
