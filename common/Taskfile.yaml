@@ -1,0 +1,39 @@
+version: "3"
+
+tasks:
+  apply-namespace:
+    desc: "Apply Kubernetes Namespace"
+    cmds:
+      - kubectl apply -f Namespace.yaml
+      - kubens ai-tools
+
+  # It will provision a Load Balancer by Traefik default setting
+  # So it will cause Load Balancer fee if you run it in GCP
+
+  ###### UNCOMMENT IT WHEN YOU NEED TO USE IT ######
+  # deploy-traefik-in-Kind:
+  #   desc: "Deploy Traefik using Helm"
+  #   cmds:
+  #     - helm repo add traefik https://traefik.github.io/charts
+  #     - helm upgrade --install -n traefik --create-namespace traefik traefik/traefik --version 20.8.0
+
+  # We use NodePort instead of default Load Balancer to aviod the
+  # cost of GCP LB
+
+  ###### UNCOMMENT IT WHEN YOU NEED TO USE IT ######
+  # deploy-traefik-in-GKE:
+  #   desc: "Deploy Traefik using Helm with NodePort"
+  #   cmds:
+  #     - helm repo add traefik https://traefik.github.io/charts
+  #     - |
+  #       helm upgrade --install traefik traefik/traefik \
+  #         --namespace traefik --create-namespace \
+  #         --version 20.8.0 \
+  #         --set service.type=NodePort \
+  #         --set service.spec.ports[0].nodePort=30080 \
+  #         --set service.spec.ports[1].nodePort=30443
+
+  apply-traefik-middleware:
+    desc: "Deploy Traefik middleware"
+    cmds:
+      - "kubectl apply -f Middleware.yaml"
