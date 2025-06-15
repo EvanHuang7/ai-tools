@@ -19,9 +19,10 @@
    - [⭐ Create a Cluster in MongoDB](#create-mongodb-cluster)
    - [⭐ Set Up Environment Variables](#set-up-env-variables)
    - [⭐ Running the Project](#running-project)
-6. ☁️ [Deploy App in GKE](#deploy-app)
-7. 🛠️ [Develop App in Kind Cluster Locally](#develop-app)
-8. 👨‍💼 [About the Author](#about-the-author)
+6. ☁️ [Deploy App in GKE](#deploy-app-in-gke)
+7. ⚙️ [Deploy App in Kind Cluster Locally](#deploy-app-in-kind)
+8. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
+9. 👨‍💼 [About the Author](#about-the-author)
 
 ## <a name="introduction">📋 Introduction</a>
 
@@ -192,14 +193,14 @@ python manage.py runserver 8088
 
 Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
 
-## <a name="deploy-app">☁️ Deploy App as K8s Cluster in GKE (GCP)</a>
+## <a name="deploy-app-in-gke">☁️ Deploy App as K8s Cluster in GKE (GCP)</a>
 
 Follow these steps to deploy app in GKE:
 
 1. Go to GCP
 2. Deploy app
 
-## <a name="develop-app">⚙️ Deploy App in Kind Cluster Locally</a>
+## <a name="deploy-app-in-kind">⚙️ Deploy App in Kind Cluster Locally</a>
 
 Develop app in kind cluster locally is esay way to find out any issue in k8s during development process
 
@@ -352,7 +353,24 @@ task frontend:build-container-image-multi-arch
   kubectl get svc
   ```
 
-## <a name="develop-app">🛠️ Develop App in Kind Cluster Locally</a>
+- View the app locally with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer by running:
+
+  ```
+  kubectl get all -n traefik
+
+  OR
+
+  kubectl get svc -n traefik
+  ```
+
+- Useful kubectl clis for debug
+
+  ```
+  kubectl logs -n ai-tools <pod-name>
+  kubectl describe pod -n ai-tools <pod-name>
+  ```
+
+## <a name="develop-app-locally">🛠️ Develop App Locally with Kind & Tilt</a>
 
 Deploy apps by using Tilt to better detact file changes and auto rebuild and push imamges to enable these changes in local cluster envriomeent as quickly as possbile.
 
@@ -366,7 +384,7 @@ Use Tilt, we can develop against a k8s config that will match as close as possbi
 task tilt-up
 ```
 
-3. Set up Sync live update by following `https://docs.tilt.dev/tutorial/5-live-update.html` and `https://docs.tilt.dev/example_go.html` (set up instrcutions for different langauages)
+3. Set up Sync live update by following `https://docs.tilt.dev/tutorial/5-live-update.html` and `https://docs.tilt.dev/example_go.html` (set up instrcutions for different langauages)...........................................................
 
 4. Work on your code, save files and the change will auto applied
 
