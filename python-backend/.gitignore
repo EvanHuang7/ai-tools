@@ -1,4 +1,4 @@
-# Python cache and compiled files
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -7,41 +7,38 @@ __pycache__/
 venv/
 env/
 .venv/
-.env/
 
-# Django migration files (optional: usually you want to commit migrations, but can ignore if you prefer)
-# ** Uncomment if you want to ignore migration files **
-# */migrations/
-# */migrations/*.py
-# */migrations/*.pyc
+# Flask instance folder (if using app.config['INSTANCE_PATH'])
+instance/
 
-# SQLite database (ignore if you use SQLite locally)
-# db.sqlite3
+# Flask SQLite database (if used locally)
+*.sqlite3
+*.db
 
-# Djongo does not create local DB files, so no need to ignore MongoDB files here
-
-# VSCode or other editor folders
-.vscode/
-.idea/
-
-# MacOS files
-.DS_Store
+# Environment variable files
+.env
+*.env
 
 # Logs
 *.log
 
-# Static files (collectstatic output)
-staticfiles/
-
-# Pytest cache
+# Test output
 .pytest_cache/
-
-# Coverage reports
 .coverage
 htmlcov/
 
-# Env variables file (if you use one)
-.env
+# Static file builds (if using Flask-Assets or similar)
+staticfiles/
+dist/
+build/
 
-# Pipenv files
+# Editor-specific folders
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Pipenv / Poetry
 Pipfile.lock
+poetry.lock
