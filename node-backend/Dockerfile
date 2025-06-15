@@ -18,10 +18,10 @@ RUN --mount=type=cache,target=/usr/src/app/.npm \
   npm set cache /usr/src/app/.npm && \
   npm ci --only=production
 
-# Use non-root user
-# Use --chown on COPY commands to set file permissions
+# Use non-root user for better security
 USER node
 
+# Use --chown on COPY commands to set file permissions
 # Copy the healthcheck script
 COPY --chown=node:node ./healthcheck/ .
 

@@ -1,0 +1,33 @@
+version: "3"
+
+vars:
+  DATABASE_URL: ""
+  # Use your own Docker hub username and repo name
+  IMAGE_REPO: docker.io/evanhuang7/ai-tools-node-backend
+  IMAGE_TAG: developing
+
+tasks:
+  install:
+    desc: install dependencies
+    cmds:
+      - npm install
+
+  run:
+    desc: Start node backend service
+    cmds:
+      - DATABASE_URL={{.DATABASE_URL}} npm run dev
+
+  build-container-image:
+    desc: Build container image
+    cmds:
+      - docker build -t {{.IMAGE_REPO}}{{.IMAGE_TAG}} .
+
+  build-container-image-multi-arch:
+    desc: Build multi-arch container image
+    cmds:
+      - |
+        docker buildx build \
+        --platform linux/amd64,linux/arm64 \
+        -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} \
+        --push \
+        .

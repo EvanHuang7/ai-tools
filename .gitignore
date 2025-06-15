@@ -5,3 +5,4 @@ bin/
 .venv/
 
 kind-config.yaml
+kind-bind-mount*
