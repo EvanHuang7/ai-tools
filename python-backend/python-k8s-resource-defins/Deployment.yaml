@@ -18,7 +18,7 @@ spec:
       containers:
         - name: python-backend
           # Remeber to change to your own Docker hub repo
-          image: evanhuang7/ai-tools-python-backend:developing
+          image: evanhuang7/ai-tools-python-backend:developing-0.0.1
           env:
             - name: PORT
               value: "8088"

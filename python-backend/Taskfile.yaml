@@ -5,7 +5,7 @@ vars:
   MONGODB_URL: ""
   # Use your own Docker hub username and repo name
   IMAGE_REPO: docker.io/evanhuang7/ai-tools-python-backend
-  IMAGE_TAG: developing
+  IMAGE_TAG: developing-0.0.1
 
 tasks:
   create-venv:
@@ -20,9 +20,15 @@ tasks:
       - . venv/bin/activate && pip install -r requirements.txt
 
   run:
-    desc: Start Python backend service inside virtualenv
+    desc: Start Flask backend service inside virtualenv
     cmds:
-      - . venv/bin/activate && REDIS_URL={{.REDIS_URL}} MONGODB_URL={{.MONGODB_URL}} python manage.py runserver 8088
+      - |
+        . venv/bin/activate && \
+        FLASK_APP=run.py \
+        FLASK_ENV=development \
+        REDIS_URL={{.REDIS_URL}} \
+        MONGODB_URL={{.MONGODB_URL}} \
+        flask run --reload --host=0.0.0.0 --port=8088
 
   build-container-image:
     desc: Build container image
