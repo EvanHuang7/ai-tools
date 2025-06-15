@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-backend
+  namespace: ai-tools
+spec:
+  selector:
+    app: go-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

@@ -14,8 +14,8 @@ includes:
     taskfile: ./frontend/Taskfile.yaml
     dir: ./frontend
   common:
-    taskfile: ./common/Taskfile.yaml
-    dir: ./common
+    taskfile: ./common-k8s-resource-defins/Taskfile.yaml
+    dir: ./common-k8s-resource-defins
 
 env:
   CLUSTER_NAME: devops-directive-kubernetes-course
@@ -103,7 +103,7 @@ tasks:
       - gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${GCP_ZONE}
     desc: "Connect to the GKE cluster"
 
-  # Create Kind K8s cluster locally
+  # Create Kind K8s Cluster Locally
   kind:01-generate-config:
     cmds:
       - REPLACE_WITH_ABSOLUTE_PATH=${PWD} envsubst < kind-config.yaml.TEMPLATE > kind-config.yaml
@@ -133,3 +133,9 @@ tasks:
       - docker buildx create --name mybuilder --driver docker-container --driver-opt network=host --use
       - docker buildx inspect mybuilder --bootstrap
       - docker buildx use mybuilder
+
+  # Deploy go backend app in cluster
+  go-k8s-resource-defins:apply:
+    desc: "Apply kubernetes resource manifests for go backend application"
+    cmds:
+      - "kubectl apply -f ./go-backend/go-k8s-resource-defins"

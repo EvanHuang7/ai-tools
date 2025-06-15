@@ -247,29 +247,25 @@ docker login
 - go-backend serivce
 
 ```
-cd go-backend
-task build-container-image-multi-arch
+task go-backend:build-container-image-multi-arch
 ```
 
 - node-backend serivce
 
 ```
-cd node-backend
-task build-container-image-multi-arch
+task node-backend:build-container-image-multi-arch
 ```
 
 - python-backend serivce
 
 ```
-cd python-backend
-task build-container-image-multi-arch
+task python-backend:build-container-image-multi-arch
 ```
 
 - frontend serivce
 
 ```
-cd frontend
-task build-container-image-multi-arch
+task frontend:build-container-image-multi-arch
 ```
 
 5. Deploy all services in Kind Cluster locally by using K8s resource definition that are using container images
@@ -303,6 +299,21 @@ task build-container-image-multi-arch
   ```
   task common:apply-traefik-middleware
   ```
+
+- Deploy go backend app in Local Kind cluster
+
+  ```
+  task go-k8s-resource-defins:apply
+  ```
+
+- Check pod and service in ai-tools namespace after deploying go backend app
+
+  ```
+  kubectl get pods -n ai-tools
+  kubectl get svc
+  ```
+
+- Deploy
 
 ## <a name="about-the-author">👨‍💼 About the Author</a>
 

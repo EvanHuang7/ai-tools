@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-backend
+  namespace: ai-tools
+  labels:
+    app: go-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-backend
+  template:
+    metadata:
+      labels:
+        app: go-backend
+    spec:
+      containers:
+        - name: go-backend
+          # Remeber to change to your own Docker hub repo
+          image: evanhuang7/ai-tools-go-backend:developing
+          env:
+            - name: PORT
+              value: "8000"
+          envFrom:
+            - secretRef:
+                name: go-backend-database-url
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8000
+          resources:
+            limits:
+              memory: "120Mi"
+            requests:
+              memory: "100Mi"
+              cpu: "50m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
