@@ -22,6 +22,8 @@ RUN npm run build
 FROM nginxinc/nginx-unprivileged:1.23-alpine-perl
 
 # Use COPY --link to avoid breaking cache if we change the second stage base image
+# TODO: the api/go, api/node, api/python sections in "nginx.conf" may
+# not need bc these api the routing to backend apis is in Ingress layer
 COPY --link nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --link --from=build usr/src/app/dist/ /usr/share/nginx/html

@@ -1,0 +1,19 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: frontend
+  namespace: ai-tools
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      # Remove Host(`your-domain-name`) if you don't set a DNS
+      # record for the ExternalIP and your own domain
+
+      # match: Host(`your-domain-name`)
+      services:
+        - kind: Service
+          name: frontend
+          port: 8080
+          scheme: http
