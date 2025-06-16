@@ -1,6 +1,7 @@
 version: "3"
 
 includes:
+  ######### Build app container image #########
   go-backend:
     taskfile: ./go-backend/Taskfile.yaml
     dir: ./go-backend
@@ -13,6 +14,7 @@ includes:
   frontend:
     taskfile: ./frontend/Taskfile.yaml
     dir: ./frontend
+  ######### Traefik ingress controller #########
   common:
     taskfile: ./common-k8s-resource-defins/Taskfile.yaml
     dir: ./common-k8s-resource-defins
@@ -28,7 +30,7 @@ env:
   MARGIN: "1 1"
 
 tasks:
-  # Create K8s cluster in GCP
+  ######### Create K8s cluster in GCP #########
   gcp:01-init-cli:
     cmds:
       - gcloud init
@@ -103,7 +105,7 @@ tasks:
       - gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${GCP_ZONE}
     desc: "Connect to the GKE cluster"
 
-  # Create Kind K8s Cluster Locally
+  ######### Create Kind K8s Cluster Locally #########
   kind:01-generate-config:
     cmds:
       - REPLACE_WITH_ABSOLUTE_PATH=${PWD} envsubst < kind-config.yaml.TEMPLATE > kind-config.yaml
@@ -126,6 +128,7 @@ tasks:
       - kind delete cluster
     desc: Delete and existing a kind Kubernetes cluster
 
+  ######### Docker buildx #########
   # Set up Docker buildx for building multiple architecture images
   bootstrap-buildx-builder:
     desc: Bootstrap the builder
@@ -134,6 +137,7 @@ tasks:
       - docker buildx inspect mybuilder --bootstrap
       - docker buildx use mybuilder
 
+  ######### Run app in K8s cluster #########
   # Deploy go backend app in cluster
   go-k8s-resource-defins:apply:
     desc: "Apply kubernetes resource manifests for go backend application"
@@ -158,8 +162,25 @@ tasks:
     cmds:
       - "kubectl apply -f ./frontend/frontend-k8s-resource-defins"
 
-  # Tilt cli to
+  ######### Tilt #########
   tilt-up:
     desc: "Start the applications using the top level tilt file"
     cmds:
       - tilt up
+
+  ######### Docker compose #########
+  compose-up:
+    desc: "Run all app containers"
+    cmds:
+      - docker compose -f Docker-compose.yml up
+
+  # Runs containers in the background with -d flag
+  compose-up-d:
+    desc: "Run all app containers in background"
+    cmds:
+      - docker compose -f Docker-compose.yml up -d
+
+  compose-down:
+    desc: "Turn off all app containers"
+    cmds:
+      - docker compose -f Docker-compose.yml down

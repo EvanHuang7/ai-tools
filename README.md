@@ -19,10 +19,12 @@
    - [⭐ Create a Cluster in MongoDB](#create-mongodb-cluster)
    - [⭐ Set Up Environment Variables](#set-up-env-variables)
    - [⭐ Running the Project](#running-project)
-6. ☁️ [Deploy App in GKE](#deploy-app-in-gke)
-7. ⚙️ [Deploy App in Kind Cluster Locally](#deploy-app-in-kind)
-8. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
-9. 👨‍💼 [About the Author](#about-the-author)
+6. ☁️ [Free: Deploy App in GCE VM (GCP)](#deploy-app-in-gce)
+7. ☁️ [No-Free: Deploy App as K8s Cluster in GKE (GCP)](#deploy-app-in-gke)
+
+8. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
+9. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
+10. 👨‍💼 [About the Author](#about-the-author)
 
 ## <a name="introduction">📋 Introduction</a>
 
@@ -193,14 +195,130 @@ python manage.py runserver 8088
 
 Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
 
-## <a name="deploy-app-in-gke">☁️ Deploy App as K8s Cluster in GKE (GCP)</a>
+## <a name="deploy-app-in-gce">☁️ Free: Deploy App in GCE VM (GCP)</a>
+
+📌 If your VM has enough CPU and Memory, it would be best to deploy this microservices project as K8s cluster using k3s or as docker containers using Docker swarm, so that we can taking advantanges of these k8s cluster orchestrator or container orchestrator. The pros to use orchestrator instead of Docker compose:
+
+- Allow us to deploy new app version without downtime and easily roll back the version
+- Allow us to run containers in differeent hosts/nodes/VMs for better scalabity
+- Providee a way to handle sensative credentials or secrets
+
+Follow these steps to deploy app using Docker-compose file in GCE:
+
+1. Go to GCP Compute Engine page
+2. Create a free `e2-micro` VM in GCE
+
+- Click **Create instance** button in overview page
+- Click **Enable Compute Engine API** button
+- Go back to **Compute Engine > VM instances** and Click **Create instance** button after **Compute Engine API** is enabled
+
+- Machine Config section
+
+  - Enter your desired **Name** tag (eg. `appName-gce-free-vm`)
+  - Select a **free VM region and zone** (eg. `us-central1` and `us-central1-a`)
+  - Select `E2` for VM **Series** and `e2-micro` for **Machine type** below the **Machine Series** chart
+  - Click **Advanced configurations** button
+  - Make sure **vCPUs to core ratio and Visible core count** are selected to `None`
+  - Then select `OS and storage` section in left side bar
+
+- OS and storage section
+
+  - Click **Change** button
+  - Select `Debian` and `Debian 11 (bullseye)` for **OS and version**
+  - Select `Standard persistent disk` for **disk type**
+  - Keep `10 GB` for **Size** by default
+  - Click **Select** button
+  - Then select `Data protection` section in left side bar
+
+- Data protection section
+
+  - Select `No backups` for **Back up your data**
+  - **Disable** all check boxs for **Continuously replicate data for disaster protection**
+  - Then select `Networking` section in left side bar
+
+- Networking section
+
+  - Enable `Allow HTTP traffic` and `Allow HTTPS traffic`
+  - Leave the rest of things as default
+
+- Click **Create** button
+
+3. Install needed dependencies in VM
+
+- Go back to **Compute Engine > VM instances** and the VM instancee we just created after VM is created
+- Click **SSH** to connect VM
+- Installs `Docker engine` by running
+
+```
+curl https://get.docker.com/ | sh
+```
+
+- Update user permission to access Docker
+
+```
+sudo chown $USER /var/run/docker.sock
+```
+
+- Check Docker access
+
+```
+docker ps
+```
+
+- Create a folder
+
+```
+mkdir dockerComposeFolder
+cd dockerComposeFolder
+```
+
+- Add `Docker-compose.yml` file to folder by copying the file content in local `Docker-compose.yml` file, run below command line and paste content and press `control + X`, `Y`, and `Enter` keys
+
+```
+nano Docker-compose.yml
+```
+
+- Run all app containers with `Docker-compose.yml` by running
+
+```
+docker compose -f Docker-compose.yml up
+
+OR
+
+docker compose -f Docker-compose.yml up -d
+```
+
+- Now, You can access your app with your VM external IP address `http://34.58.224.241/`
+
+- Useful Docker clis to, turn down the containers, list running containers, list all containers (running + stopped), list Docker images on system, check details on a specific container
+
+```
+docker compose -f Docker-compose.yml down
+docker ps
+docker ps -a
+docker images
+docker inspect <container_id_or_name>
+```
+
+4. Deploy app
+
+5. Set up DNS record in Cloudfalre to use your own domain
+
+6. Make sure docker app and docker containers auto restart if VM shut down and restart
+
+## <a name="deploy-app-in-gke">☁️ No-Free: Deploy App as K8s Cluster in GKE (GCP)</a>
 
 Follow these steps to deploy app in GKE:
 
 1. Go to GCP
-2. Deploy app
+2. Create a free `e2-micro` VM in GCE
+3. Create GKE cluster
 
-## <a name="deploy-app-in-kind">⚙️ Deploy App in Kind Cluster Locally</a>
+-
+
+3. Deploy app
+
+## <a name="run-app-in-kind">⚙️ Run App in Kind Cluster Locally</a>
 
 Develop app in kind cluster locally is esay way to find out any issue in k8s during development process
 
