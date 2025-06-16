@@ -1,5 +1,21 @@
 import { QueryClient } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Reduces unnecessary network calls
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true, // Good for handling dropped connections
+      refetchOnMount: false,
+      retry: 1, // One retry is safer than none for flakiness
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      cacheTime: 1000 * 60 * 30, // 30 minutes in memory
+    },
+    mutations: {
+      // Retry only once on failure (e.g., for saving user input)
+      retry: 1,
+    },
+  },
+});
 
 export default queryClient;
