@@ -1,0 +1,77 @@
+version: "3.7"
+
+services:
+  frontend:
+    image: evanhuang7/ai-tools-frontend:developing
+    networks:
+      - ai-tools
+    ports:
+      - 80:8080
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  node-backend:
+    image: evanhuang7/ai-tools-node-backend:developing
+    read_only: true
+    networks:
+      - ai-tools
+    ports:
+      - 3000:3000
+    init: true
+    # TODO: Remember to remove it after usage to aviod store
+    # secrets on Git
+    environment:
+      - DATABASE_URL=postgresql://postgres.otuiikhbcyitlgoknrii:Ab12345678!@aws-0-ca-central-1.pooler.supabase.com:6543/postgres
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "/usr/src/app/healthcheck.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  go-backend:
+    image: evanhuang7/ai-tools-go-backend:developing
+    read_only: true
+    networks:
+      - ai-tools
+    init: true
+    # TODO: Remember to remove it after usage to aviod store
+    # secrets on Git
+    environment:
+      - DATABASE_URL=postgresql://neondb_owner:npg_chuXl7Qo2CGv@ep-rapid-rain-a4ztbwzh-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  python-backend:
+    image: evanhuang7/ai-tools-python-backend:developing-0.0.1
+    read_only: true
+    networks:
+      - ai-tools
+    init: true
+    # TODO: Remember to remove it after usage to aviod store
+    # secrets on Git
+    environment:
+      - REDIS_URL=rediss://default:AaXyAAIjcDFkYWFhNzEzMmE3MmU0MzkyOWQ3NTA4ZTllMmI5Mjk5ZnAxMA@enough-lobster-42482.upstash.io:6379
+      - MONGODB_URL=mongodb+srv://mrxiaohui204:eZG55LdPqpWb62yO@cluster0.bjhjsnn.mongodb.net/ai_tools_db?retryWrites=true&w=majority&appName=Cluster0
+    restart: unless-stopped
+    ports:
+      - 8088:8088
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  ai-tools:
