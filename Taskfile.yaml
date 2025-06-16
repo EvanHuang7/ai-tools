@@ -1,7 +1,7 @@
 version: "3"
 
 includes:
-  ######### Build app container image #########
+  ######### Build and push app container image #########
   go-backend:
     taskfile: ./go-backend/Taskfile.yaml
     dir: ./go-backend
@@ -14,7 +14,7 @@ includes:
   frontend:
     taskfile: ./frontend/Taskfile.yaml
     dir: ./frontend
-  ######### Traefik ingress controller #########
+  ######### Deploy Traefik ingress controller #########
   common:
     taskfile: ./common-k8s-resource-defins/Taskfile.yaml
     dir: ./common-k8s-resource-defins
@@ -128,7 +128,7 @@ tasks:
       - kind delete cluster
     desc: Delete and existing a kind Kubernetes cluster
 
-  ######### Docker buildx #########
+  ######### Set up Docker buildx #########
   # Set up Docker buildx for building multiple architecture images
   bootstrap-buildx-builder:
     desc: Bootstrap the builder
@@ -137,7 +137,7 @@ tasks:
       - docker buildx inspect mybuilder --bootstrap
       - docker buildx use mybuilder
 
-  ######### Run app in K8s cluster #########
+  ######### Run apps in K8s cluster #########
   # Deploy go backend app in cluster
   go-k8s-resource-defins:apply:
     desc: "Apply kubernetes resource manifests for go backend application"
@@ -162,7 +162,7 @@ tasks:
     cmds:
       - "kubectl apply -f ./frontend/frontend-k8s-resource-defins"
 
-  ######### Tilt #########
+  ######### Start Tilt locally #########
   tilt-up:
     desc: "Start the applications using the top level tilt file"
     cmds:
