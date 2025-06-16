@@ -300,11 +300,18 @@ docker images
 docker inspect <container_id_or_name>
 ```
 
+TODO: fix the unhealthy container issue in go backend by checking the health file path after using ko to build image
+TODO: fix unhealthy pod issue in cluster by checking the
+
 4. Deploy app
 
 5. Set up DNS record in Cloudfalre to use your own domain
 
 6. Make sure docker app and docker containers auto restart if VM shut down and restart
+
+## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with Docker Swarm in GCE VM (GCP)</a>
+
+Do this aftere finish lasting section
 
 ## <a name="deploy-app-in-gke">☁️ No-Free: Deploy App as K8s Cluster in GKE (GCP)</a>
 

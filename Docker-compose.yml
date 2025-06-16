@@ -9,6 +9,9 @@ services:
       - 80:8080
     restart: unless-stopped
     healthcheck:
+      # We can use "curl" in container because it is installed
+      # in nginx base image when building frontend image.
+      # We set the health check in "nginx.conf" file of frontend.
       test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
       interval: 30s
       timeout: 5s
@@ -28,6 +31,8 @@ services:
       - DATABASE_URL=postgresql://postgres.otuiikhbcyitlgoknrii:Ab12345678!@aws-0-ca-central-1.pooler.supabase.com:6543/postgres
     restart: unless-stopped
     healthcheck:
+      # Use the custom "healthcheck.js" file to test container
+      # health because "curl" is not installed in node20 base image
       test: ["CMD", "node", "/usr/src/app/healthcheck.js"]
       interval: 30s
       timeout: 5s
@@ -47,6 +52,8 @@ services:
     ports:
       - 8000:8000
     healthcheck:
+      # TODO: Use the custom "healthcheck.go" file to test container
+      # health because "curl" is not installed in base image of ko
       test: ["CMD", "curl", "-f", "http://localhost:8000/ping"]
       interval: 30s
       timeout: 5s
@@ -67,7 +74,9 @@ services:
     ports:
       - 8088:8088
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8088/ping"]
+      # Use the custom "healthcheck.py" file to test container
+      # health because "curl" is not installed in python3.12 base image
+      test: ["CMD", "python", "/app/healthcheck/healthcheck.py"]
       interval: 30s
       timeout: 5s
       retries: 3
