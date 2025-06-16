@@ -326,7 +326,6 @@ docker compose -f Docker-compose.yml down
 
 TODO: fix the unhealthy container issue in go backend by checking the health file path after using ko to build image
 TODO: fix unhealthy pod issue in cluster by checking the
-TODO: reserve a Static External Ip and attach it to my VM
 
 4. Deploy app
 
@@ -398,7 +397,7 @@ docker login
 - go-backend serivce
 
 ```
-task go-backend:build-container-image-multi-arch
+task go-backend:build-container-image-multi-arch-with-dockerfile
 ```
 
 - node-backend serivce

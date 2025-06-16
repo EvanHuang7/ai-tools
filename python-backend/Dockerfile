@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-
 # Copy only requirements first for better caching
 COPY requirements.txt ./
 
@@ -35,14 +34,13 @@ RUN useradd -u 1001 python_user
 
 WORKDIR /app
 
-# Copy all necessary files from base stage
+# Copy all dependencies and runtime binaries from base stage
 COPY --from=base /usr/local/lib/python3.12 /usr/local/lib/python3.12
 COPY --from=base /usr/local/bin /usr/local/bin
 COPY --from=base /usr/lib /usr/lib
 
 # Set correct ownership during build (as root)
 COPY --chown=python_user:python_user . .
-
 
 # Then drop privileges from root user to non-root user for better security
 USER python_user

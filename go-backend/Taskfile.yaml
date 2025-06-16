@@ -21,8 +21,8 @@ tasks:
 
   # We use ko instead of docker to build image, which allow us
   # build the container image without writing a Dockerfile
-  build-container-image:
-    desc: Build container image
+  build-container-image-with-ko:
+    desc: Build container image with ko
     cmds:
       - |
         KO_DOCKER_REPO='{{.IMAGE_REPO}}' \
@@ -31,7 +31,27 @@ tasks:
           --tags={{.IMAGE_TAG}} \
           --platform=all
 
-  build-container-image-multi-arch:
-    desc: Build multi-arch container image
+  # You can use ko to build image if you ONLY use container image
+  # in K8s cluster instead of also use image in Docker swarm or
+  # Docker compose because the image built by ko won't include
+  # healthcheck.go file used by healthcheck of Docker swarm or Docker compose
+  build-container-image-multi-arch-with-ko:
+    desc: Build multi-arch container image with ko
     cmds:
-      - task: build-container-image
+      - task: build-container-image-with-ko
+
+  # Use it to build go backend app image working for both
+  # regular container and K8s cluster cases, so that we can
+  # use healthcheck.go file for healthcheck of Docker swarm or Docker compose
+  build-container-image-multi-arch-with-dockerfile:
+    # By default, Docker builds all the way to the last stage, so
+    # it would be "FROM scratch" (production case) if we don't
+    # specify the stage when building image using "--target" tag (such as "--target dev")
+    desc: Build multi-arch container image with Dockerfile
+    cmds:
+      - |
+        docker buildx build \
+        --platform linux/amd64,linux/arm64 \
+        -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} \
+        --push \
+        .
