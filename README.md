@@ -243,6 +243,18 @@ Follow these steps to deploy app using Docker-compose file in GCE:
 
 - Click **Create** button
 
+3. Reserved a free static externalIP with same region of VM's region and attch it to VM
+
+- Open a anther broswer tab and go to **VPC networks > IP addresses** in GCP
+- Click **Reserve external static IP address** button
+- Enter your desired **Name** tag (eg. `appName-static-external-ip`)
+- Select `Standard` for **Network Service Tier**
+- Select `IPv4` for **IP version**
+- Select `Regional` for **Type**
+- Select same region as the region of your VM (eg. `us-central1`) for **Region**
+- Select your VM (eg. `appName-gce-free-vm`) for **Attached to**
+- Click **Reserve** button
+
 3. Install needed dependencies in VM
 
 - Go back to **Compute Engine > VM instances** and the VM instancee we just created after VM is created
@@ -265,6 +277,8 @@ sudo chown $USER /var/run/docker.sock
 docker ps
 ```
 
+4. Run apps in containers with Docker-compose file (Use minimal VM CPU and memory)
+
 - Create a folder
 
 ```
@@ -278,7 +292,7 @@ cd dockerComposeFolder
 nano Docker-compose.yml
 ```
 
-- Run all app containers with `Docker-compose.yml` by running
+- Run all app in containers with `Docker-compose.yml` by running
 
 ```
 docker compose -f Docker-compose.yml up
@@ -288,7 +302,7 @@ OR
 docker compose -f Docker-compose.yml up -d
 ```
 
-- Now, You can access your app with your VM external IP address `http://34.58.224.241/`
+- Now, You can access your app with your VM external IP address (eg. `http://35.209.142.39/`)
 
 - Useful Docker clis to, turn down the containers, list running containers, list all containers (running + stopped), list Docker images on system, check details on a specific container
 
@@ -300,8 +314,19 @@ docker images
 docker inspect <container_id_or_name>
 ```
 
+5. Run apps in containers with Docker Swarm (Use more VM CPU and memory than Docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
+
+- Turn off all containers first by running
+
+```
+docker compose -f Docker-compose.yml down
+```
+
+- Clean up existing all images and containers first to save VM resource
+
 TODO: fix the unhealthy container issue in go backend by checking the health file path after using ko to build image
 TODO: fix unhealthy pod issue in cluster by checking the
+TODO: reserve a Static External Ip and attach it to my VM
 
 4. Deploy app
 
@@ -408,10 +433,12 @@ task frontend:build-container-image-multi-arch
   task common:apply-namespace
   ```
 
-- Deploy Traefik ingress controller in Local Kind cluster with Load Balancer serivce (Remember to only use it in local Kind Cluster intead of in GKE to aviod a Load Balancer to. Remember to uncomment this cli in file)
+- Deploy Traefik ingress controller in Local Kind cluster with Load Balancer serivce
+
+  - 📌 Note: It will provision a Load Balancer by Traefik default setting, so it will cause Load Balancer and ExternalIP fee if you run it in GKE of GCP.
 
   ```
-  task common:deploy-traefik-in-Kind
+  task common:deploy-traefik
   ```
 
 - Check all resources in traefik namespace (Note: the ExternalIP of LoadBalancer will stay `pending` forever if you don't run cli, `task kind:03-run-cloud-provider-kind`, to enable ExternalIP for Load Balancer in Local Kind Cluster in a seperate terminal)
