@@ -45,5 +45,5 @@ func main() {
 		port = "8000"
 	}
 
-	r.Run(":" + port) // listen and serve on 0.0.0.0:8000 (or "PORT" env var if set)}
+	r.Run("0.0.0.0:" + port) // explicitly bind to all interfaces
 }
