@@ -286,29 +286,29 @@ mkdir dockerComposeFolder
 cd dockerComposeFolder
 ```
 
-- Add `Docker-compose.yml` file to folder by copying the file content in local `Docker-compose.yml` file, run below command line and paste content and press `control + X`, `Y`, and `Enter` keys
+- Add `docker-compose.yml` file to folder by copying the file content in local `docker-compose.yml` file, run below command line and paste content and press `control + X`, `Y`, and `Enter` keys
 
 ```
-nano Docker-compose.yml
+nano docker-compose.yml
 ```
 
-- Run all app in containers with `Docker-compose.yml` by running (second cli would run containers in the background)
+- Run all app in containers with `docker-compose.yml` by running (second cli would run containers in the background)
 
 ```
-docker compose -f Docker-compose.yml up
+docker compose -f docker-compose.yml up
 
 OR
 
-docker compose -f Docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 ```
 
 - 🎉 Now, You can access your app with your VM external IP address (eg. `http://35.209.142.39/`)
-  - ⚠️ Note: If you still can not access it with your VM external IP, you can try to access your app in 8080 port (eg. `http://35.209.142.39:8080`). If you still can not access it after the change, you can change the `ports` of `frontend` to be `- 80:8080` in `Docker-compose.yml` file and redeploy the app containers to try again
+  - ⚠️ Note: If you still can not access it with your VM external IP, you can try to access your app in 8080 port (eg. `http://35.209.142.39:8080`). If you still can not access it after the change, you can change the `ports` of `frontend` to be `- 80:8080` in `docker-compose.yml` file and redeploy the app containers to try again
 
 - 📌 Useful Docker clis to, turn down the containers, list running containers, list all containers (running + stopped), list Docker images on system, check details on a specific container
 
 ```
-docker compose -f Docker-compose.yml down
+docker compose -f docker-compose.yml down
 docker ps
 docker ps -a
 docker images
@@ -328,7 +328,7 @@ sudo systemctl enable docker
 systemctl is-enabled docker
 ```
 
-- Also, Making sure that we are using `restart: unless-stopped` for all app contaiers in `Docker-compose.yml` file, which is what we already did. This resart policy set Docker to
+- Also, Making sure that we are using `restart: unless-stopped` for all app contaiers in `docker-compose.yml` file, which is what we already did. This resart policy set Docker to
 
   - Restart the container automatically if it crashes
   - Also restart it on VM reboot
@@ -357,7 +357,7 @@ Get a free subdomain in **Duck DNS** and bind it to your VM static external IP a
 - Stop all running app containers
 
 ```
-docker compose -f Docker-compose.yml down
+docker compose -f docker-compose.yml down
 ```
 
 - Intall `Snap` and `nginx` packages
@@ -378,7 +378,7 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ```
 
 - Run `Certbot` with `Nginx` to get a SSL certificate
-  - ⚠️ Note: If running into port `80` is used issue, make sure you reserve port `80` for `nginx` by killing all existing processes listening to port `80`. Also, make sure the `ports` of `frontend` to be `- 8080:8080` in `Docker-compose.yml` file
+  - ⚠️ Note: If running into port `80` is used issue, make sure you reserve port `80` for `nginx` by killing all existing processes listening to port `80`. Also, make sure the `ports` of `frontend` to be `- 8080:8080` in `docker-compose.yml` file
 
 ```
 sudo certbot --nginx -d appName-yourName.duckdns.org
@@ -462,7 +462,7 @@ sudo certbot renew --dry-run
 - Restart all app containers again
 
 ```
-docker compose -f Docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 ```
 
 - Now, Your domain has a free SSL certificate, and you can access your app via `https` (eg. `https://appName-yourName.duckdns.org`)
@@ -499,7 +499,7 @@ Run apps in containers with Docker Swarm (Use more VM CPU and memory than Docker
 - Turn off all running containers first by running
 
 ```
-docker compose -f Docker-compose.yml down
+docker compose -f docker-compose.yml down
 ```
 
 - Clean up existing all images and containers first to save VM resource

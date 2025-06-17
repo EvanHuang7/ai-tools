@@ -176,15 +176,15 @@ tasks:
   compose-up:
     desc: "Run all app containers"
     cmds:
-      - docker compose -f Docker-compose.yml up
+      - docker compose -f docker-compose.yml up
 
   # Runs containers in the background with -d flag
   compose-up-d:
     desc: "Run all app containers in background"
     cmds:
-      - docker compose -f Docker-compose.yml up -d
+      - docker compose -f docker-compose.yml up -d
 
   compose-down:
     desc: "Turn off all app containers"
     cmds:
-      - docker compose -f Docker-compose.yml down
+      - docker compose -f docker-compose.yml down
