@@ -561,7 +561,25 @@ docker service ls
 docker node ls
 ```
 
-⚠️ Warning: If your GCE VM is free `e2-micro` type, your app may becomes slower after deploying via Docker Swarm, compared to running the same containers with docker-compose. You can do the following change to improve
+⚠️ Warning: If your GCE VM is free `e2-micro` type, your app may becomes slower after deploying via Docker Swarm, compared to running the same containers with docker-compose.
+
+These are some reasones of extra latency introduced by Swarm architecture default by **comparing Docker Swarm and Docker Compose**:
+
+- **Docker Swarm** is desgined to used across **mutiple VMs**. Swarm would use the across VMs mechanism to handle the requst traffic between services even if we are running it in 1 VM.
+
+  - The **Swarm Load Balancer** is automatically created when you deploy services in Docker Swarm mode. It's a built-in mechanism that uses `VIP(Virtual IP)-based load balancing` to route traffic between containers, even across nodes.
+  - Docker Swarm Creates a `virtual IP (VIP)` for every service. Swarm Load Balancer would use `VIP` and `Routing mesh` for internal routing
+  - Docker Swarm uses the `overlay network (VXLAN)` for multi-node setups, which adds packets or **network encapsulation** (`wrapped, routed, and unwrapped steps for a requst`). This encapsulation step still happens even if it is service commnunication within same VM.
+  - Above mechanism causes higher latency, more CPU and network stack usage, slower service-to-service communication even though everything is running on the 1 VM.
+  - Swarm is `cluster-first`, so it **doesn’t skip** the `routing mesh or VXLAN` just because there’s only one node — it assumes more nodes could join at any time.
+
+- **Docker Compose** is desgined to used in **1 VM**.
+  - Docker Compose uses the `bridge network`, allow a container talk to other containers **without encapsulation** (`wrapped, routed, and unwrapped steps for a requst`) or virtual IP translation
+  - Simple local networking on the same VM.
+  - Fastest path: direct, local TCP/IP traffic.
+  - Above mechanism causes Low latency and minimal CPU/network overhead
+
+You can do the following change to improve
 
 -
 
