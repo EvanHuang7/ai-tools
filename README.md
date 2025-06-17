@@ -316,7 +316,9 @@ docker images
 docker inspect <container_id_or_name>
 ```
 
-TODO: Test it 5. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if VM reboots
+TODO: Test it
+
+5. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if VM reboots
 
 - Set the Docker daemon start automatically at system boot.
 
@@ -343,6 +345,8 @@ docker ps
 6. Set up a Domain
 
 Get a free subdomain in **Duck DNS** and bind it to your VM static external IP address
+
+🚨 Important: if you own a custom domain, you can easily bind your domain with VM static external IP address with a free SSL certificate by using `Cloudflare`, so that we don't need set up SSL certificate by your own and don't need to keep running `Nginx` (use defualt `80` port) in VM to serve your web app over HTTPS using that SSL certificate, which allow you to use `- 80:8080` as the `ports` of `frontend` in `docker-compose.yml` file because you don't need `Nginx` to proxy incoming request traffic to `frontend` container anymore.
 
 - Go to Duck DNS page (`https://www.duckdns.org/`)
 - Enter your desired **sub domain** name (eg. `appName-yourName`) in **domains** section
@@ -379,6 +383,10 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 - Run `Certbot` with `Nginx` to get a SSL certificate
   - ⚠️ Note: If running into port `80` is used issue, make sure you reserve port `80` for `nginx` by killing all existing processes listening to port `80`. Also, make sure the `ports` of `frontend` to be `- 8080:8080` in `docker-compose.yml` file
+  - This cli would do
+    - Certbot obtains and installs the SSL certificate via Let's Encrypt
+    - It **configures your Nginx to use the certificate**
+    - The cert is saved on disk (usually in /etc/letsencrypt/)
 
 ```
 sudo certbot --nginx -d appName-yourName.duckdns.org
@@ -471,7 +479,7 @@ docker compose -f docker-compose.yml up -d
 
 - Now, Your domain has a free SSL certificate, and you can access your app via `https` (eg. `https://appName-yourName.duckdns.org`)
 
-TODO: test it
+TODO: Test it
 
 - 🚨 Important: We need to set up `Nginx` in VM will auto-restart if VM or system reboot
   - 1st cli is to turn on the existing systemd service file of `Nginx`, so that `Nginx` auto-restart when VM or system reboots. (systemd service file of `Nginx` is created when installing `Nginx`, but it is not enabled automatically.)
@@ -490,7 +498,6 @@ sudo systemctl status nginx
 docker ps
 ```
 
-TODO: fix the unhealthy container issue in go backend
 TODO: fix unhealthy pod issue in cluster by checking the all Deployment.ymal files
 
 ## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with Docker Swarm in GCE VM (GCP)</a>
