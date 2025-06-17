@@ -195,7 +195,7 @@ python manage.py runserver 8088
 
 Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
 
-## <a name="deploy-app-in-gce">☁️ Free: Deploy App in GCE VM (GCP)</a>
+## <a name="deploy-app-in-gce">☁️ Free: Deploy App with Docker Compose in GCE VM (GCP)</a>
 
 📌 If your VM has enough CPU and Memory, it would be best to deploy this microservices project as K8s cluster using k3s or as docker containers using Docker swarm, so that we can taking advantanges of these k8s cluster orchestrator or container orchestrator. The pros to use orchestrator instead of Docker compose:
 
@@ -255,7 +255,7 @@ Follow these steps to deploy app using Docker-compose file in GCE:
 - Select your VM (eg. `appName-gce-free-vm`) for **Attached to**
 - Click **Reserve** button
 
-3. Install needed dependencies in VM
+4. Install required dependencies in VM
 
 - Go back to **Compute Engine > VM instances** and the VM instancee we just created after VM is created
 - Click **SSH** to connect VM
@@ -277,7 +277,7 @@ sudo chown $USER /var/run/docker.sock
 docker ps
 ```
 
-4. Run apps in containers with Docker-compose file (Use minimal VM CPU and memory)
+4. Deploy app by running app containers with Docker-compose file (Use minimal VM CPU and memory)
 
 - Create a folder
 
@@ -292,7 +292,7 @@ cd dockerComposeFolder
 nano Docker-compose.yml
 ```
 
-- Run all app in containers with `Docker-compose.yml` by running
+- Run all app in containers with `Docker-compose.yml` by running (second cli would run containers in the background)
 
 ```
 docker compose -f Docker-compose.yml up
@@ -302,9 +302,9 @@ OR
 docker compose -f Docker-compose.yml up -d
 ```
 
-- Now, You can access your app with your VM external IP address (eg. `http://35.209.142.39/`)
+- 🎉 Now, You can access your app with your VM external IP address (eg. `http://35.209.142.39/`)
 
-- Useful Docker clis to, turn down the containers, list running containers, list all containers (running + stopped), list Docker images on system, check details on a specific container
+- 📌 Useful Docker clis to, turn down the containers, list running containers, list all containers (running + stopped), list Docker images on system, check details on a specific container
 
 ```
 docker compose -f Docker-compose.yml down
@@ -314,9 +314,38 @@ docker images
 docker inspect <container_id_or_name>
 ```
 
-5. Run apps in containers with Docker Swarm (Use more VM CPU and memory than Docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
+5. 📌 Note: We need to make sure Docker engine and app containers would auto restart if VM reboots
 
-- Turn off all containers first by running
+- Set the Docker daemon start automatically at system boot.
+
+```
+sudo systemctl enable docker
+```
+
+- Make sure we are using `restart: unless-stopped` for all app contaiers in `Docker-compose.yml` file, which is what we already did. This resart policy set Docker to
+
+  - Restart the container automatically if it crashes
+  - Also restart it on VM reboot
+
+- Test restart by simulating a VM reboot and check the container status after the VM boots
+
+```
+sudo reboot
+docker ps
+```
+
+6. Set up DNS record in Cloudfalre to use your own domain
+   TODO: fix the unhealthy container issue in go backend by checking the health file path after using ko to build image
+   TODO: fix unhealthy pod issue in cluster by checking the
+
+## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with Docker Swarm in GCE VM (GCP)</a>
+
+Run apps in containers with Docker Swarm (Use more VM CPU and memory than Docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
+
+⚠️ Note: make sure you finish previous `Deploy App with Docker Compose in GCE VM (GCP)` step first.
+
+- Connect to VM in GCP console
+- Turn off all running containers first by running
 
 ```
 docker compose -f Docker-compose.yml down
@@ -324,18 +353,18 @@ docker compose -f Docker-compose.yml down
 
 - Clean up existing all images and containers first to save VM resource
 
-TODO: fix the unhealthy container issue in go backend by checking the health file path after using ko to build image
-TODO: fix unhealthy pod issue in cluster by checking the
+```
+docker rm -f $(docker ps -aq)
+docker rmi -f $(docker images -q)
+```
 
-4. Deploy app
+- Check Disk Usage of Docker
 
-5. Set up DNS record in Cloudfalre to use your own domain
+```
+docker system df
+```
 
-6. Make sure docker app and docker containers auto restart if VM shut down and restart
-
-## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with Docker Swarm in GCE VM (GCP)</a>
-
-Do this aftere finish lasting section
+- next
 
 ## <a name="deploy-app-in-gke">☁️ No-Free: Deploy App as K8s Cluster in GKE (GCP)</a>
 
@@ -348,6 +377,10 @@ Follow these steps to deploy app in GKE:
 -
 
 3. Deploy app
+
+## <a name="set-up-different-app-environment">Set up different app environment (Demo and Prod)</a>
+
+## <a name="set-up-ci-cd">Set up CI & CD for GKE Cluster</a>
 
 ## <a name="run-app-in-kind">⚙️ Run App in Kind Cluster Locally</a>
 
