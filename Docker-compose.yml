@@ -6,7 +6,7 @@ services:
     networks:
       - ai-tools
     ports:
-      - 80:8080
+      - 8080:8080
     restart: unless-stopped
     healthcheck:
       # We can use "curl" in container because it is installed

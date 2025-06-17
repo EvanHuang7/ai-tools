@@ -303,6 +303,7 @@ docker compose -f Docker-compose.yml up -d
 ```
 
 - 🎉 Now, You can access your app with your VM external IP address (eg. `http://35.209.142.39/`)
+  - ⚠️ Note: If you still can not access it with your VM external IP, you can try to access your app in 8080 port (eg. `http://35.209.142.39:8080`). If you still can not access it after the change, you can change the `ports` of `frontend` to be `- 80:8080` in `Docker-compose.yml` file and redeploy the app containers to try again
 
 - 📌 Useful Docker clis to, turn down the containers, list running containers, list all containers (running + stopped), list Docker images on system, check details on a specific container
 
@@ -314,6 +315,7 @@ docker images
 docker inspect <container_id_or_name>
 ```
 
+TODO: Test it
 5. 📌 Note: We need to make sure Docker engine and app containers would auto restart if VM reboots
 
 - Set the Docker daemon start automatically at system boot.
@@ -334,9 +336,138 @@ sudo reboot
 docker ps
 ```
 
-6. Set up DNS record in Cloudfalre to use your own domain
-   TODO: fix the unhealthy container issue in go backend by checking the health file path after using ko to build image
-   TODO: fix unhealthy pod issue in cluster by checking the
+6. Set up a Domain
+
+Get a free subdomain in **Duck DNS** and bind it to your VM static external IP address
+
+- Go to Duck DNS page (`https://www.duckdns.org/`)
+- Enter your desired **sub domain** name (eg. `appName-yourName`) in **domains** section
+- Click **add domain** button
+- Enter your VM static external IP address (eg. `35.209.142.39`) in **current ip** field
+- Click **update ip** button
+- Now, you can access the app with your subdomain (eg. `http://appName-yourName.duckdns.org/`)
+
+7. Get a free SSL certificate for domain
+
+- Connect to VM in GCP console
+- Stop all running app containers
+
+```
+docker compose -f Docker-compose.yml down
+```
+
+- Intall `Snap` and `nginx` packages
+
+```
+sudo apt update
+sudo apt install snapd -y
+sudo snap install core
+sudo snap refresh core
+sudo apt install nginx
+```
+
+- Install `Certbot` via `Snap`
+
+```
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+```
+
+- Run `Certbot` with `Nginx` to get a SSL certificate
+  - ⚠️ Note: If running into port `80` is used issue, make sure you reserve port `80` for `nginx` by killing all existing processes listening to port `80`. Also, make sure the `ports` of `frontend` to be `- 8080:8080` in `Docker-compose.yml` file
+
+```
+sudo certbot --nginx -d appName-yourName.duckdns.org
+```
+
+- Update `Nginx config` to proxy to `8080` port of `frontend` by running first command line to open `Nginx config` file frist. Then try to find the specific `server block` containing the existing script. After that, replace the `location /` block (inside this `server block` only) with updated script. Finally, save the updated config file.
+
+```
+sudo nano /etc/nginx/sites-available/default
+```
+
+Existing `Nginx config` server block 
+```
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl ipv6only=on;
+    server_name aitools-evanhuang.duckdns.org;
+
+    ssl_certificate /etc/letsencrypt/live/aitools-evanhuang.duckdns.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/aitools-evanhuang.duckdns.org/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+```
+
+Updated script for locaton / block 
+```
+location / {
+    proxy_pass http://localhost:8080;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+}
+```
+
+- Reload Nginx again after updating and saving `config` file. 
+    
+```
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+⚠️ Note: If you run into this error, `nginx.service is not active, cannot reload`
+- you can start `nginx` and check status. If the status is `Active: active (running)`, you are good to skip the rest of warning steps
+
+```
+sudo systemctl start nginx
+sudo systemctl status nginx
+```
+
+- If you run into a new error like `Job for nginx.service failed because the control process exited with error code` when startting `nginx`, that means there are other running processes listening to ports `80 or 443`. 
+
+- Try to find out those running processes first by running
+
+  ```
+  sudo apt install lsof
+  sudo lsof -i :80 -sTCP:LISTEN
+  sudo lsof -i :443 -sTCP:LISTEN
+  ```
+
+- If all those process are `Nginx`, just go to next step. Else (they are not `Nginx`), running `sudo kill -9 <PID>` cli to kill them manually
+- After all running process of ports `80 or 443` is only `Nginx`, we can running `sudo systemctl status nginx` cli to check `Nginx status`. If it is `Active: failed` status, try to kill all Nginx processes, restart it and check status again by running clis below. The status should be `Active: active (running)` now.
+  ```
+  sudo pkill nginx
+  sudo systemctl start nginx
+  sudo systemctl status nginx
+  ```
+
+- Test if SSL certificate auto-renew is handled or not
+
+```
+sudo certbot renew --dry-run
+```
+
+- Restart all app containers again
+
+```
+docker compose -f Docker-compose.yml up -d
+```
+
+- Now, Your domain has a free SSL certificate, and you can access your app via `https` (eg. `https://appName-yourName.duckdns.org`)
+
+TODO: test it
+- 📌 Note: Make sure `Nginx` in VM will aut restart if VM or system rebot
+
+TODO: fix the unhealthy container issue in go backend by checking the health file path after using ko to build image
+TODO: fix unhealthy pod issue in cluster by checking the
 
 ## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with Docker Swarm in GCE VM (GCP)</a>
 
