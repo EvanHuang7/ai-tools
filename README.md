@@ -203,7 +203,7 @@ Open [http://localhost:5173/](http://localhost:5173/) in your browser to view th
 - Allow us to run containers in differeent hosts/nodes/VMs for better scalabity
 - Providee a way to handle sensative credentials or secrets
 
-Follow these steps to deploy app using Docker-compose file in GCE:
+Follow these steps to deploy app using docker-compose file in GCE:
 
 1. Go to GCP Compute Engine page
 2. Create a free `e2-micro` VM in GCE
@@ -277,7 +277,7 @@ sudo chown $USER /var/run/docker.sock
 docker ps
 ```
 
-4. Deploy app by running app containers with Docker-compose file (Use minimal VM CPU and memory)
+4. Deploy app by running app containers with docker-compose file (Use minimal VM CPU and memory)
 
 - Create a folder
 
@@ -495,7 +495,7 @@ TODO: fix unhealthy pod issue in cluster by checking the all Deployment.ymal fil
 
 ## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with Docker Swarm in GCE VM (GCP)</a>
 
-Run apps in containers with Docker Swarm (Use more VM CPU and memory than Docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
+Run apps in containers with Docker Swarm (Use more VM CPU and memory than docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
 
 ⚠️ Note: make sure you finish previous `Deploy App with Docker Compose in GCE VM (GCP)` step first.
 
