@@ -1,0 +1,104 @@
+version: "3.7"
+
+services:
+  frontend:
+    image: evanhuang7/ai-tools-frontend:developing
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        order: start-first
+    networks:
+      - ai-tools
+    init: true
+    ports:
+      - 8080:8080
+    healthcheck:
+      # We can use "curl" in container because it is installed
+      # in nginx base image when building frontend image.
+      # We set the health check in "nginx.conf" file of frontend.
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  node-backend:
+    image: evanhuang7/ai-tools-node-backend:developing
+    read_only: true
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        order: start-first
+    networks:
+      - ai-tools
+    # TODO: may need to remove the port for these 3 apis
+    ports:
+      - 3000:3000
+    init: true
+    # TODO: Remember to remove it after usage to aviod store
+    # secrets on Git
+    environment:
+      - DATABASE_URL=postgresql://postgres.otuiikhbcyitlgoknrii:Ab12345678!@aws-0-ca-central-1.pooler.supabase.com:6543/postgres
+    healthcheck:
+      # Use the custom "healthcheck.js" file to test container
+      # health because "curl" is not installed in node20 base image
+      test: ["CMD", "node", "/usr/src/app/healthcheck.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  go-backend:
+    image: evanhuang7/ai-tools-go-backend:developing
+    read_only: true
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        order: start-first
+    networks:
+      - ai-tools
+    init: true
+    # TODO: Remember to remove it after usage to aviod store
+    # secrets on Git
+    environment:
+      - DATABASE_URL=postgresql://neondb_owner:npg_chuXl7Qo2CGv@ep-rapid-rain-a4ztbwzh-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
+    ports:
+      - 8000:8000
+    healthcheck:
+      # Use the custom "healthcheck.go" file to test container
+      # health because "curl" is not installed in base image of ko
+      test: ["CMD", "/healthcheck/healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  python-backend:
+    image: evanhuang7/ai-tools-python-backend:developing-0.0.1
+    read_only: true
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        order: start-first
+    networks:
+      - ai-tools
+    init: true
+    # TODO: Remember to remove it after usage to aviod store
+    # secrets on Git
+    environment:
+      - REDIS_URL=rediss://default:AaXyAAIjcDFkYWFhNzEzMmE3MmU0MzkyOWQ3NTA4ZTllMmI5Mjk5ZnAxMA@enough-lobster-42482.upstash.io:6379
+      - MONGODB_URL=mongodb+srv://mrxiaohui204:eZG55LdPqpWb62yO@cluster0.bjhjsnn.mongodb.net/ai_tools_db?retryWrites=true&w=majority&appName=Cluster0
+    ports:
+      - 8088:8088
+    healthcheck:
+      # Use the custom "healthcheck.py" file to test container
+      # health because "curl" is not installed in python3.12 base image
+      test: ["CMD", "python", "/app/healthcheck/healthcheck.py"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  ai-tools:
