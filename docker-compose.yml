@@ -21,6 +21,8 @@ services:
       start_period: 10s
   node-backend:
     image: evanhuang7/ai-tools-node-backend:developing
+    # Backend app container doesn't need to write to any location (like /tmp)
+    # because not volumes are mounted.
     read_only: true
     networks:
       - ai-tools

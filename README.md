@@ -552,11 +552,18 @@ docker stack deploy -c docker-swarm.yml ai-tools
 ```
 
 - List all Docker services status and view the nodes in the swarm
+  - `Docker service` is top-level Swarm object that manages desired state (e.g. `replicas: 3`, which image to use), scaling, and containers used by **Docker Swarm**. You don't run containers directly. You define services, and Swarm runs containers to satisfy the service.
+  - In **Docker Compose**, `Docker service` isn't a first-class object because Docker Compose spins up containers directly without creating services.
+  - You still can use `docker ps` cli to view Docker container status in **Docker Swarm**
 
 ```
 docker service ls
 docker node ls
 ```
+
+⚠️ Warning: If your GCE VM is free `e2-micro` type, your app may becomes slower after deploying via Docker Swarm, compared to running the same containers with docker-compose. You can do the following change to improve
+
+-
 
 5. Make sure Docker Swarm and the stack of app containers inside Docker Swarm auto-restart after VM reboots
 

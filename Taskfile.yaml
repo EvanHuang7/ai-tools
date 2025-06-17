@@ -200,6 +200,16 @@ tasks:
     cmds:
       - docker stack deploy -c docker-swarm.yml ai-tools
 
+  swarm-remove-stack:
+    desc: "Remove stack of app containers"
+    cmds:
+      - docker stack rm ai-tools
+
+  swarm-stop:
+    desc: "Disable Docker Swarm mode"
+    cmds:
+      - docker swarm leave --force
+
   swarm-ls:
     desc: "List all Docker services status"
     cmds:
@@ -209,8 +219,3 @@ tasks:
     desc: "View the node in the swarm"
     cmds:
       - docker node ls
-
-  swarm-remove-stack:
-    desc: "Remove stack of app containers"
-    cmds:
-      - docker stack rm ai-tools
