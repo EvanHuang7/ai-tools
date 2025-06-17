@@ -316,15 +316,19 @@ docker inspect <container_id_or_name>
 ```
 
 TODO: Test it
-5. 📌 Note: We need to make sure Docker engine and app containers would auto restart if VM reboots
+5. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if VM reboots
 
-- Set the Docker daemon start automatically at system boot.
+- Set the Docker daemon start automatically at system boot. 
+
+  - 1st cli is to turn on the existing systemd service file of `Docker`, so that `Docker` auto-restart when VM or system reboots. (systemd service file of `Docker` is created when installing `Docker`, but it is not enabled automatically.)
+  - 2nd cli is to verify the `Docker` systemd service is active or not.
 
 ```
 sudo systemctl enable docker
+systemctl is-enabled docker
 ```
 
-- Make sure we are using `restart: unless-stopped` for all app contaiers in `Docker-compose.yml` file, which is what we already did. This resart policy set Docker to
+- Also, Making sure that we are using `restart: unless-stopped` for all app contaiers in `Docker-compose.yml` file, which is what we already did. This resart policy set Docker to
 
   - Restart the container automatically if it crashes
   - Also restart it on VM reboot
@@ -464,7 +468,23 @@ docker compose -f Docker-compose.yml up -d
 - Now, Your domain has a free SSL certificate, and you can access your app via `https` (eg. `https://appName-yourName.duckdns.org`)
 
 TODO: test it
-- 📌 Note: Make sure `Nginx` in VM will aut restart if VM or system rebot
+- 🚨 Important: We need to set up `Nginx` in VM will auto-restart if VM or system reboot 
+  - 1st cli is to turn on the existing systemd service file of `Nginx`, so that `Nginx` auto-restart when VM or system reboots. (systemd service file of `Nginx` is created when installing `Nginx`, but it is not enabled automatically.)
+  - 2nd cli is to verify the `Nginx` systemd service is active or not.
+
+```
+sudo systemctl enable nginx
+systemctl is-enabled nginx
+```
+
+  - Test restart by simulating a VM reboot and check `Nginx` and `Docker containers` status after the VM boots
+
+  ```
+  sudo reboot
+  sudo systemctl status nginx
+  docker ps
+  ```
+
 
 TODO: fix the unhealthy container issue in go backend by checking the health file path after using ko to build image
 TODO: fix unhealthy pod issue in cluster by checking the
