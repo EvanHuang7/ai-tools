@@ -23,6 +23,7 @@ USER node
 
 # Use --chown on COPY commands to set file permissions
 # Copy the healthcheck script
+# Copy all files inside healthcheck folder to container working directory level
 COPY --chown=node:node ./healthcheck/ .
 
 # Copy remaining source code AFTER installing dependencies. 

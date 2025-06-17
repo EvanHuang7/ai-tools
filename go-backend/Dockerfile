@@ -31,11 +31,12 @@ RUN useradd -u 1001 nonroot
 
 COPY . .
 
-# Compile healthcheck
+# Compile healthcheck 
+# Creating a single binary file named healthcheck inside the /app directory
 RUN go build \
   -ldflags="-linkmode external -extldflags -static" \
   -tags netgo \
-  -o healthcheck \
+  -o /app/healthcheck \
   ./healthcheck/healthcheck.go
 
 # Compile application during build rather than at runtime
@@ -57,9 +58,11 @@ WORKDIR /
 COPY --from=build-production /etc/passwd /etc/passwd
 
 # Copy the healthcheck binary from the build stage
-COPY --from=build-production /app/healthcheck healthcheck
+# Start with "/", which is treated as an absolute path inside the container.
+COPY --from=build-production /app/healthcheck /healthcheck
 
 # Copy the app binary from the build stage
+# Not Start with "/", which is treated as a relative path inside the current WORKDIR
 COPY --from=build-production /app/go-backend go-backend
 
 # Use nonroot user
