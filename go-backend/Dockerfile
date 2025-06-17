@@ -57,7 +57,7 @@ WORKDIR /
 # Copy the passwd file
 COPY --from=build-production /etc/passwd /etc/passwd
 
-# Copy the healthcheck binary from the build stage
+# Copy the healthcheck binary from the build stage into healthcheck folder
 # Start with "/", which is treated as an absolute path inside the container.
 COPY --from=build-production /app/healthcheck /healthcheck
 

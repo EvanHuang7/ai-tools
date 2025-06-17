@@ -303,6 +303,7 @@ docker compose -f docker-compose.yml up -d
 ```
 
 - 🎉 Now, You can access your app with your VM external IP address (eg. `http://35.209.142.39/`)
+
   - ⚠️ Note: If you still can not access it with your VM external IP, you can try to access your app in 8080 port (eg. `http://35.209.142.39:8080`). If you still can not access it after the change, you can change the `ports` of `frontend` to be `- 80:8080` in `docker-compose.yml` file and redeploy the app containers to try again
 
 - 📌 Useful Docker clis to, turn down the containers, list running containers, list all containers (running + stopped), list Docker images on system, check details on a specific container
@@ -315,10 +316,9 @@ docker images
 docker inspect <container_id_or_name>
 ```
 
-TODO: Test it
-5. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if VM reboots
+TODO: Test it 5. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if VM reboots
 
-- Set the Docker daemon start automatically at system boot. 
+- Set the Docker daemon start automatically at system boot.
 
   - 1st cli is to turn on the existing systemd service file of `Docker`, so that `Docker` auto-restart when VM or system reboots. (systemd service file of `Docker` is created when installing `Docker`, but it is not enabled automatically.)
   - 2nd cli is to verify the `Docker` systemd service is active or not.
@@ -390,7 +390,8 @@ sudo certbot --nginx -d appName-yourName.duckdns.org
 sudo nano /etc/nginx/sites-available/default
 ```
 
-Existing `Nginx config` server block 
+Existing `Nginx config` server block
+
 ```
 server {
     listen 443 ssl;
@@ -408,7 +409,8 @@ server {
 }
 ```
 
-Updated script for locaton / block 
+Updated script for locaton / block
+
 ```
 location / {
     proxy_pass http://localhost:8080;
@@ -420,14 +422,15 @@ location / {
 }
 ```
 
-- Reload Nginx again after updating and saving `config` file. 
-    
+- Reload Nginx again after updating and saving `config` file.
+
 ```
 sudo nginx -t
 sudo systemctl reload nginx
 ```
 
 ⚠️ Note: If you run into this error, `nginx.service is not active, cannot reload`
+
 - you can start `nginx` and check status. If the status is `Active: active (running)`, you are good to skip the rest of warning steps
 
 ```
@@ -435,7 +438,7 @@ sudo systemctl start nginx
 sudo systemctl status nginx
 ```
 
-- If you run into a new error like `Job for nginx.service failed because the control process exited with error code` when startting `nginx`, that means there are other running processes listening to ports `80 or 443`. 
+- If you run into a new error like `Job for nginx.service failed because the control process exited with error code` when startting `nginx`, that means there are other running processes listening to ports `80 or 443`.
 
 - Try to find out those running processes first by running
 
@@ -447,6 +450,7 @@ sudo systemctl status nginx
 
 - If all those process are `Nginx`, just go to next step. Else (they are not `Nginx`), running `sudo kill -9 <PID>` cli to kill them manually
 - After all running process of ports `80 or 443` is only `Nginx`, we can running `sudo systemctl status nginx` cli to check `Nginx status`. If it is `Active: failed` status, try to kill all Nginx processes, restart it and check status again by running clis below. The status should be `Active: active (running)` now.
+
   ```
   sudo pkill nginx
   sudo systemctl start nginx
@@ -468,7 +472,8 @@ docker compose -f docker-compose.yml up -d
 - Now, Your domain has a free SSL certificate, and you can access your app via `https` (eg. `https://appName-yourName.duckdns.org`)
 
 TODO: test it
-- 🚨 Important: We need to set up `Nginx` in VM will auto-restart if VM or system reboot 
+
+- 🚨 Important: We need to set up `Nginx` in VM will auto-restart if VM or system reboot
   - 1st cli is to turn on the existing systemd service file of `Nginx`, so that `Nginx` auto-restart when VM or system reboots. (systemd service file of `Nginx` is created when installing `Nginx`, but it is not enabled automatically.)
   - 2nd cli is to verify the `Nginx` systemd service is active or not.
 
@@ -477,17 +482,16 @@ sudo systemctl enable nginx
 systemctl is-enabled nginx
 ```
 
-  - Test restart by simulating a VM reboot and check `Nginx` and `Docker containers` status after the VM boots
+- Test restart by simulating a VM reboot and check `Nginx` and `Docker containers` status after the VM boots
 
-  ```
-  sudo reboot
-  sudo systemctl status nginx
-  docker ps
-  ```
+```
+sudo reboot
+sudo systemctl status nginx
+docker ps
+```
 
-
-TODO: fix the unhealthy container issue in go backend by checking the health file path after using ko to build image
-TODO: fix unhealthy pod issue in cluster by checking the
+TODO: fix the unhealthy container issue in go backend
+TODO: fix unhealthy pod issue in cluster by checking the all Deployment.ymal files
 
 ## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with Docker Swarm in GCE VM (GCP)</a>
 
