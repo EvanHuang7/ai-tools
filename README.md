@@ -195,7 +195,7 @@ python manage.py runserver 8088
 
 Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
 
-## <a name="deploy-app-in-gce">☁️ Free: Deploy App with Docker Compose in GCE VM (GCP)</a>
+## <a name="deploy-app-in-gce">☁️ Free: Deploy App with Docker Compose 🐳 in GCE VM (GCP)</a>
 
 📌 If your VM has enough CPU and Memory, it would be best to deploy this microservices project as K8s cluster using k3s or as docker containers using Docker swarm, so that we can taking advantanges of these k8s cluster orchestrator or container orchestrator. The pros to use orchestrator instead of Docker compose:
 
@@ -346,7 +346,7 @@ docker ps
 
 Get a free subdomain in **Duck DNS** and bind it to your VM static external IP address
 
-🚨 Important: if you own a custom domain, you can easily bind your domain with VM static external IP address with a free SSL certificate by using `Cloudflare`, so that we don't need set up SSL certificate by your own and don't need to keep running `Nginx` (use defualt `80` port) in VM to serve your web app over HTTPS using that SSL certificate, which allow you to use `- 80:8080` as the `ports` of `frontend` in `docker-compose.yml` file because you don't need `Nginx` to proxy incoming request traffic to `frontend` container anymore.
+🚨 Important: if you own a custom domain, you can easily bind your domain with VM static external IP address with a free SSL certificate by using `Cloudflare`, so that we don't need set up SSL certificate by your own and don't need to keep running `Nginx` (use defualt `80` port for `HTTP`, `443` port for `HTTPS`) in VM to serve your web app over HTTPS using that SSL certificate, which allow you to use `- 80:8080` as the `ports` of `frontend` in `docker-compose.yml` file because you don't need `Nginx` to proxy incoming request traffic to `frontend` container anymore.
 
 - Go to Duck DNS page (`https://www.duckdns.org/`)
 - Enter your desired **sub domain** name (eg. `appName-yourName`) in **domains** section
@@ -500,7 +500,7 @@ docker ps
 
 TODO: fix unhealthy pod issue in cluster by checking the all Deployment.ymal files
 
-## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with Docker Swarm in GCE VM (GCP)</a>
+## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with 🐳🐳 Docker Swarm 🐳🐳 in GCE VM (GCP)</a>
 
 Run apps in containers with Docker Swarm (Use more VM CPU and memory than docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
 
@@ -526,7 +526,39 @@ docker rmi -f $(docker images -q)
 docker system df
 ```
 
-- next
+- Enable Docker Swarm mode in Docker
+
+```
+docker swarm init
+```
+
+- Create a folder
+
+```
+mkdir dockerSwarmFolder
+cd dockerSwarmFolder
+```
+
+- Add `docker-swarm.yml` file to folder by copying the file content in local `docker-swarm.yml` file, run below command line and paste content and press `control + X`, `Y`, and `Enter` keys
+
+```
+nano docker-swarm.yml
+```
+
+- Deploy stack of app containers with docker-swarm file
+
+```
+docker stack deploy -c docker-swarm.yml ai-tools
+```
+
+- List all Docker services status and view the nodes in the swarm
+
+```
+docker service ls
+docker node ls
+```
+
+5. Make sure Docker Swarm and the stack of app containers inside Docker Swarm auto-restart after VM reboots
 
 ## <a name="deploy-app-in-gke">☁️ No-Free: Deploy App as K8s Cluster in GKE (GCP)</a>
 

@@ -5,6 +5,8 @@ services:
     image: evanhuang7/ai-tools-frontend:developing
     networks:
       - ai-tools
+    # TODO: may need to enable it
+    # init: true
     ports:
       - 8080:8080
     restart: unless-stopped
@@ -22,9 +24,9 @@ services:
     read_only: true
     networks:
       - ai-tools
+    init: true
     ports:
       - 3000:3000
-    init: true
     # TODO: Remember to remove it after usage to aviod store
     # secrets on Git
     environment:

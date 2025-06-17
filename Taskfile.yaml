@@ -188,3 +188,29 @@ tasks:
     desc: "Turn off all app containers"
     cmds:
       - docker compose -f docker-compose.yml down
+
+  ######### Docker Swarm #########
+  swarm-init:
+    desc: "Enable Docker Swarm mode in Docker"
+    cmds:
+      - docker swarm init
+
+  swarm-deploy-stack:
+    desc: "Deploy stack of app containers with docker-swarm file"
+    cmds:
+      - docker stack deploy -c docker-swarm.yml ai-tools
+
+  swarm-ls:
+    desc: "List all Docker services status"
+    cmds:
+      - docker service ls
+
+  swarm-node-ls:
+    desc: "View the node in the swarm"
+    cmds:
+      - docker node ls
+
+  swarm-remove-stack:
+    desc: "Remove stack of app containers"
+    cmds:
+      - docker stack rm ai-tools
