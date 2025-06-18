@@ -47,6 +47,9 @@ app.get("/users", async (_, res) => {
   }
 });
 
+// We omit the "host" argument between "port" and "()",
+// so the host is default to be '0.0.0.0', which means
+// node server listens on all interfaces (external + localhost).
 const server = app.listen(port, () => {
   console.log(`Node server listening on port ${port}`);
 });

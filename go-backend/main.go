@@ -45,5 +45,7 @@ func main() {
 		port = "8000"
 	}
 
-	r.Run("0.0.0.0:" + port) // explicitly bind to all interfaces
+	// Host is set to '0.0.0.0', so go server 
+	// listens on all interfaces (external + localhost).
+	r.Run("0.0.0.0:" + port)
 }
