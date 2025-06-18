@@ -48,5 +48,7 @@ USER python_user
 EXPOSE 8088
 
 # When the container starts, Docker executes this CMD to start python server.
+# The host is '0.0.0.0', so the app running in container also listens
+# on all interfaces (both external and localhost of physical machine or VM or container). 
 CMD ["flask", "run", "--host=0.0.0.0", "--port=8088"]
     

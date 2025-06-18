@@ -34,4 +34,6 @@ COPY --chown=node:node ./src/ .
 EXPOSE 3000
 
 # When the container starts, Docker executes this CMD to start node server.
+# The host is default to be '0.0.0.0' in "index.js" file, so 
+# the app running in container also listens on all interfaces (both external and localhost of physical machine or VM or container). 
 CMD [ "node", "index.js" ]

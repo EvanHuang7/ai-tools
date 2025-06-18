@@ -72,5 +72,8 @@ USER nonroot
 EXPOSE 8000
 
 # "go-backend" in this CMD is a executable binary file.
+# The host is set to be '0.0.0.0' in "main.go" file, and "main.go" file 
+# is part of "go-backend" binary, so the app running in container also
+# listens on all interfaces (both external and localhost of physical machine or VM or container). 
 # When the container starts, Docker executes this CMD to start go server.
 CMD ["/go-backend"]
