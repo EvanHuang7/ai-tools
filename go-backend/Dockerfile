@@ -71,4 +71,6 @@ USER nonroot
 # Indicate expected port
 EXPOSE 8000
 
+# "go-backend" in this CMD is a executable binary file.
+# When the container starts, Docker executes this CMD to start go server.
 CMD ["/go-backend"]

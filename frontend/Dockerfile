@@ -19,6 +19,9 @@ COPY . .
 RUN npm run build
 
 # Use separate stage for deployable image
+# This base image inlcude `CMD ["nginx", "-g", "daemon off;"]` by default
+# So, when the container starts, it use this CMD to runs Nginx in the foreground.
+# The build files of React app served by Nginx, so the app runs when Nginx starts.
 FROM nginxinc/nginx-unprivileged:1.23-alpine-perl
 
 # Use COPY --link to avoid breaking cache if we change the second stage base image
@@ -27,4 +30,5 @@ COPY --link nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --link --from=build usr/src/app/dist/ /usr/share/nginx/html
 
+# EXPOSE port here is just a documation of image, not real expose action
 EXPOSE 8080

@@ -47,5 +47,6 @@ USER python_user
 
 EXPOSE 8088
 
+# When the container starts, Docker executes this CMD to start python server.
 CMD ["flask", "run", "--host=0.0.0.0", "--port=8088"]
     

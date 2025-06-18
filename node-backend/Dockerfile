@@ -33,4 +33,5 @@ COPY --chown=node:node ./src/ .
 # Indicate expected port
 EXPOSE 3000
 
+# When the container starts, Docker executes this CMD to start node server.
 CMD [ "node", "index.js" ]
