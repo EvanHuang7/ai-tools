@@ -306,7 +306,7 @@ docker compose -f docker-compose.yml up -d
 
   - ⚠️ Note: If you still can not access it with your VM external IP, you can try to access your app in 8080 port (eg. `http://35.209.142.39:8080`). If you still can not access it after the change, you can change the `ports` of `frontend` to be `- 80:8080` in `docker-compose.yml` file and redeploy the app containers to try again
 
-- 📌 Useful Docker clis to, turn down the containers, list running containers, list all containers (running + stopped), list Docker images on system, check details on a specific container
+- 📌 Useful Docker clis to, turn down the containers, list running containers, list all containers (running + stopped), list Docker images on system, check details on a specific container, check logs on a specific container
 
 ```
 docker compose -f docker-compose.yml down
@@ -314,6 +314,7 @@ docker ps
 docker ps -a
 docker images
 docker inspect <container_id_or_name>
+docker logs <container_id_or_name>
 ```
 
 TODO: Test it
@@ -561,7 +562,7 @@ docker service ls
 docker node ls
 ```
 
-⚠️ Warning: If your GCE VM is free `e2-micro` type, your app may becomes slower after deploying via Docker Swarm, compared to running the same containers with docker-compose.
+⚠️ Warning: If your GCE VM is free `e2-micro` type, your app may becomes **much slower** including accessing the web page and internal api calls after deploying via Docker Swarm, comparing to running the same containers with docker-compose.
 
 These are some reasones of extra latency introduced by Swarm architecture default by **comparing Docker Swarm and Docker Compose**:
 
@@ -579,11 +580,27 @@ These are some reasones of extra latency introduced by Swarm architecture defaul
   - Fastest path: direct, local TCP/IP traffic.
   - Above mechanism causes Low latency and minimal CPU/network overhead
 
-You can do the following change to improve
+You can do the following change to fix or improve:
 
--
+- 1st Recommanded: Switch back to use Docker Compose to deploy app if you are ok with
 
-5. Make sure Docker Swarm and the stack of app containers inside Docker Swarm auto-restart after VM reboots
+  - Deploy new app version with a few seconds of app downtime
+  - No plan to scale up VM/node number in future
+  - Handle sensative credentials or secrets by your own
+
+- 2nd Recommanded: Stop using Nginx in VM
+
+  - Stop running `Nginx` that was serving SSL and acting as a reverse proxy (proxy routing incoming traffic to frontend) in VM.
+  - Update `frontend` service in `docker-swarm` file to directly publish on port 80 inside the swarm.
+  - Redeploy app in Docker Swarm again.
+  - Now you can only access page with `http`, but the app latency issue would be fixed.
+  - You make your app to be accessed with `https` by buying a domain first, then easily creating a DNS record and setting up `SSL/TLS` to use `Flexiable encription mode` in CloudFlare.
+
+- Paid to upgrate your free VM to a higher machine type for getting more CPU and RAM
+
+TODO: Test it
+
+4. 🚨 Important: Make sure Docker Swarm and the stack of app containers inside Docker Swarm auto-restart after VM reboots
 
 ## <a name="deploy-app-in-gke">☁️ No-Free: Deploy App as K8s Cluster in GKE (GCP)</a>
 
