@@ -203,6 +203,8 @@ Open [http://localhost:5173/](http://localhost:5173/) in your browser to view th
 - Allow us to run containers in differeent hosts/nodes/VMs for better scalabity
 - Providee a way to handle sensative credentials or secrets
 
+Docker Compose deploys app as local containers without creating docker services.
+
 Follow these steps to deploy app using docker-compose file in GCE:
 
 1. Go to GCP Compute Engine page
@@ -503,9 +505,11 @@ TODO: fix unhealthy pod issue in cluster by checking the all Deployment.ymal fil
 
 ## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with 🐳🐳 Docker Swarm 🐳🐳 in GCE VM (GCP)</a>
 
-Run apps in containers with Docker Swarm (Use more VM CPU and memory than docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
+Deploy app as Docker services that manage tasks (containers) via Docker Swarm (Use more VM CPU and memory than docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
 
-⚠️ Note: make sure you finish previous `Deploy App with Docker Compose in GCE VM (GCP)` step first.
+🚨🚨 Important: make sure you finish previous `Deploy App with Docker Compose in GCE VM (GCP)` step first.
+
+1. Deploy app with Docker Swarm
 
 - Connect to VM in GCP console
 - Turn off all running containers first by running
@@ -562,6 +566,8 @@ docker service ls
 docker node ls
 ```
 
+2. App latency issue and solution after deploying app with Swarm
+
 ⚠️ Warning: If your GCE VM is free `e2-micro` type, your app may becomes **much slower** including accessing the web page and internal api calls after deploying via Docker Swarm, comparing to running the same containers with docker-compose.
 
 These are some reasones of extra latency introduced by Swarm architecture default by **comparing Docker Swarm and Docker Compose**:
@@ -585,22 +591,62 @@ You can do the following change to fix or improve:
 - 1st Recommanded: Switch back to use Docker Compose to deploy app if you are ok with
 
   - Deploy new app version with a few seconds of app downtime
-  - No plan to scale up VM/node number in future
+  - Unable to scale up VM/node number for Swarm in future
   - Handle sensative credentials or secrets by your own
 
 - 2nd Recommanded: Stop using Nginx in VM
 
-  - Stop running `Nginx` that was serving SSL and acting as a reverse proxy (proxy routing incoming traffic to frontend) in VM.
+  - Stop running `Nginx` that was serving SSL and acting as a reverse proxy (proxy routing incoming traffic to frontend) in VM. Also, make sure disable the `Nginx` entirely on VM reboot.
   - Update `frontend` service in `docker-swarm` file to directly publish on port 80 inside the swarm.
   - Redeploy app in Docker Swarm again.
   - Now you can only access page with `http`, but the app latency issue would be fixed.
-  - You make your app to be accessed with `https` by buying a domain first, then easily creating a DNS record and setting up `SSL/TLS` to use `Flexiable encription mode` in CloudFlare.
+  - You make your app to be accessed with `https` by buying a domain from some domain provider (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, then easily creating a DNS record and setting up `SSL/TLS` to use `Flexiable encription mode` in CloudFlare.
 
 - Paid to upgrate your free VM to a higher machine type for getting more CPU and RAM
+
+3. Store sensative credentail and secrets in a Secret file
+
+-
 
 TODO: Test it
 
 4. 🚨 Important: Make sure Docker Swarm and the stack of app containers inside Docker Swarm auto-restart after VM reboots
+
+5. App network routing explanation in Docker Swarm
+
+The case of running Nginx in VM:
+
+- Running Nginx in VM will researve as a proxy for serving SSL and all incoming requests from app user's browser by using default `http 80 port` and `https 443 port`
+
+  - We configed the `Nginx config` file with `proxy_pass http://localhost:8080` to forward all incoming traffic of default ports to `http://localhost:8080` of VM
+
+- We defined `frontend` as service in `docker-compose.yml` and `docker-swarm.yml` files
+  - publised ports `8080:8080`, so that Docker maps VM’s port 8080 to container’s port 8080 and only handles **forwarding** traffic from VM’s port 8080 → container’s port 8080.
+  -
+  - React app inside container listens on 0.0.0.0:8080
+  - Docker publishes port with 80:8080
+  - VM firewall and cloud firewall allow inbound traffic on port 80
+  - No other service conflicts on port 80 on the VM
+
+The case of NO Nginx in VM:
+
+- We defined `frontend` as a service in `docker-compose.yml` and `docker-swarm.yml` files
+
+  - The step of exposing `frontend` app from internal container to external of container or allowing VM to access `frontend` app in container:
+    - We set `server { listen 8080; ...}` in the `nginx.conf` file. `Nginx` will bind host to all interfaces `(0.0.0.0)` by default if we don't sepcify a host explicitly.
+    - `nginx.conf` file is used as config file for the base image,`nginxinc/nginx-unprivileged:1.23-alpine-perl`, of `frontend` container image.
+    - So, `frontend` app is running on port `8080` of container and listens on `0.0.0.0:8080`.
+    - As a result, VM has access to `frontend` app inside container.
+  - The step of VM accesses the running `frontend` app inside container
+    - We set the `ports` of `frontend` service to be `80:8080` in `docker-compose.yml` and `docker-swarm.yml` files.
+    - Docker publishes port with `80:8080`, so that Docker maps VM’s `default http port 80` to `frontend` service container’s port `8080`.
+    - As a result, Docker handles **forwarding** traffic from VM’s default port 80 → `frontend` service container’s port 8080.
+  - The step of users access `frontend` app
+    - In internet, all app users access VM by entering VM's public external IP with `http port 80` by default (eg. `http://172.18.0.2`).
+    - The app user's request to VM's port 80 will be forwarded by Docker to `frontend` service container’s port `8080`.
+    - The `frontend` service container’s port `8080` is running `frontend` app, so user can acceess the running `frontend` app now.
+    - Requirment: The firwall of VPC network that VM lives in allows inbound traffic on http port 80
+    - Requirment: No other service conflicts on port 80 on the VM
 
 ## <a name="deploy-app-in-gke">☁️ No-Free: Deploy App as K8s Cluster in GKE (GCP)</a>
 

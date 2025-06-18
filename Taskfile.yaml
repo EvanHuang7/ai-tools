@@ -196,12 +196,12 @@ tasks:
       - docker swarm init
 
   swarm-deploy-stack:
-    desc: "Deploy stack of app containers with docker-swarm file"
+    desc: "Deploy app as Docker services with docker-swarm file"
     cmds:
       - docker stack deploy -c docker-swarm.yml ai-tools
 
   swarm-remove-stack:
-    desc: "Remove stack of app containers"
+    desc: "Remove Docker Swarm services"
     cmds:
       - docker stack rm ai-tools
 
