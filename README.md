@@ -612,21 +612,39 @@ TODO: Test it
 
 4. 🚨 Important: Make sure Docker Swarm and the stack of app containers inside Docker Swarm auto-restart after VM reboots
 
-5. App network routing explanation in Docker Swarm
+TODO: move to Docker compose section?
+
+5. App network routing explanation in 1 node Docker Swarm
 
 The case of running Nginx in VM:
 
-- Running Nginx in VM will researve as a proxy for serving SSL and all incoming requests from app user's browser by using default `http 80 port` and `https 443 port`
-
-  - We configed the `Nginx config` file with `proxy_pass http://localhost:8080` to forward all incoming traffic of default ports to `http://localhost:8080` of VM
-
-- We defined `frontend` as service in `docker-compose.yml` and `docker-swarm.yml` files
-  - publised ports `8080:8080`, so that Docker maps VM’s port 8080 to container’s port 8080 and only handles **forwarding** traffic from VM’s port 8080 → container’s port 8080.
-  -
-  - React app inside container listens on 0.0.0.0:8080
-  - Docker publishes port with 80:8080
-  - VM firewall and cloud firewall allow inbound traffic on port 80
-  - No other service conflicts on port 80 on the VM
+- Default behaviour of running `Nginx` after installation.
+  - When you installed and run `Nginx` in VM, it does bind to `0.0.0.0` by default, which means it listens on all network interfaces — public and private IPs of your VM.
+  - When running `Nginx`, it uses default `port 80 (HTTP)` and default `443 (HTTPS)` of VM by default.
+  - We configed our VM to get a SSL certicate in `Nginx`.
+  - Running Nginx in VM serves a SSL certicate, which allows user to access VM by `https`.
+  - So, when all app users access VM by entering VM's public external IP with `http port 80` (eg. `http://172.18.0.2`) or `https port 443` (eg. `https://172.18.0.2`) by default.
+  - The app users would access the `Nginx` app.
+- The step to use `Nginx` in VM as a proxy to forward all incoming requests of VM
+  - We configed the `Nginx config` file in VM with `proxy_pass http://localhost:8080`.
+  - This config would let `Nginx` forward all of its incoming traffic (default `http 80 port` and `https 443 port`) to `http://localhost:8080` of VM.
+- The step of accessing `frontend` app
+  - 1st step of exposing `frontend` app from internal container to external of container or allowing VM to access `frontend` app in container:
+    - We set `server { listen 8080; ...}` in the `nginx.conf` file. `Nginx` will bind host to all interfaces `(0.0.0.0)` by default if we don't sepcify a host explicitly.
+    - `nginx.conf` file is used as config file for the base image,`nginxinc/nginx-unprivileged:1.23-alpine-perl`, of `frontend` container image.
+    - So, `frontend` app is running on port `8080` of container and listens on `0.0.0.0:8080`.
+    - As a result, VM has access to `frontend` app inside container.
+  - 2nd step of VM accesses the running `frontend` app inside container
+    - We set the `ports` of `frontend` service to be `8080:8080` in `docker-compose.yml` and `docker-swarm.yml` files.
+    - Docker publishes port with `8080:8080`, so that Docker maps VM’s `port 8080` to `frontend` service container’s port `8080`.
+    - As a result, Docker handles **forwarding** traffic from VM’s port 8080 → `frontend` service container’s port 8080.
+  - 3rd step of users access `frontend` app
+    - In internet, all app users access VM by entering VM's public external IP with `http port 80` or with `https port 443` by default (eg. `http://172.18.0.2` or `https://172.18.0.2`).
+    - The app users would access the `Nginx` app first, and `Nginx` app would forward it's incoming traffic to `http://localhost:8080` of VM.
+    - The incoming traffic of `http://localhost:8080` of VM would be forwarded by Docker to `frontend` service container’s port `8080`.
+    - The `frontend` service container’s port `8080` is running `frontend` app, so user can acceess the running `frontend` app now.
+    - Requirment: The firwall of VPC network that VM lives in allows inbound traffic on http port 80 and hppts port 443
+    - Requirment: No other service conflicts on port 80 or port 443 on the VM
 
 The case of NO Nginx in VM:
 
