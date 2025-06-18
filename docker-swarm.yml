@@ -6,7 +6,10 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      # The rolling update config
       update_config:
+        # It allow swarm start the new container before terminating
+        # the old container
         order: start-first
     networks:
       - ai-tools
@@ -48,10 +51,12 @@ services:
     ports:
       - 3000:3000
     init: true
-    # TODO: Remember to remove it after usage to aviod store
-    # secrets on Git
     environment:
-      - DATABASE_URL=postgresql://postgres.otuiikhbcyitlgoknrii:Ab12345678!@aws-0-ca-central-1.pooler.supabase.com:6543/postgres
+      - DATABASE_URL_FILE=/run/secrets/supabase-postgres-database-url
+    # If service declares the secret, the raw bytes secret kept within the Swarm manager nodes will be available
+    # inside the container as a file at: "/run/secrets/secret-name"
+    secrets:
+      - supabase-postgres-database-url
     healthcheck:
       # Use the custom "healthcheck.js" file to test container
       # health because "curl" is not installed in node20 base image
@@ -71,10 +76,10 @@ services:
     networks:
       - ai-tools
     init: true
-    # TODO: Remember to remove it after usage to aviod store
-    # secrets on Git
     environment:
-      - DATABASE_URL=postgresql://neondb_owner:npg_chuXl7Qo2CGv@ep-rapid-rain-a4ztbwzh-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
+      - DATABASE_URL_FILE=/run/secrets/neon-postgres-database-url
+    secrets:
+      - neon-postgres-database-url
     ports:
       - 8000:8000
     healthcheck:
@@ -96,11 +101,12 @@ services:
     networks:
       - ai-tools
     init: true
-    # TODO: Remember to remove it after usage to aviod store
-    # secrets on Git
     environment:
-      - REDIS_URL=rediss://default:AaXyAAIjcDFkYWFhNzEzMmE3MmU0MzkyOWQ3NTA4ZTllMmI5Mjk5ZnAxMA@enough-lobster-42482.upstash.io:6379
-      - MONGODB_URL=mongodb+srv://mrxiaohui204:eZG55LdPqpWb62yO@cluster0.bjhjsnn.mongodb.net/ai_tools_db?retryWrites=true&w=majority&appName=Cluster0
+      - REDIS_URL_FILE=/run/secrets/redis-url
+      - MONGODB_URL_FILE=/run/secrets/mongodb-url
+    secrets:
+      - redis-url
+      - mongodb-url
     ports:
       - 8088:8088
     healthcheck:
@@ -115,3 +121,15 @@ services:
 networks:
   # The default network driver for Swarm Services is "overlay"
   ai-tools:
+
+secrets:
+  supabase-postgres-database-url:
+    # We create this secret by ourselves and Docker Swarm doesn't need
+    # to manage it as part of this stack
+    external: true
+  neon-postgres-database-url:
+    external: true
+  redis-url:
+    external: true
+  mongodb-url:
+    external: true
