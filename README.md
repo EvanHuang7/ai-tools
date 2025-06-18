@@ -553,13 +553,13 @@ nano docker-swarm.yml
 - Create docker secrets for Docker swarm services to consume first (Remember to replace your url string to real a url string)
 
 ```
-printf "your url" | docker secret create supabase-postgres-database-url -
+printf 'your url' | docker secret create supabase-postgres-database-url -
 
-printf "your url" | docker secret create neon-postgres-database-url -
+printf 'your url' | docker secret create neon-postgres-database-url -
 
-printf "your url" | docker secret create redis-url -
+printf 'your url' | docker secret create redis-url -
 
-printf "your url" | docker secret create mongodb-url -
+printf 'your url' | docker secret create mongodb-url -
 ```
 
 - Deploy stack of app containers with docker-swarm file
