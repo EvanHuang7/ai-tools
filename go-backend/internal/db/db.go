@@ -13,6 +13,8 @@ var DB *gorm.DB
 func Init() {
   databaseUrl := os.Getenv("DATABASE_URL")
 	if databaseUrl == "" {
+		// Read the secret from file Only if creating a docker secret 
+		// within Docker Swarm.
 		content, err := os.ReadFile(os.Getenv("DATABASE_URL_FILE"))
 		if err != nil {
 			log.Fatal(err)

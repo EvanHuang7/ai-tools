@@ -7,7 +7,9 @@ def get_env_var(key):
     val = os.getenv(key)
     if val:
         return val
-
+    
+    # Read the secret from file Only if creating a docker secret 
+	# within Docker Swarm.
     file_path = os.getenv(f"{key}_FILE")
     if file_path and os.path.exists(file_path):
         with open(file_path, 'r') as f:
