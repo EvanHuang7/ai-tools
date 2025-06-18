@@ -18,5 +18,5 @@ app = create_app()
 if __name__ == "__main__":
     # This allows running the app with "python run.py" as well.
     # The host is set to '0.0.0.0', so python server 
-    # listens on all interfaces (external + localhost).
+    # listens on all interfaces (both external and localhost of physical machine or VM or container).
     app.run(host="0.0.0.0", port=8088)

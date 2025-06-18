@@ -46,6 +46,6 @@ func main() {
 	}
 
 	// Host is set to '0.0.0.0', so go server 
-	// listens on all interfaces (external + localhost).
+	// listens on all interfaces (both external and localhost of physical machine or VM or container).
 	r.Run("0.0.0.0:" + port)
 }
