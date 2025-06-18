@@ -195,11 +195,13 @@ tasks:
     cmds:
       - docker swarm init
 
+  # Remember to create secrets before deploying app with Docker Swarm
   swarm-deploy-stack:
     desc: "Deploy app as Docker services with docker-swarm file"
     cmds:
       - docker stack deploy -c docker-swarm.yml ai-tools
 
+  # Remember to delete secrets after removing Docker Swarm services
   swarm-remove-stack:
     desc: "Remove Docker Swarm services"
     cmds:
@@ -219,3 +221,23 @@ tasks:
     desc: "View the node in the swarm"
     cmds:
       - docker node ls
+
+  # Remember to create secrets before deploying app with Docker Swarm
+  create-secrets:
+    desc: "Create secrets files"
+    cmds:
+      - printf "postgresql://postgres.otuiikhbcyitlgoknrii:Ab12345678!@aws-0-ca-central-1.pooler.supabase.com:6543/postgres" | docker secret create supabase-postgres-database-url -
+      - printf "postgresql://neondb_owner:npg_chuXl7Qo2CGv@ep-rapid-rain-a4ztbwzh-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require" | docker secret create neon-postgres-database-url -
+      - printf "rediss://default:AaXyAAIjcDFkYWFhNzEzMmE3MmU0MzkyOWQ3NTA4ZTllMmI5Mjk5ZnAxMA@enough-lobster-42482.upstash.io:6379" | docker secret create redis-url -
+      - printf "mongodb+srv://mrxiaohui204:eZG55LdPqpWb62yO@cluster0.bjhjsnn.mongodb.net/ai_tools_db?retryWrites=true&w=majority&appName=Cluster0" | docker secret create mongodb-url -
+
+  # Remember to delete secrets after removing Docker Swarm services
+  delete-secrets:
+    desc: "Delete all secrets files"
+    cmds:
+      - docker secret rm supabase-postgres-database-url neon-postgres-database-url redis-url mongodb-url
+
+  secrets-ls:
+    desc: "List all secrets"
+    cmds:
+      - docker secret ls
