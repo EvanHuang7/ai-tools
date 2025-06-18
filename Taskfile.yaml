@@ -227,6 +227,9 @@ tasks:
     desc: "Create secrets files"
     # TODO: Remember to remove these secrets value after usage
     # to aviod store secrets on Git
+
+    # The secrets will be stored as raw bytes and
+    # kept within the Swarm manager nodes
     cmds:
       - printf "postgresql://postgres.otuiikhbcyitlgoknrii:Ab12345678!@aws-0-ca-central-1.pooler.supabase.com:6543/postgres" | docker secret create supabase-postgres-database-url -
       - printf "postgresql://neondb_owner:npg_chuXl7Qo2CGv@ep-rapid-rain-a4ztbwzh-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require" | docker secret create neon-postgres-database-url -

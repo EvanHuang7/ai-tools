@@ -323,7 +323,7 @@ TODO: Test it
 
 5. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if VM reboots
 
-- Set the Docker daemon start automatically at system boot.
+- Set the Docker daemon start automatically at VM reboots.
 
   - 1st cli is to turn on the existing systemd service file of `Docker`, so that `Docker` auto-restart when VM or system reboots. (systemd service file of `Docker` is created when installing `Docker`, but it is not enabled automatically.)
   - 2nd cli is to verify the `Docker` systemd service is active or not.
@@ -550,6 +550,18 @@ cd dockerSwarmFolder
 nano docker-swarm.yml
 ```
 
+- Create docker secrets for Docker swarm services to consume first (Remember to replace your url string to real a url string)
+
+```
+printf "your url" | docker secret create supabase-postgres-database-url -
+
+printf "your url" | docker secret create neon-postgres-database-url -
+
+printf "your url" | docker secret create redis-url -
+
+printf "your url" | docker secret create mongodb-url -
+```
+
 - Deploy stack of app containers with docker-swarm file
 
 ```
@@ -604,13 +616,24 @@ You can do the following change to fix or improve:
 
 - Paid to upgrate your free VM to a higher machine type for getting more CPU and RAM
 
-3. Store sensative credentail and secrets in a Secret file
-
--
-
 TODO: Test it
 
-4. 🚨 Important: Make sure Docker Swarm and the stack of app containers inside Docker Swarm auto-restart after VM reboots
+4. 🚨 Important: Make sure Docker Swarm, the Docker Swarm Services running apps inside Docker Swarm and Docker Swarm secrets auto-restart after **VM reboots**.
+
+- Set auto-restart for Docker Swarm and Docker Swarm Services running apps inside Docker Swarm.
+
+  - If you **DIDN'T** set the Docker daemon start automatically at VM reboot in previous **Deploy App with Docker Compose in GCE VM** section, just set it here by running
+    ```
+    sudo systemctl enable docker
+    systemctl is-enabled docker
+    ```
+  - The Docker Swarm and the Docker Swarm Services running apps will auto-restart too after VM reboots because
+    - Swarm stores service definitions and desired state in the `Raft store` under `/var/lib/docker/swarm/` on disk.
+    - When Docker Engine restarts, Swarm reboots as well, and any services not currently running will be re-deployed automatically by the Swarm manager with Swarm Services.
+
+- Docker Swarm secrets persist even if the **Swarm manager node restarts or the VM reboots** because Swarm stores secrets in the `Raft log` that is Persisted on disk in `/var/lib/docker/swarm/`.
+  - But, the secrets used by Swarm Services would be deleted if there is only **1** manager node and **that gets destroyed**.
+  - So, We need to recreate the secrets if we want to start swarm mode again after leaving swarm mode by running `docker swarm leave --force` cli that would delete all stored secrets.
 
 TODO: move to Docker compose section?
 
@@ -686,8 +709,8 @@ TODO: 🚨 Test it, It seems like we don't need to publish the external port for
   - `go-backend` app running inside `go-backend` service container is listening on `0.0.0.0:8000`, so it accepts the request.
   - Note: if `go-backend` app is not set to listen on all network interfaces, `0.0.0.0`, app will reject the request.
   - Note: We should use `http://docker service name:port/` instead of `http://localhost:8000/` because frontend app is running on different containers from all other backend apps.
-  - Same thing for `proxy_pass http://node-backend:3000/`
-  - Same thing for `proxy_pass http://python-backend:8088/`
+  - Same logic for `proxy_pass http://node-backend:3000/`
+  - Same logic for `proxy_pass http://python-backend:8088/`
 
 ## <a name="deploy-app-in-gke">☁️ No-Free: Deploy App as K8s Cluster in GKE (GCP)</a>
 
