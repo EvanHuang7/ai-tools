@@ -18,6 +18,17 @@ spec:
       containers:
         - name: go-backend
           image: evanhuang7/ai-tools-go-backend:developing
+          # K8s will always pull the image from Docker Hub, every time
+          # a pod starts even if that the image with this tag already exists on the node.
+          # If the tag is ":latest" and "imagePullPolicy" is not set,
+          # K8s defaults to use "Always".
+          # If the tag is custom like ":developing" or ":v1.0",
+          # the default is "IfNotPresent".
+          # NOTE: You have to manually pruned old images in your host
+          # if running Kind Cluster locally and use "Always" option.
+          # In GKE, the node’s kubelet includes automatic image garbage collection
+          # so the kubelet will auto clean up unused images for you.
+          imagePullPolicy: Always
           env:
             - name: PORT
               value: "8000"
@@ -25,7 +36,8 @@ spec:
             - secretRef:
                 name: go-backend-database-url
           ports:
-            - containerPort: 8000
+            - name: http
+              containerPort: 8000
               protocol: TCP
           livenessProbe:
             httpGet:
