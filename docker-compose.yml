@@ -65,7 +65,7 @@ services:
     healthcheck:
       # Use the custom "healthcheck.go" file to test container
       # health because "curl" is not installed in base image of ko
-      test: ["CMD", "/healthcheck/healthcheck"]
+      test: ["CMD", "/healthcheck"]
       interval: 30s
       timeout: 5s
       retries: 3

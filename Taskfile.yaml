@@ -207,6 +207,7 @@ tasks:
     cmds:
       - docker stack rm ai-tools
 
+  # Automatically delete secrets because manager node is deleted
   swarm-stop:
     desc: "Disable Docker Swarm mode"
     cmds:

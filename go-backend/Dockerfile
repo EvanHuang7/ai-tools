@@ -36,7 +36,7 @@ COPY . .
 RUN go build \
   -ldflags="-linkmode external -extldflags -static" \
   -tags netgo \
-  -o /app/healthcheck \
+  -o healthcheck \
   ./healthcheck/healthcheck.go
 
 # Compile application during build rather than at runtime
@@ -59,7 +59,7 @@ COPY --from=build-production /etc/passwd /etc/passwd
 
 # Copy the healthcheck binary from the build stage into healthcheck folder
 # Start with "/", which is treated as an absolute path inside the container.
-COPY --from=build-production /app/healthcheck /healthcheck
+COPY --from=build-production /app/healthcheck/healthcheck healthcheck
 
 # Copy the app binary from the build stage
 # Not Start with "/", which is treated as a relative path inside the current WORKDIR
