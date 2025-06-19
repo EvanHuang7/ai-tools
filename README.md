@@ -758,9 +758,9 @@ task gcp:05-create-subnet
 task gcp:06-create-cluster
 ```
 
-🚨 Important: You may encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error beacause The `Google Cloud SDK` installed in Devbox (via devbox.json packages) does not include the `gke-gcloud-auth-plugin` binary by default. It's a minimal version. Fixed the issue to allow you interact with your GKE cluster in **host** instead in **project devbox** by
+🚨 Important: You may encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error beacause The `Google Cloud SDK` installed in Devbox (via devbox.json packages) does not include the `gke-gcloud-auth-plugin` binary by default. It's a minimal version. Fixed the issue by:
 
-- Follow `https://cloud.google.com/sdk/docs/install` to install **google cloud sdk** into your **host** instead of project devbox
+- Follow `https://cloud.google.com/sdk/docs/install` to install **google cloud sdk** into your **host**.
 - Install `gke-gcloud-auth-plugin` in your host by running
 
 ```
@@ -779,6 +779,8 @@ kubectl config view --raw
 ```
 kubectl get nodes
 ```
+
+- Re-open the project again and run `devbox shell` cli to get into the devbox isolated environment, you can use `kubectl` on your **project devbox** to interact with the GKE cluster now.
 
 3. Deploy app
 
