@@ -39,6 +39,16 @@ spec:
             - name: http
               containerPort: 8088
               protocol: TCP
+          # We add startupProbe for python app because this app starts up a bit
+          # slowly after container starts. K8s will pause the liveness and
+          # readiness probes until the startup probe succeeds.
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: 8088
+            initialDelaySeconds: 0 # Start checking immediately after container starts
+            periodSeconds: 5 # Check every 5 seconds
+            failureThreshold: 12 # Give it up to 12 tries (12 x 5s = 60s) to succeed
           livenessProbe:
             httpGet:
               path: /ping
