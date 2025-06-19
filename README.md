@@ -758,7 +758,9 @@ task gcp:05-create-subnet
 task gcp:06-create-cluster
 ```
 
-🚨 Important: You may encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error beacause The `Google Cloud SDK` installed in Devbox (via devbox.json packages) does not include the `gke-gcloud-auth-plugin` binary by default. It's a minimal version. Fixed the issue by:
+🚨 Important: If you did not have `google-cloud-sdk` and `gke-gcloud-auth-plugin` installed in the home directory of your host, you may encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error beacause The `Google Cloud SDK` installed in Devbox (via devbox.json packages) does not include the `gke-gcloud-auth-plugin` binary by default. It's a minimal version. Fixed the issue by choosing one option:
+
+1st Recommanded:
 
 - Follow `https://cloud.google.com/sdk/docs/install` to install **google cloud sdk** into your **host**.
 - Install `gke-gcloud-auth-plugin` in your host by running
@@ -781,6 +783,18 @@ kubectl get nodes
 ```
 
 - Re-open the project again and run `devbox shell` cli to get into the devbox isolated environment, you can use `kubectl` on your **project devbox** to interact with the GKE cluster now.
+
+2nd option:
+
+- Change the `google-cloud-sdk@latest` package to `path:gcloud#google-cloud-sdk` in local `devbox.json` file, which would change the devbox to use the "google-cloud-sdk" in project `gcloud` folder that include `gke-gcloud-auth-plugin`.
+
+- Re-install devbox packages again.
+
+```
+devbox install
+```
+
+- You can use `kubectl` on your **project devbox** to interact with the GKE cluster now.
 
 3. Deploy app
 
