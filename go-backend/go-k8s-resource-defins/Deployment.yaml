@@ -28,6 +28,7 @@ spec:
           ports:
             - containerPort: 8000
               protocol: TCP
+          # Add livenessProbe for all deployments
           readinessProbe:
             httpGet:
               path: /ping

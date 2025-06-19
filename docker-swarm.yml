@@ -48,8 +48,10 @@ services:
         order: start-first
     networks:
       - ai-tools
-    ports:
-      - 3000:3000
+
+    # We don't publish ports for all backend services, which only allows
+    # frontend service to access all backend services
+
     init: true
     environment:
       - DATABASE_URL_FILE=/run/secrets/supabase-postgres-database-url
@@ -80,8 +82,6 @@ services:
       - DATABASE_URL_FILE=/run/secrets/neon-postgres-database-url
     secrets:
       - neon-postgres-database-url
-    ports:
-      - 8000:8000
     healthcheck:
       # Use the custom "healthcheck.go" file to test container
       # health because "curl" is not installed in base image of ko
@@ -107,8 +107,6 @@ services:
     secrets:
       - redis-url
       - mongodb-url
-    ports:
-      - 8088:8088
     healthcheck:
       # Use the custom "healthcheck.py" file to test container
       # health because "curl" is not installed in python3.12 base image
