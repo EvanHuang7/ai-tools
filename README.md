@@ -321,7 +321,7 @@ docker logs <container_id_or_name>
 
 TODO: Test it
 
-5. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if VM reboots
+5. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if **VM reboots**
 
 - Set the Docker daemon start automatically at VM reboots.
 
@@ -484,7 +484,7 @@ docker compose -f docker-compose.yml up -d
 
 TODO: Test it
 
-- 🚨 Important: We need to set up `Nginx` in VM will auto-restart if VM or system reboot
+- 🚨 Important: We need to set up `Nginx` in VM will auto-restart if **VM or system reboots**
   - 1st cli is to turn on the existing systemd service file of `Nginx`, so that `Nginx` auto-restart when VM or system reboots. (systemd service file of `Nginx` is created when installing `Nginx`, but it is not enabled automatically.)
   - 2nd cli is to verify the `Nginx` systemd service is active or not.
 
@@ -698,8 +698,6 @@ The case of NO Nginx in VM:
     - Requirment: No other service conflicts on port 80 on the VM
 
 52. The network routing between frontend app and backend apps
-
-TODO: 🚨 Test it, It seems like we don't need to publish the external port for and backend service in `docker-compose` and `docker-swarm` file, but still need to sepeficy the port in `nginx.conf` file because backend app in container are still listening to thesee ports.
 
 - We set `proxy_pass` in the `nginx.conf` file. `Nginx` forward frontend app's traffic to the destination we specify
   - set `proxy_pass http://go-backend:8000/`, to forward all `/api/go/` api calls to the `8000` port of `go-backend`.
