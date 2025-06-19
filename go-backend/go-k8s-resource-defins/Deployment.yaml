@@ -17,7 +17,6 @@ spec:
     spec:
       containers:
         - name: go-backend
-          # Remeber to change to your own Docker hub repo
           image: evanhuang7/ai-tools-go-backend:developing
           env:
             - name: PORT
@@ -28,11 +27,22 @@ spec:
           ports:
             - containerPort: 8000
               protocol: TCP
-          # Add livenessProbe for all deployments
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8000
+            initialDelaySeconds: 10 # Start checking after container starts running 10s
+            periodSeconds: 20 # Check every 20s
+            timeoutSeconds: 2 # Fail if API call timeout after 2s
+            failureThreshold: 3 # If 3 checks in a row fail, restart the container
           readinessProbe:
             httpGet:
               path: /ping
               port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
           resources:
             limits:
               memory: "120Mi"

@@ -715,8 +715,7 @@ The case of NO Nginx in VM:
 Follow these steps to deploy app in GKE:
 
 1. Go to GCP
-2. Create a free `e2-micro` VM in GCE
-3. Create GKE cluster
+2. 
 
 -
 
