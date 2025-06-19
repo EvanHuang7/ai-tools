@@ -5,7 +5,7 @@ vars:
   MONGODB_URL: ""
   # Use your own Docker hub username and repo name
   IMAGE_REPO: docker.io/evanhuang7/ai-tools-python-backend
-  IMAGE_TAG: developing-0.0.1
+  IMAGE_TAG: developing
 
 tasks:
   create-venv:

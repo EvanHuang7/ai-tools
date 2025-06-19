@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: python-backend
-          image: evanhuang7/ai-tools-python-backend:developing-0.0.1
+          image: evanhuang7/ai-tools-python-backend:developing
           # K8s will always pull the image from Docker Hub, every time
           # a pod starts even if that the image with this tag already exists on the node.
           # If the tag is ":latest" and "imagePullPolicy" is not set,

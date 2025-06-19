@@ -71,7 +71,7 @@ services:
       retries: 3
       start_period: 10s
   python-backend:
-    image: evanhuang7/ai-tools-python-backend:developing-0.0.1
+    image: evanhuang7/ai-tools-python-backend:developing
     read_only: true
     networks:
       - ai-tools
