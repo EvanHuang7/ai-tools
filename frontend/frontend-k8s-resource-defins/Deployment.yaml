@@ -68,6 +68,7 @@ spec:
           type: RuntimeDefault
       volumes:
         - configMap:
+            # The default mode 420 means standard read permissions
             defaultMode: 420
             name: nginx-conf
           name: nginx-conf

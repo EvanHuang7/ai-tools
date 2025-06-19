@@ -21,7 +21,6 @@
    - [⭐ Running the Project](#running-project)
 6. ☁️ [Free: Deploy App in GCE VM (GCP)](#deploy-app-in-gce)
 7. ☁️ [No-Free: Deploy App as K8s Cluster in GKE (GCP)](#deploy-app-in-gke)
-
 8. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
 9. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
 10. 👨‍💼 [About the Author](#about-the-author)
@@ -712,6 +711,8 @@ The case of NO Nginx in VM:
 
 ## <a name="deploy-app-in-gke">☁️ No-Free: Deploy App as K8s Cluster in GKE (GCP)</a>
 
+🚨🚨🚨 TODO: deploy a postgre database service via Helm chart in K8s cluster for learning purpose
+
 Follow these steps to deploy app in GKE:
 
 1. Switch to proejct isolated environment first
@@ -720,7 +721,7 @@ Follow these steps to deploy app in GKE:
 devbox shell
 ```
 
-2. Create a GKC cluster
+2. Set up `gcloud CLI` of **Google Cloud SDK** and create VPC and subnet
 
 - Authenticate and configure the gcloud CLI
   - Select `Re-initialize the configuration` for **Pick up configuration to use** or `Create a new configuration` if you have not initailize before
@@ -750,6 +751,8 @@ task gcp:04-create-vpc
 task gcp:05-create-subnet
 ```
 
+3. Create a GKC cluster
+
 - Update `GCP_PROJECT_ID` in local `Taskfile.yaml` file to be the google cloud project id you selected when setting up gcloud CLI authentication.
 
 - Create a **Standard** GKE cluster with `e2-standard-2` machine type and 2 worker nodes (VMs).
@@ -776,9 +779,12 @@ which gke-gcloud-auth-plugin
 kubectl config view --raw
 ```
 
-- Now, You can use `kubectl` on your **host** machine to interact with the GKE cluster you just created. Such as, view the cluster's worker nodes, and system pods
+- Now, You can use `kubectl` on your **host** machine to interact with the GKE cluster you just created.
+  - 1st cli is to check if GKE cluster in Kubernetes contexts and clusters. Please make sure you **are using GKE cluster** in `kubectx`.
+  - 2nd and 3rd clis are to view the current (GKE) cluster's worker nodes and system pods
 
 ```
+kubectx
 kubectl get nodes
 kubectl get pods -A
 ```
@@ -795,16 +801,98 @@ kubectl get pods -A
 devbox install
 ```
 
-- You can use `kubectl` on your **project devbox** to interact with the GKE cluster now. Such as, view the cluster's worker nodes, and system pods
+- You can use `kubectl` on your **project devbox** to interact with the GKE cluster now.
+  - 1st cli is to check if GKE cluster in Kubernetes contexts and clusters. Please make sure you **are using GKE cluster** in `kubectx`.
+  - 2nd and 3rd clis are to view the current (GKE) cluster's worker nodes and system pods
 
 ```
+kubectx
 kubectl get nodes
 kubectl get pods -A
 ```
 
-3. Deploy app to GKE cluster
+4. Create namespace and deploy Traefik ingress controller in GKE Cluster first
 
--
+- Create namespace
+
+  ```
+  task common:apply-namespace
+  ```
+
+- Deploy Traefik ingress controller with Load Balancer serivce
+
+  - 📌 Note: It will provision a Load Balancer with an ExternalIP assigned by Traefik default setting, so it will cause **Load Balancer and ExternalIP fee 💸💸** if you run it in **GKE of GCP**.
+
+  ```
+  task common:deploy-traefik
+  ```
+
+- Check all resources in traefik namespace
+
+  ```
+  kubectl get all -n traefik
+  ```
+
+- Apply the Traefik middleware to strip path prefix for all incoming requests by ingress controller
+
+  ```
+  task common:apply-traefik-middleware
+  ```
+
+5. Deploy all app services to GKE cluster
+
+🚨🚨 Important: If you didn't build container images of app services and push them to Docker hub yet, please finish it by following the `2nd step` of **⚙️ Run App in Kind Cluster Locally** section first.
+
+- Deploy go backend app
+
+  ```
+  task go-k8s-resource-defins:apply
+  ```
+
+- Deploy node backend app
+
+  ```
+  task node-k8s-resource-defins:apply
+  ```
+
+- Deploy python backend app
+
+  ```
+  task python-k8s-resource-defins:apply
+  ```
+
+- Deploy frontend app
+
+  ```
+  task frontend-k8s-resource-defins:apply
+  ```
+
+- Check pod and service in ai-tools namespace after deploying all app services
+
+  ```
+  kubectl get pods -n ai-tools
+  kubectl get svc
+  ```
+
+6. View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer by running:
+
+```
+kubectl get all -n traefik
+
+OR
+
+kubectl get svc -n traefik
+```
+
+- Useful kubectl clis for debug.
+
+  - Print the logs of pod
+  - Show the details of pod. You can view the liveness, Readiness and all conditions of pod
+
+  ```
+  kubectl logs -n ai-tools <pod-name>
+  kubectl describe pod -n ai-tools <pod-name>
+  ```
 
 ## <a name="set-up-different-app-environment">Set up different app environment (Demo and Prod)</a>
 
@@ -855,7 +943,7 @@ task python-backend:build-container-image-multi-arch
 task frontend:build-container-image-multi-arch
 ```
 
-3. Create a Kind cluster via Task command lines in `Taskfile.yaml` locally
+3. Create a Kind cluster locally
 
 - Generate Kind config file based on you file absolute path and create Kind cluster that is actually Docker containers in Docker Desktop VM locally
 
@@ -886,7 +974,7 @@ task frontend:build-container-image-multi-arch
 
 4. Create namespace and deploy Traefik ingress controller in Kind Cluster locally first
 
-- Make sure you are using Kind cluster by running:
+- Make sure you are currently using Kind cluster by running:
 
   ```
   kubectx
@@ -900,7 +988,7 @@ task frontend:build-container-image-multi-arch
 
 - Deploy Traefik ingress controller in Local Kind cluster with Load Balancer serivce
 
-  - 📌 Note: It will provision a Load Balancer by Traefik default setting, so it will cause **Load Balancer and ExternalIP fee** if you run it in **GKE of GCP**.
+  - 📌 Note: It will provision a Load Balancer with an ExternalIP assigned by Traefik default setting, so it will cause **Load Balancer and ExternalIP fee 💸💸** if you run it in **GKE of GCP**. But, it won't provision a real Load Balancer and an ExternalIP for local Kind cluster case, so you won't be charged for this case.
 
   ```
   task common:deploy-traefik
@@ -962,6 +1050,9 @@ kubectl get svc -n traefik
 ```
 
 - Useful kubectl clis for debug
+
+  - Print the logs of pod
+  - Show the details of pod. You can view the liveness, Readiness and all conditions of pod
 
   ```
   kubectl logs -n ai-tools <pod-name>
