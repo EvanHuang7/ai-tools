@@ -24,7 +24,7 @@ includes:
     dir: ./common-k8s-resource-defins
 
 env:
-  CLUSTER_NAME: devops-directive-kubernetes-course
+  CLUSTER_NAME: ai-tools
   GCP_REGION: us-central1
   GCP_ZONE: us-central1-a
   # Set default gum style options
@@ -76,7 +76,7 @@ tasks:
   gcp:06-create-cluster:
     desc: "Create GKE cluster"
     vars:
-      GCP_PROJECT_ID: kubernetes-course-424917
+      GCP_PROJECT_ID: steadfast-pivot-462821-p7
     cmds:
       - |
         gcloud container clusters create ${CLUSTER_NAME} \

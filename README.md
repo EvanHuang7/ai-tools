@@ -714,10 +714,71 @@ The case of NO Nginx in VM:
 
 Follow these steps to deploy app in GKE:
 
-1. Go to GCP
-2. 
+1. Switch to proejct isolated environment first
 
--
+```
+devbox shell
+```
+
+2. Create a GKC cluster
+
+- Authenticate and configure the gcloud CLI
+  - Select `Re-initialize the configuration` for **Pick up configuration to use** or `Create a new configuration` if you have not initailize before
+  - Loggin into your google account
+  - Pick up a google cloud project you want to use
+  - Configure a default Compute Region and zone by selecting `us-central1-a`. (Note: if you select a different region and zone, you should update them in local `Taskfile.yaml` file too)
+
+```
+task gcp:01-init-cli
+```
+
+- Enable all required GCP APIs
+
+```
+task gcp:02-enable-apis
+```
+
+- Create a custom VPC instead of using the default VPC of the project
+
+```
+task gcp:04-create-vpc
+```
+
+- Create a subnet for `us-central1-a` region under VPC
+
+```
+task gcp:05-create-subnet
+```
+
+- Update `GCP_PROJECT_ID` in local `Taskfile.yaml` file to be the google cloud project id you selected when setting up gcloud CLI authentication.
+
+- Create a **Standard** GKE cluster with `e2-standard-2` machine type and 2 worker nodes (VMs).
+
+```
+task gcp:06-create-cluster
+```
+
+🚨 Important: You may encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error beacause The `Google Cloud SDK` installed in Devbox (via devbox.json packages) does not include the `gke-gcloud-auth-plugin` binary by default. It's a minimal version. Fixed the issue to allow you interact with your GKE cluster in **host** instead in **project devbox** by
+
+- Follow `https://cloud.google.com/sdk/docs/install` to install **google cloud sdk** into your **host** instead of project devbox
+- Install `gke-gcloud-auth-plugin` in your host by running
+
+```
+gcloud components install gke-gcloud-auth-plugin
+```
+
+- Verify the `gke-gcloud-auth-plugin` is installed and make sure your `kubectl` config uses this plugin
+
+```
+which gke-gcloud-auth-plugin
+kubectl config view --raw
+```
+
+- Now, You can use `kubectl` on your **host** machine to interact with the GKE cluster you just created. Such as, view the cluster's worker nodes
+
+```
+kubectl get nodes
+```
 
 3. Deploy app
 
