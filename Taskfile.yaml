@@ -18,7 +18,7 @@ includes:
   frontend:
     taskfile: ./frontend/Taskfile.yaml
     dir: ./frontend
-  ######### Deploy Traefik ingress controller #########
+  ######### Deploy Traefik ingress controller in K8s Cluster#########
   common:
     taskfile: ./common-k8s-resource-defins/Taskfile.yaml
     dir: ./common-k8s-resource-defins
@@ -141,7 +141,7 @@ tasks:
       - docker buildx inspect mybuilder --bootstrap
       - docker buildx use mybuilder
 
-  ######### Run apps in K8s cluster #########
+  ######### Deploy app in K8s cluster #########
   # Deploy go backend app in cluster
   go-k8s-resource-defins:apply:
     desc: "Apply kubernetes resource manifests for go backend application"

@@ -776,10 +776,11 @@ which gke-gcloud-auth-plugin
 kubectl config view --raw
 ```
 
-- Now, You can use `kubectl` on your **host** machine to interact with the GKE cluster you just created. Such as, view the cluster's worker nodes
+- Now, You can use `kubectl` on your **host** machine to interact with the GKE cluster you just created. Such as, view the cluster's worker nodes, and system pods
 
 ```
 kubectl get nodes
+kubectl get pods -A
 ```
 
 - Re-open the project again and run `devbox shell` cli to get into the devbox isolated environment, you can use `kubectl` on your **project devbox** to interact with the GKE cluster now.
@@ -794,9 +795,16 @@ kubectl get nodes
 devbox install
 ```
 
-- You can use `kubectl` on your **project devbox** to interact with the GKE cluster now.
+- You can use `kubectl` on your **project devbox** to interact with the GKE cluster now. Such as, view the cluster's worker nodes, and system pods
 
-3. Deploy app
+```
+kubectl get nodes
+kubectl get pods -A
+```
+
+3. Deploy app to GKE cluster
+
+-
 
 ## <a name="set-up-different-app-environment">Set up different app environment (Demo and Prod)</a>
 
@@ -808,8 +816,46 @@ Develop app in kind cluster locally is esay way to find out any issue in k8s dur
 
 You need Docker Desktop, devbox installed
 
-1. Install devbox and run `devbox shell` cli to create isolated enviroment for project
-2. Create a Kind cluster via Task command lines in `Taskfile.yaml` locally
+1. Install devbox and run `devbox shell` cli in **project terminal** to create isolated enviroment for project
+
+- 📌 Note: It may take a big long to install all packages if you run this cli to install devbox packages first time
+
+2. Build container images of services and push to Docker hub, so that we can deploy them into the Kind cluster that we are going to create.
+
+- Open Docker Desktop app manually
+
+- Set up Docker buildx used to build container image for multiple architecture and Login Docker for pushing images to Docker hub by cli in your proejct devbox shell:
+
+```
+task bootstrap-buildx-builder
+docker login
+```
+
+- Build container images and push them to Docker hub for `go-backend` serivce
+
+```
+task go-backend:build-container-image-multi-arch-with-dockerfile
+```
+
+- Build container images and push them to Docker hub for `node-backend` serivce
+
+```
+task node-backend:build-container-image-multi-arch
+```
+
+- Build container images and push them to Docker hub for `python-backend` serivce
+
+```
+task python-backend:build-container-image-multi-arch
+```
+
+- Build container images and push them to Docker hub for `frontend` serivce
+
+```
+task frontend:build-container-image-multi-arch
+```
+
+3. Create a Kind cluster via Task command lines in `Taskfile.yaml` locally
 
 - Generate Kind config file based on you file absolute path and create Kind cluster that is actually Docker containers in Docker Desktop VM locally
 
@@ -831,47 +877,14 @@ You need Docker Desktop, devbox installed
   kubectl get pods -A
   ```
 
-- Enable Load Balancer service in Local Kind Cluster by opening a 2nd terminal in proejct and running (Remember switch back to 1st terminal and leave 2nd terminal running in the background):
+- Enable Load Balancer service in Local Kind Cluster by opening a **2nd devbox shell terminal** in proejct and running (Remember switch back to 1st terminal and leave 2nd terminal running in the background):
 
   ```
   devbox shell
   task kind:03-run-cloud-provider-kind
   ```
 
-3. Open Docker Desktop app manually, then set up Docker buildx used to build container image for multiple architecture and Login Docker for pushing images to Docker hub by running:
-
-```
-task bootstrap-buildx-builder
-docker login
-```
-
-4. Build container images of services and push to Docker hub
-
-- go-backend serivce
-
-```
-task go-backend:build-container-image-multi-arch-with-dockerfile
-```
-
-- node-backend serivce
-
-```
-task node-backend:build-container-image-multi-arch
-```
-
-- python-backend serivce
-
-```
-task python-backend:build-container-image-multi-arch
-```
-
-- frontend serivce
-
-```
-task frontend:build-container-image-multi-arch
-```
-
-5. Deploy all services in Kind Cluster locally by using K8s resource definition that are using container images
+4. Create namespace and deploy Traefik ingress controller in Kind Cluster locally first
 
 - Make sure you are using Kind cluster by running:
 
@@ -887,7 +900,7 @@ task frontend:build-container-image-multi-arch
 
 - Deploy Traefik ingress controller in Local Kind cluster with Load Balancer serivce
 
-  - 📌 Note: It will provision a Load Balancer by Traefik default setting, so it will cause Load Balancer and ExternalIP fee if you run it in GKE of GCP.
+  - 📌 Note: It will provision a Load Balancer by Traefik default setting, so it will cause **Load Balancer and ExternalIP fee** if you run it in **GKE of GCP**.
 
   ```
   task common:deploy-traefik
@@ -905,17 +918,12 @@ task frontend:build-container-image-multi-arch
   task common:apply-traefik-middleware
   ```
 
+5. Deploy all app services in Kind Cluster locally by using K8s resource definition that are using container images
+
 - Deploy go backend app in Local Kind cluster
 
   ```
   task go-k8s-resource-defins:apply
-  ```
-
-- Check pod and service in ai-tools namespace after deploying go backend app
-
-  ```
-  kubectl get pods -n ai-tools
-  kubectl get svc
   ```
 
 - Deploy node backend app in Local Kind cluster
@@ -924,24 +932,10 @@ task frontend:build-container-image-multi-arch
   task node-k8s-resource-defins:apply
   ```
 
-- Check pod and service in ai-tools namespace after deploying node backend app
-
-  ```
-  kubectl get pods -n ai-tools
-  kubectl get svc
-  ```
-
 - Deploy python backend app in Local Kind cluster
 
   ```
   task python-k8s-resource-defins:apply
-  ```
-
-- Check pod and service in ai-tools namespace after deploying python backend app
-
-  ```
-  kubectl get pods -n ai-tools
-  kubectl get svc
   ```
 
 - Deploy frontend app in Local Kind cluster
@@ -950,22 +944,22 @@ task frontend:build-container-image-multi-arch
   task frontend-k8s-resource-defins:apply
   ```
 
-- Check pod and service in ai-tools namespace after deploying frontend app
+- Check pod and service in ai-tools namespace after deploying all app services
 
   ```
   kubectl get pods -n ai-tools
   kubectl get svc
   ```
 
-- View the app locally with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer by running:
+6. View the app locally with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer by running:
 
-  ```
-  kubectl get all -n traefik
+```
+kubectl get all -n traefik
 
-  OR
+OR
 
-  kubectl get svc -n traefik
-  ```
+kubectl get svc -n traefik
+```
 
 - Useful kubectl clis for debug
 
