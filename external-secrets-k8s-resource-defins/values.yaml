@@ -1,3 +1,3 @@
 serviceAccount:
   annotations:
-    iam.gke.io/gcp-service-account: external-secrets@kubernetes-course-424917.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: external-secrets@steadfast-pivot-462821-p7.iam.gserviceaccount.com

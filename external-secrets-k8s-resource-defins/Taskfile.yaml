@@ -7,6 +7,9 @@ env:
   MARGIN: "1 1"
 
 tasks:
+  # A K8s service account named "external-secrets" is created automatically in namespace
+  # by the Helm chart we applied when installing External Secrets Operator (ESO).
+  # It's full ID in google is "steadfast-pivot-462821-p7.svc.id.goog[external-secrets/external-secrets]".
   01-install-external-secrets:
     desc: "Install external secrets operator"
     cmds:
@@ -19,6 +22,28 @@ tasks:
           --create-namespace \
           --version 0.9.19
 
+  ######### 1st cli Explanation #########
+  # First, Creates a GCP IAM service account named "external-secrets", and it's
+  # full ID in google is "external-secrets@<GCP-project-id>.iam.gserviceaccount.com".
+
+  ######### 2nd Cli Format #########
+  ######### 2nd cli Explanation #########
+  # Then, Grants the IAM service account permission to Secret Manager by binding
+  # "secretmanager.secretAccessor" role to this "external-secrets" service account,
+
+  ######### 3rd Cli Format #########
+  # gcloud iam service-accounts add-iam-policy-binding [GSA_EMAIL] \
+  # --role roles/iam.workloadIdentityUser \
+  # --member "serviceAccount:[PROJECT_ID].svc.id.goog[NAMESPACE/KSA_NAME]"
+  ######### 3rd cli Explanation #########
+  # Then, bind "iam.workloadIdentityUser" role to K8s service account, this role allows
+  # K8s service accounts to impersonate GCP IAM service accounts securely.
+  # This means the workload (e.g., a pod in GKE) can access GCP resources like Cloud Storage,
+  # Pub/Sub, or Firestore without needing to manage service account keys manually.
+  # This binding allows only pods using "external-secrets KSA" in "external-secrets namespace" to impersonate the GSA.
+  # If you want another pod in a different namespace (say, "default") to impersonate
+  # the same GSA, you’d have to create another binding for serviceAccount:my-project.svc.id.goog[default/external-secrets].
+  # ???
   02-create-iam-service-account:
     desc: "Create GCP IAM service account and attach necessary permissions"
     cmds:
@@ -28,16 +53,18 @@ tasks:
       - cmd: gum style "Attach roles/secretmanager.secretAccessor to IAM service account"
         silent: true
       - |
-        gcloud projects add-iam-policy-binding kubernetes-course-424917 \
-          --member="serviceAccount:external-secrets@kubernetes-course-424917.iam.gserviceaccount.com" \
+        gcloud projects add-iam-policy-binding steadfast-pivot-462821-p7 \
+          --member="serviceAccount:external-secrets@steadfast-pivot-462821-p7.iam.gserviceaccount.com" \
           --role="roles/secretmanager.secretAccessor"
       - cmd: gum style "Attach roles/iam.workloadIdentityUser to kubernetes service account"
         silent: true
       - |
-        gcloud iam service-accounts add-iam-policy-binding external-secrets@kubernetes-course-424917.iam.gserviceaccount.com \
+        gcloud iam service-accounts add-iam-policy-binding external-secrets@steadfast-pivot-462821-p7.iam.gserviceaccount.com \
           --role roles/iam.workloadIdentityUser \
-          --member "serviceAccount:kubernetes-course-424917.svc.id.goog[external-secrets/external-secrets]"
+          --member "serviceAccount:steadfast-pivot-462821-p7.svc.id.goog[external-secrets/external-secrets]"
 
+  # Annotate the K8s service account to enable connection take place
+  # ???
   03-annotate-kubernetes-service-account:
     cmds:
       - cmd: gum style "Annotate k8s service account to allow it to use IAM serivce account via workload identity"
@@ -45,11 +72,13 @@ tasks:
       - kubectl apply -f ServiceAccount.yaml
     desc: "Add annotation to kubernetes service account for workload identity"
 
+  # It is to tell the external secrets operator where to find the secrets
   04-apply-cluster-secret-store:
     desc: "Apply the ClusterSecretStore configuration"
     cmds:
       - kubectl apply -f ClusterSecretStore.yaml
 
+  #
   05-apply-external-secret:
     desc: "Apply the ExternalSecret configuration"
     cmds:
@@ -58,8 +87,8 @@ tasks:
   07-get-secret-value:
     desc: "Retrieve the secret value from the Kubernetes api"
     cmds:
-      - kubectl get secrets external-secrets-example-k8s -o yaml | yq
-      - kubectl get secrets external-secrets-example-k8s -o yaml | yq '.data.key-k8s' | base64 -d
+      - kubectl get secrets k8s-external-secrets-mongodb-url -o yaml | yq
+      - kubectl get secrets k8s-external-secrets-mongodb-url -o yaml | yq '.data.key-k8s' | base64 -d
 
   08-delete-namespace:
     desc: "Delete the namespace to clean up"

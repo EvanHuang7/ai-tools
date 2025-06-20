@@ -2,26 +2,32 @@ version: "3"
 
 includes:
   ######### Build and push app container image #########
-  # Cli: "task go-backend:build-container-image-multi-arch-with-dockerfile"
+  # Eg. Cli: "task go-backend:build-container-image-multi-arch-with-dockerfile"
   go-backend:
     taskfile: ./go-backend/Taskfile.yaml
     dir: ./go-backend
-  # Cli: "task node-backend:build-container-image-multi-arch"
+  # Eg. Cli: "task node-backend:build-container-image-multi-arch"
   node-backend:
     taskfile: ./node-backend/Taskfile.yaml
     dir: ./node-backend
-  # Cli: "task python-backend:build-container-image-multi-arch"
+  # Eg. Cli: "task python-backend:build-container-image-multi-arch"
   python-backend:
     taskfile: ./python-backend/Taskfile.yaml
     dir: ./python-backend
-  # Cli: "task frontend:build-container-image-multi-arch"
+  # Eg. Cli: "task frontend:build-container-image-multi-arch"
   frontend:
     taskfile: ./frontend/Taskfile.yaml
     dir: ./frontend
   ######### Deploy Traefik ingress controller in K8s Cluster#########
+  # Eg. Cli: "task common:deploy-traefik"
   common:
     taskfile: ./common-k8s-resource-defins/Taskfile.yaml
     dir: ./common-k8s-resource-defins
+  ######### Deploy Google Secret Manager in GKE cluster #########
+  # Eg. Cli: "task external-secrets:01-install-external-secrets"
+  external-secrets:
+    taskfile: ./external-secrets-k8s-resource-defins/Taskfile.yaml
+    dir: ./external-secrets-k8s-resource-defins
 
 env:
   CLUSTER_NAME: ai-tools
