@@ -895,6 +895,8 @@ task external-secrets:07-get-secret-value
 
 🚨🚨 Important: If you didn't build container images of app services and push them to Docker hub yet, please finish it by following the `2nd step` of **⚙️ Run App in Kind Cluster Locally** section first.
 
+🚨 Important: Please change all secret values palceholder to your own secret values in `Secret.yaml` files of thoese `k8s-resource-defins` folders these before starting this step.
+
 - Deploy go backend app
 
   ```
