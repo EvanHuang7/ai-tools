@@ -894,6 +894,16 @@ kubectl get svc -n traefik
   kubectl describe pod -n ai-tools <pod-name>
   ```
 
+7. 🚨🚨🚨 Clean up to aviod cost 💸💸
+
+Remember to remove the cluster after you finish testing or development because a running cluster with K8s resource charges you by running time. You can use new user credit to cover the fee for first 3 months new user, but you will need to pay after 3 months.
+
+Delete the GCP network, subnet, firewall rules, and cluster that we just created by running:
+
+```
+task gcp:09-clean-up
+```
+
 ## <a name="set-up-different-app-environment">Set up different app environment (Demo and Prod)</a>
 
 ## <a name="set-up-ci-cd">Set up CI & CD for GKE Cluster</a>
