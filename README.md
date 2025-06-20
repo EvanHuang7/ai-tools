@@ -885,7 +885,13 @@ task external-secrets:04-apply-cluster-secret-store
 task external-secrets:05-apply-external-secret
 ```
 
-- Retrieve the secret value from the Kubernetes api
+- View the created K8s SecretStore, ExternalSecret and Secret
+
+```
+task external-secrets:06-get-secretStore-and-externalSecret-and-secret
+```
+
+- View the secret value from the Kubernetes api
 
 ```
 task external-secrets:07-get-secret-value

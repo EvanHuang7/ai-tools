@@ -124,19 +124,27 @@ tasks:
   # Set External Secrets Operator to look for secrets in GCP Secret Manager
   # by appling ClusterSecretStore configuration
   04-apply-cluster-secret-store:
-    desc: "Apply the ClusterSecretStore configuration"
+    desc: "Create SecretStore by applying the ClusterSecretStore configuration"
     cmds:
       - kubectl apply -f ClusterSecretStore.yaml
 
   # Tells External Secrets Operator to fetch secrets from GCP Secret Manager.
   # Then, creates K8s Secrets in sepecified namespace by appling ExternalSecret configuration.
-  # TODO: Add for go and node backends
+  # TODO: Considere adding for go and node backend services if cost is low
   05-apply-external-secret:
-    desc: "Apply the ExternalSecret configuration"
+    desc: "Create ExternalSecret by applying the ExternalSecret configuration"
     cmds:
       - kubectl apply -f PythonExternalSecret.yaml
 
-  # Clis to get k8s secrets value
+  # Clis to view K8s SecretStore, ExternalSecret and Secret
+  06-get-secretStore-and-externalSecret-and-secret:
+    desc: "Retrieve the created SecretStore, ExternalSecret and Secrets in cluster"
+    cmds:
+      - kubectl get clustersecretstores.external-secrets.io
+      - kubectl get externalsecrets.external-secrets.io -n ai-tools
+      - kubectl get secrets -n ai-tools
+
+  # Clis to get K8s Secrets value
   07-get-secret-value:
     desc: "Retrieve the secret value from the Kubernetes api"
     cmds:
