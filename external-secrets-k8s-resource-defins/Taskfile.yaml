@@ -72,13 +72,15 @@ tasks:
       - kubectl apply -f ServiceAccount.yaml
     desc: "Add annotation to kubernetes service account for workload identity"
 
-  # It is to tell the external secrets operator where to find the secrets
+  # Set External Secrets Operator to look for secrets in GCP Secret Manager
+  # by appling ClusterSecretStore configuration
   04-apply-cluster-secret-store:
     desc: "Apply the ClusterSecretStore configuration"
     cmds:
       - kubectl apply -f ClusterSecretStore.yaml
 
-  #
+  # Tells External Secrets Operator to fetch secrets from GCP Secret Manager.
+  # Then, creates K8s Secrets in sepecified namespace by appling ExternalSecret configuration.
   05-apply-external-secret:
     desc: "Apply the ExternalSecret configuration"
     cmds:

@@ -813,7 +813,7 @@ kubectl get pods -A
 
 4. Create namespace and deploy Traefik ingress controller in GKE Cluster first
 
-- Create namespace
+- Create namespace, "ai-tools", for grouping app services resources
 
   ```
   task common:apply-namespace
@@ -838,6 +838,10 @@ kubectl get pods -A
   ```
   task common:apply-traefik-middleware
   ```
+
+5. Deploy external secrets for app services to consume
+
+- Run
 
 5. Deploy all app services to GKE cluster
 
