@@ -1,3 +1,9 @@
+# Attachs "external-secrets" GCP IAM service account to the
+# K8s service account (also named "external-secrets") that is auto-created
+# as part of Helm chart installation.
 serviceAccount:
+  # We still can add "external-secrets" GCP IAM service account as annotation
+  # even if this "external-secrets" GCP IAM service account is not created yet.
+  # Because annotations are just metadata attached to the K8s ServiceAccount resource.
   annotations:
     iam.gke.io/gcp-service-account: external-secrets@steadfast-pivot-462821-p7.iam.gserviceaccount.com
