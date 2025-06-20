@@ -108,7 +108,7 @@ tasks:
   # is allowed to impersonate this GSA.”).
   # NOTE: "01-install-external-secrets" cli already added the annotation
   # by passing the "values.yaml" file in ESO Helm chart installation.
-  # So we can skil it if we already ran "01-install-external-secrets" cli.
+  # So we can technically skil it if we already ran "01-install-external-secrets" cli.
   03-annotate-kubernetes-service-account:
     cmds:
       - cmd: gum style "Annotate K8s service account to allow it to use IAM serivce account via workload identity"
@@ -125,14 +125,15 @@ tasks:
 
   # Tells External Secrets Operator to fetch secrets from GCP Secret Manager.
   # Then, creates K8s Secrets in sepecified namespace by appling ExternalSecret configuration.
+  # TODO: Add for go and node backends
   05-apply-external-secret:
     desc: "Apply the ExternalSecret configuration"
     cmds:
-      - kubectl apply -f ExternalSecret.yaml
+      - kubectl apply -f PythonExternalSecret.yaml
 
   # Clis to get k8s secrets value
   07-get-secret-value:
     desc: "Retrieve the secret value from the Kubernetes api"
     cmds:
-      - kubectl get secrets k8s-secrets-mongodb-url -o yaml | yq
-      - kubectl get secrets k8s-secrets-mongodb-url -o yaml | yq '.data.mongoUri' | base64 -d
+      - kubectl get secrets python-backend-secrets -o yaml | yq
+      - kubectl get secrets python-backend-secrets -o yaml | yq '.data.MONGODB_URL' | base64 -d

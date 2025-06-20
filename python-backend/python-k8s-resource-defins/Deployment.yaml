@@ -15,6 +15,7 @@ spec:
       labels:
         app: python-backend
     spec:
+      serviceAccountName: external-secrets
       containers:
         - name: python-backend
           image: evanhuang7/ai-tools-python-backend:developing
@@ -34,7 +35,7 @@ spec:
               value: "8088"
           envFrom:
             - secretRef:
-                name: python-backend-database-url
+                name: python-backend-secrets
           ports:
             - name: http
               containerPort: 8088

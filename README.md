@@ -841,7 +841,41 @@ kubectl get pods -A
 
 5. Deploy external secrets for app services to consume
 
-- Run
+- Install `External Secrets Operator (ESO)` via Helm chart, and a `K8s service account (KSA)` named `external-secrets` is created automatically in namespace as part of External Secrets Operator (ESO) Helm chart installation.
+
+```
+task external-secrets:01-install-external-secrets
+```
+
+- Create a `GCP IAM service account (Google Service Account/GSA)` named `external-secrets`, attach GCP Secret Manager access role to this GSA, and bind the KSA with the GSA to allow the KSA to impersonate the GSA.
+
+```
+task external-secrets:02-create-iam-service-account
+```
+
+- Add GSA annotation to K8s service account, so that a workload Identity trust relationship is enabled after finishing both binding and annotation for KSA and GSA. The workload Identity alllows the GKE workloads (eg. a pod) using the KSA to access GCP services (eg. Secret Manager).
+
+```
+task external-secrets:03-annotate-kubernetes-service-account
+```
+
+- Set External Secrets Operator to look for secrets in GCP Secret Manager by appling ClusterSecretStore configuration
+
+```
+task external-secrets:04-apply-cluster-secret-store
+```
+
+- Kick External Secrets Operator to fetch secrets from GCP Secret Manager. Then, creates K8s Secrets in sepecified namespace by appling ExternalSecret configuration.
+
+```
+task external-secrets:05-apply-external-secret
+```
+
+- Retrieve the secret value from the Kubernetes api
+
+```
+task external-secrets:07-get-secret-value
+```
 
 5. Deploy all app services to GKE cluster
 
