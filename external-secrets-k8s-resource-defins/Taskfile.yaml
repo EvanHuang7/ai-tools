@@ -80,6 +80,10 @@ tasks:
   # Workload runs with a KSA -> That KSA has an annotation pointing to a GSA
   # -> The GSA allows the KSA to impersonate it via an IAM policy binding ->
   # So workload can access GCP services
+
+  # TODO: polish it
+  # binding of roles/iam.serviceAccountTokenCreator role on the GSA to the KSA.
+  # This role is also required to allow Workload Identity tokens to be minted.
   02-create-iam-service-account:
     desc: "Create GCP IAM service account and attach necessary permissions"
     cmds:
@@ -92,6 +96,13 @@ tasks:
         gcloud projects add-iam-policy-binding steadfast-pivot-462821-p7 \
           --member="serviceAccount:external-secrets@steadfast-pivot-462821-p7.iam.gserviceaccount.com" \
           --role="roles/secretmanager.secretAccessor"
+      - cmd: gum style "Attach roles/iam.serviceAccountTokenCreator to kubernetes service account"
+        silent: true
+      - |
+        gcloud iam service-accounts add-iam-policy-binding external-secrets@steadfast-pivot-462821-p7.iam.gserviceaccount.com \
+          --role="roles/iam.serviceAccountTokenCreator" \
+          --member="serviceAccount:steadfast-pivot-462821-p7.svc.id.goog[ai-tools/external-secrets]"
+
       - cmd: gum style "Attach roles/iam.workloadIdentityUser to kubernetes service account"
         silent: true
       - |
@@ -135,5 +146,5 @@ tasks:
   07-get-secret-value:
     desc: "Retrieve the secret value from the Kubernetes api"
     cmds:
-      - kubectl get secrets python-backend-secrets -o yaml | yq
       - kubectl get secrets python-backend-secrets -o yaml | yq '.data.MONGODB_URL' | base64 -d
+      - kubectl get secrets python-backend-secrets -o yaml | yq '.data.REDIS_URL' | base64 -d
