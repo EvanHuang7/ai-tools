@@ -841,6 +841,20 @@ kubectl get pods -A
 
 5. Deploy external secrets for app services to consume
 
+🚨 Important: Please change all the usages of `GCP project ID` in `external-secrets-k8s-resource-defins` folder to be your own GCP project ID before starting this step.
+
+📌 Note: We will only store the secrets of **python backend service** into GCP Secret Manager becaues **GCP Secret Manager only offer 6 secret version (including create and update a secret) per month**. Also, holding a serect costs **$0.06 💸💸** per active secret version per month.
+
+- Go to GCP Secret Manager
+
+- Click **CREATE SECRET** button
+
+- Enter `mongodb-url-in-gcpsm` as secret name and copy paste your mongodb url to **Secret value** textare.
+
+- Leave all the rest of things by default and click **CREATE SECRET** button.
+
+- Follow the same steps again to create `redis-url-in-gcpsm` secret in Secret Manager.
+
 - Install `External Secrets Operator (ESO)` via Helm chart, and a `K8s service account (KSA)` named `external-secrets` is created automatically in namespace as part of External Secrets Operator (ESO) Helm chart installation.
 
 ```
@@ -877,7 +891,7 @@ task external-secrets:05-apply-external-secret
 task external-secrets:07-get-secret-value
 ```
 
-5. Deploy all app services to GKE cluster
+6. Deploy all app services to GKE cluster
 
 🚨🚨 Important: If you didn't build container images of app services and push them to Docker hub yet, please finish it by following the `2nd step` of **⚙️ Run App in Kind Cluster Locally** section first.
 
