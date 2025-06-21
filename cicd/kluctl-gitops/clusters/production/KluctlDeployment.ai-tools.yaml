@@ -2,7 +2,9 @@ apiVersion: gitops.kluctl.io/v1beta1
 kind: KluctlDeployment
 metadata:
   # This ai-tools KluctlDeployment will refer to and manage
-  # the deployment of applicationin in K8s cluster.
+  # the deployment of application in K8s cluster.
+  # It will deploy the app into cluster if the app does not
+  # exist in the cluster after it is installed to cluster.
   name: ai-tools
   namespace: kluctl-gitops
 spec:

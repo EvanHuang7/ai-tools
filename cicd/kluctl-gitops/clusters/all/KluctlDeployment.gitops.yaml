@@ -3,6 +3,9 @@ kind: KluctlDeployment
 metadata:
   # This gitops KluctlDeployment will manage itself,
   # kluctl controller and kluctl webui in K8s cluster.
+  # We will manually deploy the "gitops KluctlDeployment"
+  # one time, and it will then install the "ai-tools KluctlDeployment"
+  # that will then in turn deploy all of our app.
   name: gitops
   namespace: kluctl-gitops
 spec:
