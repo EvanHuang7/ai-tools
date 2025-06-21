@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-backend
+  namespace: ai-tools
+  labels:
+    app: python-backend
+spec:
+  replicas: { { pythonBackend.replicas } }
+  selector:
+    matchLabels:
+      app: python-backend
+  template:
+    metadata:
+      labels:
+        app: python-backend
+    spec:
+      serviceAccountName: external-secrets
+      containers:
+        - name: python-backend
+          image: evanhuang7/ai-tools-python-backend:{{ pythonBackend.version }}
+          imagePullPolicy: Always
+          env:
+            - name: PORT
+              value: "8088"
+          envFrom:
+            - secretRef:
+                name: python-backend-secrets
+          ports:
+            - name: http
+              containerPort: 8088
+              protocol: TCP
+          # We add startupProbe for python app because this app starts up a bit
+          # slowly after container starts. K8s will pause the liveness and
+          # readiness probes until the startup probe succeeds.
+          startupProbe:
+            httpGet:
+              path: /ping
+              port: 8088
+            initialDelaySeconds: 0 # Start checking immediately after container starts
+            periodSeconds: 5 # Check every 5 seconds
+            failureThreshold: 12 # Give it up to 12 tries (12 x 5s = 60s) to succeed
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8088
+            initialDelaySeconds: 10 # Start checking after container starts running 10s
+            periodSeconds: 20 # Check every 20s
+            timeoutSeconds: 2 # Fail if API call timeout after 2s
+            failureThreshold: 3 # If 3 checks in a row fail, restart the container
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8088
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            limits:
+              memory: "120Mi"
+              cpu: "60m"
+            requests:
+              memory: "100Mi"
+              cpu: "50m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault

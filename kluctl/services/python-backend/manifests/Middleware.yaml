@@ -1,0 +1,10 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-api-prefixes-python
+  namespace: ai-tools
+spec:
+  stripPrefix:
+    forceSlash: false
+    prefixes:
+      - /api/python
