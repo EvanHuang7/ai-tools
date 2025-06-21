@@ -4,7 +4,8 @@ targets:
       environment: staging
       environmentType: non-prod
     # Adding a context to .kluctl.yaml helps prevent accidentally deploying to the wrong cluster!
-    context: <DEMO-CLUSTER-HOLDER>
+    # Note: Update placeholder to a different cluster for staging enviroment.
+    context: <STAGING-CLUSTER-HOLDER>
 
   - name: production
     args:
