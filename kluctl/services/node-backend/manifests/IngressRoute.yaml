@@ -12,7 +12,7 @@ spec:
       # host if you set a DNS record for the ExternalIP and your own domain
       match: PathPrefix(`/api/node`)
       middlewares:
-        - name: strip-api-prefixes
+        - name: strip-api-prefixes-node
       services:
         - kind: Service
           name: node-backend
