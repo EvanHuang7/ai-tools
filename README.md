@@ -949,9 +949,21 @@ kubectl get svc -n traefik
   - Print the logs of pod
   - Show the details of pod. You can view the liveness, Readiness and all conditions of pod
 
+  - Show all services in namespace
+  - Show all pods in namespace
+  - Show all deployments in namespace
+  - Show all replicasets in namespace
+  - Show all resources in namespace
+
   ```
   kubectl logs -n ai-tools <pod-name>
   kubectl describe pod -n ai-tools <pod-name>
+
+  kubectl get svc -n ai-tools
+  kubectl get pods -n ai-tools
+  kubectl get deployment -n ai-tools
+  kubectl get replicaset -n ai-tools
+  kubectl get all -n ai-tools
   ```
 
 7. 🚨🚨🚨 Clean up to aviod cost 💸💸
@@ -1152,9 +1164,21 @@ kubectl get svc -n traefik
   - Print the logs of pod
   - Show the details of pod. You can view the liveness, Readiness and all conditions of pod
 
+  - Show all services in namespace
+  - Show all pods in namespace
+  - Show all deployments in namespace
+  - Show all replicasets in namespace
+  - Show all resources in namespace
+
   ```
   kubectl logs -n ai-tools <pod-name>
   kubectl describe pod -n ai-tools <pod-name>
+
+  kubectl get svc -n ai-tools
+  kubectl get pods -n ai-tools
+  kubectl get deployment -n ai-tools
+  kubectl get replicaset -n ai-tools
+  kubectl get all -n ai-tools
   ```
 
 ## <a name="develop-app-locally">🛠️ Develop App Locally with Kind & Tilt</a>
