@@ -3,4 +3,4 @@
 # So that, we can reference these shared variables across different manifests.
 sharedVars:
   # Note: We don't use it because we didn't set a domain name for app
-  # hostName: "your-domain-name"
+  hostName: "aitools-prod-evanhuang.duckdns.org"

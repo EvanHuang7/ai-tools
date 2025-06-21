@@ -10,7 +10,7 @@ spec:
     - kind: Rule
       # We can use "sharedVars.hostName" kluctl variable to sepcifcy the
       # host if you set a DNS record for the ExternalIP and your own domain
-      match: PathPrefix(`/api/node`)
+      match: Host(`{{ sharedVars.hostName }}`) && PathPrefix(`/api/node`)
       middlewares:
         - name: strip-api-prefixes-node
       services:
