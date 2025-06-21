@@ -1,0 +1,5 @@
+# Sepcicy the variables that are shared accross different services.
+# such as frontend, go, node, python services share.
+# So that, we can reference these shared variables across different manifests.
+sharedVars:
+  hostName: "kubernetes-course.devopsdirective.com"

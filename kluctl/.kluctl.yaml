@@ -1,0 +1,24 @@
+targets:
+  - name: staging
+    args:
+      environment: staging
+      environmentType: non-prod
+    # Adding a context to .kluctl.yaml helps prevent accidentally deploying to the wrong cluster!
+    context: <DEMO-CLUSTER-HOLDER>
+
+  - name: production
+    args:
+      environment: production
+      environmentType: prod
+    # Adding a context to .kluctl.yaml helps prevent accidentally deploying to the wrong cluster!
+    context: gke_steadfast-pivot-462821-p7_us-central1-a_ai-tools
+
+# args are top level global varialbes that can be used throughout the
+# entire kluctl project
+args:
+  - name: environment
+  - name: environmentType
+
+# This allow kluctl keeps of tracks which resources it is managing,
+# and it can uniquely distingush between dffierent targets.
+discriminator: kluctl-{{ target.name }}

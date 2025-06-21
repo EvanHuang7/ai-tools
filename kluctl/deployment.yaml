@@ -1,0 +1,14 @@
+vars:
+  - file: config/{{ args.environment }}.yaml
+
+deployments:
+  - path: namespaces
+  # Make sure namespace folder files be executed before third-party folder
+  - barrier: true
+  - include: third-party
+  - barrier: true
+  - include: services
+
+# These are K8s labels applied to all resources
+commonLabels:
+  devopsdirective.com/course: "kubernetes-course"
