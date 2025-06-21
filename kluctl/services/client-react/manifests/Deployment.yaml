@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: client-react-nginx
-  namespace: demo-app
+  namespace: ai-tools
   labels:
     app: client-react-nginx
 spec:

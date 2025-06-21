@@ -1,8 +1,8 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: api-node
-  namespace: demo-app
+  name: node-backend
+  namespace: ai-tools
 spec:
   entryPoints:
     - web
@@ -13,6 +13,6 @@ spec:
         - name: strip-api-prefixes
       services:
         - kind: Service
-          name: api-node
+          name: node-backend
           port: 3000
           scheme: http

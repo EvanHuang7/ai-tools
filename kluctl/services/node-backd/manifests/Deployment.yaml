@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-node
-  namespace: demo-app
+  name: node-backend
+  namespace: ai-tools
   labels:
-    app: api-node
+    app: node-backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api-node
+      app: node-backend
   template:
     metadata:
       labels:
-        app: api-node
+        app: node-backend
     spec:
       containers:
-        - name: api-node
-          image: sidpalas/devops-directive-docker-course-api-node:{{ apiNode.version }}
+        - name: node-backend
+          image: sidpalas/devops-directive-docker-course-node-backend:{{ apiNode.version }}
           env:
             - name: PORT
               value: "3000"
           envFrom:
             - secretRef:
-                name: api-node-database-url
+                name: node-backend-database-url
           ports:
             - containerPort: 3000
               protocol: TCP

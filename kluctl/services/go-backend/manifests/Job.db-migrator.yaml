@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: db-migrator
-  namespace: demo-app
+  namespace: ai-tools
   annotations:
     kluctl.io/hook: pre-deploy
     kluctl.io/hook-weight: 2

@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-golang
-  namespace: demo-app
+  name: go-backend
+  namespace: ai-tools
   labels:
-    app: api-golang
+    app: go-backend
 spec:
-  replicas: {{apiGolang.replicas}}
+  replicas: { { apiGolang.replicas } }
   selector:
     matchLabels:
-      app: api-golang
+      app: go-backend
   template:
     metadata:
       labels:
-        app: api-golang
+        app: go-backend
     spec:
       containers:
-        - name: api-golang
-          image: sidpalas/devops-directive-docker-course-api-golang:{{ apiGolang.version }}
+        - name: go-backend
+          image: sidpalas/devops-directive-docker-course-go-backend:{{ apiGolang.version }}
           env:
             - name: PORT
               value: "8000"
           envFrom:
             - secretRef:
-                name: api-golang-database-url
+                name: go-backend-database-url
           ports:
             - containerPort: 8000
               protocol: TCP

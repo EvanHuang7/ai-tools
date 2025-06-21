@@ -1,8 +1,8 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: api-golang
-  namespace: demo-app
+  name: go-backend
+  namespace: ai-tools
 spec:
   entryPoints:
     - web
@@ -13,6 +13,6 @@ spec:
         - name: strip-api-prefixes
       services:
         - kind: Service
-          name: api-golang
+          name: go-backend
           port: 8080
           scheme: http

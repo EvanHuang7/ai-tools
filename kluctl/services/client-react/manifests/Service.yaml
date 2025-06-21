@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: client-react-nginx
-  namespace: demo-app
+  namespace: ai-tools
 spec:
   selector:
     app: client-react-nginx
