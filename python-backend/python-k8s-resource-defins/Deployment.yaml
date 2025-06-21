@@ -15,6 +15,8 @@ spec:
       labels:
         app: python-backend
     spec:
+      # NOTE: This "external-secrets" KSA would be availale only if we
+      # deployed external secrets for app services to consume
       serviceAccountName: external-secrets
       containers:
         - name: python-backend
@@ -34,7 +36,7 @@ spec:
             - name: PORT
               value: "8088"
           envFrom:
-            # NOTE: This K8s Secret would be availale only if we
+            # NOTE: This "python-backend-secrets" K8s Secret would be availale only if we
             # deployed external secrets for app services to consume
             - secretRef:
                 name: python-backend-secrets

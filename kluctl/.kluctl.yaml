@@ -5,7 +5,7 @@ targets:
       environmentType: non-prod
     # Adding a context to .kluctl.yaml helps prevent accidentally deploying to the wrong cluster!
     # Note: Update placeholder to a different cluster for staging enviroment.
-    context: <STAGING-CLUSTER-HOLDER>
+    context: gke_steadfast-pivot-462821-p7_us-central1-a_ai-tools-demo
 
   - name: production
     args:
