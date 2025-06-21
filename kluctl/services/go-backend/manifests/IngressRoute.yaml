@@ -8,11 +8,15 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`{{ sharedVars.hostName }}`) && PathPrefix(`/api/golang`)
+      # match: Host(`{{ sharedVars.hostName }}`) && PathPrefix(`/api/go`)
+
+      # Remove Host(`{{ sharedVars.hostName }}`) if you don't set a DNS
+      # record for the ExternalIP and your own domain
+      match: PathPrefix(`/api/go`)
       middlewares:
         - name: strip-api-prefixes
       services:
         - kind: Service
           name: go-backend
-          port: 8080
+          port: 8000
           scheme: http

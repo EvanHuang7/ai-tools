@@ -18,6 +18,7 @@ spec:
       containers:
         - name: go-backend
           image: evanhuang7/ai-tools-go-backend:{{ goBackend.version }}
+          imagePullPolicy: Always
           env:
             - name: PORT
               value: "8000"
@@ -25,15 +26,29 @@ spec:
             - secretRef:
                 name: go-backend-database-url
           ports:
-            - containerPort: 8000
+            - name: http
+              containerPort: 8000
               protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8000
+            initialDelaySeconds: 10 # Start checking after container starts running 10s
+            periodSeconds: 20 # Check every 20s
+            timeoutSeconds: 2 # Fail if API call timeout after 2s
+            failureThreshold: 3 # If 3 checks in a row fail, restart the container
           readinessProbe:
             httpGet:
               path: /ping
               port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
           resources:
             limits:
-              memory: "100Mi"
+              memory: "120Mi"
+              cpu: "60m"
             requests:
               memory: "100Mi"
               cpu: "50m"

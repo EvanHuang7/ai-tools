@@ -2,4 +2,5 @@
 # such as frontend, go, node, python services share.
 # So that, we can reference these shared variables across different manifests.
 sharedVars:
-  hostName: "kubernetes-course.devopsdirective.com"
+  # Note: We don't use it because we didn't set a domain name for app
+  # hostName: "your-domain-name"

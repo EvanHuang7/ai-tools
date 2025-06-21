@@ -966,6 +966,8 @@ task gcp:09-clean-up
 
 ## <a name="set-up-different-app-environment">Set up different app environment (Demo and Prod)</a>
 
+-
+
 ## <a name="set-up-ci-cd">Set up CI & CD for GKE Cluster</a>
 
 ## <a name="run-app-in-kind">⚙️ Run App in Kind Cluster Locally</a>

@@ -9,7 +9,7 @@ tasks:
   render-staging:
     cmds:
       - kluctl render -t staging --print-all | yq
-    desc: "Render resource yaml with staging values"
+    desc: "Render (Display) resource yaml with staging values"
 
   deploy-staging:
     cmds:
@@ -24,7 +24,7 @@ tasks:
   render-production:
     cmds:
       - kluctl render -t production --print-all | yq
-    desc: "Render resource yaml with production values"
+    desc: "Render (Display) resource yaml with production values"
 
   deploy-production:
     cmds:

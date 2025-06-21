@@ -1,2 +1,3 @@
 sharedVars:
-  hostName: "kubernetes-course-staging.devopsdirective.com"
+  # Note: We don't use it because we didn't set a domain name for app
+  # hostName: "your-staging-domain-name"
