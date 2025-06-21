@@ -43,7 +43,7 @@ tasks:
   # Use it to build go backend app image working for both
   # regular container and K8s cluster cases, so that we can
   # use healthcheck.go file for healthcheck of Docker swarm or Docker compose
-  build-container-image-multi-arch-with-dockerfile:
+  build-container-image-multi-arch:
     # By default, Docker builds all the way to the last stage, so
     # it would be "FROM scratch" (production case) if we don't
     # specify the stage when building image using "--target" tag (such as "--target dev")

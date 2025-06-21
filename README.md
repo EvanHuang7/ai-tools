@@ -1089,7 +1089,7 @@ docker login
 - Build container images and push them to Docker hub for `go-backend` serivce
 
 ```
-task go-backend:build-container-image-multi-arch-with-dockerfile
+task go-backend:build-container-image-multi-arch
 ```
 
 - Build container images and push them to Docker hub for `node-backend` serivce

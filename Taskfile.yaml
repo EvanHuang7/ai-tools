@@ -2,7 +2,7 @@ version: "3"
 
 includes:
   ######### Build and push app container image #########
-  # Eg. Cli: "task go-backend:build-container-image-multi-arch-with-dockerfile"
+  # Eg. Cli: "task go-backend:build-container-image-multi-arch"
   go-backend:
     taskfile: ./go-backend/Taskfile.yaml
     dir: ./go-backend
