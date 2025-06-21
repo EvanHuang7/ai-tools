@@ -6,7 +6,7 @@ metadata:
   labels:
     app: frontend
 spec:
-  replicas: 1
+  replicas: { { frontend.replicas } }
   selector:
     matchLabels:
       app: frontend
@@ -17,18 +17,32 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: sidpalas/devops-directive-docker-course-frontend:{{ clientReact.version }}
+          image: evanhuang7/ai-tools-frontend:{{ frontend.version }}
+          imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - name: http
+              containerPort: 8080
               protocol: TCP
-          readinessProbe:
-            failureThreshold: 3
+          livenessProbe:
             httpGet:
               path: /ping
               port: 8080
+            initialDelaySeconds: 10 # Start checking after container starts running 10s
+            periodSeconds: 20 # Check every 20s
+            timeoutSeconds: 2 # Fail if API call timeout after 2s
+            failureThreshold: 3 # If 3 checks in a row fail, restart the container
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
           resources:
             limits:
-              memory: 100Mi
+              cpu: 60m
+              memory: 120Mi
             requests:
               cpu: 50m
               memory: 100Mi
@@ -36,6 +50,7 @@ spec:
             allowPrivilegeEscalation: false
             privileged: false
           volumeMounts:
+            # This is a default location nginx will look for config
             - mountPath: /etc/nginx/conf.d
               name: nginx-conf
       securityContext:
@@ -43,6 +58,7 @@ spec:
           type: RuntimeDefault
       volumes:
         - configMap:
+            # The default mode 420 means standard read permissions
             defaultMode: 420
             name: nginx-conf
           name: nginx-conf

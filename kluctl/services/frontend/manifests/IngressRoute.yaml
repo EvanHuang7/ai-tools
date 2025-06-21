@@ -8,7 +8,11 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`{{ sharedVars.hostName }}`)
+      # Remove Host(`{{ sharedVars.hostName }}`) if you don't set a DNS
+      # record for the ExternalIP and your own domain
+
+      # match: Host(`{{ sharedVars.hostName }}`)
+      match: PathPrefix(`/`)
       services:
         - kind: Service
           name: frontend
