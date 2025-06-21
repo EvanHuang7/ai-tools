@@ -1,7 +1,7 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: client-react-nginx
+  name: frontend
   namespace: ai-tools
 spec:
   entryPoints:
@@ -11,6 +11,6 @@ spec:
       match: Host(`{{ sharedVars.hostName }}`)
       services:
         - kind: Service
-          name: client-react-nginx
+          name: frontend
           port: 8080
           scheme: http

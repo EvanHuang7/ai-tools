@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: node-backend
-          image: sidpalas/devops-directive-docker-course-node-backend:{{ apiNode.version }}
+          image: sidpalas/devops-directive-docker-course-node-backend:{{ nodeBackend.version }}
           env:
             - name: PORT
               value: "3000"

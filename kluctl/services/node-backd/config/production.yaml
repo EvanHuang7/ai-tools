@@ -1,2 +1,2 @@
-apiNode:
+nodeBackend:
   version: 1.0.0 # PRODUCTION_IMAGE_TAG

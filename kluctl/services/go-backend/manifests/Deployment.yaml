@@ -6,7 +6,7 @@ metadata:
   labels:
     app: go-backend
 spec:
-  replicas: { { apiGolang.replicas } }
+  replicas: { { goBackend.replicas } }
   selector:
     matchLabels:
       app: go-backend
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: go-backend
-          image: sidpalas/devops-directive-docker-course-go-backend:{{ apiGolang.version }}
+          image: evanhuang7/ai-tools-go-backend:{{ goBackend.version }}
           env:
             - name: PORT
               value: "8000"

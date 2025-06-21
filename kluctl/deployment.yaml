@@ -11,4 +11,4 @@ deployments:
 
 # These are K8s labels applied to all resources
 commonLabels:
-  devopsdirective.com/course: "kubernetes-course"
+  appName: "ai-tools"

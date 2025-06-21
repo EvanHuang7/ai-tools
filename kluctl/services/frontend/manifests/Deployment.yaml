@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client-react-nginx
+  name: frontend
   namespace: ai-tools
   labels:
-    app: client-react-nginx
+    app: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: client-react-nginx
+      app: frontend
   template:
     metadata:
       labels:
-        app: client-react-nginx
+        app: frontend
     spec:
       containers:
-        - name: client-react-nginx
-          image: sidpalas/devops-directive-docker-course-client-react-nginx:{{ clientReact.version }}
+        - name: frontend
+          image: sidpalas/devops-directive-docker-course-frontend:{{ clientReact.version }}
           ports:
             - containerPort: 8080
               protocol: TCP
