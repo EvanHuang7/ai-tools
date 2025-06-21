@@ -976,9 +976,25 @@ Delete the GCP network, subnet, firewall rules, and cluster that we just created
 task gcp:09-clean-up
 ```
 
-## <a name="set-up-different-app-environment">Set up different app environment (Staging and Prod)</a>
+## <a name="set-up-different-app-environment">Set up different app environment (🛠️Staging and 🚀Prod)</a>
 
-🚨 Important: Please to update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file to your own clusters first.
+🚨 Important: Please make sure to update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file to your own clusters first.
+
+⚠️ Note: The current `kluctl` folder does not include `External Secret` deployment yet, and the service deployments are all using local `Secret` resource files to generate K8s sceret. So, you should deploy `External Secret` manually first if you need to use `External Secret` in services.
+
+1. Create a seperate new cluster for deploying app to `Staging` environment if you only have 1 cluster running for deploying `Production` environment.
+
+- 🚨 Important: Change the cluster name of `gcp:06-create-cluster` task cli to `ai-tools-demo` in `Taskfile.yaml` first if you alreay created a `ai-tools` cluster.
+
+- Create a **Standard** GKE cluster with `e2-standard-2` machine type and 2 worker nodes (VMs) for `Staging` environment.
+
+```
+task gcp:06-create-cluster
+```
+
+- Update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file to your own `Staging` and `Production` clusters.
+
+2. Deploy app to **Staging** and **Production** environment clusters
 
 - Check the yaml files after rendering with template of staging env
 
@@ -1004,7 +1020,37 @@ task kluctl:render-production
 task kluctl:deploy-production
 ```
 
-- Now, you have your app configed with `Staging` and `Prod` environment specfication seperatly running in two K8s cluster.
+3. Now, you have your app configed with `Staging` and `Prod` environment specfication seperatly running in two K8s cluster.
+
+- Switch `kubectx` to view `Staging` and `Prod` environment clusters info and status.
+
+- View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer **if you don't use a hostname** for `IngressRoutes` in `kluctl` by running:
+
+```
+kubectl get all -n traefik
+
+OR
+
+kubectl get svc -n traefik
+```
+
+- If you use a hostname for `IngressRoutes` in `kluctl`, you need to create a DNS record for the `EXTERNAL-IP` and your hostname first. Then, you can view the app with your hostname
+
+7. 🚨🚨🚨 Clean up to aviod cost 💸💸💸💸💸💸
+
+Remember to remove the cluster after you finish testing or development because a running cluster with K8s resource charges you by running time. You can use new user credit to cover the fee for first 3 months new user, but you will need to pay after 3 months.
+
+- Only Delete the demo cluster by running
+
+```
+gcloud container clusters delete ai-tools-demo --zone us-central1-a
+```
+
+- Delete **everything** including the GCP network, subnet, firewall rules, and **all clusters** by running:
+
+```
+task gcp:09-clean-up
+```
 
 ## <a name="set-up-ci-cd">Set up CI & CD for GKE Cluster</a>
 
