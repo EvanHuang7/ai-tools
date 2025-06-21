@@ -9,7 +9,7 @@ import "./App.css";
 export function App() {
   return (
     <div>
-      <h1>AI Tools App 👋 Testing Tilt 2ND!</h1>
+      <h1>AI Tools App 👋 Test CI GitHub Worflow!</h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
       <CurrentTime api="/api/python/" />
