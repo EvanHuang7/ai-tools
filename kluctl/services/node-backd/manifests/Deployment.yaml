@@ -6,7 +6,7 @@ metadata:
   labels:
     app: node-backend
 spec:
-  replicas: 1
+  replicas: { { nodeBackend.replicas } }
   selector:
     matchLabels:
       app: node-backend
@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: node-backend
-          image: sidpalas/devops-directive-docker-course-node-backend:{{ nodeBackend.version }}
+          image: evanhuang7/ai-tools-node-backend:{{ nodeBackend.version }}
+          imagePullPolicy: Always
           env:
             - name: PORT
               value: "3000"
@@ -25,15 +26,29 @@ spec:
             - secretRef:
                 name: node-backend-database-url
           ports:
-            - containerPort: 3000
+            - name: http
+              containerPort: 3000
               protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 3000
+            initialDelaySeconds: 10 # Start checking after container starts running 10s
+            periodSeconds: 20 # Check every 20s
+            timeoutSeconds: 2 # Fail if API call timeout after 2s
+            failureThreshold: 3 # If 3 checks in a row fail, restart the container
           readinessProbe:
             httpGet:
               path: /ping
               port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
           resources:
             limits:
-              memory: "100Mi"
+              memory: "120Mi"
+              cpu: "60m"
             requests:
               memory: "100Mi"
               cpu: "50m"
