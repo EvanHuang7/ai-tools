@@ -964,9 +964,35 @@ Delete the GCP network, subnet, firewall rules, and cluster that we just created
 task gcp:09-clean-up
 ```
 
-## <a name="set-up-different-app-environment">Set up different app environment (Demo and Prod)</a>
+## <a name="set-up-different-app-environment">Set up different app environment (Staging and Prod)</a>
 
--
+🚨 Important: Please to update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file to your own clusters first.
+
+- Check the yaml files after rendering with template of staging env
+
+```
+task kluctl:render-staging
+```
+
+- Deploy all K8s resources defined in "kluctl" folder for staging env
+
+```
+task kluctl:deploy-staging
+```
+
+- Check the yaml files after rendering with template of production env
+
+```
+task kluctl:render-production
+```
+
+- Deploy all K8s resources defined in "kluctl" folder for production env
+
+```
+task kluctl:deploy-production
+```
+
+- Now, you have your app configed with `Staging` and `Prod` environment specfication seperatly running in two K8s cluster.
 
 ## <a name="set-up-ci-cd">Set up CI & CD for GKE Cluster</a>
 

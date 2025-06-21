@@ -1,36 +1,48 @@
 version: "3"
 
 tasks:
+  # Downloads the Helm chart files into the local project folder
+  # so that Kluctl can render and deploy them as part of its GitOps-style workflows.
   helm-pull:
+    # We don't specify arguments in this cli, Kluctl looks for a
+    # "helm-chart.yaml" file in the current directory.
+    # This file defines what Helm chart to pull.
     cmds:
       - kluctl helm-pull
     desc: "Pre-pull helm charts"
 
+  # Display the yaml files after rendering with template of staging env
   render-staging:
     cmds:
       - kluctl render -t staging --print-all | yq
     desc: "Render (Display) resource yaml with staging values"
 
+  # Deploy all K8s resources defined in "kluctl" folder for staging
   deploy-staging:
     cmds:
       - kluctl deploy -t staging
     desc: "Deploy staging configuration"
 
+  # Delete all K8s resources managed by kluctl for staging
   delete-staging:
     cmds:
       - kluctl delete -t staging
     desc: "Render resource yaml with staging values"
 
+  # Display the yaml files after rendering with template of production env
   render-production:
     cmds:
       - kluctl render -t production --print-all | yq
     desc: "Render (Display) resource yaml with production values"
 
+  # Deploy all K8s resources defined in "kluctl" folder for production
   deploy-production:
     cmds:
       - kluctl deploy -t production
     desc: "Deploy production configuration"
 
+  # Delete all K8s resources managed by kluctl for production
+  # This means all resources related to External Secret won't be deleted.
   delete-production:
     cmds:
       - kluctl delete -t production
