@@ -4,6 +4,7 @@ vars:
 deployments:
   - path: namespaces
   # Make sure namespace folder files be executed before third-party folder
+  # TODO: Consider setting up external secret operator in here too
   - barrier: true
   - include: third-party
   - barrier: true
