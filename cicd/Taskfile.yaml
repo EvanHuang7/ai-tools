@@ -5,6 +5,6 @@ includes:
     taskfile: ./github-actions/Taskfile.yaml
     dir: ./github-actions
 
-  # kluctl-gitops:
-  #   taskfile: ./kluctl-gitops/Taskfile.yaml
-  #   dir: ./kluctl-gitops
+  kluctl-gitops:
+    taskfile: ./kluctl-gitops/Taskfile.yaml
+    dir: ./kluctl-gitops

@@ -1,0 +1,21 @@
+# clusters/deployment.yaml
+deployments:
+  # We are using a public Git repo instead of local folder
+  # or files in this project for this kluctl deployment.
+  - git:
+      url: https://github.com/kluctl/kluctl.git
+      subDir: install/controller
+      ref:
+        tag: v2.24.1
+  - git:
+      url: https://github.com/kluctl/kluctl.git
+      subDir: install/webui
+      ref:
+        tag: v2.24.1
+  - barrier: true
+  # Include things that are required on both staging and production
+  # clusters (e.g., the KluctlDeployment for the GitOps deployment itself)
+  - path: all
+  # We use simple templating to change a dedicated deployment item per cluster
+  # prettier-ignore
+  - path: {{args.cluster_name}}

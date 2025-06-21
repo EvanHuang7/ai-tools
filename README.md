@@ -500,8 +500,6 @@ sudo systemctl status nginx
 docker ps
 ```
 
-TODO: fix unhealthy pod issue in cluster by checking the all Deployment.ymal files
-
 ## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with 🐳🐳 Docker Swarm 🐳🐳 in GCE VM (GCP)</a>
 
 Deploy app as Docker services that manage tasks (containers) via Docker Swarm (Use more VM CPU and memory than docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
@@ -1054,7 +1052,13 @@ task gcp:09-clean-up
 
 ## <a name="set-up-ci-cd">Set up CI & CD for GKE Cluster</a>
 
-We will use `GitHub actions` for Continuous Integrataion and `Kluctl` for Continuous Deployment
+We will use `GitHub actions` for Continuous Integrataion and `Kluctl GitOps` for Continuous Deployment.
+
+📌 Note: The concept of `GitOps` is to have a controller running in K8s cluster. The controller is able to automatically pull updates from Git, which can be triggered via a webhook. This keep those updates in sync with the deployed state of cluster.
+
+🚨 Important: The **Set up different app environment (🛠️Staging and 🚀Prod)** section is required to be finished first before starting this section.
+
+TODO: Consider adding lint build and test build steps into the GitHub workflow.
 
 1. Add necessary secrets to you GitHub repo, which allow GitHub workflow to use
 
@@ -1063,7 +1067,9 @@ We will use `GitHub actions` for Continuous Integrataion and `Kluctl` for Contin
 - Click click **New repository secret** button
 - Add `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`, and `MY_GITHUB_ACTION_PAT` secrets.
 
-2.
+2. Verify the **Continuous Integrataion** process by updating and pushing any code change in `frontend` folder, so that you can check if the push triggers a workflow in the `Actions` tab of your GitHub repository.
+
+3.
 
 ## <a name="run-app-in-kind">⚙️ Run App in Kind Cluster Locally</a>
 

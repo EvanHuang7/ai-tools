@@ -1,0 +1,26 @@
+apiVersion: gitops.kluctl.io/v1beta1
+kind: KluctlDeployment
+metadata:
+  # This gitops KluctlDeployment will manage itself,
+  # kluctl controller and kluctl webui in K8s cluster.
+  name: gitops
+  namespace: kluctl-gitops
+spec:
+  interval: 5m
+  source:
+    git:
+      # This tells kluctl about our project specifically
+      url: https://github.com/EvanHuang7/ai-tools.git
+      # Kluctl will be able to manage itself via GitOps
+      # by specifying this.
+      path: cicd/kluctl-gitops
+  # prettier-ignore
+  target: {{args.cluster_name}}
+  args:
+    # this passes the cluster_name initially passed via `kluctl deploy -a cluster_name=xxx.example.com` into the KluctlDeployment
+    # prettier-ignore
+    cluster_name: {{args.cluster_name}}
+  context: default
+  # let the controller automatically clean up orphan KluctlDeployment resources
+  prune: true
+  delete: true
