@@ -33,6 +33,8 @@ includes:
   kluctl:
     taskfile: ./kluctl/Taskfile.yaml
     dir: ./kluctl
+  ######### CI&CD #########
+  # cicd:
 
 env:
   CLUSTER_NAME: ai-tools

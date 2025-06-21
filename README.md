@@ -1054,6 +1054,10 @@ task gcp:09-clean-up
 
 ## <a name="set-up-ci-cd">Set up CI & CD for GKE Cluster</a>
 
+We will use `GitHub actions` for Continuous Integrataion and `Kluctl` for Continuous Deployment
+
+-
+
 ## <a name="run-app-in-kind">⚙️ Run App in Kind Cluster Locally</a>
 
 Develop app in kind cluster locally is esay way to find out any issue in k8s during development process

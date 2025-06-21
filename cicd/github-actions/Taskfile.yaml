@@ -10,10 +10,13 @@ tasks:
         silent: true
     desc: "Use git describe to generate a tag based on the latest release tag"
 
-  # Update image tags for Staging or Production environments
+  # Take input of a path and recursively goes through every files in the repo
+  # and look for input of identifier comment and update them with new tag.
   update-image-tags:
     desc: "Recursively update image tags in files with the specified comment"
     vars:
+      # Exclude this Taskfile.yaml file to avoid the identifier comments
+      # in this Taskfile.yaml file to be modified by this task cli itself.
       EXCLUDED_FILES: |
         {{.TASKFILE_DIR}}/Taskfile.yaml
         MORE_FILES_CAN_GO_HERE
@@ -55,9 +58,12 @@ tasks:
     cmds:
       - task: check-new-tag-var
       - task: update-image-tags
+        # "# STAGING_IMAGE_TAG" comments exists in the "staging.yaml" file
+        # in "kluctl" folder.
         vars:
           IDENTIFIER_COMMENT: "# STAGING_IMAGE_TAG"
-          # Starts at the repo root directory
+          # Starts at the repo root directory by using the
+          # absolute path of the root of git repo
           STARTING_PATH:
             sh: git rev-parse --show-toplevel
 
@@ -67,6 +73,8 @@ tasks:
     cmds:
       - task: check-new-tag-var
       - task: update-image-tags
+        # "# PRODUCTION_IMAGE_TAG" comments exists in the "production.yaml" file
+        # in "kluctl" folder.
         vars:
           IDENTIFIER_COMMENT: "# PRODUCTION_IMAGE_TAG"
           STARTING_PATH:
