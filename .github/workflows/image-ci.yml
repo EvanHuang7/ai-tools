@@ -1,0 +1,139 @@
+# GitHub workflow name
+name: image-ci
+
+# Set up the trigger of workflow
+on:
+  push:
+    # Code is pushed to main branch
+    branches:
+      - "main"
+    # Or push a tag matches this format, such as "0.0.1"
+    tags:
+      - "[0-9]*.[0-9]*.[0-9]*"
+    paths:
+      # Only rebuild images when thoese folder files
+      # (application code and Dockerfiles) are changed to avoid
+      # the workflow triggered when changing unrelated files.
+      - "frontend/**/*"
+      - "go-backend/**/*"
+      - "node-backend/**/*"
+      - "python-backend/**/*"
+
+jobs:
+  # 1st job of workflow is to generate the image tag
+  generate-image-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.generate-image-tag.outputs.image_tag }}
+    steps:
+      # "actions/checkout@v4 action" is used clone the repository into
+      # the runner environment so that subsequent steps can access the code.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # By default, "actions/checkout" performs a shallow clone with
+          # a fetch-depth of 1, which only includes the latest commit.
+          # This is faster, but does not include tags or full commit history.
+          # Setting fetch-depth: 0 tells GitHub Actions to fetch the
+          # entire Git history and all tags.
+          # Necessary to get all tags for IMAGE_TAG generation with "git describe"
+          fetch-depth: 0
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+
+      - name: Generate Image Tag
+        id: generate-image-tag
+        working-directory: cicd/github-actions
+        run: |
+          image_tag=$(task generate-version-tag)
+          echo "image_tag=$image_tag" >> $GITHUB_OUTPUT
+
+  # 2nd job of workflow is to take the image tag as input to
+  # build tag and push all container images
+  build-tag-push:
+    runs-on: ubuntu-latest
+    needs: generate-image-tag
+    # Matrix strategy allow 4 services to be built for container images
+    # in parallel in 4 pipelines all at once.
+    # "strategy.matrix" runs the same steps 4 times in parallel,
+    # once for each value in matrix.path.
+    strategy:
+      matrix:
+        path:
+          - frontend
+          - go-backend
+          - node-backend
+          - python-backend
+
+    steps:
+      # Clone the repo, so Git workflow have access to the codebase.
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+
+      # Allows Docker Buildx to emulate different CPU architectures
+      # (e.g. build ARM images on x86 machines).
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        # Make sure set up the secrets for them first in Git.
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Image
+        env:
+          IMAGE_TAG: ${{ needs.generate-image-tag.outputs.image_tag }}
+        working-directory: ${{ matrix.path }}
+        run: |
+          task build-container-image-multi-arch IMAGE_TAG=${IMAGE_TAG}
+
+  # 3rd job of workflow is to update the image tags.
+  update-tags:
+    runs-on: ubuntu-latest
+    needs: [generate-image-tag, build-tag-push]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+
+      # Run "task update-staging-image-tags" or "task update-production-image-tags"
+      # to update image tags.
+      - name: Update Image Tags
+        working-directory: cicd/github-actions
+        env:
+          IMAGE_TAG: ${{ needs.generate-image-tag.outputs.image_tag }}
+        run: |
+          # Update staging tags for push to main or release tag
+          task update-staging-image-tags NEW_TAG=${IMAGE_TAG}            
+
+          # Update production tags only for release tags
+          if [[ $GITHUB_REF == refs/tags/*.*.* ]]; then
+            task update-production-image-tags NEW_TAG=${IMAGE_TAG}
+          fi
+
+      # Create a PR after updating the image tags, so that we can
+      # review and check the image tages change before merging changes.
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          base: main
+          token: ${{ secrets.DEVOPS_DIRECTIVE_KUBERNETES_COURSE_GITHUB_ACTION_PAT }}
+          title: "Update image tags to (${{ needs.generate-image-tag.outputs.image_tag }})"
