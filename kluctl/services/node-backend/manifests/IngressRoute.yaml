@@ -8,10 +8,8 @@ spec:
     - web
   routes:
     - kind: Rule
-      # match: Host(`{{ sharedVars.hostName }}`) && PathPrefix(`/api/node`)
-
-      # Remove Host(`{{ sharedVars.hostName }}`) if you don't set a DNS
-      # record for the ExternalIP and your own domain
+      # We can use "sharedVars.hostName" kluctl variable to sepcifcy the
+      # host if you set a DNS record for the ExternalIP and your own domain
       match: PathPrefix(`/api/node`)
       middlewares:
         - name: strip-api-prefixes

@@ -34,6 +34,8 @@ spec:
             - name: PORT
               value: "8088"
           envFrom:
+            # NOTE: This K8s Secret would be availale only if we
+            # deployed external secrets for app services to consume
             - secretRef:
                 name: python-backend-secrets
           ports:

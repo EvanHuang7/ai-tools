@@ -6,7 +6,8 @@ metadata:
   labels:
     app: frontend
 spec:
-  replicas: { { frontend.replicas } }
+  # prettier-ignore
+  replicas: {{ frontend.replicas }}
   selector:
     matchLabels:
       app: frontend

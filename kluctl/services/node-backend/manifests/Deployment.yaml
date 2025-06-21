@@ -6,7 +6,8 @@ metadata:
   labels:
     app: node-backend
 spec:
-  replicas: { { nodeBackend.replicas } }
+  # prettier-ignore
+  replicas: {{ nodeBackend.replicas }}
   selector:
     matchLabels:
       app: node-backend

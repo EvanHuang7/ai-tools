@@ -6,7 +6,8 @@ metadata:
   labels:
     app: go-backend
 spec:
-  replicas: { { goBackend.replicas } }
+  # prettier-ignore
+  replicas: {{ goBackend.replicas }}
   selector:
     matchLabels:
       app: go-backend

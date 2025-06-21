@@ -8,10 +8,8 @@ spec:
     - web
   routes:
     - kind: Rule
-      # Remove Host(`{{ sharedVars.hostName }}`) if you don't set a DNS
-      # record for the ExternalIP and your own domain
-
-      # match: Host(`{{ sharedVars.hostName }}`)
+      # We can use "sharedVars.hostName" kluctl variable to sepcifcy the
+      # host if you set a DNS record for the ExternalIP and your own domain
       match: PathPrefix(`/`)
       services:
         - kind: Service

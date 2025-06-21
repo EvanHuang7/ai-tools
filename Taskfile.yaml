@@ -18,7 +18,7 @@ includes:
   frontend:
     taskfile: ./frontend/Taskfile.yaml
     dir: ./frontend
-  ######### Deploy Traefik ingress controller in K8s Cluster#########
+  ######### Deploy Traefik ingress controller in K8s Cluster #########
   # Eg. Cli: "task common:deploy-traefik"
   common:
     taskfile: ./common-k8s-resource-defins/Taskfile.yaml
@@ -28,6 +28,11 @@ includes:
   external-secrets:
     taskfile: ./external-secrets-k8s-resource-defins/Taskfile.yaml
     dir: ./external-secrets-k8s-resource-defins
+  ######### Deploy app to different environments (staging & production) #########
+  # Eg. Cli: "task kluctl:render-staging"
+  kluctl:
+    taskfile: ./kluctl/Taskfile.yaml
+    dir: ./kluctl
 
 env:
   CLUSTER_NAME: ai-tools
