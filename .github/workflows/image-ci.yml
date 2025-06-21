@@ -4,7 +4,7 @@ name: image-ci
 # Set up the trigger of workflow
 on:
   push:
-    # Code is pushed to main branch
+    # Code change within specified "paths" is pushed to main branch
     branches:
       - "main"
     # Or push a release tag matches this format, such as "0.0.1"
@@ -142,5 +142,6 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           base: main
-          token: ${{ secrets.DEVOPS_DIRECTIVE_KUBERNETES_COURSE_GITHUB_ACTION_PAT }}
+          # The GitHub Personal Access Token
+          token: ${{ secrets.MY_GITHUB_ACTION_PAT }}
           title: "Update image tags to (${{ needs.generate-image-tag.outputs.image_tag }})"

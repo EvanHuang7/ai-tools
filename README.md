@@ -1056,7 +1056,14 @@ task gcp:09-clean-up
 
 We will use `GitHub actions` for Continuous Integrataion and `Kluctl` for Continuous Deployment
 
--
+1. Add necessary secrets to you GitHub repo, which allow GitHub workflow to use
+
+- Go to your GitHub repository of this project
+- Click **Settings → Secrets and variables → Actions** button
+- Click click **New repository secret** button
+- Add `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`, and `MY_GITHUB_ACTION_PAT` secrets.
+
+2.
 
 ## <a name="run-app-in-kind">⚙️ Run App in Kind Cluster Locally</a>
 
