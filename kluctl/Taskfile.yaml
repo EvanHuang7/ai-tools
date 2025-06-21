@@ -24,6 +24,7 @@ tasks:
     desc: "Deploy staging configuration"
 
   # Delete all K8s resources managed by kluctl for staging
+  # So everything in "ai-tools" and "traefik" namespaces will be deleted.
   delete-staging:
     cmds:
       - kluctl delete -t staging
@@ -41,8 +42,8 @@ tasks:
       - kluctl deploy -t production
     desc: "Deploy production configuration"
 
-  # Delete all K8s resources managed by kluctl for production
-  # This means all resources related to External Secret won't be deleted.
+  # Delete all K8s resources managed by kluctl for production.
+  # So everything in "ai-tools" and "traefik" namespaces will be deleted.
   delete-production:
     cmds:
       - kluctl delete -t production
