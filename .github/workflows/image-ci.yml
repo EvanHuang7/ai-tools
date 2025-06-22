@@ -7,7 +7,7 @@ on:
     # Code change within specified "paths" is pushed to main branch
     branches:
       - "main"
-    # Or push a release tag matches this format, such as "0.0.1"
+    # Or publish a release tag matches this format, such as "0.0.1"
     tags:
       - "[0-9]*.[0-9]*.[0-9]*"
     paths:
@@ -120,9 +120,9 @@ jobs:
       # Run "task update-staging-image-tags" and "task update-production-image-tags"
       # to update image tags.
       # "task update-staging-image-tags" would be ran every single time
-      # when the GitHub worflow triggered triggered by a push to main branch or a release tag.
+      # when the GitHub worflow triggered triggered by a push to main branch or publish a release tag.
       # "task update-production-image-tags" is only ran when the workflow
-      # is triggered by a release tag matching "*.*.*" format.
+      # is triggered by a new published release tag matching "*.*.*" format.
       - name: Update Image Tags
         working-directory: cicd/github-actions
         env:

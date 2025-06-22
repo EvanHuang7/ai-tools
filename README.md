@@ -778,7 +778,7 @@ kubectl config view --raw
 ```
 
 - Now, You can use `kubectl` on your **host** machine to interact with the GKE cluster you just created.
-  - 1st cli is to check if GKE cluster in Kubernetes contexts and clusters. Please make sure you **are using GKE cluster** in `kubectx`.
+  - 1st cli is to check if GKE cluster in Kubernetes contexts and clusters. Please make sure you **are using GKE cluster** in `kubectx` (Swith cluster by running `kubectx <custer-context-name>`).
   - 2nd and 3rd clis are to view the current (GKE) cluster's worker nodes and system pods
 
 ```
@@ -800,7 +800,7 @@ devbox install
 ```
 
 - You can use `kubectl` on your **project devbox** to interact with the GKE cluster now.
-  - 1st cli is to check if GKE cluster in Kubernetes contexts and clusters. Please make sure you **are using GKE cluster** in `kubectx`.
+  - 1st cli is to check if GKE cluster in Kubernetes contexts and clusters. Please make sure you **are using GKE cluster** in `kubectx` (Swith cluster by running `kubectx <custer-context-name>`).
   - 2nd and 3rd clis are to view the current (GKE) cluster's worker nodes and system pods
 
 ```
@@ -1006,18 +1006,18 @@ task kluctl:render-staging
 task kluctl:deploy-staging
 ```
 
-⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error.
+- ⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error.
 
-🤔 Reason: If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error.
+- 🤔 Reason: If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error.
 
-- Kubernetes doesn't apply resources in dependency order unless you explicitly control it.
-- Even if you apply the CRDs first (in the same deploy), Kubernetes may still be registering the CRD with the API server when Kluctl moves on to the `IngressRoute` manifest.
-- So the resource fails because Kubernetes doesn’t recognize the new kind yet.
+  - Kubernetes doesn't apply resources in dependency order unless you explicitly control it.
+  - Even if you apply the CRDs first (in the same deploy), Kubernetes may still be registering the CRD with the API server when Kluctl moves on to the `IngressRoute` manifest.
+  - So the resource fails because Kubernetes doesn’t recognize the new kind yet.
 
-🛠️ Fix: You can just redeploy the app by running same cli again.
+- 🛠️ Fix: You can just redeploy the app by running same cli again.
 
-- After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
-- So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
+  - After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
+  - So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
 
 - Check the yaml files after rendering with template of production env
 
@@ -1033,7 +1033,11 @@ task kluctl:deploy-production
 
 3. Now, you have your app configed with `Staging` and `Prod` environment specfication seperatly running in two K8s cluster.
 
-- Switch `kubectx` to view `Staging` and `Prod` environment clusters info and status.
+- Switch cluster to view `Staging` and `Prod` environment clusters info and status.
+
+```
+kubectx <custer-context-name>
+```
 
 - View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer **if you don't use a hostname** for `IngressRoutes` in `kluctl` by running:
 
@@ -1086,7 +1090,9 @@ TODO: Consider adding lint build and test build steps into the GitHub workflow.
 - Click click **New repository secret** button
 - Add `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`, and `MY_GITHUB_ACTION_PAT` secrets.
 
-2. Verify the **Continuous Integrataion** process by updating and pushing any code change in `frontend` folder, so that you can check if the push triggers a workflow in the `Actions` tab of your GitHub repository.
+2. Verify the **Continuous Integrataion** process by updating and pushing any code change in `frontend` folder, so that you can check if the push triggers a workflow in the `Actions` tab of your GitHub repository. Also, it will create a new PR including the image tag version change for **ONLY Staging enviroment**.
+
+⚠️ Note: The GitHub workflow would also update the new image tag for **Production environment in the new PR only if** a new released tag matching **0.0.0** format is pushlised in GitHub Repo. You can test this by trying to publish a tag in your GitHub Repo.
 
 3. Use `Kluctl GitOps` to deploy app to Staging and Production clusters.
 
@@ -1127,20 +1133,26 @@ task cicd:kluctl-gitops:port-forward-webui
 
 - Go to `http://localhost:8080/` kluctl web ui page and log in with `admin` username and the random password we just copied to view deployment status.
 
-⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error.
+  - ⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error.
 
-🤔 Reason: If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error
+  - 🤔 Reason: If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error
 
-- Kubernetes doesn't apply resources in dependency order unless you explicitly control it.
-- Even if you apply the CRDs first (in the same deploy), Kubernetes may still be registering the CRD with the API server when Kluctl moves on to the `IngressRoute` manifest.
-- So the resource fails because Kubernetes doesn’t recognize the new kind yet.
+    - Kubernetes doesn't apply resources in dependency order unless you explicitly control it.
+    - Even if you apply the CRDs first (in the same deploy), Kubernetes may still be registering the CRD with the API server when Kluctl moves on to the `IngressRoute` manifest.
+    - So the resource fails because Kubernetes doesn’t recognize the new kind yet.
 
-🛠️ Fix: You can just easily click the **kebab menu button** of `ai-tools(staing)` card and click **🚀 Deploy** button to redeploy the app from kluctl web ui page to fix the error or warning.
+  - 🛠️ Fix: You can just easily click the **kebab menu button** of `ai-tools(staing)` card and click **🚀 Deploy** button to redeploy the app from kluctl web ui page to fix the error or warning.
 
-- After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
-- So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
+    - After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
+    - So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
 
--
+- Switch to **production cluster** by running `kubectx <custer-context-name>` cli, and follow the same step to deploy the app to **production cluster**.
+
+- Now, the kluctl deployment will watch the Git Repo and check for **any new Git commits pushed to GitHub** and rerun the re-deployment every 5 minutes. The re-deployment would still start even if the commits change does not include the files in `kluctl` folder that is used by **kluctl deployment to render and apply resources**.
+
+- **Verify auto-deployment for Clusters**, you can push a new commit to GitHub and check if new K8s pods created or check if there is a deployment process in kluctl web ui.
+
+TODO: Consider add this for VM if it is not too complex. I think it's easy to monitor the images change in DockerHub and apply the updated images to cluster. But it's may be a bit hard to monitor the GitHub repo change and apply the updated K8s resources definition to cluster.
 
 ## <a name="set-up-cd-for-vm">Set up CD for GCE VM</a>
 
@@ -1220,7 +1232,7 @@ task frontend:build-container-image-multi-arch
 
 4. Create namespace and deploy Traefik ingress controller in Kind Cluster locally first
 
-- Make sure you are currently using Kind cluster by running:
+- Make sure you are currently using Kind cluster by running (Switch cluster by running `kubectx <custer-context-name>`):
 
   ```
   kubectx
