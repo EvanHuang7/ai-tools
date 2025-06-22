@@ -1051,7 +1051,7 @@ kubectl get svc -n traefik
 
 - If you use a hostname for `IngressRoutes` in `kluctl`, you need to create a DNS record for the `EXTERNAL-IP` and your hostname first. Then, you can view the app with your hostname
 
-7. 🚨🚨🚨 Clean up to aviod cost 💸💸💸💸💸💸
+4. 🚨🚨🚨 Clean up to aviod cost 💸💸💸💸💸💸
 
 Remember to remove the cluster after you finish testing or development because a running cluster with K8s resource charges you by running time. You can use new user credit to cover the fee for first 3 months new user, but you will need to pay after 3 months.
 
@@ -1092,7 +1092,7 @@ TODO: Consider adding lint build and test build steps into the GitHub workflow.
 
 2. Verify the **Continuous Integrataion** process by updating and pushing any code change in `frontend` folder, so that you can check if the push triggers a workflow in the `Actions` tab of your GitHub repository. Also, it will create a new PR including the image tag version change for **ONLY Staging enviroment**.
 
-⚠️ Note: The GitHub workflow would also update the new image tag for **Production environment in the new PR only if** a new released tag matching **0.0.0** format is pushlised in GitHub Repo. You can test this by trying to publish a tag in your GitHub Repo.
+⚠️ Note: The GitHub workflow would also update the new image tag for **Production environment in the new PR ONLY IF** a **new released tag** matching **0.0.0** format is **pushlised** in GitHub Repo. You can test this by trying to publish a tag in your GitHub Repo.
 
 3. Use `Kluctl GitOps` to deploy app to Staging and Production clusters.
 
