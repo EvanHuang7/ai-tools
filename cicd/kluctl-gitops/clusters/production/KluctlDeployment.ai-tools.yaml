@@ -11,6 +11,9 @@ spec:
   interval: 5m
   source:
     git:
+      # The KluctlDeployment watches this Git Repo. Any new
+      # Git commits pushed to Git Repo will trigger a re-deploy.
+      # The re-deployment would start even if the "kluctl" folder does not change.
       url: https://github.com/EvanHuang7/ai-tools.git
       # It will control the deployment of application itself
       # because we define the all resources of app in kluctl folder.

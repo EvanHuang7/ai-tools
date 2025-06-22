@@ -12,7 +12,9 @@ spec:
   interval: 5m
   source:
     git:
-      # This tells kluctl about our project specifically
+      # The KluctlDeployment watches this Git Repo. Any new
+      # Git commits pushed to Git Repo will trigger a re-deploy.
+      # The re-deployment would start even if the "kluctl" folder does not change.
       url: https://github.com/EvanHuang7/ai-tools.git
       # Kluctl will be able to manage itself via GitOps
       # by specifying this.
