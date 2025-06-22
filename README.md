@@ -1006,7 +1006,11 @@ task kluctl:render-staging
 task kluctl:deploy-staging
 ```
 
-- ⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error.
+- ⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error. Our app is actully running correctly now because our `IngressRoute` were all created. You can check all created `IngressRoute` by running:
+
+```
+kubectl get ingressroutes -A
+```
 
 - 🤔 Reason: If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error.
 
@@ -1014,7 +1018,7 @@ task kluctl:deploy-staging
   - Even if you apply the CRDs first (in the same deploy), Kubernetes may still be registering the CRD with the API server when Kluctl moves on to the `IngressRoute` manifest.
   - So the resource fails because Kubernetes doesn’t recognize the new kind yet.
 
-- 🛠️ Fix: You can just redeploy the app by running same cli again.
+- 🛠️ Fix: For safer option, we can still fix it easily by redeploying the app with running same cli again.
 
   - After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
   - So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
@@ -1133,7 +1137,11 @@ task cicd:kluctl-gitops:port-forward-webui
 
 - Go to `http://localhost:8080/` kluctl web ui page and log in with `admin` username and the random password we just copied to view deployment status.
 
-  - ⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error.
+  - ⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error. Our app is actully running correctly now because our `IngressRoute` were all created. You can check all created `IngressRoute` by running:
+
+    ```
+    kubectl get ingressroutes -A
+    ```
 
   - 🤔 Reason: If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error
 
@@ -1141,10 +1149,22 @@ task cicd:kluctl-gitops:port-forward-webui
     - Even if you apply the CRDs first (in the same deploy), Kubernetes may still be registering the CRD with the API server when Kluctl moves on to the `IngressRoute` manifest.
     - So the resource fails because Kubernetes doesn’t recognize the new kind yet.
 
-  - 🛠️ Fix: You can just easily click the **kebab menu button** of `ai-tools(staing)` card and click **🚀 Deploy** button to redeploy the app from kluctl web ui page to fix the error or warning.
+  - 🛠️ Fix: For safer option, we can still fix it easily by clicking the **kebab menu button** of `ai-tools(staing)` card and clicking **🚀 Deploy** button to redeploy the app from kluctl web ui page to fix the error or warning.
 
     - After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
     - So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
+
+- View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer **if you don't use a hostname** for `IngressRoutes` in `kluctl` by running:
+
+```
+kubectl get all -n traefik
+
+OR
+
+kubectl get svc -n traefik
+```
+
+- If you use a hostname for `IngressRoutes` in `kluctl`, you need to create a DNS record for the `EXTERNAL-IP` and your hostname first. Then, you can view the app with your hostname.
 
 - Switch to **production cluster** by running `kubectx <custer-context-name>` cli, and follow the same step to deploy the app to **production cluster**.
 
