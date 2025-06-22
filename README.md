@@ -1038,10 +1038,16 @@ kubectl get svc -n traefik
 
 Remember to remove the cluster after you finish testing or development because a running cluster with K8s resource charges you by running time. You can use new user credit to cover the fee for first 3 months new user, but you will need to pay after 3 months.
 
-- Only Delete the demo cluster by running
+- Only Delete the **entire demo cluster** by running
 
 ```
 gcloud container clusters delete ai-tools-demo --zone us-central1-a
+```
+
+- OR only delete the **resources in demo cluster**, but still **keeping the demo cluster** by running
+
+```
+task kluctl:delete-staging
 ```
 
 - Delete **everything** including the GCP network, subnet, firewall rules, and **all clusters** by running:
@@ -1054,7 +1060,7 @@ task gcp:09-clean-up
 
 We will use `GitHub actions` for Continuous Integrataion and `Kluctl GitOps` for Continuous Deployment.
 
-📌 Note: The concept of `GitOps` is to have a controller running in K8s cluster. The controller is able to automatically pull updates from Git, which can be triggered via a webhook. This keep those updates in sync with the deployed state of cluster.
+📌 Note: The concept of `GitOps` is to have a **controller** running in K8s cluster. The controller is able to **automatically pull updates from Git**, which can be triggered via a webhook. This keep those updates in sync with the deployed state of cluster.
 
 🚨 Important: The **Set up different app environment (🛠️Staging and 🚀Prod)** section is required to be finished first before starting this section.
 
@@ -1069,7 +1075,56 @@ TODO: Consider adding lint build and test build steps into the GitHub workflow.
 
 2. Verify the **Continuous Integrataion** process by updating and pushing any code change in `frontend` folder, so that you can check if the push triggers a workflow in the `Actions` tab of your GitHub repository.
 
-3.
+3. Use `Kluctl GitOps` to deploy app to Staging and Production clusters.
+
+- ⚠️ We should **delete all resources** in clusters to get two fresh Staging and Production clusters first **if we manually deployed app** into these cluster by using the task clis in `kluctl` folder.
+
+```
+task kluctl:delete-staging
+```
+
+```
+task kluctl:delete-production
+```
+
+- Deploy app to **Staing cluster** by deploying `Kluctl GitOps` to the fresh Staing cluster.
+
+```
+task cicd:kluctl-gitops:deploy-gitops-to-staging-cluster
+```
+
+- View **all kluctl deployments** across all namespaces and all pods including **kluctl controller and kluctl webui** in `kluctl-system` namespaces,
+
+```
+kubectl get kluctldeployments.gitops.kluctl.io -A
+kubectl get pods -n kluctl-system
+```
+
+- View random password (eg. `g9vqztq5rd7d2rxtqs29xsz7rw4vxbrl`) of kluctl webui and copy the password value manually
+
+```
+task cicd:kluctl-gitops:get-webui-password
+```
+
+- Port forward kluctl webui to localhost 8080 port
+
+```
+task cicd:kluctl-gitops:port-forward-webui
+```
+
+- Go to `http://localhost:8080/` kluctl web ui page and log in with `admin` username and the random password we just copied to view deployment status.
+
+⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error. You can just easily click the **kebab menu button** of `ai-tools(staing)` card and click **🚀 Deploy** button to redeploy the app from kluctl web ui page to fix the error or warning.
+
+🤔 Reason: If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error
+
+- Kubernetes doesn't apply resources in dependency order unless you explicitly control it.
+- Even if you apply the CRDs first (in the same deploy), Kubernetes may still be registering the CRD with the API server when Kluctl moves on to the `IngressRoute` manifest.
+- So the resource fails because Kubernetes doesn’t recognize the new kind yet.
+- If you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
+- So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
+
+-
 
 ## <a name="run-app-in-kind">⚙️ Run App in Kind Cluster Locally</a>
 
