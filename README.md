@@ -1172,6 +1172,8 @@ kubectl get svc -n traefik
 
 - **Verifying auto-deployment for Clusters**, you can push a new commit to GitHub by editing any `frontend UI text` and check if new K8s pods created or check if there is a deployment process in kluctl web ui.
 
+📌 Note: You can **ONLY** see the `Reconciliation State` time of application is updated in kluctl web ui, **but there is NO** new pod created in K8s because K8s did not find out any changes of existing deployments, so it skip creating new pods.
+
 TODO: Consider add this for VM if it is not too complex. I think it's easy to monitor the images change in DockerHub and apply the updated images to cluster. But it's may be a bit hard to monitor the GitHub repo change and apply the updated K8s resources definition to cluster.
 
 ## <a name="set-up-cd-for-vm">Set up CD for GCE VM</a>
