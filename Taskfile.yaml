@@ -35,7 +35,7 @@ includes:
     dir: ./kluctl
   ######### CI&CD clis used by GitHub Workflow to start CI process #########
   # Eg. Cli: "task cicd:github-actions:generate-version-tag"
-  # Eg. Cli: "task cicd:kluctl-gitops:deploy-gitops-to-staging-cluster"
+  # Eg. Cli: "task cicd:kluctl-gitops:deploy-app-with-gitops-to-staging-cluster"
   cicd:
     taskfile: ./cicd/Taskfile.yaml
     dir: ./cicd

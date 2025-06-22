@@ -1,13 +1,13 @@
 version: "3"
 
 tasks:
-  deploy-gitops-to-staging-cluster:
-    desc: "Deploy kluctl gitops to staging target/cluster"
+  deploy-app-with-gitops-to-staging-cluster:
+    desc: "Deploy app and kluctl gitops to staging target/cluster"
     cmds:
       - kluctl deploy -t staging
 
-  deploy-gitops-to-production-cluster:
-    desc: "Deploy kluctl gitops to production target/cluster"
+  deploy-app-with-gitops-to-production-cluster:
+    desc: "Deploy app and kluctl gitops to production target/cluster"
     cmds:
       - kluctl deploy -t production
 

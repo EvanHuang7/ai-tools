@@ -1109,7 +1109,7 @@ task kluctl:delete-production
 - Deploy app to **Staing cluster** by deploying `Kluctl GitOps` to the fresh Staing cluster.
 
 ```
-task cicd:kluctl-gitops:deploy-gitops-to-staging-cluster
+task cicd:kluctl-gitops:deploy-app-with-gitops-to-staging-cluster
 ```
 
 - View **all kluctl deployments** across all namespaces and all pods including **kluctl controller and kluctl webui** in `kluctl-system` namespaces,
