@@ -1170,7 +1170,7 @@ kubectl get svc -n traefik
 
 - Now, the kluctl deployment will watch the Git Repo and check for **any new Git commits pushed to GitHub** and rerun the re-deployment every 5 minutes. The re-deployment would still start even if the commits change does not include the files in `kluctl` folder that is used by **kluctl deployment to render and apply resources**.
 
-- **Verify auto-deployment for Clusters**, you can push a new commit to GitHub and check if new K8s pods created or check if there is a deployment process in kluctl web ui.
+- **Verifying auto-deployment for Clusters**, you can push a new commit to GitHub by editing any `frontend UI text` and check if new K8s pods created or check if there is a deployment process in kluctl web ui.
 
 TODO: Consider add this for VM if it is not too complex. I think it's easy to monitor the images change in DockerHub and apply the updated images to cluster. But it's may be a bit hard to monitor the GitHub repo change and apply the updated K8s resources definition to cluster.
 
