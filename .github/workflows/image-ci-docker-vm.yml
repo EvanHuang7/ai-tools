@@ -66,7 +66,7 @@ jobs:
       # Build and push images to Docker Hub.
       - name: Build Image
         env:
-          IMAGE_TAG: latest
+          IMAGE_TAG: developing
         working-directory: ${{ matrix.path }}
         run: |
           task build-container-image-multi-arch IMAGE_TAG=${IMAGE_TAG}
