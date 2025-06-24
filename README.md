@@ -194,7 +194,7 @@ python manage.py runserver 8088
 
 Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
 
-## <a name="deploy-app-in-gce">☁️ Free: Deploy App with Docker Compose 🐳 in GCE VM (GCP)</a>
+## <a name="deploy-app-in-gce">☁️ GCE(GCP) VM: Deploy App with Docker Compose 🐳 </a>
 
 📌 If your VM has enough CPU and Memory, it would be best to deploy this microservices project as K8s cluster using k3s or as docker containers using Docker swarm, so that we can taking advantanges of these k8s cluster orchestrator or container orchestrator. The pros to use orchestrator instead of Docker compose:
 
@@ -500,7 +500,7 @@ sudo systemctl status nginx
 docker ps
 ```
 
-## <a name="deploy-app-with-docker-swarm-in-gce">☁️ Free: Deploy App with 🐳🐳 Docker Swarm 🐳🐳 in GCE VM (GCP)</a>
+## <a name="deploy-app-with-docker-swarm-in-gce">☁️ GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳</a>
 
 Deploy app as Docker services that manage tasks (containers) via Docker Swarm (Use more VM CPU and memory than docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
 
