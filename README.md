@@ -707,7 +707,7 @@ The case of NO Nginx in VM:
   - Same logic for `proxy_pass http://node-backend:3000/`
   - Same logic for `proxy_pass http://python-backend:8088/`
 
-## <a name="deploy-app-in-gke">☁️ No-Free: Deploy App as K8s Cluster in GKE (GCP)</a>
+## <a name="deploy-app-in-gke">☁️ GKE (GCP): Deploy App as K8s Cluster</a>
 
 🚨🚨🚨 TODO: deploy a postgre database service via Helm chart in K8s cluster for learning purpose
 
@@ -974,7 +974,7 @@ Delete the GCP network, subnet, firewall rules, and cluster that we just created
 task gcp:09-clean-up
 ```
 
-## <a name="set-up-different-app-environment">Set up different app environment (🛠️Staging and 🚀Prod)</a>
+## <a name="set-up-different-app-environment">Deploy app on 🛠️Demo and 🚀Prod environment</a>
 
 🚨 Important: Please make sure to update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file to your own clusters first.
 
@@ -1077,7 +1077,7 @@ task kluctl:delete-staging
 task gcp:09-clean-up
 ```
 
-## <a name="set-up-ci-cd">Set up CI & CD for GKE Cluster</a>
+## <a name="set-up-ci-cd">🔁 GKE (GCP):Set up CI & CD for Cluster apps</a>
 
 We will use `GitHub actions` for Continuous Integrataion and `Kluctl GitOps` for Continuous Deployment.
 
@@ -1174,11 +1174,13 @@ kubectl get svc -n traefik
 
 📌 Note: You can **ONLY** see the `Reconciliation State` time of application is updated in kluctl web ui, **but there is NO** new pod created in K8s because K8s did not find out any changes of existing deployments, so it skip creating new pods.
 
-## <a name="set-up-cd-for-vm">Set up CD for GCE VM</a>
+## <a name="set-up-cd-for-vm">🔁 GCE(GCP) VM:Set up CI & CD for Docker apps</a>
+
+- Follow the same **CI step** in **🔁 GKE (GCP):Set up CI & CD for Cluster apps** section.
 
 - Connect to GCP VM
 
-- Deploy `Watchtower` in GCP VM to auto-redeploy containers when new container images are found from Docker Hub by running
+- For **CD step**, deploying `Watchtower` in GCP VM to auto-redeploy containers when new container images are found from Docker Hub by running
 
   - Check every 30 seconds
 
