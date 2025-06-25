@@ -2,10 +2,10 @@ from app import create_app
 
 app = create_app()
 
-# Cli to start virtual env: source .venv/bin/activate
+# Cli to start virtual env in ROOR FOLDER: source .venv/bin/activate
 # Cli to exit virtual env: deactivate
 
-# Cli to run app:
+# Cli to run app in PYTHON PROJECT FOLDER:
 # export FLASK_APP=run.py
 # export FLASK_ENV=development
 # flask run --reload --port=8088
