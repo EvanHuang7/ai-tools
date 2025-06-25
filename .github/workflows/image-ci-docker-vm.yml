@@ -6,8 +6,11 @@ name: image-ci-docker-vm
 on:
   push:
     # Code change within specified "paths" is pushed to main branch
-    branches:
-      - "main"
+
+    # ⚠️ Warning: Disable CI workflow for app development
+    # branches:
+    #   - "main"
+
     # Or publish a release tag matches this format, such as "0.0.1"
     tags:
       - "[0-9]*.[0-9]*.[0-9]*"
