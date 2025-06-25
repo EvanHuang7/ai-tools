@@ -13,18 +13,20 @@
 3. 🚀 [Features](#features)
 4. 🧩 [Diagram and Screenshots](#diagram-screenshots)
 5. ⚙️ [Installation and Start Project](#installation-start-project)
-   - [⭐ Prerequisites](#prerequisites)
-   - [⭐ Cloning the Repository](#clone-repo)
-   - [⭐ Packages Installation](#install-packages)
-   - [⭐ Create a Cluster in MongoDB](#create-mongodb-cluster)
-   - [⭐ Set Up Environment Variables](#set-up-env-variables)
-   - [⭐ Running the Project](#running-project)
-6. [☁️ GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
-7. [☁️ GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳](#deploy-app-in-gce-with-docker-swarm)
-8. [☁️ GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
-9. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
-10. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
-11. 👨‍💼 [About the Author](#about-the-author)
+   - ⭐ [Prerequisites](#prerequisites)
+   - ⭐ [Cloning the Repository](#clone-repo)
+   - ⭐ [Packages Installation](#install-packages)
+   - ⭐ [Create a Cluster in MongoDB](#create-mongodb-cluster)
+   - ⭐ [Set Up Environment Variables](#set-up-env-variables)
+   - ⭐ [Running the Project](#running-project)
+6. ☁️ [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
+7. ☁️ [GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳](#deploy-app-in-gce-with-docker-swarm)
+8. ☁️ [GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
+9. 🔁 [GKE (GCP):Set up CI & CD for Cluster apps](#set-up-ci-cd-for-cluster)
+10. 🔁 [GCE(GCP) VM:Set up CI & CD for Docker apps](#set-up-ci-cd-for-docker)
+11. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
+12. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
+13. 👨‍💼 [About the Author](#about-the-author)
 
 ## <a name="introduction">📋 Introduction</a>
 
@@ -1078,7 +1080,7 @@ task kluctl:delete-staging
 task gcp:09-clean-up
 ```
 
-## <a name="set-up-ci-cd">🔁 GKE (GCP):Set up CI & CD for Cluster apps</a>
+## <a name="set-up-ci-cd-for-cluster">🔁 GKE (GCP):Set up CI & CD for Cluster apps</a>
 
 We will use `GitHub actions` for Continuous Integrataion and `Kluctl GitOps` for Continuous Deployment.
 
@@ -1175,7 +1177,7 @@ kubectl get svc -n traefik
 
 📌 Note: You can **ONLY** see the `Reconciliation State` time of application is updated in kluctl web ui, **but there is NO** new pod created in K8s because K8s did not find out any changes of existing deployments, so it skip creating new pods.
 
-## <a name="set-up-cd-for-vm">🔁 GCE(GCP) VM:Set up CI & CD for Docker apps</a>
+## <a name="set-up-ci-cd-for-docker">🔁 GCE(GCP) VM:Set up CI & CD for Docker apps</a>
 
 - Follow the same **CI step** in **🔁 GKE (GCP):Set up CI & CD for Cluster apps** section.
 
