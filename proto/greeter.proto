@@ -2,10 +2,11 @@ syntax = "proto3";
 
 package greeter;
 
-// Generate proto stubs for Go backend (run this CLI in Repo Root level):
-// "protoc --proto_path=proto   --go_out=go-backend/gen --go-grpc_out=go-backend/gen   proto/greeter.proto"
+// Generate proto stubs for Go backend (run CLI in Repo Root level):
+// "protoc --proto_path=proto --go_out=go-backend/gen --go-grpc_out=go-backend/gen proto/greeter.proto"
 
-// We don't need to generate proto stubs for Node backend bc Node loads ".proto" dynamically.
+// Generate proto stubs for Node backend (run CLI in node-backend level):
+// "npm run generate:proto" 
 option go_package = "./greeter;greeter";
 
 service GreeterService {
