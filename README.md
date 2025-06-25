@@ -19,11 +19,12 @@
    - [⭐ Create a Cluster in MongoDB](#create-mongodb-cluster)
    - [⭐ Set Up Environment Variables](#set-up-env-variables)
    - [⭐ Running the Project](#running-project)
-6. ☁️ [Free: Deploy App in GCE VM (GCP)](#deploy-app-in-gce)
-7. ☁️ [No-Free: Deploy App as K8s Cluster in GKE (GCP)](#deploy-app-in-gke)
-8. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
-9. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
-10. 👨‍💼 [About the Author](#about-the-author)
+6. [☁️ GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
+7. [☁️ GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳](#deploy-app-in-gce-with-docker-swarm)
+8. [☁️ GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
+9. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
+10. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
+11. 👨‍💼 [About the Author](#about-the-author)
 
 ## <a name="introduction">📋 Introduction</a>
 
@@ -194,7 +195,7 @@ python manage.py runserver 8088
 
 Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
 
-## <a name="deploy-app-in-gce">☁️ GCE(GCP) VM: Deploy App with Docker Compose 🐳 </a>
+## <a name="deploy-app-in-gce-with-docker-compose">☁️ GCE(GCP) VM: Deploy App with Docker Compose 🐳</a>
 
 📌 If your VM has enough CPU and Memory, it would be best to deploy this microservices project as K8s cluster using k3s or as docker containers using Docker swarm, so that we can taking advantanges of these k8s cluster orchestrator or container orchestrator. The pros to use orchestrator instead of Docker compose:
 
@@ -500,7 +501,7 @@ sudo systemctl status nginx
 docker ps
 ```
 
-## <a name="deploy-app-with-docker-swarm-in-gce">☁️ GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳</a>
+## <a name="deploy-app-in-gce-with-docker-swarm">☁️ GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳</a>
 
 Deploy app as Docker services that manage tasks (containers) via Docker Swarm (Use more VM CPU and memory than docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
 
