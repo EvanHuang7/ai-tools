@@ -40,7 +40,8 @@ func main() {
 	r.GET("/messages", handlers.GetMessages)
 
 	// Add gRPC APIs:
-	handlers.StartGrpcServer()
+	// Start gRPC server in a new goroutine so it doesn't block HTTP server
+    go handlers.StartGrpcServer()
 
 	port := os.Getenv("PORT")
 	if port == "" {

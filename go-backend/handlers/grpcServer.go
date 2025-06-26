@@ -30,7 +30,7 @@ func StartGrpcServer() {
 	s := grpc.NewServer()
 	pb.RegisterGreeterServiceServer(s, &greeterServer{})
 
-	log.Println("gRPC server listening on port 50051")
+	log.Println("go gRPC server listening on port 50051")
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
