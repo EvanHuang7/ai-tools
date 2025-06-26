@@ -25,7 +25,7 @@ on:
 
 jobs:
   # build tag and push all container images
-  build-tag-push:
+  build-and-push-image:
     runs-on: ubuntu-latest
     # Matrix strategy allow 4 services to be built for container images
     # in parallel in 4 pipelines all at once.
