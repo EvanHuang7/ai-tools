@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"go-backend/handlers"
+	"go-backend/api"
 	"go-backend/internal/db"
 
 	"github.com/gin-gonic/gin"
@@ -36,12 +36,15 @@ func main() {
 	})
 
 	// Add message APIs:
-	r.POST("/messages", handlers.CreateMessage)
-	r.GET("/messages", handlers.GetMessages)
+	r.POST("/messages", api.CreateMessage)
+	r.GET("/messages", api.GetMessages)
+
+	// Add sendPubSubMessage API:
+	r.POST("/pubsubMessage", api.SendPubSubMessage)
 
 	// Add gRPC APIs:
 	// Start gRPC server in a new goroutine so it doesn't block HTTP server
-    go handlers.StartGrpcServer()
+    go api.StartGrpcServer()
 
 	port := os.Getenv("PORT")
 	if port == "" {
