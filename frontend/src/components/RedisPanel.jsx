@@ -15,7 +15,7 @@ const RedisPanel = () => {
 
   return (
     <div>
-      <h2>Redis Test</h2>
+      <h2>⭐ Redis Test</h2>
       <input
         value={key}
         onChange={(e) => setKey(e.target.value)}

@@ -19,7 +19,7 @@ const SupabasePostgrePanel = () => {
 
   return (
     <div>
-      <h2>Supabase Postgre Test</h2>
+      <h2>⭐ Supabase Postgre Test</h2>
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}

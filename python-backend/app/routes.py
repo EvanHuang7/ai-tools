@@ -92,7 +92,7 @@ def grpc_greet():
         client = greeter_pb2_grpc.GreeterServiceStub(channel)
 
         # Create the request message
-        request_message = greeter_pb2.HelloRequest(name="Python Client")
+        request_message = greeter_pb2.HelloRequest(name="Python Backend")
 
         # Call the SayHello RPC
         response = client.SayHello(request_message, timeout=3)  # 3 seconds timeout

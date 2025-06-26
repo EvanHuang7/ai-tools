@@ -9,7 +9,7 @@ const CurrentTime = ({ api }) => {
 
   return (
     <div>
-      <p>API: {data.api}</p>
+      <h2>⭐ API: {data.api}</h2>
       <p>Time from DB: {data.currentTime}</p>
       <div>{isFetching && "Updating..."}</div>
     </div>

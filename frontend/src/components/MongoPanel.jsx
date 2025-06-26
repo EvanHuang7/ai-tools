@@ -15,7 +15,7 @@ const MongoPanel = () => {
 
   return (
     <div>
-      <h2>Mongo Test</h2>
+      <h2>⭐ Mongo Test</h2>
       <input
         value={userId}
         onChange={(e) => setUserId(e.target.value)}

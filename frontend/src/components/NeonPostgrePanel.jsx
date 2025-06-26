@@ -19,7 +19,7 @@ const NeonPostgrePanel = () => {
 
   return (
     <div>
-      <h2>Neon Postgre Test</h2>
+      <h2>⭐ Neon Postgre Test</h2>
       <input
         value={userId}
         onChange={(e) => setUserId(e.target.value)}

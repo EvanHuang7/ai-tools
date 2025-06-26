@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	pb "go-backend/gen/greeter" // adjust to your module
 
@@ -16,7 +17,8 @@ type greeterServer struct {
 }
 
 func (s *greeterServer) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
-	msg := fmt.Sprintf("Hello, %s! (from Go gRPC server)", req.Name)
+	currentTime := time.Now().Format(time.RFC3339)
+	msg := fmt.Sprintf("%s called the API from Go gRPC server at %s", req.Name, currentTime)
 	return &pb.HelloResponse{Message: msg}, nil
 }
 

@@ -1,10 +1,12 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import "./App.css";
+
 import CurrentTime from "./components/CurrentTime";
 import RedisPanel from "./components/RedisPanel";
 import SupabasePostgrePanel from "./components/SupabasePostgrePanel";
 import NeonPostgrePanel from "./components/NeonPostgrePanel";
 import MongoPanel from "./components/MongoPanel";
-import "./App.css";
+import GrpcCall from "./components/GrpcCall";
 
 export function App() {
   return (
@@ -15,6 +17,7 @@ export function App() {
       <CurrentTime api="/api/python/" />
       <RedisPanel />
       <MongoPanel />
+      <GrpcCall />
       <SupabasePostgrePanel />
       <NeonPostgrePanel />
       <ReactQueryDevtools initialIsOpen={false} />
