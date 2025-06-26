@@ -35,9 +35,12 @@ func main() {
 		c.JSON(200, "pong")
 	})
 
-	// Add your message APIs here:
+	// Add message APIs:
 	r.POST("/messages", handlers.CreateMessage)
 	r.GET("/messages", handlers.GetMessages)
+
+	// Add gRPC APIs:
+	handlers.StartGrpcServer()
 
 	port := os.Getenv("PORT")
 	if port == "" {
