@@ -3,6 +3,9 @@ from datetime import datetime
 import json
 
 from .models import Plan
+# gRPC imports
+import grpc
+from gen import greeter_pb2, greeter_pb2_grpc
 
 bp = Blueprint("main", __name__)
 
@@ -76,3 +79,22 @@ def read_plans():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# gRPC call to go backend
+@bp.route("/grpc-greet", methods=["GET"])
+def grpc_greet():
+    try:
+        # Connect to the gRPC server (Go server running on localhost:50051)
+        channel = grpc.insecure_channel("localhost:50051")
+        client = greeter_pb2_grpc.GreeterServiceStub(channel)
+
+        # Create the request message
+        request_message = greeter_pb2.HelloRequest(name="Python Client")
+
+        # Call the SayHello RPC
+        response = client.SayHello(request_message, timeout=3)  # 3 seconds timeout
+
+        return jsonify({"message": response.message})
+
+    except grpc.RpcError as e:
+        return jsonify({"error": f"gRPC call failed: {e}"}), 500
