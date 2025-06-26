@@ -11,7 +11,7 @@ import GrpcCall from "./components/GrpcCall";
 export function App() {
   return (
     <div>
-      <h1>AI Tools App 👋 Test Auto-deployment for GCP VM!</h1>
+      <h1>AI Tools App 👋 Test gRPC call for GKE Cluster!</h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
       <CurrentTime api="/api/python/" />
