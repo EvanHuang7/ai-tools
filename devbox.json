@@ -23,7 +23,9 @@
     "tilt@latest",
     "yq-go@latest",
     "google-cloud-sdk@latest",
-    "protobuf@latest"
+    "python312Packages.grpcio",
+    "python312Packages.grpcio-tools",
+    "python312Packages.protobuf"
   ],
   "shell": {
     "init_hook": [
