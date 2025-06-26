@@ -3,11 +3,6 @@ import morgan from "morgan";
 import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
 
-// gRPC implementation
-import http2 from "http2";
-import { connectNodeAdapter } from "@connectrpc/connect-node";
-import { GreeterService } from "./gen/greeter_connect.js";
-
 // Express app config
 const app = express();
 const port = process.env.PORT || 3000;
@@ -64,30 +59,4 @@ process.on("SIGTERM", () => {
   server.close(() => {
     console.debug("HTTP server closed");
   });
-});
-
-// gRPC implementation
-const greeterServiceImpl = {
-  sayHello(request) {
-    return { message: `Hello, ${request.message.name}! (from gRPC server)` };
-  },
-};
-
-const grpcHandler = connectNodeAdapter({
-  routes(router) {
-    router.service(GreeterService, greeterServiceImpl);
-  },
-});
-
-const grpcServer = http2.createServer((req, res) => {
-  if (req.url.startsWith("/grpc")) {
-    grpcHandler(req, res);
-  } else {
-    res.statusCode = 404;
-    res.end("Not found");
-  }
-});
-
-grpcServer.listen(50051, () => {
-  console.log("gRPC HTTP2 server listening on port 50051");
 });

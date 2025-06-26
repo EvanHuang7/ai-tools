@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "generate:proto": "protoc   --proto_path=../proto   --plugin=protoc-gen-es=node_modules/.bin/protoc-gen-es   --plugin=protoc-gen-connect=node_modules/.bin/protoc-gen-connect-es   --es_out=src/gen   --connect_out=src/gen   ../proto/greeter.proto"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -12,10 +11,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@bufbuild/protobuf": "^1.10.1",
-    "@connectrpc/connect": "1.6.1",
-    "@connectrpc/connect-node": "1.6.1",
-    "@grpc/grpc-js": "^1.13.4",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
     "express": "^5.1.0",
@@ -24,8 +19,6 @@
     "postgres": "^3.4.7"
   },
   "devDependencies": {
-    "@bufbuild/protoc-gen-es": "1.10.1",
-    "@connectrpc/protoc-gen-connect-es": "1.6.1",
     "drizzle-kit": "^0.31.1",
     "nodemon": "^3.1.10"
   }
