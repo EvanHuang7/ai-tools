@@ -20,7 +20,7 @@ func SendPubSubMessage(c *gin.Context) {
 	}
 
 	projectID := "steadfast-pivot-462821-p7"
-	topicID := "my-topic"
+	topicID := "my-first-topic"
 
 	id, err := service.PublishMessage(c.Request.Context(), projectID, topicID, req.Message)
 	if err != nil {

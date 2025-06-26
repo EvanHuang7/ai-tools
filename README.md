@@ -41,22 +41,41 @@
 - **📡 Node Backend Service**:
 
   - **Node.js, Express.js, JavaScript**,
+  - **Supabase PostgreSql DB, Drizzle ORM**
 
 - **📡 Go Backend Service**:
 
   - **Go, Gin**,
+  - **Neon PostgreSql DB, GORM**
 
 - **📡 Python Backend Service**:
 
   - **Python, Django**,
+  - **MongoDB, Upstash Redis, MongoEngine**
 
-- **⚙️ Other Tools**:
+- **☁️ Deployment and CI&CD Techs**
 
-  - Docker
-  - Devbox
-  - Kind Cluster
-  - Helm (use it to install a Helm chart as app or tool in k8s cluster from Helm repository or OCI repository)
-  - Oras (use it interact with OCI registry (such as Docker Hub) repos)
+  - Docker & Docker Hub for building and storing container images
+  - Deploy app in GKE via Kubernate cluster
+    - Cloudflare for DNS hosting and SSL/TLS encryption
+    - Traefik for load balancer and traffic distribution
+    - GCP Secret Manager for sensative Secrets Management
+    - GCP IAM for GCP services authentication
+  - Deploy app in GCE VM via Docker Compose or Docker Swarm
+    - DuckDNS for DNS hosting
+    - Nginx and Certbox for SSL/TLS encryption
+    - Nginx for traffic distribution
+  - GitHub Action Workflow for **Continuous Integration**
+  - **Continuous Deployment**
+    - KluCtl for GKE Kubernate cluster
+    - WatchTower for GCE VM
+
+- **⚙️ Other Tools & Techs**:
+  - Services communication
+    - HTTP (frontend -> backends commnunication)
+    - gRPC (Python backend -> Go backend commnunication)
+    - GCP Pub/Sub (Go backend -> Nodejs backend commnunication)
+    - Kafka (Nodejs backend -> Python backend commnunication)
 
 ## <a name="features">🚀 Features</a>
 
@@ -135,7 +154,23 @@ Create a cluster by selecting a free plan and `Drivers` connection method under 
 
 ### <a name="create-redis-in-upstash">⭐ Create a Redis DB in Upstash</a>
 
-### <a name="create-postgre-db">⭐ Create a Local PostgreSql DB</a>
+### <a name="create-postgre-db-in-supabase">⭐ Create a PostgreSql DB in Supabase</a>
+
+### <a name="create-postgre-db-in-neon">⭐ Create a PostgreSql DB in Neon</a>
+
+### <a name="create-postgre-db-in-neon">⭐ Set up GCP Pub/Sub</a>
+
+1. Create topic and subscription by running
+
+```
+gcloud pubsub topics create my-first-topic
+
+gcloud pubsub subscriptions create nodejs-subscription --topic=my-first-topic
+```
+
+2. Authentication for GCP VM case
+
+3. Authentication for GKE Cluster case
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
