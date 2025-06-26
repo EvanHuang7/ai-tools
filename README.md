@@ -550,7 +550,9 @@ cd dockerSwarmFolder
 nano docker-swarm.yml
 ```
 
-- Create docker secrets for Docker swarm services to consume first (Remember to replace your url string to real a url string)
+- Create docker secrets for Docker swarm services to consume first
+  - ⚠️ Note: Remember to replace your url string to real a url string
+  - Create secrets for all env variables if there are more
 
 ```
 printf 'your url' | docker secret create supabase-postgres-database-url -

@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app
 from datetime import datetime
+import os
 import json
 
 from .models import Plan
@@ -84,8 +85,10 @@ def read_plans():
 @bp.route("/grpc-greet", methods=["GET"])
 def grpc_greet():
     try:
-        # Connect to the gRPC server (Go server running on localhost:50051)
-        channel = grpc.insecure_channel("localhost:50051")
+        # Connect to the gRPC server (Go server running on 50051 port)
+        grpc_host = os.getenv("GRPC_HOST", "localhost")
+        grpc_port = os.getenv("GRPC_PORT", "50051")
+        channel = grpc.insecure_channel(f"{grpc_host}:{grpc_port}")
         client = greeter_pb2_grpc.GreeterServiceStub(channel)
 
         # Create the request message

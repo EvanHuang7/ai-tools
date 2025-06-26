@@ -81,6 +81,7 @@ services:
     environment:
       - REDIS_URL=rediss://default:AaXyAAIjcDFkYWFhNzEzMmE3MmU0MzkyOWQ3NTA4ZTllMmI5Mjk5ZnAxMA@enough-lobster-42482.upstash.io:6379
       - MONGODB_URL=mongodb+srv://mrxiaohui204:eZG55LdPqpWb62yO@cluster0.bjhjsnn.mongodb.net/ai_tools_db?retryWrites=true&w=majority&appName=Cluster0
+      - GRPC_HOST=go-backend
     restart: unless-stopped
     healthcheck:
       # Use the custom "healthcheck.py" file to test container
