@@ -314,9 +314,27 @@ tasks:
           --member="serviceAccount:ai-tools-gsa@steadfast-pivot-462821-p7.iam.gserviceaccount.com" \
           --role="roles/pubsub.subscriber"
 
+  # Download GSA key file for local development usage
   general:download-gsa-key-locally:
-    desc: "Add GSA annotation to the default KSA under ai-tools namespace for workload identity"
+    desc: "Download GSA key file for local development usage"
     cmds:
       - |
         gcloud iam service-accounts keys create ai-tools-gsa-local-key.json \
         --iam-account ai-tools-gsa@steadfast-pivot-462821-p7.iam.gserviceaccount.com
+
+  ######### Set up GCP services access for GCE VM #########
+  gceVmPubsubAccess:attach-pubsub-permissions-to-GCE-VM-GSA:
+    desc: "Attach GCP Pub/Sub permissions to the GSA of GCE VM"
+    cmds:
+      - cmd: gum style "Attach roles/pubsub.publisher to the GSA of GCE VM"
+        silent: true
+      - |
+        gcloud projects add-iam-policy-binding steadfast-pivot-462821-p7 \
+          --member="serviceAccount:170922314966-compute@developer.gserviceaccount.com" \
+          --role="roles/pubsub.publisher"
+      - cmd: gum style "Attach roles/pubsub.subscriber to the GSA of GCE VM"
+        silent: true
+      - |
+        gcloud projects add-iam-policy-binding steadfast-pivot-462821-p7 \
+          --member="serviceAccount:170922314966-compute@developer.gserviceaccount.com" \
+          --role="roles/pubsub.subscriber"

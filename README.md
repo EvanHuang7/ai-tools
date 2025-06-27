@@ -188,6 +188,20 @@ task pubsubAccess:attach-pubsub-permissions-to-GSA
 
 3. Authentication for running app in GCP VM case
 
+- Find the GCP VM's GSA
+
+  - Go to **GCP Console** > Go to **Compute Engine > VM instances**
+  - Click on your VM
+  - Scroll down to **Service account** (eg. `1234567890-compute@developer.gserviceaccount.com`)
+
+- Update `gceVmPubsubAccess:attach-pubsub-permissions-to-GCE-VM-GSA` task cli in `Taskfile.yaml` file to use your own VM GSA
+
+- Attach required GCP Pub/Sub access to the GSA of GCP VM by running
+
+```
+task gceVmPubsubAccess:attach-pubsub-permissions-to-GCE-VM-GSA
+```
+
 4. Authentication for running app in local machine
 
 - Download a service account key for local use
