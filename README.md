@@ -202,6 +202,14 @@ task pubsubAccess:attach-pubsub-permissions-to-GSA
 task gceVmPubsubAccess:attach-pubsub-permissions-to-GCE-VM-GSA
 ```
 
+- Enable `Cloud Pub/Sub` access of **Cloud API access scopes** in GCP VM if it is currently off.
+  - Stop the current running GCP VM
+  - Click **Edit** button in VM info page
+  - Select `Set access for each API` for **Access scopes**
+  - Select **Enable** for `Cloud Pub/Sub`
+  - Click **Save** button
+  - Start GCP VM again
+
 4. Authentication for running app in local machine
 
 - Download a service account key for local use
@@ -221,6 +229,8 @@ ls ~/Downloads/ai-tools-gsa-local-key.json
 ```
 GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 ```
+
+### <a name="create-postgre-db-in-neon">⭐ Set up Kafka or RabbitMQ?</a>
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
@@ -355,6 +365,9 @@ curl https://get.docker.com/ | sh
 ```
 
 - Update user permission to access Docker
+
+TODO: test it
+🚨 Important: This cli is required to be ran again whenever the VM reboots and Docker restart.
 
 ```
 sudo chown $USER /var/run/docker.sock
