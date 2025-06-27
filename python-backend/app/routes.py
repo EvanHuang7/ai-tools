@@ -3,7 +3,7 @@ from datetime import datetime
 import os
 import json
 
-from .models import Plan
+from .models import Plan, KafkaMessage
 # gRPC imports
 import grpc
 from gen import greeter_pb2, greeter_pb2_grpc
@@ -101,3 +101,14 @@ def grpc_greet():
 
     except grpc.RpcError as e:
         return jsonify({"error": f"gRPC call failed: {e}"}), 500
+    
+# List kafka message
+@bp.route("/listKafkaMessages", methods=["GET"])
+def listKafkaMessages():
+    try:
+        kafkaMessages = KafkaMessage.objects()
+        return jsonify({
+            "messages": [{"message": m.message} for m in kafkaMessages]
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
