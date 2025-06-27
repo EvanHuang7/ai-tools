@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import { listenForPubSubMessages } from "./service/pubsubReceiver.js";
 import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
 
@@ -52,6 +53,11 @@ app.get("/users", async (_, res) => {
 // node server listens on all interfaces (both external and localhost of physical machine or VM or container).
 const server = app.listen(port, () => {
   console.log(`Node server listening on port ${port}`);
+
+  // Start listening to GCP Pub/Sub messages once server is running
+  listenForPubSubMessages().catch((err) => {
+    console.error("Failed to start GCP Pub/Sub listener:", err);
+  });
 });
 
 process.on("SIGTERM", () => {

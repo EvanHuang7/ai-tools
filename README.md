@@ -170,7 +170,7 @@ gcloud pubsub topics create my-first-topic
 gcloud pubsub subscriptions create nodejs-subscription --topic=my-first-topic
 ```
 
-2. Authentication for GKE Cluster case
+2. Authentication for running app in GKE Cluster
 
 - Create Google IAM service account (GSA) for app first, then bind and annotate default Kubernate service account (KSA) with GSA
 
@@ -186,7 +186,9 @@ task general:03-annotate-KSA-with-GSA
 task pubsubAccess:attach-pubsub-permissions-to-GSA
 ```
 
-3. Authentication for GCP VM case
+3. Authentication for running app in GCP VM case
+
+4. Authentication for running app in local machine
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
