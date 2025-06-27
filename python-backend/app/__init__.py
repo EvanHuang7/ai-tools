@@ -1,6 +1,7 @@
 from flask import Flask
 from mongoengine import connect
 import redis
+import threading
 from . import config
 from . import kafka
 
@@ -17,7 +18,10 @@ def create_app():
     app.redis_client = redis.from_url(config.REDIS_URL)
     
     # Start a Kafka connection as consumer once server is running
-    kafka.connectKafkaConsumer()
+    # Kafka connection is running in a separate daemon thread or background task,
+    # so that it won't block starting the python app server.
+    consumer_thread = threading.Thread(target=kafka.connectKafkaConsumer, daemon=True)
+    consumer_thread.start()
 
     from .routes import bp as main_bp
     app.register_blueprint(main_bp)
