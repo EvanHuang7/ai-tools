@@ -14,7 +14,7 @@ export function App() {
     <div>
       <h1>
         AI Tools App 👋 Test GCP PubSub for GCP VM! (Fix CA Cert in Go image and
-        use Go slim image)
+        use Go regular bulleyes image)
       </h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />

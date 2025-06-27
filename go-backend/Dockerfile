@@ -2,7 +2,7 @@
 # Pin specific version for stability
 # Use separate stage for building image
 # Use debian for easier build utilities
-FROM golang:1.24.4-bullseye-slim AS build-base
+FROM golang:1.24.4-bullseye  AS build-base
 
 WORKDIR /app 
 
