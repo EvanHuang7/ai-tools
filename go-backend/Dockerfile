@@ -14,16 +14,6 @@ RUN --mount=type=cache,target=/go/pkg/mod \
   --mount=type=cache,target=/root/.cache/go-build \
   go mod download
 
-FROM build-base AS dev
-
-# Install air for hot reload & delve for debugging
-RUN go install github.com/cosmtrek/air@latest && \
-  go install github.com/go-delve/delve/cmd/dlv@latest
-
-COPY . .
-
-CMD ["air", "-c", ".air.toml"]
-
 FROM build-base AS build-production
 
 # Add non root user

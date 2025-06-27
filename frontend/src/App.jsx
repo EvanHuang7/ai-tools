@@ -14,7 +14,7 @@ export function App() {
     <div>
       <h1>
         AI Tools App 👋 Test GCP PubSub for GKE Cluster! (Fix CA Cert in Go
-        image)
+        image,2)
       </h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
