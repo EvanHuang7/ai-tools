@@ -1,4 +1,5 @@
 from confluent_kafka import Consumer, KafkaException
+from .models import KafkaMessage
 
 conf = {
     'bootstrap.servers': 'd1fgarsdfulgj4bj0b60.any.us-west-2.mpx.prd.cloud.redpanda.com:9092',
@@ -23,8 +24,16 @@ def connectKafkaConsumer():
                 continue
             if msg.error():
                 raise KafkaException(msg.error())
-            print(f"Received message: {msg.value().decode('utf-8')}")
+            decodedMessage = msg.value().decode('utf-8') 
+            print(f"Received message: {decodedMessage}")
+            createKafkaMessage(decodedMessage)
     except KeyboardInterrupt:
         pass
     finally:
         consumer.close()
+        
+def createKafkaMessage(message):
+    try:
+        KafkaMessage(message=message).save()
+    except Exception as e:
+        print(f"Failed to save Kafka message: {e}")
