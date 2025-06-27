@@ -190,6 +190,24 @@ task pubsubAccess:attach-pubsub-permissions-to-GSA
 
 4. Authentication for running app in local machine
 
+- Download a service account key for local use
+
+```
+task general:download-gsa-key-locally
+```
+
+- Move this key file from you project to host Download folder and find the absolute file path (eg. `/Users/evan/Downloads/ai-tools-gsa-local-key.json`) of your downloaded JSON credentials on macOS by running
+
+```
+ls ~/Downloads/ai-tools-gsa-local-key.json
+```
+
+- Add env varabile to `.env` files in `go-backend` and `node-backend` services.
+
+```
+GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
+```
+
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
 - Create a `.env` file under **node-backend** folder of your project and add the following content:

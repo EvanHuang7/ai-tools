@@ -1,4 +1,4 @@
-import PubSub from "google-cloud/pubsub";
+import { PubSub } from "@google-cloud/pubsub";
 
 const projectId = "steadfast-pivot-462821-p7";
 
