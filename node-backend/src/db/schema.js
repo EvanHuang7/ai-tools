@@ -9,3 +9,12 @@ export const users = pgTable("users", {
     mode: "date", // important
   }).defaultNow(),
 });
+
+export const gcpPubSubMessages = pgTable("gcpPubSubMessages", {
+  id: serial("id").primaryKey().notNull(), // serial will be auto-generated
+  message: text("message").notNull(),
+  createdAt: timestamp("created_at", {
+    withTimezone: false,
+    mode: "date", // important
+  }).defaultNow(),
+});
