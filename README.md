@@ -72,10 +72,10 @@
 
 - **⚙️ Other Tools & Techs**:
   - Services communication
-    - HTTP (frontend -> backends commnunication)
-    - gRPC (Python backend -> Go backend commnunication)
-    - GCP Pub/Sub (Go backend -> Nodejs backend commnunication)
-    - Kafka (Nodejs backend -> Python backend commnunication)
+    - **HTTP** (frontend -> backends commnunication)
+    - **gRPC** (Python backend -> Go backend commnunication)
+    - Message broker via **GCP Pub/Sub** (Go backend -> Nodejs backend commnunication)
+    - Event Streaming via **Kafka** in RedPanda (Nodejs backend -> Python backend commnunication)
 
 ## <a name="features">🚀 Features</a>
 
@@ -230,7 +230,7 @@ ls ~/Downloads/ai-tools-gsa-local-key.json
 GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 ```
 
-### <a name="create-postgre-db-in-neon">⭐ Set up RedPanda</a>
+### <a name="create-postgre-db-in-neon">⭐ Set up Redpanda Cloud</a>
 
 - Create a **Redpanda Cloud** account with a free default cluster created
 
@@ -238,11 +238,13 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 
 - Copy the value of `Bootstrap server URL`
 
-- Click **Manage credentials** button and create a user with userName and password
+- Click **Manage credentials** button and create a user with userName (eg. `ai-tools-redpanda-user`) and password
 
 - Copy the values of `userName` and `password`
 
-- Select **ACLs** to give the new created user **Allow all operations** access
+- Select **ACLs** tab and click the new created user (eg. `ai-tools-redpanda-user`)
+
+- Click **Allow all operations** and **Save** buttons
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 

@@ -8,6 +8,7 @@ import NeonPostgrePanel from "./components/NeonPostgrePanel";
 import MongoPanel from "./components/MongoPanel";
 import GrpcCall from "./components/GrpcCall";
 import GcpPubSub from "./components/GcpPubSub";
+import KafkaMessage from "./components/KafkaMessage";
 
 export function App() {
   return (
@@ -25,6 +26,7 @@ export function App() {
       <NeonPostgrePanel />
       <GrpcCall />
       <GcpPubSub />
+      <KafkaMessage />
       <ReactQueryDevtools initialIsOpen={false} />
     </div>
   );
