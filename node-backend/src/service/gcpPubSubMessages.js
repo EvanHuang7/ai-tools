@@ -5,7 +5,7 @@ export const CreateGcpPubSubMessage = async (message) => {
   try {
     const result = await postgreDbClient
       .insert(gcpPubSubMessages)
-      .values({ message })
+      .values({ message: message + "(Received and stored in Nodejs service)" })
       .returning();
 
     return result[0];

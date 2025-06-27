@@ -7,6 +7,7 @@ import SupabasePostgrePanel from "./components/SupabasePostgrePanel";
 import NeonPostgrePanel from "./components/NeonPostgrePanel";
 import MongoPanel from "./components/MongoPanel";
 import GrpcCall from "./components/GrpcCall";
+import GcpPubSub from "./components/GcpPubSub";
 
 export function App() {
   return (
@@ -17,9 +18,10 @@ export function App() {
       <CurrentTime api="/api/python/" />
       <RedisPanel />
       <MongoPanel />
-      <GrpcCall />
       <SupabasePostgrePanel />
       <NeonPostgrePanel />
+      <GrpcCall />
+      <GcpPubSub />
       <ReactQueryDevtools initialIsOpen={false} />
     </div>
   );
