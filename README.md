@@ -158,7 +158,9 @@ Create a cluster by selecting a free plan and `Drivers` connection method under 
 
 ### <a name="create-postgre-db-in-neon">⭐ Create a PostgreSql DB in Neon</a>
 
-### <a name="create-postgre-db-in-neon">⭐ Set up GCP Pub/Sub</a>
+### <a name="create-postgre-db-in-neon">⭐ Set up GCP services access for app</a>
+
+🚨🚨🚨 Important: This **⭐ Set up GCP services access for app** is required to be finished for all sections about deploy app in GKE cluster.
 
 1. Create topic and subscription by running
 
@@ -168,9 +170,23 @@ gcloud pubsub topics create my-first-topic
 gcloud pubsub subscriptions create nodejs-subscription --topic=my-first-topic
 ```
 
-2. Authentication for GCP VM case
+2. Authentication for GKE Cluster case
 
-3. Authentication for GKE Cluster case
+- Create Google IAM service account (GSA) for app first, then bind and annotate default Kubernate service account (KSA) with GSA
+
+```
+task general:01-create-GSA
+task general:02-bind-KSA-with-GSA
+task general:03-annotate-KSA-with-GSA
+```
+
+- Attach GCP Pub/Sub permissions to GSA
+
+```
+task pubsubAccess:attach-pubsub-permissions-to-GSA
+```
+
+3. Authentication for GCP VM case
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 

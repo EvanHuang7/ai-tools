@@ -51,7 +51,7 @@ env:
   MARGIN: "1 1"
 
 tasks:
-  ######### Create K8s cluster in GCP #########
+  ######### Create K8s cluster in GKE/GCP #########
   gcp:01-init-cli:
     cmds:
       - gcloud init
@@ -264,3 +264,52 @@ tasks:
     desc: "List all secrets"
     cmds:
       - docker secret ls
+
+  ######### Set up GCP services access for GKE K8s cluster #########
+  general:01-create-GSA:
+    desc: "Create GCP IAM service account (GSA) for AI Tools App"
+    cmds:
+      - |
+        gcloud iam service-accounts create ai-tools-gsa \
+          --display-name "AI Tools App IAM Service Account"
+
+  general:02-bind-KSA-with-GSA:
+    desc: "Bind the default Kubernate service account under ai-tools namespace with GSA, which allows KSA to impersonate the GSA"
+    cmds:
+      - cmd: gum style "Attach roles/iam.workloadIdentityUser to allows the KSA to impersonate the GSA"
+        silent: true
+      - |
+        gcloud iam service-accounts add-iam-policy-binding ai-tools-gsa@steadfast-pivot-462821-p7.iam.gserviceaccount.com \
+          --role roles/iam.workloadIdentityUser \
+          --member "serviceAccount:steadfast-pivot-462821-p7.svc.id.goog[ai-tools/default]"
+      - cmd: gum style "Attach roles/iam.serviceAccountTokenCreator to allow the KSA to generate the token used for that impersonation"
+        silent: true
+      - |
+        gcloud iam service-accounts add-iam-policy-binding ai-tools-gsa@steadfast-pivot-462821-p7.iam.gserviceaccount.com \
+          --role="roles/iam.serviceAccountTokenCreator" \
+          --member="serviceAccount:steadfast-pivot-462821-p7.svc.id.goog[ai-tools/default]"
+
+  general:03-annotate-KSA-with-GSA:
+    desc: "Add GSA annotation to the default KSA under ai-tools namespace for workload identity"
+    cmds:
+      - |
+        kubectl annotate serviceaccount \
+        default \
+        --namespace ai-tools \
+        iam.gke.io/gcp-service-account=ai-tools-gsa@steadfast-pivot-462821-p7.iam.gserviceaccount.com
+
+  pubsubAccess:attach-pubsub-permissions-to-GSA:
+    desc: "Attach GCP Pub/Sub permissions to GSA"
+    cmds:
+      - cmd: gum style "Attach roles/pubsub.publisher to IAM service account"
+        silent: true
+      - |
+        gcloud projects add-iam-policy-binding steadfast-pivot-462821-p7 \
+          --member="serviceAccount:ai-tools-gsa@steadfast-pivot-462821-p7.iam.gserviceaccount.com" \
+          --role="roles/pubsub.publisher"
+      - cmd: gum style "Attach roles/pubsub.subscriber to IAM service account"
+        silent: true
+      - |
+        gcloud projects add-iam-policy-binding steadfast-pivot-462821-p7 \
+          --member="serviceAccount:ai-tools-gsa@steadfast-pivot-462821-p7.iam.gserviceaccount.com" \
+          --role="roles/pubsub.subscriber"

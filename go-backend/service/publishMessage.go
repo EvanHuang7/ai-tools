@@ -16,7 +16,7 @@ func PublishMessage(ctx context.Context, projectID, topicID, message string) (st
 
 	topic := client.Topic(topicID)
 	result := topic.Publish(ctx, &pubsub.Message{
-		Data: []byte(message),
+		Data: []byte(message + "(published from Go service)"),
 	})
 
 	id, err := result.Get(ctx)
