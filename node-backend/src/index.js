@@ -1,8 +1,9 @@
 import express from "express";
 import morgan from "morgan";
-import { listenForPubSubMessages } from "./service/pubsubReceiver.js";
+import { listenForPubSubMessages } from "./service/gcpPubsubListener.js";
 import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
+import { ListGcpPubSubMessages } from "./service/gcpPubSubMessages.js";
 
 // Express app config
 const app = express();
@@ -42,6 +43,16 @@ app.post("/users", async (req, res) => {
 app.get("/users", async (_, res) => {
   try {
     const result = await postgreDbClient.select().from(users);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Test GCP Pubsub
+app.get("/gcpPubsubMessage", async (_, res) => {
+  try {
+    const result = await ListGcpPubSubMessages();
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
