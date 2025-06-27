@@ -54,6 +54,9 @@ ENV GIN_MODE=release
 
 WORKDIR /
 
+# Copy the CA certs from golang:1.24.4-bullseye image to scratch image
+COPY --from=build-production /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+
 # Copy the passwd file
 COPY --from=build-production /etc/passwd /etc/passwd
 
