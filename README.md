@@ -366,7 +366,9 @@ sudo chown $USER /var/run/docker.sock
 docker ps
 ```
 
-4. Deploy app by running app containers with docker-compose file (Use minimal VM CPU and memory)
+5. Deploy app by running app containers with docker-compose file (Use minimal VM CPU and memory)
+
+🚨🚨🚨 Important: The **⭐ Set up GCP services access for app** subsection is required to be finished before starting this step
 
 - Create a folder
 
@@ -408,7 +410,7 @@ docker logs <container_id_or_name>
 
 TODO: Test it
 
-5. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if **VM reboots**
+6. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if **VM reboots**
 
 - Set the Docker daemon start automatically at VM reboots.
 
@@ -432,7 +434,7 @@ sudo reboot
 docker ps
 ```
 
-6. Set up a Domain
+7. Set up a Domain
 
 Get a free subdomain in **Duck DNS** and bind it to your VM static external IP address
 
@@ -445,7 +447,7 @@ Get a free subdomain in **Duck DNS** and bind it to your VM static external IP a
 - Click **update ip** button
 - Now, you can access the app with your subdomain (eg. `http://appName-yourName.duckdns.org/`)
 
-7. Get a free SSL certificate for domain
+8. Get a free SSL certificate for domain
 
 - Connect to VM in GCP console
 - Stop all running app containers
