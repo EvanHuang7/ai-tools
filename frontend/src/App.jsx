@@ -12,7 +12,7 @@ import GcpPubSub from "./components/GcpPubSub";
 export function App() {
   return (
     <div>
-      <h1>AI Tools App 👋 Test GCP PubSub for GCP VM!</h1>
+      <h1>AI Tools App 👋 Test GCP PubSub for GKE Cluster!</h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
       <CurrentTime api="/api/python/" />
