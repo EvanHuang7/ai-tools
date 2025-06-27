@@ -4,6 +4,7 @@ import { listenForPubSubMessages } from "./service/gcpPubsubListener.js";
 import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
 import { ListGcpPubSubMessages } from "./service/gcpPubSubMessages.js";
+import { connectKafkaProducer, kafkaProducer } from "./lib/kafka.js";
 
 // Express app config
 const app = express();
@@ -59,6 +60,26 @@ app.get("/gcpPubsubMessage", async (_, res) => {
   }
 });
 
+// Test Kafka messagee
+app.post("/sendKafkaMessage", async (req, res) => {
+  const { message } = req.body;
+
+  if (!message) {
+    return res.status(400).json({ error: "Missing message in request body" });
+  }
+
+  try {
+    await kafkaProducer.send({
+      topic: "hello-world",
+      messages: [{ value: message }],
+    });
+
+    res.json({ success: true, message });
+  } catch (err) {
+    console.error("Failed to send Kafka message:", err);
+    res.status(500).json({ error: "Failed to send Kafka message" });
+  }
+});
 // We omit the "host" argument between "port" and "()",
 // so the host is default to be '0.0.0.0', which means
 // node server listens on all interfaces (both external and localhost of physical machine or VM or container).
@@ -68,6 +89,11 @@ const server = app.listen(port, () => {
   // Start listening to GCP Pub/Sub messages once server is running
   listenForPubSubMessages().catch((err) => {
     console.error("Failed to start GCP Pub/Sub listener:", err);
+  });
+
+  // Start a Kafka connection as producer once server is running
+  connectKafkaProducer().catch((err) => {
+    console.error("Failed to connect Kafka producer:", err);
   });
 });
 

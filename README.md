@@ -230,7 +230,11 @@ ls ~/Downloads/ai-tools-gsa-local-key.json
 GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 ```
 
-### <a name="create-postgre-db-in-neon">⭐ Set up Kafka or RabbitMQ?</a>
+### <a name="create-postgre-db-in-neon">⭐ Set up RedPanda</a>
+
+- Create a **Redpanda Cloud** account with a free default cluster created
+
+-
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
