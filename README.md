@@ -368,7 +368,7 @@ docker ps
 
 5. Deploy app by running app containers with docker-compose file (Use minimal VM CPU and memory)
 
-🚨🚨🚨 Important: The **⭐ Set up GCP services access for app** subsection is required to be finished before starting this step
+🚨🚨🚨 Important: The **⭐ Set up GCP services access for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
 
 - Create a folder
 
@@ -1024,6 +1024,8 @@ task external-secrets:07-get-secret-value
   kubectl get svc
   ```
 
+🚨🚨🚨 Important: The **⭐ Set up GCP services access for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
+
 6. View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer by running:
 
 ```
@@ -1126,6 +1128,8 @@ task kluctl:render-production
 ```
 task kluctl:deploy-production
 ```
+
+🚨🚨🚨 Important: The **⭐ Set up GCP services access for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
 
 3. Now, you have your app configed with `Staging` and `Prod` environment specfication seperatly running in two K8s cluster.
 
@@ -1245,6 +1249,8 @@ task cicd:kluctl-gitops:port-forward-webui
 
     - After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
     - So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
+
+🚨🚨🚨 Important: The **⭐ Set up GCP services access for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
 
 - View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer **if you don't use a hostname** for `IngressRoutes` in `kluctl` by running:
 
