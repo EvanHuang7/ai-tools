@@ -13,8 +13,8 @@ export function App() {
   return (
     <div>
       <h1>
-        AI Tools App 👋 Test GCP PubSub for GKE Cluster! (Fix CA Cert in Go
-        image,2)
+        AI Tools App 👋 Test GCP PubSub for GCP VM! (Fix CA Cert in Go image and
+        use Go slim image)
       </h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
