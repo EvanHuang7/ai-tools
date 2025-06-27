@@ -1,13 +1,15 @@
 import { Kafka } from "kafkajs";
 
 const kafkaClient = new Kafka({
-  clientId: "node-app",
-  brokers: ["your-bootstrap-url:9092"],
+  clientId: "nodejs-app",
+  brokers: [
+    "d1fgarsdfulgj4bj0b60.any.us-west-2.mpx.prd.cloud.redpanda.com:9092",
+  ],
   ssl: true,
   sasl: {
-    mechanism: "plain",
-    username: "your-username",
-    password: "your-password",
+    mechanism: "SCRAM-SHA-256",
+    username: "ai-tools-redpanda-user",
+    password: "Ab12345678!",
   },
 });
 

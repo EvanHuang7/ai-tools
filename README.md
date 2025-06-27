@@ -234,7 +234,15 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 
 - Create a **Redpanda Cloud** account with a free default cluster created
 
--
+- Click **Kafka API** button in Cluster Overview page
+
+- Copy the value of `Bootstrap server URL`
+
+- Click **Manage credentials** button and create a user with userName and password
+
+- Copy the values of `userName` and `password`
+
+- Select **ACLs** to give the new created user **Allow all operations** access
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
