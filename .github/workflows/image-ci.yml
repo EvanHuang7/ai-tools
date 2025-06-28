@@ -8,8 +8,8 @@ on:
     # Code change within specified "paths" is pushed to main branch
 
     # ⚠️ Warning: Disable CI workflow for app development
-    # branches:
-    #   - "main"
+    branches:
+      - "main"
 
     # Or publish a release tag matches this format, such as "0.0.1"
     tags:
@@ -97,6 +97,17 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # Install required package for Ko to build Go backend image
+      - uses: actions/setup-go@v5
+        if: matrix.path == 'go-backend'
+        with:
+          go-version: "1.24.4"
+
+      - uses: ko-build/setup-ko@v0.6
+        if: matrix.path == 'go-backend'
+        with:
+          version: v0.15.4
+
       # NOTE: We can save and restore the docker cache across GitHub action
       # workflow runs to speed up the build time. But we did not do it here.
       # Build and push images to Docker Hub.
@@ -105,7 +116,11 @@ jobs:
           IMAGE_TAG: ${{ needs.generate-image-tag.outputs.image_tag }}
         working-directory: ${{ matrix.path }}
         run: |
-          task build-container-image-multi-arch IMAGE_TAG=${IMAGE_TAG}
+          if [[ "${{ matrix.path }}" == "go-backend" ]]; then
+            task build-container-image-multi-arch-with-ko IMAGE_TAG=${IMAGE_TAG}
+          else
+            task build-container-image-multi-arch IMAGE_TAG=${IMAGE_TAG}
+          fi
 
   # 3rd job of workflow is to update the image tags.
   update-tags-and-create-PR:

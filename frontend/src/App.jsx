@@ -14,8 +14,8 @@ export function App() {
   return (
     <div>
       <h1>
-        AI Tools App 👋 Test GCP PubSub for GCP VM! (Fix CA Cert in Go image and
-        use Go regular bulleyes image)
+        AI Tools App 👋 Test Kafka message for GKE Cluster! (and update GKE
+        cluster Git Workflow to use ko build GO app image))
       </h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
