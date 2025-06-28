@@ -5,6 +5,7 @@ import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
 import { ListGcpPubSubMessages } from "./service/gcpPubSubMessages.js";
 import { connectKafkaProducer, kafkaProducer } from "./lib/kafka.js";
+import userRoutes from "./routes/user.route.js";
 
 // Express app config
 const app = express();
@@ -80,6 +81,10 @@ app.post("/sendKafkaMessage", async (req, res) => {
     res.status(500).json({ error: "Failed to send Kafka message" });
   }
 });
+
+// Set up API routes
+app.use("/user", userRoutes);
+
 // We omit the "host" argument between "port" and "()",
 // so the host is default to be '0.0.0.0', which means
 // node server listens on all interfaces (both external and localhost of physical machine or VM or container).
