@@ -21,6 +21,17 @@ spec:
       # has higher precedence than PathPrefix("/"). So, Traefik would route the
       # traffic to most specific match → go to go-backend service.
 
+      ########### The flow of browser loads React app Explanation ###########
+      # For example, user open the app site (e.g., http://aitools-demo-evanhuang.duckdns.org/dashboard)
+      # 1. Browser makes a request tohttp://aitools-demo-evanhuang.duckdns.org/dashboard.
+      # 2. This goes to GKE cluster's LoadBalancer (external IP).
+      # 3. The Traefik Ingress Controller receives the request.
+      # 4. Ingress routes the request to the the frontend service running Nginx pod.
+      # 5. The Nginx pod serves your React app static files.
+      # 6. Downloads the React app from Nginx.
+      # 7. Which returns the built dist files, index.html, JS, CSS, etc.
+      # 8. The browser loads the site with these downloaded files.
+
       ########### The flow of frontend calls backend Explanation ###########
       # For example, frontend call an API with 1 line code, "axios.post("/api/go/messages", { userId, text });",
       # without specifying any host for this api call.
