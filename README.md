@@ -37,6 +37,8 @@
 - **🖥️ Frontend Service**:
 
   - **React.js, TypeScript**,
+  - **Clerk** for Authentication
+  - **Clerk Bill** for Payment
 
 - **📡 Node Backend Service**:
 
@@ -158,7 +160,7 @@ Create a cluster by selecting a free plan and `Drivers` connection method under 
 
 ### <a name="create-postgre-db-in-neon">⭐ Create a PostgreSql DB in Neon</a>
 
-### <a name="create-postgre-db-in-neon">⭐ Set up GCP services access for app</a>
+### <a name="set-up-gcp-services-access">⭐ Set up GCP services access for app</a>
 
 🚨🚨🚨 Important: This **⭐ Set up GCP services access for app** is required to be finished for all sections about deploy app in GKE cluster.
 
@@ -230,7 +232,7 @@ ls ~/Downloads/ai-tools-gsa-local-key.json
 GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 ```
 
-### <a name="create-postgre-db-in-neon">⭐ Set up Redpanda Cloud</a>
+### <a name="set-up-redpanda-cloud">⭐ Set up Redpanda Cloud</a>
 
 - Create a **Redpanda Cloud** account with a free default cluster created
 
@@ -245,6 +247,38 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 - Select **ACLs** tab and click the new created user (eg. `ai-tools-redpanda-user`)
 
 - Click **Allow all operations** and **Save** buttons
+
+### <a name="set-up-clerk">⭐ Set up Clerk</a>
+
+1. Get the Clerk auth key
+
+- Create a project under your Clerk account
+
+- Go to **Configure tab > API keys tab**
+
+- Select `React` and Copy the `VITE_CLERK_PUBLISHABLE_KEY` value
+
+2. Set up payment in Clerk
+
+- Go to **Subscription tab > Get started button**
+
+- Click **Create a plan** button to create first billing plan
+
+- Click the auto created `Free` plan
+
+- Enter `Perfect for trying out our AI tools` text for **Description**
+
+- Click **Add feature** button for adding new features for current `Free` plan
+
+  - Enter `100 credits per month` for **Name**
+  - Click **Create feature** button
+  - Add more features by following same steps again
+
+- Click **Save** button
+
+- Add more plans by following same steps again
+
+- Go to **Configure tab > Billing tab > Settings tab > Enable Billing button** after finishing adding all plans and corresponding features.
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
