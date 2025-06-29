@@ -3,6 +3,37 @@ kind: ConfigMap
 metadata:
   name: nginx-conf
   namespace: ai-tools
+
+########## "location /" Explanation ##########
+# This block matches ALL routes that start with "/"
+# Examples: "/", "/dashboard", "/about", "/pricing"
+# It’s the catch-all route for your React SPA.
+########## "root /usr/share/nginx/html" Explanation ##########
+# This sets the base folder where Nginx will look for static files (e.g. HTML, JS, CSS, images).
+# In Dockerfile, it copied all built dist files to "/usr/share/nginx/html" folder,
+# so this points to the app’s all dist files or static files.
+
+########## "index index.html index.htm" Explanation ##########
+# Nginx serves index.html file including whole app when the URL path maps to a folder.
+# For exmaple, user visits "/" or "/dashboard" (a folder without specifying a file),
+# Nginx would serve index.html file to user.
+# "index.html" is the app entry point. It loads:
+### 1. JavaScript app (main.tsx)
+### 2. Injects the React app into <div id="root">
+### 3. From there, React Router takes over and shows the correct page or page component for /, /pricing, /dashboard, etc.
+# URL path:
+### "/" → This is the root path.
+### "/dashboard" or "/dashboard/" → This is a folder-like URL, but the browser doesn’t request a specific file like /dashboard/index.html or /dashboard/page.html.
+
+########## "try_files $uri $uri/ /index.html =404" Explanation ##########
+# This line is key for Single Page Applications (SPAs) like React.
+# This set Nginx how to handle the url.
+# For example, user enters "/dashboard" url,
+### 1. $uri → Look for a file named /usr/share/nginx/html/dashboard (which usually doesn’t exist)
+### 2. $uri/ → Look for a folder /usr/share/nginx/html/dashboard/ and then serve its index.html if found.
+### 3. /index.html → If neither of the above exists, fall back to /usr/share/nginx/html/index.html.
+### 4. =404 → if all else fails, return a 404.
+
 data:
   default.conf: |-
     server {
