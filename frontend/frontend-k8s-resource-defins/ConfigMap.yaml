@@ -18,22 +18,46 @@ metadata:
 # For exmaple, user visits "/" or "/dashboard" (a folder without specifying a file),
 # Nginx would serve index.html file to user.
 # "index.html" is the app entry point. It loads:
-### 1. JavaScript app (main.tsx)
-### 2. Injects the React app into <div id="root">
-### 3. From there, React Router takes over and shows the correct page or page component for /, /pricing, /dashboard, etc.
+#### 1. JavaScript app (main.tsx)
+#### 2. Injects the React app into <div id="root">
+#### 3. From there, React Router takes over and shows the correct page or page component for /, /pricing, /dashboard, etc.
 # URL path:
-### "/" → This is the root path.
-### "/dashboard" or "/dashboard/" → This is a folder-like URL, but the browser doesn’t request a specific file like /dashboard/index.html or /dashboard/page.html.
+#### "/" → This is the root path.
+#### "/dashboard" or "/dashboard/" → This is a folder-like URL, but the browser doesn’t request a specific file like /dashboard/index.html or /dashboard/page.html.
 
 ########## "try_files $uri $uri/ /index.html =404" Explanation ##########
 # This line is key for Single Page Applications (SPAs) like React.
 # This set Nginx how to handle the url.
 # For example, user enters "/dashboard" url,
-### 1. $uri → Look for a file named /usr/share/nginx/html/dashboard (which usually doesn’t exist)
-### 2. $uri/ → Look for a folder /usr/share/nginx/html/dashboard/ and then serve its index.html if found.
-### 3. /index.html → If neither of the above exists, fall back to /usr/share/nginx/html/index.html.
-### 4. =404 → if all else fails, return a 404.
+#### 1. $uri → Look for a file named /usr/share/nginx/html/dashboard (which usually doesn’t exist)
+#### 2. $uri/ → Look for a folder /usr/share/nginx/html/dashboard/ and then serve its index.html if found.
+#### 3. /index.html → If neither of the above exists, fall back to /usr/share/nginx/html/index.html.
+#### 4. =404 → if all else fails, return a 404.
 
+########## "nginx.conf" file ONLY processes INCOMING requests  ##########
+# The Nginx config ("nginx.conf" file) ONLY processes INCOMING requests
+# that come to the frontend container.
+# 1. Nginx is running inside the frontend container.
+# 2. Nginx is serving a static React app that was built with Vite (index.html, main.js, etc.).
+
+########### The flow of browser loads React app in GCP VM Explanation ###########
+# For example, user open the app site (e.g., https://aitools-evanhuang.duckdns.org/)
+# 1. Browser makes a request to https://aitools-evanhuang.duckdns.org/
+# 2. Request goes to the Nginx inside the frontend container.
+# 3. Downloads the React app from Nginx
+# 4. Which returns the built dist files, index.html, JS, CSS, etc.
+# 5. The browser loads the site with these downloaded files.
+
+########### The flow of frontend calls backend API in GCP VM Explanation ###########
+# 1. Now, the React app is running in the browser, not in Nginx inside frontend container.
+# 2. When browser client calls "axios.post("/api/go/messages"), The browser expands it into:
+# "https://aitools-evanhuang.duckdns.org/api/go/messages".
+# 3. The browser sends this request to the same server that served it —
+# which is your Nginx container.
+# 4. Since that domain name (public IP) and port maps to the frontend container in VM,
+# the request goes back into the frontend container, and Nginx receives it.
+# 5. Nginx looks at its config file and finds "location /api/go/" config
+# 6. Nginx process request and proxies the request to the go-backend container.
 data:
   default.conf: |-
     server {
