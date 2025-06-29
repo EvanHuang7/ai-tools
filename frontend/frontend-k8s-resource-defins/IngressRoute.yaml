@@ -8,10 +8,33 @@ spec:
     - web
   routes:
     - kind: Rule
-      # Remove Host(`your-domain-name`) if you don't set a DNS
+      # Don't use "match: Host(`your-domain-name`)" if you don't set a DNS
       # record for the ExternalIP and your own domain
 
-      # match: Host(`your-domain-name`)
+      ########### "PathPrefix(`/`)" Explanation ###########
+      # It matches any request path, because every valid URL path starts with "/."
+      # Such as, "/", "/dashboard", "/settings", "/api/node", "/api/go", "/api/python".
+
+      ########### "/api/go" matchs which service Explanation ###########
+      # "/api/go" matchs both frontend and go-backend services, and Traefik
+      # follows most-specific-match-wins logic. That means PathPrefix("/api/go")
+      # has higher precedence than PathPrefix("/"). So, Traefik would route the
+      # traffic to most specific match → go to go-backend service.
+
+      ########### The flow of frontend calls backend Explanation ###########
+      # For example, frontend call an API with 1 line code, "axios.post("/api/go/messages", { userId, text });",
+      # without specifying any host for this api call.
+      # 1. "/api/go/messages" is a relative URL — meaning:
+      #### It doesn’t specify the protocol (http), hostname, or port.
+      #### So the browser automatically resolves it against the current URL in the address bar.
+      # 2. Suppose the user’s browser is currently viewing page: "http://aitools-demo-evanhuang.duckdns.org/dashboard"
+      # When browser client calls "axios.post("/api/go/messages"), The browser expands it into:
+      # "http://aitools-demo-evanhuang.duckdns.org/api/go/messages".
+      # The browser adds: "protocol: http", "host: aitools-demo-evanhuang.duckdns.org", "(optional) port: default :80 for HTTP".
+      # 3. The API call URL is public because of public domain name or public External IP address
+      # - it resolves via DNS to the LoadBalancer External IP instead of internal Cluster IP.
+      # 4. Traefik Ingress Controller receives this external HTTP request, and Traefik matches
+      # it to  "PathPrefix(`/api/go`)". Then, Traefik forwards that request to the go-backend service.
       match: PathPrefix(`/`)
       services:
         - kind: Service
