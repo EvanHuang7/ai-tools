@@ -21,12 +21,19 @@ tasks:
     cmds:
       - docker build -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} .
 
+  # We need to pass the env values when building the frontend image
+  # because Vite replaces "import.meta.env.VITE_*" in code during the build.
+  # So we need to set the VITE env var as ARG in "Dockerfile", and
+  # pass the values into it when running the cli to build the image.
+  # TODO: Remeber to remove after running corresponding to
+  # avoid storing it in Github
   build-container-image-multi-arch:
     desc: Build multi-arch container image
     cmds:
       - |
         docker buildx build \
         --platform linux/amd64,linux/arm64 \
+        --build-arg VITE_CLERK_PUBLISHABLE_KEY=pk_test_aW5zcGlyZWQtZmF3bi0zNS5jbGVyay5hY2NvdW50cy5kZXYk \
         -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} \
         --push \
         .
