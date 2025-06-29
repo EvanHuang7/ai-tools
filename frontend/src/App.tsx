@@ -14,7 +14,8 @@ export function App() {
   return (
     <div>
       <h1>
-        AI Tools App 👋 GCP VM Test after converting frontend app from JS to TS
+        AI Tools App 👋 GKE Cluster Test after converting frontend app from JS
+        to TS
       </h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />

@@ -36,7 +36,7 @@
 
 - **🖥️ Frontend Service**:
 
-  - **React.js, JavaScript**,
+  - **React.js, TypeScript**,
 
 - **📡 Node Backend Service**:
 
