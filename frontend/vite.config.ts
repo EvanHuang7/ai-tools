@@ -5,6 +5,13 @@ import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // This "resolve, alias" are only required in app build time,
+  // so it isn't required to be included in "nginx.conf" file.
+  // Same logic applies to "tsconfig.json", "tsconfig.node.json",
+  // "tailwind.config.js", "postcss.config.js", etc files.
+  // Those files are all only required in build-time.
+  // In run-time, Those files are not needed at all — we can safely
+  // exclude them from the final Docker image or deploy artifact.
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
