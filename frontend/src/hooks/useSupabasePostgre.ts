@@ -17,7 +17,9 @@ export const useSupabasePostgreWrite = () => {
   return useMutation({
     mutationFn: supabasePostgreWrite,
     onSuccess: (_, { name }) => {
-      queryClient.invalidateQueries(["supabasePostgreRead", name]);
+      queryClient.invalidateQueries({
+        queryKey: ["supabasePostgreRead", name],
+      });
     },
   });
 };

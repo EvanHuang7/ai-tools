@@ -14,8 +14,7 @@ export function App() {
   return (
     <div>
       <h1>
-        AI Tools App 👋 Test Kafka message for GKE Cluster! (and update GKE
-        cluster Git Workflow to use ko build GO app image))
+        AI Tools App 👋 GCP VM Test after converting frontend app from JS to TS
       </h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />

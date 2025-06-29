@@ -4,8 +4,8 @@ import {
   useKafkaMessageWrite,
 } from "../hooks/useKafkaMessage";
 
-const KafkaMessage = () => {
-  const [message, setMessage] = useState("");
+const KafkaMessage: React.FC = () => {
+  const [message, setMessage] = useState<string>("");
 
   const { data, isLoading } = useKafkaMessageRead();
   const { mutate, isPending } = useKafkaMessageWrite();

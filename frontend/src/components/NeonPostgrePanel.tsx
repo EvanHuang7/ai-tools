@@ -4,9 +4,9 @@ import {
   useNeonPostgreWrite,
 } from "../hooks/useNeonPostgre";
 
-const NeonPostgrePanel = () => {
-  const [userId, setUserId] = useState("");
-  const [text, setText] = useState("");
+const NeonPostgrePanel: React.FC = () => {
+  const [userId, setUserId] = useState<string>("");
+  const [text, setText] = useState<string>("");
 
   const { data, isLoading } = useNeonPostgreRead();
   const { mutate, isPending } = useNeonPostgreWrite();
@@ -38,8 +38,8 @@ const NeonPostgrePanel = () => {
           "Loading..."
         ) : data ? (
           <>
-            <p>UserId: {data[data.length - 1].ID}</p>
-            <p>Text: {data[data.length - 1].Text}</p>
+            <p>UserId: {data[data.length - 1]?.ID}</p>
+            <p>Text: {data[data.length - 1]?.Text}</p>
           </>
         ) : (
           "No data found."

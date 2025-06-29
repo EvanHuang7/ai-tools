@@ -4,11 +4,11 @@ import {
   useSupabasePostgreWrite,
 } from "../hooks/useSupabasePostgre";
 
-const SupabasePostgrePanel = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+const SupabasePostgrePanel: React.FC = () => {
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
-  const { data, isLoading } = useSupabasePostgreRead(); // optional read by email
+  const { data, isLoading } = useSupabasePostgreRead();
   const { mutate, isPending } = useSupabasePostgreWrite();
 
   const handleSubmit = () => {
@@ -38,9 +38,9 @@ const SupabasePostgrePanel = () => {
           "Loading..."
         ) : data ? (
           <>
-            <p>Name: {data[data.length - 1].name}</p>
-            <p>Email: {data[data.length - 1].email}</p>
-            <p>Created At: {data[data.length - 1].createdAt}</p>
+            <p>Name: {data[data.length - 1]?.name}</p>
+            <p>Email: {data[data.length - 1]?.email}</p>
+            <p>Created At: {data[data.length - 1]?.createdAt}</p>
           </>
         ) : (
           "No data found."

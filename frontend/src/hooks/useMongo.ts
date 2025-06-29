@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { mongoRead, mongoWrite } from "../api/mongo";
 
-export const useMongoRead = (userId) => {
+export const useMongoRead = (userId: string) => {
   return useQuery({
     queryKey: ["mongoRead", userId],
     queryFn: () => mongoRead(userId),
@@ -15,7 +15,7 @@ export const useMongoWrite = () => {
   return useMutation({
     mutationFn: mongoWrite,
     onSuccess: (_, { userId }) => {
-      queryClient.invalidateQueries(["mongoRead", userId]);
+      queryClient.invalidateQueries({ queryKey: ["mongoRead", userId] });
     },
   });
 };

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useMongoRead, useMongoWrite } from "../hooks/useMongo";
 
-const MongoPanel = () => {
-  const [userId, setUserId] = useState("1");
-  const [plan, setPlan] = useState("");
+const MongoPanel: React.FC = () => {
+  const [userId, setUserId] = useState<string>("1");
+  const [plan, setPlan] = useState<string>("");
   const { data, isLoading } = useMongoRead(userId);
   const { mutate, isPending } = useMongoWrite();
 
@@ -32,7 +32,7 @@ const MongoPanel = () => {
       <div>
         {isLoading
           ? "Loading..."
-          : `Stored value: ${data?.plans[0].plan || "N/A"}`}
+          : `Stored value: ${data?.plans[0]?.plan || "N/A"}`}
       </div>
     </div>
   );

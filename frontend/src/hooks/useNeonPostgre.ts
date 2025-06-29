@@ -14,7 +14,7 @@ export const useNeonPostgreWrite = () => {
   return useMutation({
     mutationFn: neonPostgreWrite,
     onSuccess: (_, { userId }) => {
-      queryClient.invalidateQueries(["neonPostgreRead", userId]);
+      queryClient.invalidateQueries({ queryKey: ["neonPostgreRead", userId] });
     },
   });
 };

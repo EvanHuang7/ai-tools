@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useGcpPubSubRead, useGcpPubSubWrite } from "../hooks/useGcpPubSub";
 
-const GcpPubSub = () => {
-  const [message, setMessage] = useState("");
+const GcpPubSub: React.FC = () => {
+  const [message, setMessage] = useState<string>("");
 
   const { data, isLoading } = useGcpPubSubRead();
   const { mutate, isPending } = useGcpPubSubWrite();
@@ -31,7 +31,7 @@ const GcpPubSub = () => {
         ) : data ? (
           <>
             <p>Latest GCP pubsub Message:</p>
-            <p>{data[data.length - 1].message}</p>
+            <p>{data[data.length - 1]?.message}</p>
           </>
         ) : (
           "No data found."

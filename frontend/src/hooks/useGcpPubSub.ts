@@ -14,7 +14,7 @@ export const useGcpPubSubWrite = () => {
   return useMutation({
     mutationFn: gcpPubSubWrite,
     onSuccess: (_, { message }) => {
-      queryClient.invalidateQueries(["gcpPubSubRead", message]);
+      queryClient.invalidateQueries({ queryKey: ["gcpPubSubRead", message] });
     },
   });
 };

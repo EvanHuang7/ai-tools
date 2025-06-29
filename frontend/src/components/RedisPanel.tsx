@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useRedisRead, useRedisWrite } from "../hooks/useRedis";
 
-const RedisPanel = () => {
-  const [key, setKey] = useState("user-1");
-  const [value, setValue] = useState("");
+const RedisPanel: React.FC = () => {
+  const [key, setKey] = useState<string>("user-1");
+  const [value, setValue] = useState<string>("");
   const { data, isLoading } = useRedisRead(key);
   const { mutate, isPending } = useRedisWrite();
 

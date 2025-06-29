@@ -14,7 +14,9 @@ export const useKafkaMessageWrite = () => {
   return useMutation({
     mutationFn: kafkaMessageWrite,
     onSuccess: (_, { message }) => {
-      queryClient.invalidateQueries(["kafkaMessageRead", message]);
+      queryClient.invalidateQueries({
+        queryKey: ["kafkaMessageRead", message],
+      });
     },
   });
 };

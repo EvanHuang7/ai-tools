@@ -9,7 +9,7 @@ const queryClient = new QueryClient({
       refetchOnMount: false,
       retry: 1, // One retry is safer than none for flakiness
       staleTime: 1000 * 60 * 5, // 5 minutes
-      cacheTime: 1000 * 60 * 30, // 30 minutes in memory
+      gcTime: 1000 * 60 * 30, // 30 minutes in memory (renamed from cacheTime)
     },
     mutations: {
       // Retry only once on failure (e.g., for saving user input)
