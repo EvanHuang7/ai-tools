@@ -54,6 +54,7 @@
 
   - **Python, Django**,
   - **MongoDB, Upstash Redis, MongoEngine**
+  - **Imagekit.io**
 
 - **☁️ Deployment and CI&CD Techs**
 
@@ -279,6 +280,12 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 - Add more plans by following same steps again
 
 - Go to **Configure tab > Billing tab > Settings tab > Enable Billing button** after finishing adding all plans and corresponding features.
+
+### <a name="set-up-imagekit">⭐ Set up Imagekit.io</a>
+
+- Create a **Imagekit.io** account.
+
+- Copy the `privte key` of your **Imagekit.io** account.
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
