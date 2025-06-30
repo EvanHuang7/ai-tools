@@ -150,6 +150,69 @@ export function ImageEditor() {
     }
   };
 
+  const downloadHighQualityImage = async () => {
+    if (!processedImage) return;
+
+    try {
+      // Create a canvas to render the image without the grid background
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = processedImage;
+      });
+
+      // Create canvas with higher resolution for better quality
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) {
+        throw new Error("Could not get canvas context");
+      }
+
+      // Set canvas size to match or enhance the image dimensions
+      const scaleFactor = 2; // 2x resolution for higher quality
+      canvas.width = img.naturalWidth * scaleFactor;
+      canvas.height = img.naturalHeight * scaleFactor;
+
+      // Enable high-quality rendering
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+
+      // Draw the image at higher resolution
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      // Convert to blob and download
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            throw new Error("Could not create image blob");
+          }
+
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `high-quality-${
+            uploadedFile?.name?.replace(/\.[^/.]+$/, "") || "image"
+          }.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+
+          toast.success("High quality PNG downloaded!");
+        },
+        "image/png",
+        1.0 // Maximum quality
+      );
+    } catch (error) {
+      console.error("Error downloading high quality image:", error);
+      toast.error("Failed to download high quality image");
+    }
+  };
+
   const clearImages = () => {
     setUploadedImage(null);
     setUploadedFile(null);
@@ -321,15 +384,25 @@ export function ImageEditor() {
                           <Download className="w-4 h-4 mr-2" />
                           Download PNG
                         </Button>
-                        <Button variant="outline" disabled>
+                        <Button
+                          onClick={downloadHighQualityImage}
+                          className="bg-purple-600 hover:bg-purple-700"
+                        >
                           <Sparkles className="w-4 h-4 mr-2" />
-                          Enhance Quality
+                          Download High Quality PNG
                         </Button>
                       </div>
 
-                      <div className="text-xs text-muted-foreground text-center">
+                      <div className="text-xs text-muted-foreground text-center space-y-1">
                         <p>✨ Background successfully removed using AI</p>
-                        <p>Download includes transparent background</p>
+                        <p>
+                          Standard download: Original resolution with
+                          transparent background
+                        </p>
+                        <p>
+                          High Quality: Enhanced 2x resolution without grid
+                          pattern
+                        </p>
                       </div>
                     </div>
                   ) : (
@@ -362,19 +435,19 @@ export function ImageEditor() {
               <Card className="text-center p-6">
                 <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">
-                  Image Enhancement
+                  High Quality Enhancement
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Upscale and enhance image quality automatically
+                  Download enhanced 2x resolution images without grid patterns
                 </p>
               </Card>
               <Card className="text-center p-6">
                 <Download className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">
-                  High Quality Export
+                  Multiple Export Options
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Download in PNG format with transparent background
+                  Choose between standard and high-quality PNG downloads
                 </p>
               </Card>
             </div>
