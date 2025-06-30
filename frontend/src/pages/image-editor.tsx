@@ -20,6 +20,9 @@ import {
   Scissors,
   Sparkles,
   Loader2,
+  Grid3X3,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
@@ -30,6 +33,7 @@ export function ImageEditor() {
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showGrid, setShowGrid] = useState(true);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -213,6 +217,11 @@ export function ImageEditor() {
     }
   };
 
+  const toggleGrid = () => {
+    setShowGrid(!showGrid);
+    toast.info(showGrid ? "Grid hidden" : "Grid shown");
+  };
+
   const clearImages = () => {
     setUploadedImage(null);
     setUploadedFile(null);
@@ -351,10 +360,32 @@ export function ImageEditor() {
               {/* Result Section */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5" />
-                    Processed Result
-                  </CardTitle>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-5 w-5" />
+                      <CardTitle>Processed Result</CardTitle>
+                    </div>
+                    {processedImage && (
+                      <Button
+                        onClick={toggleGrid}
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2"
+                      >
+                        {showGrid ? (
+                          <>
+                            <EyeOff className="h-4 w-4" />
+                            Hide Grid
+                          </>
+                        ) : (
+                          <>
+                            <Eye className="h-4 w-4" />
+                            Show Grid
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
                   <CardDescription>
                     Your AI-processed image will appear here
                   </CardDescription>
@@ -366,43 +397,66 @@ export function ImageEditor() {
                         <img
                           src={processedImage}
                           alt="Processed"
-                          className="w-full rounded-lg object-contain bg-gray-100 dark:bg-gray-800"
+                          className="w-full rounded-lg object-contain transition-all duration-300"
                           style={{
-                            backgroundImage: `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`,
+                            backgroundColor: showGrid
+                              ? "transparent"
+                              : "#f3f4f6",
+                            backgroundImage: showGrid
+                              ? `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`
+                              : "none",
                           }}
                         />
                         <Badge className="absolute top-2 right-2 bg-green-500 text-white">
                           Background Removed
                         </Badge>
+                        {showGrid && (
+                          <Badge
+                            variant="outline"
+                            className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm"
+                          >
+                            <Grid3X3 className="w-3 h-3 mr-1" />
+                            Transparency Grid
+                          </Badge>
+                        )}
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <Button
-                          onClick={downloadImage}
-                          className="bg-blue-600 hover:bg-blue-700"
-                        >
-                          <Download className="w-4 h-4 mr-2" />
-                          Download PNG
-                        </Button>
-                        <Button
-                          onClick={downloadHighQualityImage}
-                          className="bg-purple-600 hover:bg-purple-700"
-                        >
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          Download High Quality PNG
-                        </Button>
-                      </div>
+                      <div className="space-y-3">
+                        {/* Primary download buttons */}
+                        <div className="grid grid-cols-2 gap-3">
+                          <Button
+                            onClick={downloadImage}
+                            className="bg-blue-600 hover:bg-blue-700"
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Standard PNG
+                          </Button>
+                          <Button
+                            onClick={downloadHighQualityImage}
+                            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg"
+                          >
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            HD PNG
+                          </Button>
+                        </div>
 
-                      <div className="text-xs text-muted-foreground text-center space-y-1">
-                        <p>✨ Background successfully removed using AI</p>
-                        <p>
-                          Standard download: Original resolution with
-                          transparent background
-                        </p>
-                        <p>
-                          High Quality: Enhanced 2x resolution without grid
-                          pattern
-                        </p>
+                        {/* Download info */}
+                        <div className="text-xs text-muted-foreground bg-muted/30 rounded-lg p-3 space-y-1">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span>
+                              <strong>Standard:</strong> Original resolution
+                              with transparent background
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                            <span>
+                              <strong>HD:</strong> Enhanced 2x resolution
+                              without grid pattern
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ) : (
@@ -434,20 +488,16 @@ export function ImageEditor() {
               </Card>
               <Card className="text-center p-6">
                 <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">
-                  High Quality Enhancement
-                </h3>
+                <h3 className="text-lg font-semibold mb-2">HD Enhancement</h3>
                 <p className="text-muted-foreground text-sm">
                   Download enhanced 2x resolution images without grid patterns
                 </p>
               </Card>
               <Card className="text-center p-6">
-                <Download className="w-8 h-8 text-primary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">
-                  Multiple Export Options
-                </h3>
+                <Eye className="w-8 h-8 text-primary mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Preview Control</h3>
                 <p className="text-muted-foreground text-sm">
-                  Choose between standard and high-quality PNG downloads
+                  Toggle transparency grid to see your image clearly
                 </p>
               </Card>
             </div>
