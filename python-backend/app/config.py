@@ -19,3 +19,5 @@ def get_env_var(key):
 
 MONGODB_URL = get_env_var("MONGODB_URL")
 REDIS_URL = get_env_var("REDIS_URL")
+IMAGEKIT_PRIVATE_KEY = get_env_var("IMAGEKIT_PRIVATE_KEY")
+IMAGEKIT_UPLOAD_URL = "https://upload.imagekit.io/api/v1/files/upload"
