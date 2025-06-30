@@ -22,28 +22,14 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import axios from "axios";
 
 export function ImageEditor() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
-
-  // Mock mutation since API is commented out
-  const processImageMutation = {
-    mutateAsync: async () => {
-      setIsProcessing(true);
-      // Simulate processing
-      for (let i = 0; i <= 100; i += 10) {
-        setProgress(i);
-        await new Promise((resolve) => setTimeout(resolve, 200));
-      }
-      setProcessedImage(uploadedImage); // Use uploaded image as processed for demo
-      setIsProcessing(false);
-      return { data: { processedImageUrl: uploadedImage } };
-    },
-    isPending: isProcessing,
-  };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -51,7 +37,9 @@ export function ImageEditor() {
       const reader = new FileReader();
       reader.onload = (e) => {
         setUploadedImage(e.target?.result as string);
+        setUploadedFile(file);
         setProcessedImage(null);
+        setProgress(0);
         toast.success("Image uploaded successfully!");
       };
       reader.readAsDataURL(file);
@@ -64,35 +52,107 @@ export function ImageEditor() {
       "image/*": [".jpeg", ".jpg", ".png", ".webp"],
     },
     maxFiles: 1,
+    maxSize: 10 * 1024 * 1024, // 10MB limit
   });
 
   const processImage = async () => {
-    if (!uploadedImage) return;
+    if (!uploadedFile) {
+      toast.error("Please upload an image first");
+      return;
+    }
 
+    setIsProcessing(true);
     setProgress(0);
 
     try {
-      await processImageMutation.mutateAsync();
+      // Create FormData to send the file
+      const formData = new FormData();
+      formData.append("image", uploadedFile);
+
+      // Simulate progress updates
+      const progressInterval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return 90;
+          }
+          return prev + 10;
+        });
+      }, 200);
+
+      // Call your Python API
+      const response = await axios.post("/api/python/remove-bg", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        timeout: 60000, // 60 second timeout for processing
+      });
+
+      clearInterval(progressInterval);
       setProgress(100);
-      toast.success("Background removed successfully!");
+
+      // Assuming your API returns the processed image URL
+      if (response.data && response.data.processed_url) {
+        setProcessedImage(response.data.processed_url);
+        toast.success("Background removed successfully!");
+      } else {
+        throw new Error("Invalid response from server");
+      }
     } catch (error) {
+      console.error("Error processing image:", error);
       setProgress(0);
-      toast.error("Failed to process image");
+
+      if (axios.isAxiosError(error)) {
+        if (error.code === "ECONNABORTED") {
+          toast.error("Processing timeout. Please try with a smaller image.");
+        } else if (error.response?.status === 413) {
+          toast.error(
+            "Image file is too large. Please use an image under 10MB."
+          );
+        } else if (error.response?.status === 400) {
+          toast.error("Invalid image format. Please use JPG, PNG, or WebP.");
+        } else {
+          toast.error(
+            `Failed to process image: ${
+              error.response?.data?.message || error.message
+            }`
+          );
+        }
+      } else {
+        toast.error("Failed to process image. Please try again.");
+      }
+    } finally {
+      setIsProcessing(false);
     }
   };
 
-  const downloadImage = () => {
-    if (processedImage) {
+  const downloadImage = async () => {
+    if (!processedImage) return;
+
+    try {
+      // If the processed image is a URL, fetch it and download
+      const response = await fetch(processedImage);
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.href = processedImage;
-      link.download = "processed-image.png";
+      link.href = url;
+      link.download = `processed-${uploadedFile?.name || "image"}.png`;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
       toast.success("Image downloaded!");
+    } catch (error) {
+      console.error("Error downloading image:", error);
+      toast.error("Failed to download image");
     }
   };
 
   const clearImages = () => {
     setUploadedImage(null);
+    setUploadedFile(null);
     setProcessedImage(null);
     setProgress(0);
     toast.info("Images cleared");
@@ -123,7 +183,7 @@ export function ImageEditor() {
                     Upload Image
                   </CardTitle>
                   <CardDescription>
-                    Drag and drop your image or click to browse
+                    Drag and drop your image or click to browse (Max 10MB)
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -142,14 +202,22 @@ export function ImageEditor() {
                         <img
                           src={uploadedImage}
                           alt="Uploaded"
-                          className="max-w-full max-h-64 mx-auto rounded-lg"
+                          className="max-w-full max-h-64 mx-auto rounded-lg object-contain"
                         />
-                        <Badge
-                          variant="secondary"
-                          className="bg-green-500/10 text-green-600 border-green-500/20"
-                        >
-                          Image Ready
-                        </Badge>
+                        <div className="flex items-center justify-center gap-2">
+                          <Badge
+                            variant="secondary"
+                            className="bg-green-500/10 text-green-600 border-green-500/20"
+                          >
+                            Image Ready
+                          </Badge>
+                          <Badge variant="outline">
+                            {uploadedFile &&
+                              `${(uploadedFile.size / 1024 / 1024).toFixed(
+                                1
+                              )}MB`}
+                          </Badge>
+                        </div>
                       </div>
                     ) : (
                       <div className="space-y-4">
@@ -172,10 +240,10 @@ export function ImageEditor() {
                     <div className="mt-6 space-y-4">
                       <Button
                         onClick={processImage}
-                        disabled={processImageMutation.isPending}
+                        disabled={isProcessing}
                         className="w-full"
                       >
-                        {processImageMutation.isPending ? (
+                        {isProcessing ? (
                           <>
                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                             Processing...
@@ -188,15 +256,18 @@ export function ImageEditor() {
                         )}
                       </Button>
 
-                      {processImageMutation.isPending && (
+                      {isProcessing && (
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
                             <span className="text-muted-foreground">
-                              Processing...
+                              Processing image...
                             </span>
                             <span>{progress}%</span>
                           </div>
                           <Progress value={progress} className="h-2" />
+                          <p className="text-xs text-muted-foreground text-center">
+                            This may take a few moments depending on image size
+                          </p>
                         </div>
                       )}
 
@@ -204,6 +275,7 @@ export function ImageEditor() {
                         onClick={clearImages}
                         variant="outline"
                         className="w-full"
+                        disabled={isProcessing}
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
                         Clear Images
@@ -231,7 +303,10 @@ export function ImageEditor() {
                         <img
                           src={processedImage}
                           alt="Processed"
-                          className="w-full rounded-lg"
+                          className="w-full rounded-lg object-contain bg-gray-100 dark:bg-gray-800"
+                          style={{
+                            backgroundImage: `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`,
+                          }}
                         />
                         <Badge className="absolute top-2 right-2 bg-green-500 text-white">
                           Background Removed
@@ -244,12 +319,17 @@ export function ImageEditor() {
                           className="bg-blue-600 hover:bg-blue-700"
                         >
                           <Download className="w-4 h-4 mr-2" />
-                          Download
+                          Download PNG
                         </Button>
-                        <Button variant="outline">
+                        <Button variant="outline" disabled>
                           <Sparkles className="w-4 h-4 mr-2" />
                           Enhance Quality
                         </Button>
+                      </div>
+
+                      <div className="text-xs text-muted-foreground text-center">
+                        <p>✨ Background successfully removed using AI</p>
+                        <p>Download includes transparent background</p>
                       </div>
                     </div>
                   ) : (
@@ -294,7 +374,7 @@ export function ImageEditor() {
                   High Quality Export
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Download in multiple formats and resolutions
+                  Download in PNG format with transparent background
                 </p>
               </Card>
             </div>

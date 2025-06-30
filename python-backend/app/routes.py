@@ -118,7 +118,7 @@ def listKafkaMessages():
         return jsonify({"error": str(e)}), 500
     
     
-
+# TODO: use Ingest latteer
 @bp.route("/remove-bg", methods=["POST"])
 def remove_background():
     try:
@@ -143,7 +143,6 @@ def remove_background():
 
         # 3. Download transformed image (background removed)
         transformed_img_res = requests.get(transformed_url)
-        print(f"transformed_img_res: {transformed_img_res}")
         if transformed_img_res.status_code != 200:
             return jsonify({"error": "Failed to download transformed image"}), 500
 
