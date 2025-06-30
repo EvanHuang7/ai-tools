@@ -104,9 +104,11 @@ services:
     environment:
       - REDIS_URL_FILE=/run/secrets/redis-url
       - MONGODB_URL_FILE=/run/secrets/mongodb-url
+      - IMAGEKIT_PRIVATE_KEY_FILE=/run/secrets/imagekit-private-key
     secrets:
       - redis-url
       - mongodb-url
+      - imagekit-private-key
     healthcheck:
       # Use the custom "healthcheck.py" file to test container
       # health because "curl" is not installed in python3.12 base image
