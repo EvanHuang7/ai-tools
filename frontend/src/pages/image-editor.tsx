@@ -218,8 +218,9 @@ export function ImageEditor() {
   };
 
   const toggleGrid = () => {
-    setShowGrid(!showGrid);
-    toast.info(showGrid ? "Grid hidden" : "Grid shown");
+    const newShowGrid = !showGrid;
+    setShowGrid(newShowGrid);
+    toast.info(newShowGrid ? "Grid shown" : "Grid hidden");
   };
 
   const clearImages = () => {
@@ -229,6 +230,9 @@ export function ImageEditor() {
     setProgress(0);
     toast.info("Images cleared");
   };
+
+  // Define the grid pattern as a constant
+  const gridPattern = `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -402,9 +406,7 @@ export function ImageEditor() {
                             backgroundColor: showGrid
                               ? "transparent"
                               : "#f3f4f6",
-                            backgroundImage: showGrid
-                              ? `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`
-                              : "none",
+                            backgroundImage: showGrid ? gridPattern : "none",
                           }}
                         />
                         <Badge className="absolute top-2 right-2 bg-green-500 text-white">
