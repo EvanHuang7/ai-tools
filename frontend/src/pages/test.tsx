@@ -12,7 +12,7 @@ export function TestPage() {
   return (
     <div>
       <h1>
-        AI Tools App 👋 GKE Cluster Test after fix the Clerk env value issue
+        AI Tools App 👋 GKE Cluster Test after adding editor-image feature
       </h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
