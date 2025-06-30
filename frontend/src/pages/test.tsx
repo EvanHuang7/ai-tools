@@ -12,7 +12,8 @@ export function TestPage() {
   return (
     <div>
       <h1>
-        AI Tools App 👋 GKE Cluster Test after adding editor-image feature
+        AI Tools App 👋 GKE Cluster Test after adding editor-image feature and
+        FIXING ENV KEY FOR ImageKit
       </h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
