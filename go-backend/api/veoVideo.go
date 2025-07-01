@@ -97,13 +97,13 @@ func GenerateVideo(c *gin.Context) {
     video := op.Response.GeneratedVideos[0].Video
 
     // Download the video bytes
-    if err := client.Files.Download(ctx, video, nil); err != nil {
+    if _, err := client.Files.Download(ctx, video, nil); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to download video bytes"})
         return
     }
 
     // Upload to your GCS bucket
-    bucketName := "your-gcs-bucket-name" // replace with your bucket
+    bucketName := "ai-tools-gcs-bucket" 
     objectName := "videos/" + "generated_video.mp4" // customize path and filename
 
     if err := uploadToGCS(ctx, bucketName, objectName, video.VideoBytes); err != nil {
