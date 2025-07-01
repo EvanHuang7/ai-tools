@@ -189,6 +189,12 @@ task general:03-annotate-KSA-with-GSA
 task pubsubAccess:attach-pubsub-permissions-to-GSA
 ```
 
+- Attach GCP Cloud Storage admin access to GSA
+
+```
+task gcsAccess:attach-gcs-permissions-to-GSA
+```
+
 3. Authentication for running app in GCP VM case
 
 - Find the GCP VM's GSA

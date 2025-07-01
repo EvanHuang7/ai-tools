@@ -314,6 +314,16 @@ tasks:
           --member="serviceAccount:ai-tools-gsa@steadfast-pivot-462821-p7.iam.gserviceaccount.com" \
           --role="roles/pubsub.subscriber"
 
+  gcsAccess:attach-gcs-permissions-to-GSA:
+    desc: "Attach GCP Cloud Storage full access (read/write/delete) to GSA"
+    cmds:
+      - cmd: gum style "Attach roles/storage.admin to IAM service account"
+        silent: true
+      - |
+        gcloud projects add-iam-policy-binding steadfast-pivot-462821-p7 \
+          --member="serviceAccount:ai-tools-gsa@steadfast-pivot-462821-p7.iam.gserviceaccount.com" \
+          --role="roles/storage.admin"
+
   # Download GSA key file for local development usage
   general:download-gsa-key-locally:
     desc: "Download GSA key file for local development usage"
