@@ -93,15 +93,29 @@ func GenerateVideo(c *gin.Context) {
 		return
 	}
 
-	for n, video := range operation.Response.GeneratedVideos {
-        client.Files.Download(ctx, video.Video, nil)
-        fname := fmt.Sprintf("video_with_image_input_%d.mp4", n)
-        _ = os.WriteFile(fname, video.Video.VideoBytes, 0644)
+    // For simplicity, upload only the first video:
+    video := op.Response.GeneratedVideos[0].Video
+
+    // Download the video bytes
+    if err := client.Files.Download(ctx, video, nil); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to download video bytes"})
+        return
     }
 
-	c.JSON(http.StatusOK, gin.H{
-		"videoUrl": op.Response.GeneratedVideos[0].Video.URI,
-	})
+    // Upload to your GCS bucket
+    bucketName := "your-gcs-bucket-name" // replace with your bucket
+    objectName := "videos/" + "generated_video.mp4" // customize path and filename
+
+    if err := uploadToGCS(ctx, bucketName, objectName, video.VideoBytes); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload video to GCS: " + err.Error()})
+        return
+    }
+
+    // Return public URL or GCS path (adjust depending on your bucket's ACL)
+    publicURL := fmt.Sprintf("https://storage.googleapis.com/%s/%s", bucketName, objectName)
+    c.JSON(http.StatusOK, gin.H{
+        "videoUrl": publicURL,
+    })
 }
 
 func uploadToGCS(ctx context.Context, bucketName, objectName string, data []byte) error {
