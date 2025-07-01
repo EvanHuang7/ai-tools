@@ -42,6 +42,9 @@ func main() {
 	// Add sendPubSubMessage API:
 	r.POST("/pubsubMessage", api.SendPubSubMessage)
 
+	// Generate AI video API
+	r.POST("/veoVideo", api.GenerateVideo)
+
 	// Add gRPC APIs:
 	// Start gRPC server in a new goroutine so it doesn't block HTTP server
     go api.StartGrpcServer()
