@@ -293,6 +293,24 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 
 - Copy the `privte key` of your **Imagekit.io** account.
 
+### <a name="set-up-imagekit">⭐ Set up Google Cloud Storage and Get Gemini API Key</a>
+
+1. Create Google Cloud Storage bucket and add public Read access to this bucket
+
+- Go to GCP Google Cloud Storage
+
+- Create a Google Cloud Storage bucket (eg. `ai-tools-gcs-bucket`)
+
+- Click **the new created bucket > "Permissions" tab > "Grant access" button**
+
+- Enter `allUsers` for **New principals** field and select `Storage Object Viewer` for **Role** field
+
+- Click **Save** button
+
+2. Get `GOOGLE_API_KEY` env value
+
+-
+
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
 - Create a `.env` file under **node-backend** folder of your project and add the following content:
