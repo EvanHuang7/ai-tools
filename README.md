@@ -309,7 +309,18 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 
 2. Get `GOOGLE_API_KEY` env value
 
--
+🚨 Important: To use `veo-2.0-generate-001` AI model to generate a AI video with this API key, you need enable Billing for the `GOOGLE_API_KEY` of GCP project.
+
+- If you are using **GCP new user first 3 months 300$ credit**, you are already has Billing enabled for the default GCP project
+
+  - Go to **APIs & Services** in GCP
+  - Click **Library** tab in side bar and search `gemini api`
+  - Enable `gemini api` access for all of 3 search results
+  - Click **Credentials** tab in side bar
+  - Click **"Create Credentials" button > "API key" button**
+  - You can copy the generated result as `GOOGLE_API_KEY`.
+
+- If you don't have this new user free credit anymore, you have to go to **Google AI Studio**, enable the Billing for **Gemini API** GCP project and generate a `GOOGLE_API_KEY` in **Google AI Studio**.
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
