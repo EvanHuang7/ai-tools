@@ -1,27 +1,25 @@
 package api
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"time"
 
 	"cloud.google.com/go/storage"
+	"github.com/gabriel-vasile/mimetype"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/genai"
 )
 
-type VideoInput struct {
-	Prompt    string `json:"prompt" binding:"required"`
-	ImageURL  string `json:"imageUrl"` // optional reference image
-}
-
 func GenerateVideo(c *gin.Context) {
-	// Get request input
-	var input VideoInput
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// Parse text prompt from form
+	prompt := c.PostForm("prompt")
+	if prompt == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "prompt is required"})
 		return
 	}
 
@@ -36,39 +34,48 @@ func GenerateVideo(c *gin.Context) {
 		return
 	}
 
-	// NOTE: GOOGLE_API_KEY is required the GCP project having Billing enabled
+	// Parse image file from multipart form
+	var imageInput *genai.Image
+	file, err := c.FormFile("image")
+	if err == nil {
+		src, err := file.Open()
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "failed to read uploaded image"})
+			return
+		}
+		defer src.Close()
 
-	// Create Gemini AI client
+		buf := new(bytes.Buffer)
+		if _, err := io.Copy(buf, src); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to read image bytes"})
+			return
+		}
+
+		mime := mimetype.Detect(buf.Bytes())
+
+		imageInput = &genai.Image{
+			ImageBytes: buf.Bytes(),
+			MIMEType:   mime.String(), // e.g., "image/jpeg"
+		}
+	}
+
+	// Prepare video config
 	duration := int32(5)
 	videoConfig := &genai.GenerateVideosConfig{
 		AspectRatio:      "16:9",
-		NumberOfVideos: 1,
-		DurationSeconds: &duration,
+		NumberOfVideos:   1,
+		DurationSeconds:  &duration,
 		PersonGeneration: "dont_allow",
 	}
 
-	// Generate video with image or without image if not provided
-	var op *genai.GenerateVideosOperation
-	if input.ImageURL != "" {
-		op, err = client.Models.GenerateVideos(
-			ctx,
-			"veo-2.0-generate-001",
-			input.Prompt,
-			// TODO: store the image to GCS in this api first and use the url from it
-			// TODO: try to use "ImageBytes" field in "genai.Image"
-			// "GCSURI" means "gs:// type URI" instead of a a public HTTP URL
-			&genai.Image{GCSURI: input.ImageURL},
-			videoConfig,
-		)
-	} else {
-		op, err = client.Models.GenerateVideos(
-			ctx,
-			"veo-2.0-generate-001",
-			input.Prompt,
-			nil,
-			videoConfig,
-		)
-	}
+	// Call GenerateVideos
+	op, err := client.Models.GenerateVideos(
+		ctx,
+		"veo-2.0-generate-001",
+		prompt,
+		imageInput,
+		videoConfig,
+	)
 	if err != nil {
 		fmt.Println("GenerateVideos error:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "video generation request failed"})
@@ -83,50 +90,44 @@ func GenerateVideo(c *gin.Context) {
 			return
 		}
 	}
+
 	if len(op.Response.GeneratedVideos) == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "no video generated"})
 		return
 	}
 
-    // For simplicity, upload only the first video:
-    video := op.Response.GeneratedVideos[0].Video
+	video := op.Response.GeneratedVideos[0].Video
 
-    // Download the video bytes
-    if _, err := client.Files.Download(ctx, video, nil); err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to download video bytes"})
-        return
-    }
+	// Download the video bytes
+	if _, err := client.Files.Download(ctx, video, nil); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to download video bytes"})
+		return
+	}
 
-    // Upload to your GCS bucket
-    bucketName := "ai-tools-gcs-bucket" 
-    objectName := "videos/" + "generated_video.mp4"
+	// Upload to GCS
+	bucketName := "ai-tools-gcs-bucket"
+	objectName := "videos/generated_video.mp4"
+	if err := uploadToGCS(ctx, bucketName, objectName, video.VideoBytes); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload video to GCS: " + err.Error()})
+		return
+	}
 
-    if err := uploadToGCS(ctx, bucketName, objectName, video.VideoBytes); err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload video to GCS: " + err.Error()})
-        return
-    }
-
-    // Return public URL or GCS path (adjust depending on your bucket's ACL)
-    publicURL := fmt.Sprintf("https://storage.googleapis.com/%s/%s", bucketName, objectName)
-    c.JSON(http.StatusOK, gin.H{
-        "videoUrl": publicURL,
-    })
+	publicURL := fmt.Sprintf("https://storage.googleapis.com/%s/%s", bucketName, objectName)
+	c.JSON(http.StatusOK, gin.H{"videoUrl": publicURL})
 }
 
 func uploadToGCS(ctx context.Context, bucketName, objectName string, data []byte) error {
-    client, err := storage.NewClient(ctx)
-    if err != nil {
-        return fmt.Errorf("failed to create storage client: %w", err)
-    }
-    defer client.Close()
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to create storage client: %w", err)
+	}
+	defer client.Close()
 
-    bucket := client.Bucket(bucketName)
-    obj := bucket.Object(objectName)
-    wc := obj.NewWriter(ctx)
-    defer wc.Close()
+	wc := client.Bucket(bucketName).Object(objectName).NewWriter(ctx)
+	defer wc.Close()
 
-    if _, err := wc.Write(data); err != nil {
-        return fmt.Errorf("failed to write to GCS object: %w", err)
-    }
-    return nil
+	if _, err := wc.Write(data); err != nil {
+		return fmt.Errorf("failed to write to GCS object: %w", err)
+	}
+	return nil
 }
