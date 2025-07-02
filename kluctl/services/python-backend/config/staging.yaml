@@ -1,3 +1,3 @@
 pythonBackend:
-  version: 0.0.0-103-g1bc4e57 # STAGING_IMAGE_TAG
+  version: 0.0.0-124-gb1e2720 # STAGING_IMAGE_TAG
   replicas: 1
