@@ -61,6 +61,7 @@ services:
     # secrets on Git
     environment:
       - DATABASE_URL=postgresql://neondb_owner:npg_chuXl7Qo2CGv@ep-rapid-rain-a4ztbwzh-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
+      - GOOGLE_API_KEY=AIzaSyANoF0xsQ1va3C9bOhnLhjM3gQaoxuDL7s
     restart: unless-stopped
     healthcheck:
       # Use the custom "healthcheck.go" file to test container

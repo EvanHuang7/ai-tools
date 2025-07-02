@@ -80,8 +80,10 @@ services:
     init: true
     environment:
       - DATABASE_URL_FILE=/run/secrets/neon-postgres-database-url
+      - GOOGLE_API_KEY_FILE=/run/secrets/google-api-key
     secrets:
       - neon-postgres-database-url
+      - google-api-key
     healthcheck:
       # Use the custom "healthcheck.go" file to test container
       # health because "curl" is not installed in base image of ko
