@@ -51,11 +51,21 @@ func GenerateVideo(c *gin.Context) {
 			return
 		}
 
+		// Detect MIME type
 		mime := mimetype.Detect(buf.Bytes())
 
+		// Upload input image to GCS
+		bucketName := "ai-tools-gcs-bucket"
+		imageObjectName := "images/" + file.Filename
+		if err := uploadToGCS(ctx, bucketName, imageObjectName, buf.Bytes()); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload input image to GCS: " + err.Error()})
+			return
+		}
+
+		// Use image bytes for video generation
 		imageInput = &genai.Image{
 			ImageBytes: buf.Bytes(),
-			MIMEType:   mime.String(), // e.g., "image/jpeg"
+			MIMEType:   mime.String(),
 		}
 	}
 
@@ -82,7 +92,9 @@ func GenerateVideo(c *gin.Context) {
 		return
 	}
 
+	// Repeatedly checks whether the video generation operation has finished
 	for !op.Done {
+		// Waits for 20 seconds between each check
 		time.Sleep(20 * time.Second)
 		op, err = client.Operations.GetVideosOperation(ctx, op, nil)
 		if err != nil {
