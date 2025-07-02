@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	"cloud.google.com/go/storage"
@@ -30,35 +31,41 @@ func GenerateVideo(c *gin.Context) {
 		Backend: genai.BackendGeminiAPI,
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create Gemini client"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create Gemini client", "detail": err.Error()})
 		return
 	}
 
 	// Parse image file from multipart form
 	var imageInput *genai.Image
+	var baseFilename string // used for naming the video later
 	file, err := c.FormFile("image")
 	if err == nil {
 		src, err := file.Open()
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "failed to read uploaded image"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "failed to read uploaded image", "detail": err.Error()})
 			return
 		}
 		defer src.Close()
 
 		buf := new(bytes.Buffer)
 		if _, err := io.Copy(buf, src); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to read image bytes"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to read image bytes", "detail": err.Error()})
 			return
 		}
 
 		// Detect MIME type
 		mime := mimetype.Detect(buf.Bytes())
 
+		// Generate timestamp and safe base filename
+		timestamp := time.Now().Format("20060102_150405")
+		ext := filepath.Ext(file.Filename)
+		baseFilename = file.Filename[:len(file.Filename)-len(ext)]
+		imageObjectName := fmt.Sprintf("images/%s_%s%s", baseFilename, timestamp, ext)
+
 		// Upload input image to GCS
 		bucketName := "ai-tools-gcs-bucket"
-		imageObjectName := "images/" + file.Filename
 		if err := uploadToGCS(ctx, bucketName, imageObjectName, buf.Bytes()); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload input image to GCS: " + err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload input image to GCS", "detail": err.Error()})
 			return
 		}
 
@@ -87,8 +94,7 @@ func GenerateVideo(c *gin.Context) {
 		videoConfig,
 	)
 	if err != nil {
-		fmt.Println("GenerateVideos error:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "video generation request failed"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "video generation request failed", "detail": err.Error()})
 		return
 	}
 
@@ -98,13 +104,13 @@ func GenerateVideo(c *gin.Context) {
 		time.Sleep(20 * time.Second)
 		op, err = client.Operations.GetVideosOperation(ctx, op, nil)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "error polling video operation"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "error polling video operation", "detail": err.Error()})
 			return
 		}
 	}
 
 	if len(op.Response.GeneratedVideos) == 0 {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "no video generated"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "no video generated", "detail": "Gemini returned an empty video list"})
 		return
 	}
 
@@ -112,15 +118,20 @@ func GenerateVideo(c *gin.Context) {
 
 	// Download the video bytes
 	if _, err := client.Files.Download(ctx, video, nil); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to download video bytes"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to download video bytes", "detail": err.Error()})
 		return
 	}
 
 	// Upload to GCS
 	bucketName := "ai-tools-gcs-bucket"
-	objectName := "videos/generated_video.mp4"
+	timestamp := time.Now().Format("20060102_150405")
+	if baseFilename == "" {
+		baseFilename = "video"
+	}
+	objectName := fmt.Sprintf("videos/%s_%s_generated_video.mp4", baseFilename, timestamp)
+
 	if err := uploadToGCS(ctx, bucketName, objectName, video.VideoBytes); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload video to GCS: " + err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload video to GCS", "detail": err.Error()})
 		return
 	}
 
