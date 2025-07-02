@@ -12,8 +12,7 @@ export function TestPage() {
   return (
     <div>
       <h1>
-        AI Tools App 👋 GKE Cluster Test after updating video generator to call
-        API
+        AI Tools App 👋 GCP VM Test after updating video generator to call API
       </h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
