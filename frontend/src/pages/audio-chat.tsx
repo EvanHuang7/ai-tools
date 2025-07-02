@@ -97,9 +97,9 @@ export function AudioChat() {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  // Refs
+  // Refs - Fixed the timer ref initialization
   const transcriptEndRef = useRef<HTMLDivElement>(null);
-  const callTimerRef = useRef<NodeJS.Timeout>();
+  const callTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Voice options
   const voiceOptions = [
@@ -243,6 +243,7 @@ export function AudioChat() {
   const stopCallTimer = () => {
     if (callTimerRef.current) {
       clearInterval(callTimerRef.current);
+      callTimerRef.current = null;
     }
   };
 
