@@ -29,37 +29,21 @@ import {
   Wand2,
   Clock,
   Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
+import axios from "axios";
 
 export function VideoGenerator() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [prompt, setPrompt] = useState("");
   const [style, setStyle] = useState("cinematic");
   const [duration, setDuration] = useState("3");
   const [progress, setProgress] = useState(0);
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-
-  // Mock mutation since API is commented out
-  const generateVideoMutation = {
-    mutateAsync: async () => {
-      setIsGenerating(true);
-      setProgress(0);
-
-      // Simulate progress
-      const stages = [20, 40, 60, 80, 100];
-      for (const stage of stages) {
-        setProgress(stage);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-
-      setGeneratedVideo("/api/placeholder-video.mp4");
-      setIsGenerating(false);
-      return { data: { videoUrl: "/api/placeholder-video.mp4" } };
-    },
-    isPending: isGenerating,
-  };
+  const [currentStage, setCurrentStage] = useState("");
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -67,7 +51,10 @@ export function VideoGenerator() {
       const reader = new FileReader();
       reader.onload = (e) => {
         setUploadedImage(e.target?.result as string);
+        setUploadedFile(file);
         setGeneratedVideo(null);
+        setProgress(0);
+        setCurrentStage("");
         toast.success("Image uploaded successfully!");
       };
       reader.readAsDataURL(file);
@@ -80,10 +67,11 @@ export function VideoGenerator() {
       "image/*": [".jpeg", ".jpg", ".png", ".webp"],
     },
     maxFiles: 1,
+    maxSize: 10 * 1024 * 1024, // 10MB limit
   });
 
   const generateVideo = async () => {
-    if (!uploadedImage) {
+    if (!uploadedFile) {
       toast.error("Please upload an image first");
       return;
     }
@@ -92,17 +80,148 @@ export function VideoGenerator() {
       return;
     }
 
+    setIsGenerating(true);
+    setProgress(0);
+    setCurrentStage("Preparing...");
+    setGeneratedVideo(null);
+
     try {
-      await generateVideoMutation.mutateAsync();
-      toast.success("Video generated successfully!");
+      // Create FormData with the required fields
+      const formData = new FormData();
+      formData.append("image", uploadedFile);
+      formData.append("prompt", prompt.trim());
+
+      // Simulate progress updates during the 40-50 second generation
+      const progressStages = [
+        { progress: 10, stage: "Uploading image..." },
+        { progress: 20, stage: "Analyzing image content..." },
+        { progress: 30, stage: "Processing AI prompt..." },
+        { progress: 45, stage: "Generating video frames..." },
+        { progress: 60, stage: "Creating animations..." },
+        { progress: 75, stage: "Rendering video..." },
+        { progress: 85, stage: "Optimizing quality..." },
+        { progress: 95, stage: "Finalizing video..." },
+      ];
+
+      // Start progress simulation
+      let stageIndex = 0;
+      const progressInterval = setInterval(() => {
+        if (stageIndex < progressStages.length) {
+          const currentProgressStage = progressStages[stageIndex];
+          setProgress(currentProgressStage.progress);
+          setCurrentStage(currentProgressStage.stage);
+          stageIndex++;
+        }
+      }, 6000); // Update every 6 seconds (48 seconds total for 8 stages)
+
+      // Call your API
+      const response = await axios.post("/api/gp/veoVideo", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        timeout: 120000, // 2 minute timeout for the 40-50 second generation
+        onUploadProgress: (progressEvent) => {
+          // Handle upload progress if needed
+          if (progressEvent.total) {
+            const uploadProgress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            if (uploadProgress < 100) {
+              setProgress(Math.min(uploadProgress / 10, 10)); // Cap upload progress at 10%
+              setCurrentStage("Uploading image...");
+            }
+          }
+        },
+      });
+
+      // Clear the progress interval
+      clearInterval(progressInterval);
+
+      // Complete the progress
+      setProgress(100);
+      setCurrentStage("Video generated successfully!");
+
+      // Handle the response
+      if (response.data && response.data.videoUrl) {
+        setGeneratedVideo(response.data.videoUrl);
+        toast.success("Video generated successfully!");
+      } else if (response.data && response.data.video_url) {
+        // Handle different response format if needed
+        setGeneratedVideo(response.data.video_url);
+        toast.success("Video generated successfully!");
+      } else {
+        throw new Error("Invalid response from server - no video URL received");
+      }
     } catch (error) {
+      console.error("Error generating video:", error);
       setProgress(0);
-      toast.error("Failed to generate video");
+      setCurrentStage("");
+
+      if (axios.isAxiosError(error)) {
+        if (error.code === "ECONNABORTED") {
+          toast.error(
+            "Video generation timeout. The process is taking longer than expected."
+          );
+        } else if (error.response?.status === 413) {
+          toast.error(
+            "Image file is too large. Please use an image under 10MB."
+          );
+        } else if (error.response?.status === 400) {
+          toast.error(
+            `Invalid request: ${
+              error.response?.data?.message ||
+              "Please check your image and prompt."
+            }`
+          );
+        } else if (error.response?.status === 500) {
+          toast.error(
+            "Server error during video generation. Please try again."
+          );
+        } else {
+          toast.error(
+            `Failed to generate video: ${
+              error.response?.data?.message || error.message
+            }`
+          );
+        }
+      } else {
+        toast.error(
+          "Failed to generate video. Please check your connection and try again."
+        );
+      }
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  const downloadVideo = () => {
-    toast.success("Video download started!");
+  const downloadVideo = async () => {
+    if (!generatedVideo) return;
+
+    try {
+      // Create a download link
+      const link = document.createElement("a");
+      link.href = generatedVideo;
+      link.download = `generated-video-${Date.now()}.mp4`;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success("Video download started!");
+    } catch (error) {
+      console.error("Error downloading video:", error);
+      toast.error("Failed to download video");
+    }
+  };
+
+  const clearAll = () => {
+    setUploadedImage(null);
+    setUploadedFile(null);
+    setPrompt("");
+    setGeneratedVideo(null);
+    setProgress(0);
+    setCurrentStage("");
+    toast.info("All data cleared");
   };
 
   return (
@@ -131,7 +250,7 @@ export function VideoGenerator() {
                       Upload Image
                     </CardTitle>
                     <CardDescription>
-                      Start with your source image
+                      Start with your source image (Max 10MB)
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -150,14 +269,22 @@ export function VideoGenerator() {
                           <img
                             src={uploadedImage}
                             alt="Source"
-                            className="max-w-full max-h-48 mx-auto rounded-lg"
+                            className="max-w-full max-h-48 mx-auto rounded-lg object-contain"
                           />
-                          <Badge
-                            variant="secondary"
-                            className="bg-green-500/10 text-green-600 border-green-500/20"
-                          >
-                            Image Ready
-                          </Badge>
+                          <div className="flex items-center justify-center gap-2">
+                            <Badge
+                              variant="secondary"
+                              className="bg-green-500/10 text-green-600 border-green-500/20"
+                            >
+                              Image Ready
+                            </Badge>
+                            <Badge variant="outline">
+                              {uploadedFile &&
+                                `${(uploadedFile.size / 1024 / 1024).toFixed(
+                                  1
+                                )}MB`}
+                            </Badge>
+                          </div>
                         </div>
                       ) : (
                         <div className="space-y-4">
@@ -190,21 +317,30 @@ export function VideoGenerator() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <Label htmlFor="prompt">Prompt</Label>
+                      <Label htmlFor="prompt">Prompt *</Label>
                       <Textarea
                         id="prompt"
-                        placeholder="Describe the animation or movement you want to see..."
+                        placeholder="Describe the animation or movement you want to see... (e.g., 'gentle camera zoom in', 'leaves swaying in the wind', 'water flowing')"
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
                         className="mt-2"
-                        rows={3}
+                        rows={4}
+                        disabled={isGenerating}
                       />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Be specific about the type of movement or animation you
+                        want
+                      </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label>Style</Label>
-                        <Select value={style} onValueChange={setStyle}>
+                        <Select
+                          value={style}
+                          onValueChange={setStyle}
+                          disabled={isGenerating}
+                        >
                           <SelectTrigger className="mt-2">
                             <SelectValue />
                           </SelectTrigger>
@@ -220,7 +356,11 @@ export function VideoGenerator() {
 
                       <div>
                         <Label>Duration</Label>
-                        <Select value={duration} onValueChange={setDuration}>
+                        <Select
+                          value={duration}
+                          onValueChange={setDuration}
+                          disabled={isGenerating}
+                        >
                           <SelectTrigger className="mt-2">
                             <SelectValue />
                           </SelectTrigger>
@@ -234,37 +374,65 @@ export function VideoGenerator() {
                       </div>
                     </div>
 
-                    <Button
-                      onClick={generateVideo}
-                      disabled={
-                        generateVideoMutation.isPending ||
-                        !uploadedImage ||
-                        !prompt.trim()
-                      }
-                      className="w-full"
-                    >
-                      {generateVideoMutation.isPending ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Generating Video...
-                        </>
-                      ) : (
-                        <>
-                          <Play className="w-4 h-4 mr-2" />
-                          Generate Video
-                        </>
-                      )}
-                    </Button>
+                    {/* Generation Time Warning */}
+                    <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                      <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                      <div className="text-sm">
+                        <p className="text-amber-800 font-medium">
+                          Processing Time
+                        </p>
+                        <p className="text-amber-700">
+                          Video generation takes 40-50 seconds. Please be
+                          patient!
+                        </p>
+                      </div>
+                    </div>
 
-                    {generateVideoMutation.isPending && (
-                      <div className="space-y-2">
+                    <div className="space-y-3">
+                      <Button
+                        onClick={generateVideo}
+                        disabled={
+                          isGenerating || !uploadedImage || !prompt.trim()
+                        }
+                        className="w-full"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Generating Video...
+                          </>
+                        ) : (
+                          <>
+                            <Play className="w-4 h-4 mr-2" />
+                            Generate Video
+                          </>
+                        )}
+                      </Button>
+
+                      <Button
+                        onClick={clearAll}
+                        variant="outline"
+                        className="w-full"
+                        disabled={isGenerating}
+                      >
+                        Clear All
+                      </Button>
+                    </div>
+
+                    {isGenerating && (
+                      <div className="space-y-3">
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">
-                            Generating...
+                            {currentStage}
                           </span>
                           <span>{progress}%</span>
                         </div>
-                        <Progress value={progress} className="h-2" />
+                        <Progress value={progress} className="h-3" />
+                        <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
+                          <Clock className="w-3 h-3 inline mr-1" />
+                          This process typically takes 40-50 seconds. Please
+                          keep this tab open.
+                        </div>
                       </div>
                     )}
                   </CardContent>
@@ -286,15 +454,14 @@ export function VideoGenerator() {
                   {generatedVideo ? (
                     <div className="space-y-6">
                       <div className="relative bg-black rounded-lg overflow-hidden">
-                        <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
-                          <div className="text-center">
-                            <Play className="w-16 h-16 text-primary mx-auto mb-4" />
-                            <p className="text-foreground">Video Preview</p>
-                            <p className="text-sm text-muted-foreground">
-                              Generated based on your prompt
-                            </p>
-                          </div>
-                        </div>
+                        <video
+                          src={generatedVideo}
+                          controls
+                          className="w-full aspect-video"
+                          poster={uploadedImage || undefined}
+                        >
+                          Your browser does not support the video tag.
+                        </video>
                         <Badge className="absolute top-2 right-2 bg-green-500 text-white">
                           Generated
                         </Badge>
@@ -307,11 +474,22 @@ export function VideoGenerator() {
                             className="bg-green-600 hover:bg-green-700"
                           >
                             <Download className="w-4 h-4 mr-2" />
-                            Download HD
+                            Download MP4
                           </Button>
-                          <Button variant="outline">
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              const video = document.querySelector(
+                                "video"
+                              ) as HTMLVideoElement;
+                              if (video) {
+                                video.currentTime = 0;
+                                video.play();
+                              }
+                            }}
+                          >
                             <Play className="w-4 h-4 mr-2" />
-                            Preview
+                            Replay
                           </Button>
                         </div>
 
@@ -333,16 +511,22 @@ export function VideoGenerator() {
                               </div>
                               <div>
                                 <span className="text-muted-foreground">
-                                  Resolution:
-                                </span>
-                                <span className="ml-2">1080p</span>
-                              </div>
-                              <div>
-                                <span className="text-muted-foreground">
                                   Format:
                                 </span>
                                 <span className="ml-2">MP4</span>
                               </div>
+                              <div>
+                                <span className="text-muted-foreground">
+                                  Quality:
+                                </span>
+                                <span className="ml-2">HD</span>
+                              </div>
+                            </div>
+                            <div className="mt-3 pt-3 border-t">
+                              <span className="text-muted-foreground text-sm">
+                                Prompt:
+                              </span>
+                              <p className="text-sm mt-1 italic">"{prompt}"</p>
                             </div>
                           </CardContent>
                         </Card>
@@ -376,24 +560,24 @@ export function VideoGenerator() {
               <Card className="text-center p-6">
                 <Clock className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">
-                  Multiple Durations
+                  Professional Quality
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Generate videos from 3 to 15 seconds
+                  40-50 second processing for premium results
                 </p>
               </Card>
               <Card className="text-center p-6">
                 <Video className="w-8 h-8 text-primary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">HD Quality</h3>
+                <h3 className="text-lg font-semibold mb-2">HD Video Output</h3>
                 <p className="text-muted-foreground text-sm">
-                  Export in crisp 1080p resolution
+                  Export high-quality MP4 videos
                 </p>
               </Card>
               <Card className="text-center p-6">
                 <Download className="w-8 h-8 text-primary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Easy Export</h3>
+                <h3 className="text-lg font-semibold mb-2">Easy Download</h3>
                 <p className="text-muted-foreground text-sm">
-                  Download in popular video formats
+                  Download your videos instantly
                 </p>
               </Card>
             </div>
