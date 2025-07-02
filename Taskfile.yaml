@@ -348,3 +348,13 @@ tasks:
         gcloud projects add-iam-policy-binding steadfast-pivot-462821-p7 \
           --member="serviceAccount:170922314966-compute@developer.gserviceaccount.com" \
           --role="roles/pubsub.subscriber"
+
+  gceVmGcsAccess:attach-gcs-permissions-to-GCE-VM-GSA:
+    desc: "Attach GCP Cloud Storage full access (read/write/delete) to the GSA of GCE VM"
+    cmds:
+      - cmd: gum style "Attach roles/storage.admin to the GSA of GCE VM"
+        silent: true
+      - |
+        gcloud projects add-iam-policy-binding steadfast-pivot-462821-p7 \
+          --member="serviceAccount:170922314966-compute@developer.gserviceaccount.com" \
+          --role="roles/storage.admin"

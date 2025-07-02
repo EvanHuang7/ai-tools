@@ -17,7 +17,7 @@ import (
 )
 
 func GenerateVideo(c *gin.Context) {
-	// Parse text prompt from form
+	// Parse text prompt from form data
 	prompt := c.PostForm("prompt")
 	if prompt == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "prompt is required"})
@@ -37,7 +37,7 @@ func GenerateVideo(c *gin.Context) {
 
 	// Parse image file from multipart form
 	var imageInput *genai.Image
-	var baseFilename string // used for naming the video later
+	var baseFilename string
 	file, err := c.FormFile("image")
 	if err == nil {
 		src, err := file.Open()
@@ -85,6 +85,7 @@ func GenerateVideo(c *gin.Context) {
 		PersonGeneration: "dont_allow",
 	}
 
+	// NOTE: GOOGLE_API_KEY is required the GCP project having Billing enabled
 	// Call GenerateVideos
 	op, err := client.Models.GenerateVideos(
 		ctx,

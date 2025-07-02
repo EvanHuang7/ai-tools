@@ -211,11 +211,17 @@ task gcsAccess:attach-gcs-permissions-to-GSA
 task gceVmPubsubAccess:attach-pubsub-permissions-to-GCE-VM-GSA
 ```
 
-- Enable `Cloud Pub/Sub` access of **Cloud API access scopes** in GCP VM if it is currently off.
+- Attach required GCP Cloud Storage admin access to the GSA of GCP VM by running
+
+```
+task gceVmGcsAccess:attach-gcs-permissions-to-GCE-VM-GSA
+```
+
+- Enable `Cloud Pub/Sub` and `Storage` access of **Cloud API access scopes** in GCP VM if it is currently off.
   - Stop the current running GCP VM
   - Click **Edit** button in VM info page
   - Select `Set access for each API` for **Access scopes**
-  - Select **Enable** for `Cloud Pub/Sub`
+  - Select **Enable** for `Cloud Pub/Sub` and **Read Write** for `Storage`
   - Click **Save** button
   - Start GCP VM again
 
@@ -227,7 +233,7 @@ task gceVmPubsubAccess:attach-pubsub-permissions-to-GCE-VM-GSA
 task general:download-gsa-key-locally
 ```
 
-- Move this key file from you project to host Download folder and find the absolute file path (eg. `/Users/evan/Downloads/ai-tools-gsa-local-key.json`) of your downloaded JSON credentials on macOS by running
+- Move this key file **from you project to host Download folder** and find the absolute file path (eg. `/Users/evan/Downloads/ai-tools-gsa-local-key.json`) of your downloaded JSON credentials on macOS by running
 
 ```
 ls ~/Downloads/ai-tools-gsa-local-key.json
@@ -293,7 +299,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 
 - Copy the `privte key` of your **Imagekit.io** account.
 
-### <a name="set-up-imagekit">⭐ Set up Google Cloud Storage and Get Gemini API Key</a>
+### <a name="set-up-gcs-and-get-gemini-api-key">⭐ Set up Google Cloud Storage and Get Gemini API Key</a>
 
 1. Create Google Cloud Storage bucket and add public Read access to this bucket
 
