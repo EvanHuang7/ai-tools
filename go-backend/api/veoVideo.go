@@ -38,27 +38,24 @@ func GenerateVideo(c *gin.Context) {
 
 	// NOTE: GOOGLE_API_KEY is required the GCP project having Billing enabled
 
-	// TODO: Make sure the GCS bucket permission to only be pulbic for 
-	// Read action, not including Write aciont
-
 	// Create Gemini AI client
 	duration := int32(5)
 	videoConfig := &genai.GenerateVideosConfig{
 		AspectRatio:      "16:9",
 		NumberOfVideos: 1,
-		// OutputGCSURI: "gs://ai-tools-gcs-bucket/folder/",
 		DurationSeconds: &duration,
 		PersonGeneration: "dont_allow",
 	}
 
 	// Generate video with image or without image if not provided
 	var op *genai.GenerateVideosOperation
-	if false {
+	if input.ImageURL != "" {
 		op, err = client.Models.GenerateVideos(
 			ctx,
 			"veo-2.0-generate-001",
 			input.Prompt,
-			// TOOD: store the image to GCS in this api first and use the url from it
+			// TODO: store the image to GCS in this api first and use the url from it
+			// TODO: try to use "ImageBytes" field in "genai.Image"
 			// "GCSURI" means "gs:// type URI" instead of a a public HTTP URL
 			&genai.Image{GCSURI: input.ImageURL},
 			videoConfig,
@@ -72,9 +69,8 @@ func GenerateVideo(c *gin.Context) {
 			videoConfig,
 		)
 	}
-
 	if err != nil {
-		fmt.Println("GenerateVideos error:", err) // 👈 logs error to console
+		fmt.Println("GenerateVideos error:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "video generation request failed"})
 		return
 	}
@@ -87,7 +83,6 @@ func GenerateVideo(c *gin.Context) {
 			return
 		}
 	}
-
 	if len(op.Response.GeneratedVideos) == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "no video generated"})
 		return
@@ -104,7 +99,7 @@ func GenerateVideo(c *gin.Context) {
 
     // Upload to your GCS bucket
     bucketName := "ai-tools-gcs-bucket" 
-    objectName := "videos/" + "generated_video.mp4" // customize path and filename
+    objectName := "videos/" + "generated_video.mp4"
 
     if err := uploadToGCS(ctx, bucketName, objectName, video.VideoBytes); err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload video to GCS: " + err.Error()})
