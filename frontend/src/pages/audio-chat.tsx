@@ -30,52 +30,13 @@ import {
   Volume2,
   User,
   Bot,
-  Play,
-  Pause,
   RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
 import Vapi from "@vapi-ai/web";
-
-interface TranscriptMessage {
-  id: string;
-  type: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-  isPartial?: boolean;
-}
-
-// Voice configuration matching your example
-const voices = {
-  sarah: {
-    friendly: "EXAVITQu4vr4xnSDxMaL",
-    professional: "EXAVITQu4vr4xnSDxMaL",
-    educational: "EXAVITQu4vr4xnSDxMaL",
-    creative: "EXAVITQu4vr4xnSDxMaL",
-    analytical: "EXAVITQu4vr4xnSDxMaL",
-  },
-  john: {
-    friendly: "VR6AewLTigWG4xSOukaG",
-    professional: "VR6AewLTigWG4xSOukaG",
-    educational: "VR6AewLTigWG4xSOukaG",
-    creative: "VR6AewLTigWG4xSOukaG",
-    analytical: "VR6AewLTigWG4xSOukaG",
-  },
-  emma: {
-    friendly: "ThT5KcBeYPX3keUQqHPh",
-    professional: "ThT5KcBeYPX3keUQqHPh",
-    educational: "ThT5KcBeYPX3keUQqHPh",
-    creative: "ThT5KcBeYPX3keUQqHPh",
-    analytical: "ThT5KcBeYPX3keUQqHPh",
-  },
-  alex: {
-    friendly: "SOYHLrjzK2X1ezoPC6cr",
-    professional: "SOYHLrjzK2X1ezoPC6cr",
-    educational: "SOYHLrjzK2X1ezoPC6cr",
-    creative: "SOYHLrjzK2X1ezoPC6cr",
-    analytical: "SOYHLrjzK2X1ezoPC6cr",
-  },
-};
+import { configureAssistant } from "@/lib/utils";
+import { voiceOptions, styleOptions } from "@/lib/constants/vapi";
+import type { TranscriptMessage } from "@/types/vapi";
 
 export function AudioChat() {
   // Vapi instance
@@ -95,52 +56,10 @@ export function AudioChat() {
   // Transcript
   const [transcript, setTranscript] = useState<TranscriptMessage[]>([]);
   const [isListening, setIsListening] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
 
-  // Refs - Fixed the timer ref initialization
+  // Refs
   const transcriptEndRef = useRef<HTMLDivElement>(null);
   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Voice options
-  const voiceOptions = [
-    {
-      id: "sarah",
-      name: "Sarah",
-      description: "Warm, professional female voice",
-    },
-    { id: "john", name: "John", description: "Clear, confident male voice" },
-    { id: "emma", name: "Emma", description: "British accent, articulate" },
-    { id: "alex", name: "Alex", description: "Neutral, versatile voice" },
-  ];
-
-  // Style options
-  const styleOptions = [
-    {
-      id: "friendly",
-      name: "Friendly",
-      description: "Casual and approachable conversation",
-    },
-    {
-      id: "professional",
-      name: "Professional",
-      description: "Business-like and formal tone",
-    },
-    {
-      id: "educational",
-      name: "Educational",
-      description: "Teaching and explanatory style",
-    },
-    {
-      id: "creative",
-      name: "Creative",
-      description: "Imaginative and artistic discussions",
-    },
-    {
-      id: "analytical",
-      name: "Analytical",
-      description: "Logical and detail-oriented approach",
-    },
-  ];
 
   // Initialize Vapi
   useEffect(() => {
@@ -166,7 +85,6 @@ export function AudioChat() {
       setIsConnected(false);
       setIsConnecting(false);
       setIsListening(false);
-      setIsSpeaking(false);
       stopCallTimer();
       toast.info("Call ended");
     });
@@ -232,7 +150,7 @@ export function AudioChat() {
     transcriptEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [transcript]);
 
-  // Call timer
+  // Call timer functions
   const startCallTimer = () => {
     setCallDuration(0);
     callTimerRef.current = setInterval(() => {
@@ -252,64 +170,6 @@ export function AudioChat() {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  // Create Vapi configuration based on your example
-  const configureAssistant = (voice: string, style: string, topic: string) => {
-    const voiceId =
-      voices[voice as keyof typeof voices][
-        style as keyof (typeof voices)[keyof typeof voices]
-      ] || "EXAVITQu4vr4xnSDxMaL";
-
-    const vapiAssistant = {
-      name: "AI Companion",
-      firstMessage: topic
-        ? `Hello, let's start the session. Today we'll be talking about ${topic}.`
-        : "Hello! I'm here to chat with you. What's on your mind today?",
-      transcriber: {
-        provider: "deepgram",
-        model: "nova-2",
-        language: "en",
-      },
-      voice: {
-        provider: "11labs",
-        voiceId: voiceId,
-        stability: 0.4,
-        similarityBoost: 0.8,
-        speed: 1,
-        style: 0.5,
-        useSpeakerBoost: true,
-      },
-      model: {
-        provider: "openai",
-        model: "gpt-4",
-        messages: [
-          {
-            role: "system",
-            content: `You are a highly knowledgeable AI assistant having a real-time voice conversation with a user. Your goal is to engage in meaningful conversation about the given topic.
-
-            Guidelines:
-            ${
-              topic
-                ? `- Focus on the topic: ${topic}`
-                : "- Discuss any topic the user brings up"
-            }
-            - Keep your conversation style ${style}
-            - Keep the conversation flowing smoothly while maintaining control
-            - Ask engaging follow-up questions to keep the user engaged
-            - Keep your responses conversational and natural, like in a real voice conversation
-            - Keep responses relatively short and to the point
-            - Do not include any special characters in your responses - this is a voice conversation
-            - Be helpful, informative, and engaging
-            
-            Remember: This is a voice conversation, so speak naturally and conversationally.`,
-          },
-        ],
-      },
-      clientMessages: [],
-      serverMessages: [],
-    };
-    return vapiAssistant;
   };
 
   // Start conversation
