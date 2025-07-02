@@ -115,7 +115,7 @@ export function VideoGenerator() {
       }, 6000); // Update every 6 seconds (48 seconds total for 8 stages)
 
       // Call your API
-      const response = await axios.post("/api/gp/veoVideo", formData, {
+      const response = await axios.post("/api/go/veoVideo", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
