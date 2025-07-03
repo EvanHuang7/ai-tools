@@ -7,6 +7,7 @@ import (
 	"io"
 	"mime"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -15,16 +16,15 @@ import (
 )
 
 const (
-	magicHourAPIKey  = "MAGIC_HOUR_API_KEY"
-	uploadURLAPI     = "https://api.magichour.ai/v1/files/upload-urls"
-	imageToVideoAPI  = "https://api.magichour.ai/v1/image-to-video"
-	videoStatusAPI   = "https://api.magichour.ai/v1/video-projects/%s"
+	uploadURLAPI    = "https://api.magichour.ai/v1/files/upload-urls"
+	imageToVideoAPI = "https://api.magichour.ai/v1/image-to-video"
+	videoStatusAPI  = "https://api.magichour.ai/v1/video-projects/%s"
 )
 
 type uploadURLResp struct {
 	Items []struct {
-		UploadURL string `json:"uploadUrl"`
-		FilePath  string `json:"filePath"`
+		UploadURL string `json:"upload_url"`
+		FilePath  string `json:"file_path"`
 	} `json:"items"`
 }
 
@@ -39,15 +39,19 @@ type videoStatusResp struct {
 	} `json:"downloads"`
 }
 
-// POST /generate-magic-video
 func GenerateMagicHourVideo(c *gin.Context) {
+	apiKey := os.Getenv("MAGIC_HOUR_API_KEY")
+	if apiKey == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "MAGIC_HOUR_API_KEY not set in environment"})
+		return
+	}
+
 	prompt := c.PostForm("prompt")
 	if prompt == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "prompt is required"})
 		return
 	}
 
-	// 1. Parse image
 	file, err := c.FormFile("image")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "image is required"})
@@ -69,23 +73,47 @@ func GenerateMagicHourVideo(c *gin.Context) {
 	imageBytes := buf.Bytes()
 
 	mimeType := mimetype.Detect(imageBytes).String()
-	exts, _ := mime.ExtensionsByType(mimeType)
-	if len(exts) == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "unsupported file type"})
-		return
+	mimeToExt := map[string]string{
+		"image/jpeg": "jpeg",
+		"image/jpg":  "jpg",
+		"image/png":  "png",
+		// Add more as needed
 	}
-	ext := strings.TrimPrefix(exts[0], ".")
+	
+	ext := mimeToExt[mimeType]
+	if ext == "" {
+		exts, _ := mime.ExtensionsByType(mimeType)
+		if len(exts) > 0 {
+			ext = strings.TrimPrefix(exts[0], ".")
+		}
+	}
 
-	// 2. Request upload URL
-	payload := []map[string]string{{"type": "image", "extension": ext}}
-	payloadBytes, _ := json.Marshal(payload)
+
+	// Step 1: Request upload URL 
+	uploadPayload := map[string][]map[string]string{
+		"items": {
+			{
+				"type":      "image",
+				"extension": ext, // like "png", "jpg"
+			},
+		},
+	}
+	payloadBytes, _ := json.Marshal(uploadPayload)
+
 	req, _ := http.NewRequest("POST", uploadURLAPI, bytes.NewBuffer(payloadBytes))
-	req.Header.Set("Authorization", "Bearer "+magicHourAPIKey)
+	req.Header.Set("Authorization", "Bearer "+os.Getenv("MAGIC_HOUR_API_KEY"))
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil || resp.StatusCode != http.StatusOK {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to request upload URL"})
+		body, _ := io.ReadAll(resp.Body)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":     "failed to request upload URL",
+			"status":    resp.StatusCode,
+			"response":  string(body),
+			"mime_type": mimeType,
+			"ext":       ext,
+		})
 		return
 	}
 	defer resp.Body.Close()
@@ -99,49 +127,54 @@ func GenerateMagicHourVideo(c *gin.Context) {
 	uploadURL := uploadResp.Items[0].UploadURL
 	filePath := uploadResp.Items[0].FilePath
 
-	// 3. Upload image
+	// Step 2: Upload image file
 	putReq, _ := http.NewRequest("PUT", uploadURL, bytes.NewReader(imageBytes))
 	putReq.Header.Set("Content-Type", "application/octet-stream")
 	putResp, err := http.DefaultClient.Do(putReq)
 	if err != nil || putResp.StatusCode != 200 {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload image to Magic Hour"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload image"})
 		return
 	}
 	defer putResp.Body.Close()
 
-	// 4. Request video generation
+	// Step 3: Trigger image-to-video
 	body := map[string]interface{}{
-		"assets": map[string]string{
-			"imageFilePath": filePath,
+		"name":           "Generated video",
+		"end_seconds":    5,
+		"height":         960,
+		"width":          512,
+		"style": map[string]interface{}{
+			"prompt":        prompt,
+			"high_quality":  false,
+			"quality_mode":  "quick",
 		},
-		"prompt":          prompt,
-		"durationSeconds": 5,
-		"width":           640,
-		"height":          360,
+		"assets": map[string]interface{}{
+			"image_file_path": filePath,
+		},
 	}
 	bodyBytes, _ := json.Marshal(body)
 	req, _ = http.NewRequest("POST", imageToVideoAPI, bytes.NewReader(bodyBytes))
-	req.Header.Set("Authorization", "Bearer "+magicHourAPIKey)
+	req.Header.Set("Authorization", "Bearer "+apiKey)
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err = http.DefaultClient.Do(req)
-	if err != nil || resp.StatusCode != http.StatusOK {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to request video generation"})
+	if err != nil || (resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated) {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to start video generation"})
 		return
 	}
 	defer resp.Body.Close()
 
 	var videoResp imageToVideoResp
 	if err := json.NewDecoder(resp.Body).Decode(&videoResp); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "invalid video response"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "invalid video creation response"})
 		return
 	}
 
-	// 5. Poll video status
+	// Step 4: Poll for completion
 	for {
 		statusURL := fmt.Sprintf(videoStatusAPI, videoResp.ID)
 		req, _ := http.NewRequest("GET", statusURL, nil)
-		req.Header.Set("Authorization", "Bearer "+magicHourAPIKey)
+		req.Header.Set("Authorization", "Bearer "+apiKey)
 
 		statusResp, err := http.DefaultClient.Do(req)
 		if err != nil {
