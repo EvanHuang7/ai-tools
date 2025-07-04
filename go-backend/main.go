@@ -45,9 +45,6 @@ func main() {
 	// Generate Gemini Veo2 video API
 	r.POST("/veoVideo", api.GenerateVideo)
 
-	// Generate Magic Hour video API
-	r.POST("/generate-magic-video", api.GenerateMagicHourVideo)
-
 	// Add gRPC APIs:
 	// Start gRPC server in a new goroutine so it doesn't block HTTP server
     go api.StartGrpcServer()
