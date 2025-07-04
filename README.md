@@ -328,7 +328,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 
 - If you don't have this new user free credit anymore, you have to go to **Google AI Studio**, enable the Billing for **Gemini API** GCP project and generate a `GOOGLE_API_KEY` in **Google AI Studio**.
 
-🚨🚨 Important: The video generation via Veo2 costs around 💸💸 **0.35-0.50$ per second**💸💸
+🚨🚨 Important: The video generation via Veo2 costs around 💸💸 **0.35-0.50$ per second**💸💸, so make sure specify the **IP address restrictions** of this ** API Key restrictions** to only allow your `GKE Cluster external public IP` and `GCP VM public IP` to access it.
 
 ### <a name="set-up-magic-hour">⭐ Set up Magic hour</a>
 
