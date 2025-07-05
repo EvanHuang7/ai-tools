@@ -1,12 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { ProtectedRoute } from "@/components/auth/protected-route";
-import { TestPage } from "@/pages/test";
 import { LandingPage } from "@/pages/landing";
 import { Dashboard } from "@/pages/dashboard";
 import { ImageEditor } from "@/pages/image-editor";
 import { VideoGenerator } from "@/pages/video-generator";
 import { AudioChat } from "@/pages/audio-chat";
+import { TextToImage } from "@/pages/text-to-image";
 import { Pricing } from "@/pages/pricing";
 import { Settings } from "@/pages/settings";
 
@@ -14,7 +14,6 @@ function App() {
   return (
     <div className="min-h-screen bg-background">
       <Routes>
-        <Route path="/test" element={<TestPage />} />
         <Route path="/" element={<LandingPage />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route
@@ -30,6 +29,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ImageEditor />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/text-to-image"
+          element={
+            <ProtectedRoute>
+              <TextToImage />
             </ProtectedRoute>
           }
         />

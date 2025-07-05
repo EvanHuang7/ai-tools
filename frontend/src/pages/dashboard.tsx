@@ -12,7 +12,16 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ProtectWrapper } from "@/components/billing/protect-wrapper";
 import { useUser } from "@clerk/clerk-react";
-import { Image, Video, Mic, Clock, Zap, ArrowRight, Crown } from "lucide-react";
+import {
+  Image,
+  Wand2,
+  Video,
+  Mic,
+  Clock,
+  Zap,
+  ArrowRight,
+  Crown,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function Dashboard() {
@@ -20,9 +29,9 @@ export function Dashboard() {
 
   const stats = [
     { label: "Images Processed", value: "24", icon: Image, change: "+12%" },
+    { label: "Images Generated", value: "18", icon: Wand2, change: "+35%" },
     { label: "Videos Generated", value: "8", icon: Video, change: "+25%" },
     { label: "Audio Chats", value: "15", icon: Mic, change: "+8%" },
-    { label: "Credits Used", value: "47", icon: Zap, change: "47/100" },
   ];
 
   const recentActivity = [
@@ -32,16 +41,16 @@ export function Dashboard() {
       time: "2 hours ago",
     },
     {
+      type: "generate",
+      title: 'Generated "sunset mountain landscape"',
+      time: "3 hours ago",
+    },
+    {
       type: "video",
       title: "Generated video from landscape.png",
       time: "4 hours ago",
     },
     { type: "audio", title: "Voice chat session completed", time: "1 day ago" },
-    {
-      type: "image",
-      title: "Enhanced product photo quality",
-      time: "2 days ago",
-    },
   ];
 
   const quickActions = [
@@ -51,6 +60,14 @@ export function Dashboard() {
       icon: Image,
       href: "/image-editor",
       color: "bg-blue-500",
+      requiresPro: false,
+    },
+    {
+      title: "Generate Images",
+      description: "Create images from text descriptions",
+      icon: Wand2,
+      href: "/text-to-image",
+      color: "bg-emerald-500",
       requiresPro: false,
     },
     {
@@ -122,7 +139,7 @@ export function Dashboard() {
                       Jump into your favorite AI tools
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {quickActions.map((action, index) => (
                       <div key={index} className="relative">
                         {action.requiresPro && !hasPro ? (
@@ -235,6 +252,17 @@ export function Dashboard() {
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-medium">
+                            Images Generated
+                          </span>
+                          <span className="text-sm text-muted-foreground">
+                            18
+                          </span>
+                        </div>
+                        <Progress value={45} className="h-2" />
+                      </div>
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">
                             Videos Generated
                           </span>
                           <span className="text-sm text-muted-foreground">
@@ -263,6 +291,11 @@ export function Dashboard() {
                             {activity.type === "image" && (
                               <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                                 <Image className="h-4 w-4 text-blue-600" />
+                              </div>
+                            )}
+                            {activity.type === "generate" && (
+                              <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                                <Wand2 className="h-4 w-4 text-emerald-600" />
                               </div>
                             )}
                             {activity.type === "video" && (
