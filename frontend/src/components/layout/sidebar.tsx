@@ -1,31 +1,33 @@
-import { Link, useLocation } from 'react-router-dom'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { 
-  LayoutDashboard, 
-  Image, 
-  Video, 
-  Mic, 
-  Settings, 
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  LayoutDashboard,
+  Image,
+  Wand2,
+  Video,
+  Mic,
+  Settings,
   CreditCard,
-  Zap
-} from 'lucide-react'
+  Zap,
+} from "lucide-react";
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Image Editor', href: '/image-editor', icon: Image },
-  { name: 'Video Generator', href: '/video-generator', icon: Video },
-  { name: 'Audio Chat', href: '/audio-chat', icon: Mic },
-]
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Image Editor", href: "/image-editor", icon: Image },
+  { name: "Text to Image", href: "/text-to-image", icon: Wand2 },
+  { name: "Video Generator", href: "/video-generator", icon: Video },
+  { name: "Audio Chat", href: "/audio-chat", icon: Mic },
+];
 
 const bottomNavigation = [
-  { name: 'Settings', href: '/settings', icon: Settings },
-  { name: 'Billing', href: '/billing', icon: CreditCard },
-]
+  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Billing", href: "/billing", icon: CreditCard },
+];
 
 export function Sidebar() {
-  const location = useLocation()
+  const location = useLocation();
 
   return (
     <div className="flex h-full w-64 flex-col border-r border-border bg-card">
@@ -41,7 +43,7 @@ export function Sidebar() {
       <div className="flex-1 overflow-y-auto py-4">
         <nav className="space-y-1 px-3">
           {navigation.map((item) => {
-            const isActive = location.pathname === item.href
+            const isActive = location.pathname === item.href;
             return (
               <Link key={item.name} to={item.href}>
                 <Button
@@ -55,7 +57,7 @@ export function Sidebar() {
                   {item.name}
                 </Button>
               </Link>
-            )
+            );
           })}
         </nav>
 
@@ -81,7 +83,7 @@ export function Sidebar() {
       <div className="border-t border-border p-3">
         <nav className="space-y-1">
           {bottomNavigation.map((item) => {
-            const isActive = location.pathname === item.href
+            const isActive = location.pathname === item.href;
             return (
               <Link key={item.name} to={item.href}>
                 <Button
@@ -92,10 +94,10 @@ export function Sidebar() {
                   {item.name}
                 </Button>
               </Link>
-            )
+            );
           })}
         </nav>
       </div>
     </div>
-  )
+  );
 }

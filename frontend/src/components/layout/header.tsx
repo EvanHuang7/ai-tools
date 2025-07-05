@@ -1,11 +1,16 @@
-import { Link } from 'react-router-dom'
-import { SignInButton, SignUpButton, UserButton, useAuth } from '@clerk/clerk-react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Sparkles, Zap } from 'lucide-react'
+import { Link } from "react-router-dom";
+import {
+  SignInButton,
+  SignUpButton,
+  UserButton,
+  useAuth,
+} from "@clerk/clerk-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles, Zap } from "lucide-react";
 
 export function Header() {
-  const { isSignedIn } = useAuth()
+  const { isSignedIn } = useAuth();
 
   return (
     <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -20,21 +25,42 @@ export function Header() {
         <nav className="hidden md:flex items-center space-x-6">
           {isSignedIn && (
             <>
-              <Link to="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link
+                to="/dashboard"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
                 Dashboard
               </Link>
-              <Link to="/image-editor" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link
+                to="/image-editor"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
                 Image Editor
               </Link>
-              <Link to="/video-generator" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link
+                to="/text-to-image"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Text to Image
+              </Link>
+              <Link
+                to="/video-generator"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
                 Video Generator
               </Link>
-              <Link to="/audio-chat" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link
+                to="/audio-chat"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
                 Audio Chat
               </Link>
             </>
           )}
-          <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">
+          <Link
+            to="/pricing"
+            className="text-sm font-medium hover:text-primary transition-colors"
+          >
             Pricing
           </Link>
         </nav>
@@ -56,14 +82,12 @@ export function Header() {
                 </Button>
               </SignInButton>
               <SignUpButton mode="modal">
-                <Button size="sm">
-                  Get Started
-                </Button>
+                <Button size="sm">Get Started</Button>
               </SignUpButton>
             </>
           )}
         </div>
       </div>
     </header>
-  )
+  );
 }
