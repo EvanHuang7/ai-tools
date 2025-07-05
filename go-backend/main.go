@@ -45,6 +45,9 @@ func main() {
 	// Generate Gemini Veo2 video API
 	r.POST("/veoVideo", api.GenerateVideo)
 
+	// Generate ImageKit image via text API
+	r.POST("/generateImage", api.GenerateImage)
+
 	// Add gRPC APIs:
 	// Start gRPC server in a new goroutine so it doesn't block HTTP server
     go api.StartGrpcServer()
