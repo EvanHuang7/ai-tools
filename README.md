@@ -297,7 +297,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 
 - Create a **Imagekit.io** account.
 
-- Copy the `privte key` of your **Imagekit.io** account.
+- Copy the `privte key` and `imagekit id` of your **Imagekit.io** account.
 
 ### <a name="set-up-gcs-and-get-gemini-api-key">⭐ Set up Google Cloud Storage and Get Gemini API Key</a>
 
