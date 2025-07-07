@@ -43,7 +43,7 @@ func main() {
 	r.POST("/pubsubMessage", api.SendPubSubMessage)
 
 	// Generate Gemini Veo2 video API
-	r.POST("/veoVideo", api.GenerateVideo)
+	r.POST("/veoVideo", api.GenerateVeo2Video)
 
 	// Generate ImageKit image via text API
 	r.POST("/generateImage", api.GenerateImage)

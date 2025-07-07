@@ -16,7 +16,7 @@ import (
 	"google.golang.org/genai"
 )
 
-func GenerateVideo(c *gin.Context) {
+func GenerateVeo2Video(c *gin.Context) {
 	// Parse text prompt from form data
 	prompt := c.PostForm("prompt")
 	if prompt == "" {
