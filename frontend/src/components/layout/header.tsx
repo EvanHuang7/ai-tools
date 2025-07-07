@@ -44,16 +44,16 @@ export function Header() {
                 Text to Image
               </Link>
               <Link
-                to="/audio-chat"
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Audio Chat
-              </Link>
-              <Link
                 to="/video-generator"
                 className="text-sm font-medium hover:text-primary transition-colors"
               >
                 Video Generator
+              </Link>
+              <Link
+                to="/audio-chat"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Audio Chat
               </Link>
             </>
           )}
@@ -69,8 +69,7 @@ export function Header() {
           {isSignedIn ? (
             <>
               <Badge variant="secondary" className="hidden sm:flex">
-                <Zap className="h-3 w-3 mr-1" />
-                100 Credits
+                Free Plan
               </Badge>
               <UserButton afterSignOutUrl="/" />
             </>

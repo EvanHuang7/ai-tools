@@ -45,12 +45,12 @@ export function Dashboard() {
       title: 'Generated "sunset mountain landscape"',
       time: "3 hours ago",
     },
+    { type: "audio", title: "Voice chat session completed", time: "1 day ago" },
     {
       type: "video",
       title: "Generated video from landscape.png",
       time: "4 hours ago",
     },
-    { type: "audio", title: "Voice chat session completed", time: "1 day ago" },
   ];
 
   const quickActions = [
@@ -71,19 +71,19 @@ export function Dashboard() {
       requiresPro: false,
     },
     {
-      title: "Generate Videos",
-      description: "Create videos from your images",
-      icon: Video,
-      href: "/video-generator",
-      color: "bg-purple-500",
-      requiresPro: true,
-    },
-    {
       title: "Voice Chat",
       description: "Talk with AI assistant",
       icon: Mic,
       href: "/audio-chat",
       color: "bg-green-500",
+      requiresPro: true,
+    },
+    {
+      title: "Generate Videos",
+      description: "Create videos from your images",
+      icon: Video,
+      href: "/video-generator",
+      color: "bg-purple-500",
       requiresPro: true,
     },
   ];
@@ -230,46 +230,46 @@ export function Dashboard() {
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-medium">
-                            Credits Used
+                            Image Processing
                           </span>
                           <span className="text-sm text-muted-foreground">
-                            {hasPro ? "Unlimited" : "47/100"}
+                            {hasPro ? "Unlimited" : "8/10"}
                           </span>
                         </div>
-                        <Progress value={hasPro ? 100 : 47} className="h-2" />
+                        <Progress value={hasPro ? 100 : 80} className="h-2" />
                       </div>
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-medium">
-                            Images Processed
+                            Text to Image
                           </span>
                           <span className="text-sm text-muted-foreground">
-                            24
+                            {hasPro ? "Unlimited" : "3/5"}
                           </span>
                         </div>
-                        <Progress value={60} className="h-2" />
+                        <Progress value={hasPro ? 100 : 60} className="h-2" />
                       </div>
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-medium">
-                            Images Generated
+                            Audio Chat Sessions
                           </span>
                           <span className="text-sm text-muted-foreground">
-                            18
+                            {hasPro ? "Unlimited" : "2/3"}
                           </span>
                         </div>
-                        <Progress value={45} className="h-2" />
+                        <Progress value={hasPro ? 100 : 67} className="h-2" />
                       </div>
                       <div>
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-medium">
-                            Videos Generated
+                            Video Generation
                           </span>
                           <span className="text-sm text-muted-foreground">
-                            8
+                            {hasPro ? "Unlimited" : "1/1"}
                           </span>
                         </div>
-                        <Progress value={32} className="h-2" />
+                        <Progress value={hasPro ? 100 : 100} className="h-2" />
                       </div>
                     </div>
                   </CardContent>
@@ -340,15 +340,23 @@ export function Dashboard() {
                       <ul className="space-y-2 mb-4 text-sm">
                         <li className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                          Unlimited AI processing
+                          Unlimited image processing
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                          Unlimited text-to-image generation
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                          Unlimited audio chat sessions
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                          Unlimited video generation
                         </li>
                         <li className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 bg-primary rounded-full" />
                           Priority support
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                          Advanced features
                         </li>
                       </ul>
                       <Link to="/pricing">
@@ -374,7 +382,7 @@ export function Dashboard() {
                       <ul className="space-y-2 mb-4 text-sm text-amber-800">
                         <li className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 bg-amber-600 rounded-full" />
-                          Unlimited credits
+                          Unlimited usage on all features
                         </li>
                         <li className="flex items-center gap-2">
                           <div className="w-1.5 h-1.5 bg-amber-600 rounded-full" />

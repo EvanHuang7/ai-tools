@@ -10,7 +10,6 @@ import {
   Video,
   Mic,
   Settings,
-  Zap,
   ExternalLink,
 } from "lucide-react";
 
@@ -18,8 +17,8 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Image Editor", href: "/image-editor", icon: Image },
   { name: "Text to Image", href: "/text-to-image", icon: Wand2 },
-  { name: "Video Generator", href: "/video-generator", icon: Video },
   { name: "Audio Chat", href: "/audio-chat", icon: Mic },
+  { name: "Video Generator", href: "/video-generator", icon: Video },
 ];
 
 export function Sidebar() {
@@ -52,14 +51,23 @@ export function Sidebar() {
         <div className="mt-8 px-3">
           <div className="rounded-lg bg-muted p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Credits</span>
-              <Badge variant="secondary">
-                <Zap className="h-3 w-3 mr-1" />
-                100
+              <span className="text-sm font-medium">Usage</span>
+              <Badge variant="secondary" className="text-xs">
+                Free Plan
               </Badge>
             </div>
+            <div className="space-y-2 text-xs text-muted-foreground mb-3">
+              <div className="flex justify-between">
+                <span>Images: 8/10</span>
+                <span>Text-to-Image: 3/5</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Audio: 2/3</span>
+                <span>Video: 1/1</span>
+              </div>
+            </div>
             <p className="text-xs text-muted-foreground mb-3">
-              Upgrade to Pro for unlimited credits
+              Upgrade to Pro for unlimited usage
             </p>
             <Button size="sm" className="w-full">
               Upgrade Plan
