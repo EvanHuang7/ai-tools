@@ -7,10 +7,12 @@ WORKDIR /usr/src/app
 
 # Accept VITE env var at build time
 ARG VITE_CLERK_PUBLISHABLE_KEY
+ARG VITE_VAPI_PUBLIC_KEY
 # ENV in the Dockerfile expects ARG passed in 
 # from the outside (e.g. the cli arg of build image cli).
 # It doesn’t read from ".env" file by itself.
 ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
+ENV VITE_VAPI_PUBLIC_KEY=$VITE_VAPI_PUBLIC_KEY
 
 # Copy only files required for dependencies install
 # (better layer caching)

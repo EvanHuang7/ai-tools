@@ -34,6 +34,7 @@ tasks:
         docker buildx build \
         --platform linux/amd64,linux/arm64 \
         --build-arg VITE_CLERK_PUBLISHABLE_KEY=pk_test_aW5zcGlyZWQtZmF3bi0zNS5jbGVyay5hY2NvdW50cy5kZXYk \
+        --build-arg VITE_VAPI_PUBLIC_KEY=b099cbfe-44d6-4a99-aa4b-4f112b72b233 \
         -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} \
         --push \
         .
