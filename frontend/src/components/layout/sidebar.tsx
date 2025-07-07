@@ -17,8 +17,8 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Image Editor", href: "/image-editor", icon: Image },
   { name: "Text to Image", href: "/text-to-image", icon: Wand2 },
-  { name: "Video Generator", href: "/video-generator", icon: Video },
   { name: "Audio Chat", href: "/audio-chat", icon: Mic },
+  { name: "Video Generator", href: "/video-generator", icon: Video },
 ];
 
 const bottomNavigation = [

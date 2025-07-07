@@ -44,16 +44,16 @@ export function Header() {
                 Text to Image
               </Link>
               <Link
-                to="/video-generator"
-                className="text-sm font-medium hover:text-primary transition-colors"
-              >
-                Video Generator
-              </Link>
-              <Link
                 to="/audio-chat"
                 className="text-sm font-medium hover:text-primary transition-colors"
               >
                 Audio Chat
+              </Link>
+              <Link
+                to="/video-generator"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Video Generator
               </Link>
             </>
           )}
