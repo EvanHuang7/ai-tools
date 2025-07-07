@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { UsageGuard } from "@/components/usage-guard";
 import {
   Upload,
   Download,
@@ -263,101 +264,107 @@ export function ImageEditor() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div
-                    {...getRootProps()}
-                    className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
-                      ${
-                        isDragActive
-                          ? "border-primary bg-primary/5"
-                          : "border-border hover:border-primary/50"
-                      }`}
+                  <UsageGuard
+                    feature="imageProcessing"
+                    action="process this image"
                   >
-                    <input {...getInputProps()} />
-                    {uploadedImage ? (
-                      <div className="space-y-4">
-                        <img
-                          src={uploadedImage}
-                          alt="Uploaded"
-                          className="max-w-full max-h-64 mx-auto rounded-lg object-contain"
-                        />
-                        <div className="flex items-center justify-center gap-2">
-                          <Badge
-                            variant="secondary"
-                            className="bg-green-500/10 text-green-600 border-green-500/20"
-                          >
-                            Image Ready
-                          </Badge>
-                          <Badge variant="outline">
-                            {uploadedFile &&
-                              `${(uploadedFile.size / 1024 / 1024).toFixed(
-                                1
-                              )}MB`}
-                          </Badge>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <Upload className="w-12 h-12 text-muted-foreground mx-auto" />
-                        <div>
-                          <p className="font-medium mb-2">
-                            {isDragActive
-                              ? "Drop your image here"
-                              : "Click to upload or drag and drop"}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Supports JPG, PNG, WebP (Max 10MB)
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {uploadedImage && (
-                    <div className="mt-6 space-y-4">
-                      <Button
-                        onClick={processImage}
-                        disabled={isProcessing}
-                        className="w-full"
-                      >
-                        {isProcessing ? (
-                          <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Processing...
-                          </>
-                        ) : (
-                          <>
-                            <Scissors className="w-4 h-4 mr-2" />
-                            Remove Background
-                          </>
-                        )}
-                      </Button>
-
-                      {isProcessing && (
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">
-                              Processing image...
-                            </span>
-                            <span>{progress}%</span>
+                    <div
+                      {...getRootProps()}
+                      className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
+                        ${
+                          isDragActive
+                            ? "border-primary bg-primary/5"
+                            : "border-border hover:border-primary/50"
+                        }`}
+                    >
+                      <input {...getInputProps()} />
+                      {uploadedImage ? (
+                        <div className="space-y-4">
+                          <img
+                            src={uploadedImage}
+                            alt="Uploaded"
+                            className="max-w-full max-h-64 mx-auto rounded-lg object-contain"
+                          />
+                          <div className="flex items-center justify-center gap-2">
+                            <Badge
+                              variant="secondary"
+                              className="bg-green-500/10 text-green-600 border-green-500/20"
+                            >
+                              Image Ready
+                            </Badge>
+                            <Badge variant="outline">
+                              {uploadedFile &&
+                                `${(uploadedFile.size / 1024 / 1024).toFixed(
+                                  1
+                                )}MB`}
+                            </Badge>
                           </div>
-                          <Progress value={progress} className="h-2" />
-                          <p className="text-xs text-muted-foreground text-center">
-                            This may take a few moments depending on image size
-                          </p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <Upload className="w-12 h-12 text-muted-foreground mx-auto" />
+                          <div>
+                            <p className="font-medium mb-2">
+                              {isDragActive
+                                ? "Drop your image here"
+                                : "Click to upload or drag and drop"}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Supports JPG, PNG, WebP (Max 10MB)
+                            </p>
+                          </div>
                         </div>
                       )}
-
-                      <Button
-                        onClick={clearImages}
-                        variant="outline"
-                        className="w-full"
-                        disabled={isProcessing}
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Clear Images
-                      </Button>
                     </div>
-                  )}
+
+                    {uploadedImage && (
+                      <div className="mt-6 space-y-4">
+                        <Button
+                          onClick={processImage}
+                          disabled={isProcessing}
+                          className="w-full"
+                        >
+                          {isProcessing ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Processing...
+                            </>
+                          ) : (
+                            <>
+                              <Scissors className="w-4 h-4 mr-2" />
+                              Remove Background
+                            </>
+                          )}
+                        </Button>
+
+                        {isProcessing && (
+                          <div className="space-y-2">
+                            <div className="flex justify-between text-sm">
+                              <span className="text-muted-foreground">
+                                Processing image...
+                              </span>
+                              <span>{progress}%</span>
+                            </div>
+                            <Progress value={progress} className="h-2" />
+                            <p className="text-xs text-muted-foreground text-center">
+                              This may take a few moments depending on image
+                              size
+                            </p>
+                          </div>
+                        )}
+
+                        <Button
+                          onClick={clearImages}
+                          variant="outline"
+                          className="w-full"
+                          disabled={isProcessing}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Clear Images
+                        </Button>
+                      </div>
+                    )}
+                  </UsageGuard>
                 </CardContent>
               </Card>
 

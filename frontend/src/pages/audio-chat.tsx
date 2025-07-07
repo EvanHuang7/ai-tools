@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { UsageGuard } from "@/components/usage-guard";
 import {
   Mic,
   MicOff,
@@ -261,175 +262,180 @@ export function AudioChat() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {/* Topic Input */}
-                  <div>
-                    <Label htmlFor="topic">Conversation Topic *</Label>
-                    <Textarea
-                      id="topic"
-                      placeholder="What would you like to talk about? (e.g., 'space exploration', 'cooking tips', 'business strategy')"
-                      value={topic}
-                      onChange={(e) => setTopic(e.target.value)}
-                      className="mt-2"
-                      rows={3}
-                      disabled={isConnected || isConnecting}
-                    />
-                  </div>
+                  <UsageGuard
+                    feature="audioChat"
+                    action="start this conversation"
+                  >
+                    {/* Topic Input */}
+                    <div>
+                      <Label htmlFor="topic">Conversation Topic *</Label>
+                      <Textarea
+                        id="topic"
+                        placeholder="What would you like to talk about? (e.g., 'space exploration', 'cooking tips', 'business strategy')"
+                        value={topic}
+                        onChange={(e) => setTopic(e.target.value)}
+                        className="mt-2"
+                        rows={3}
+                        disabled={isConnected || isConnecting}
+                      />
+                    </div>
 
-                  {/* Conversation Style */}
-                  <div>
-                    <Label>Conversation Style</Label>
-                    <Select
-                      value={conversationStyle}
-                      onValueChange={setConversationStyle}
-                      disabled={isConnected || isConnecting}
-                    >
-                      <SelectTrigger className="mt-2">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {styleOptions.map((style) => (
-                          <SelectItem key={style.id} value={style.id}>
-                            <div>
-                              <div className="font-medium">{style.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {style.description}
-                              </div>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Voice Selection */}
-                  <div>
-                    <Label>AI Voice</Label>
-                    <Select
-                      value={selectedVoice}
-                      onValueChange={setSelectedVoice}
-                      disabled={isConnected || isConnecting}
-                    >
-                      <SelectTrigger className="mt-2">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {voiceOptions.map((voice) => (
-                          <SelectItem key={voice.id} value={voice.id}>
-                            <div>
-                              <div className="font-medium">{voice.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {voice.description}
-                              </div>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Call Controls */}
-                  <div className="space-y-3 pt-4">
-                    {!isConnected ? (
-                      <Button
-                        onClick={startConversation}
-                        disabled={isConnecting || !topic.trim()}
-                        className="w-full bg-green-600 hover:bg-green-700"
+                    {/* Conversation Style */}
+                    <div>
+                      <Label>Conversation Style</Label>
+                      <Select
+                        value={conversationStyle}
+                        onValueChange={setConversationStyle}
+                        disabled={isConnected || isConnecting}
                       >
-                        {isConnecting ? (
-                          <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Connecting...
-                          </>
-                        ) : (
-                          <>
-                            <Phone className="w-4 h-4 mr-2" />
-                            Start Conversation
-                          </>
-                        )}
-                      </Button>
-                    ) : (
-                      <div className="space-y-3">
-                        <Button
-                          onClick={endConversation}
-                          className="w-full bg-red-600 hover:bg-red-700"
-                        >
-                          <PhoneOff className="w-4 h-4 mr-2" />
-                          End Conversation
-                        </Button>
+                        <SelectTrigger className="mt-2">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {styleOptions.map((style) => (
+                            <SelectItem key={style.id} value={style.id}>
+                              <div>
+                                <div className="font-medium">{style.name}</div>
+                                <div className="text-xs text-muted-foreground">
+                                  {style.description}
+                                </div>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
+                    {/* Voice Selection */}
+                    <div>
+                      <Label>AI Voice</Label>
+                      <Select
+                        value={selectedVoice}
+                        onValueChange={setSelectedVoice}
+                        disabled={isConnected || isConnecting}
+                      >
+                        <SelectTrigger className="mt-2">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {voiceOptions.map((voice) => (
+                            <SelectItem key={voice.id} value={voice.id}>
+                              <div>
+                                <div className="font-medium">{voice.name}</div>
+                                <div className="text-xs text-muted-foreground">
+                                  {voice.description}
+                                </div>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Call Controls */}
+                    <div className="space-y-3 pt-4">
+                      {!isConnected ? (
                         <Button
-                          onClick={toggleMute}
-                          variant="outline"
-                          className="w-full"
+                          onClick={startConversation}
+                          disabled={isConnecting || !topic.trim()}
+                          className="w-full bg-green-600 hover:bg-green-700"
                         >
-                          {isMuted ? (
+                          {isConnecting ? (
                             <>
-                              <MicOff className="w-4 h-4 mr-2" />
-                              Unmute
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Connecting...
                             </>
                           ) : (
                             <>
-                              <Mic className="w-4 h-4 mr-2" />
-                              Mute
+                              <Phone className="w-4 h-4 mr-2" />
+                              Start Conversation
                             </>
                           )}
                         </Button>
+                      ) : (
+                        <div className="space-y-3">
+                          <Button
+                            onClick={endConversation}
+                            className="w-full bg-red-600 hover:bg-red-700"
+                          >
+                            <PhoneOff className="w-4 h-4 mr-2" />
+                            End Conversation
+                          </Button>
+
+                          <Button
+                            onClick={toggleMute}
+                            variant="outline"
+                            className="w-full"
+                          >
+                            {isMuted ? (
+                              <>
+                                <MicOff className="w-4 h-4 mr-2" />
+                                Unmute
+                              </>
+                            ) : (
+                              <>
+                                <Mic className="w-4 h-4 mr-2" />
+                                Mute
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      )}
+
+                      <Button
+                        onClick={clearTranscript}
+                        variant="outline"
+                        className="w-full"
+                        disabled={transcript.length === 0}
+                      >
+                        <RotateCcw className="w-4 h-4 mr-2" />
+                        Clear Transcript
+                      </Button>
+                    </div>
+
+                    {/* Call Status */}
+                    {isConnected && (
+                      <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span className="text-green-800 font-medium">
+                              Connected
+                            </span>
+                          </div>
+                          <Badge
+                            variant="outline"
+                            className="text-green-700 border-green-300"
+                          >
+                            {formatDuration(callDuration)}
+                          </Badge>
+                        </div>
+
+                        <div className="flex items-center gap-4 text-sm text-green-700">
+                          <div className="flex items-center gap-1">
+                            {isListening ? (
+                              <>
+                                <Mic className="w-3 h-3" />
+                                <span>Listening...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Volume2 className="w-3 h-3" />
+                                <span>Ready</span>
+                              </>
+                            )}
+                          </div>
+
+                          {isMuted && (
+                            <div className="flex items-center gap-1">
+                              <MicOff className="w-3 h-3" />
+                              <span>Muted</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
-
-                    <Button
-                      onClick={clearTranscript}
-                      variant="outline"
-                      className="w-full"
-                      disabled={transcript.length === 0}
-                    >
-                      <RotateCcw className="w-4 h-4 mr-2" />
-                      Clear Transcript
-                    </Button>
-                  </div>
-
-                  {/* Call Status */}
-                  {isConnected && (
-                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                          <span className="text-green-800 font-medium">
-                            Connected
-                          </span>
-                        </div>
-                        <Badge
-                          variant="outline"
-                          className="text-green-700 border-green-300"
-                        >
-                          {formatDuration(callDuration)}
-                        </Badge>
-                      </div>
-
-                      <div className="flex items-center gap-4 text-sm text-green-700">
-                        <div className="flex items-center gap-1">
-                          {isListening ? (
-                            <>
-                              <Mic className="w-3 h-3" />
-                              <span>Listening...</span>
-                            </>
-                          ) : (
-                            <>
-                              <Volume2 className="w-3 h-3" />
-                              <span>Ready</span>
-                            </>
-                          )}
-                        </div>
-
-                        {isMuted && (
-                          <div className="flex items-center gap-1">
-                            <MicOff className="w-3 h-3" />
-                            <span>Muted</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                  </UsageGuard>
                 </CardContent>
               </Card>
 

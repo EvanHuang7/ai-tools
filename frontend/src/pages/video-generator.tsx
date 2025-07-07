@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { UsageGuard } from "@/components/usage-guard";
 import {
   Upload,
   Play,
@@ -243,200 +244,209 @@ export function VideoGenerator() {
             <div className="grid lg:grid-cols-2 gap-8">
               {/* Input Section */}
               <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Upload className="h-5 w-5" />
-                      Upload Image
-                    </CardTitle>
-                    <CardDescription>
-                      Start with your source image (Max 10MB)
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div
-                      {...getRootProps()}
-                      className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
+                <UsageGuard
+                  feature="videoGeneration"
+                  action="generate this video"
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Upload className="h-5 w-5" />
+                        Upload Image
+                      </CardTitle>
+                      <CardDescription>
+                        Start with your source image (Max 10MB)
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div
+                        {...getRootProps()}
+                        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
                         ${
                           isDragActive
                             ? "border-primary bg-primary/5"
                             : "border-border hover:border-primary/50"
                         }`}
-                    >
-                      <input {...getInputProps()} />
-                      {uploadedImage ? (
-                        <div className="space-y-4">
-                          <img
-                            src={uploadedImage}
-                            alt="Source"
-                            className="max-w-full max-h-48 mx-auto rounded-lg object-contain"
-                          />
-                          <div className="flex items-center justify-center gap-2">
-                            <Badge
-                              variant="secondary"
-                              className="bg-green-500/10 text-green-600 border-green-500/20"
-                            >
-                              Image Ready
-                            </Badge>
-                            <Badge variant="outline">
-                              {uploadedFile &&
-                                `${(uploadedFile.size / 1024 / 1024).toFixed(
-                                  1
-                                )}MB`}
-                            </Badge>
+                      >
+                        <input {...getInputProps()} />
+                        {uploadedImage ? (
+                          <div className="space-y-4">
+                            <img
+                              src={uploadedImage}
+                              alt="Source"
+                              className="max-w-full max-h-48 mx-auto rounded-lg object-contain"
+                            />
+                            <div className="flex items-center justify-center gap-2">
+                              <Badge
+                                variant="secondary"
+                                className="bg-green-500/10 text-green-600 border-green-500/20"
+                              >
+                                Image Ready
+                              </Badge>
+                              <Badge variant="outline">
+                                {uploadedFile &&
+                                  `${(uploadedFile.size / 1024 / 1024).toFixed(
+                                    1
+                                  )}MB`}
+                              </Badge>
+                            </div>
                           </div>
+                        ) : (
+                          <div className="space-y-4">
+                            <Upload className="w-10 h-10 text-muted-foreground mx-auto" />
+                            <div>
+                              <p className="font-medium mb-2">
+                                {isDragActive
+                                  ? "Drop your image here"
+                                  : "Click to upload or drag and drop"}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                JPG, PNG, WebP (Max 10MB)
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Wand2 className="h-5 w-5" />
+                        Video Settings
+                      </CardTitle>
+                      <CardDescription>
+                        Customize your video generation
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <Label htmlFor="prompt">Prompt *</Label>
+                        <Textarea
+                          id="prompt"
+                          placeholder="Describe the animation or movement you want to see... (e.g., 'gentle camera zoom in', 'leaves swaying in the wind', 'water flowing')"
+                          value={prompt}
+                          onChange={(e) => setPrompt(e.target.value)}
+                          className="mt-2"
+                          rows={4}
+                          disabled={isGenerating}
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Be specific about the type of movement or animation
+                          you want
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label>Style</Label>
+                          <Select
+                            value={style}
+                            onValueChange={setStyle}
+                            disabled={isGenerating}
+                          >
+                            <SelectTrigger className="mt-2">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="cinematic">
+                                Cinematic
+                              </SelectItem>
+                              <SelectItem value="anime">Anime</SelectItem>
+                              <SelectItem value="realistic">
+                                Realistic
+                              </SelectItem>
+                              <SelectItem value="artistic">Artistic</SelectItem>
+                              <SelectItem value="fantasy">Fantasy</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
-                      ) : (
-                        <div className="space-y-4">
-                          <Upload className="w-10 h-10 text-muted-foreground mx-auto" />
-                          <div>
-                            <p className="font-medium mb-2">
-                              {isDragActive
-                                ? "Drop your image here"
-                                : "Click to upload or drag and drop"}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              JPG, PNG, WebP (Max 10MB)
-                            </p>
+
+                        <div>
+                          <Label>Duration</Label>
+                          <Select
+                            value={duration}
+                            onValueChange={setDuration}
+                            disabled={isGenerating}
+                          >
+                            <SelectTrigger className="mt-2">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="3">3 seconds</SelectItem>
+                              <SelectItem value="5">5 seconds</SelectItem>
+                              <SelectItem value="10">10 seconds</SelectItem>
+                              <SelectItem value="15">15 seconds</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      {/* Generation Time Warning */}
+                      <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                        <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                        <div className="text-sm">
+                          <p className="text-amber-800 font-medium">
+                            Processing Time
+                          </p>
+                          <p className="text-amber-700">
+                            Video generation takes 40-50 seconds. Please be
+                            patient!
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <Button
+                          onClick={generateVideo}
+                          disabled={
+                            isGenerating || !uploadedImage || !prompt.trim()
+                          }
+                          className="w-full"
+                        >
+                          {isGenerating ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Generating Video...
+                            </>
+                          ) : (
+                            <>
+                              <Play className="w-4 h-4 mr-2" />
+                              Generate Video
+                            </>
+                          )}
+                        </Button>
+
+                        <Button
+                          onClick={clearAll}
+                          variant="outline"
+                          className="w-full"
+                          disabled={isGenerating}
+                        >
+                          Clear All
+                        </Button>
+                      </div>
+
+                      {isGenerating && (
+                        <div className="space-y-3">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">
+                              {currentStage}
+                            </span>
+                            <span>{progress}%</span>
+                          </div>
+                          <Progress value={progress} className="h-3" />
+                          <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
+                            <Clock className="w-3 h-3 inline mr-1" />
+                            This process typically takes 40-50 seconds. Please
+                            keep this tab open.
                           </div>
                         </div>
                       )}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Wand2 className="h-5 w-5" />
-                      Video Settings
-                    </CardTitle>
-                    <CardDescription>
-                      Customize your video generation
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Label htmlFor="prompt">Prompt *</Label>
-                      <Textarea
-                        id="prompt"
-                        placeholder="Describe the animation or movement you want to see... (e.g., 'gentle camera zoom in', 'leaves swaying in the wind', 'water flowing')"
-                        value={prompt}
-                        onChange={(e) => setPrompt(e.target.value)}
-                        className="mt-2"
-                        rows={4}
-                        disabled={isGenerating}
-                      />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Be specific about the type of movement or animation you
-                        want
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label>Style</Label>
-                        <Select
-                          value={style}
-                          onValueChange={setStyle}
-                          disabled={isGenerating}
-                        >
-                          <SelectTrigger className="mt-2">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="cinematic">Cinematic</SelectItem>
-                            <SelectItem value="anime">Anime</SelectItem>
-                            <SelectItem value="realistic">Realistic</SelectItem>
-                            <SelectItem value="artistic">Artistic</SelectItem>
-                            <SelectItem value="fantasy">Fantasy</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div>
-                        <Label>Duration</Label>
-                        <Select
-                          value={duration}
-                          onValueChange={setDuration}
-                          disabled={isGenerating}
-                        >
-                          <SelectTrigger className="mt-2">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="3">3 seconds</SelectItem>
-                            <SelectItem value="5">5 seconds</SelectItem>
-                            <SelectItem value="10">10 seconds</SelectItem>
-                            <SelectItem value="15">15 seconds</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    {/* Generation Time Warning */}
-                    <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                      <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                      <div className="text-sm">
-                        <p className="text-amber-800 font-medium">
-                          Processing Time
-                        </p>
-                        <p className="text-amber-700">
-                          Video generation takes 40-50 seconds. Please be
-                          patient!
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <Button
-                        onClick={generateVideo}
-                        disabled={
-                          isGenerating || !uploadedImage || !prompt.trim()
-                        }
-                        className="w-full"
-                      >
-                        {isGenerating ? (
-                          <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Generating Video...
-                          </>
-                        ) : (
-                          <>
-                            <Play className="w-4 h-4 mr-2" />
-                            Generate Video
-                          </>
-                        )}
-                      </Button>
-
-                      <Button
-                        onClick={clearAll}
-                        variant="outline"
-                        className="w-full"
-                        disabled={isGenerating}
-                      >
-                        Clear All
-                      </Button>
-                    </div>
-
-                    {isGenerating && (
-                      <div className="space-y-3">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">
-                            {currentStage}
-                          </span>
-                          <span>{progress}%</span>
-                        </div>
-                        <Progress value={progress} className="h-3" />
-                        <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
-                          <Clock className="w-3 h-3 inline mr-1" />
-                          This process typically takes 40-50 seconds. Please
-                          keep this tab open.
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </UsageGuard>
               </div>
 
               {/* Result Section */}

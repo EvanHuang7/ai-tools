@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
+import { UsageGuard } from "@/components/usage-guard";
 
 export function TextToImage() {
   const [prompt, setPrompt] = useState("");
@@ -334,184 +335,187 @@ export function TextToImage() {
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Input Section */}
               <div className="lg:col-span-2 space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Wand2 className="h-5 w-5" />
-                      Create Your Image
-                    </CardTitle>
-                    <CardDescription>
-                      Describe the image you want to generate
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div>
-                      <Label htmlFor="prompt">Image Description *</Label>
-                      <Textarea
-                        id="prompt"
-                        placeholder="Describe the image you want to create... (e.g., 'A serene mountain lake at sunset with golden reflections')"
-                        value={prompt}
-                        onChange={(e) => setPrompt(e.target.value)}
-                        className="mt-2 min-h-[120px]"
-                        disabled={isGenerating}
-                      />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Be descriptive and specific for better results. Include
-                        details about style, mood, colors, and composition.
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <UsageGuard feature="textToImage" action="generate this image">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Wand2 className="h-5 w-5" />
+                        Create Your Image
+                      </CardTitle>
+                      <CardDescription>
+                        Describe the image you want to generate
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
                       <div>
-                        <Label>Art Style</Label>
-                        <Select
-                          value={style}
-                          onValueChange={setStyle}
+                        <Label htmlFor="prompt">Image Description *</Label>
+                        <Textarea
+                          id="prompt"
+                          placeholder="Describe the image you want to create... (e.g., 'A serene mountain lake at sunset with golden reflections')"
+                          value={prompt}
+                          onChange={(e) => setPrompt(e.target.value)}
+                          className="mt-2 min-h-[120px]"
                           disabled={isGenerating}
-                        >
-                          <SelectTrigger className="mt-2">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {styleOptions.map((option) => (
-                              <SelectItem
-                                key={option.value}
-                                value={option.value}
-                              >
-                                <div>
-                                  <div className="font-medium">
-                                    {option.label}
-                                  </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {option.description}
-                                  </div>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Be descriptive and specific for better results.
+                          Include details about style, mood, colors, and
+                          composition.
+                        </p>
                       </div>
 
-                      <div>
-                        <Label>Aspect Ratio</Label>
-                        <Select
-                          value={aspectRatio}
-                          onValueChange={setAspectRatio}
-                          disabled={isGenerating}
-                        >
-                          <SelectTrigger className="mt-2">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {aspectRatioOptions.map((option) => (
-                              <SelectItem
-                                key={option.value}
-                                value={option.value}
-                              >
-                                <div>
-                                  <div className="font-medium">
-                                    {option.label}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <Label>Art Style</Label>
+                          <Select
+                            value={style}
+                            onValueChange={setStyle}
+                            disabled={isGenerating}
+                          >
+                            <SelectTrigger className="mt-2">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {styleOptions.map((option) => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  <div>
+                                    <div className="font-medium">
+                                      {option.label}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground">
+                                      {option.description}
+                                    </div>
                                   </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {option.description}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label>Aspect Ratio</Label>
+                          <Select
+                            value={aspectRatio}
+                            onValueChange={setAspectRatio}
+                            disabled={isGenerating}
+                          >
+                            <SelectTrigger className="mt-2">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {aspectRatioOptions.map((option) => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  <div>
+                                    <div className="font-medium">
+                                      {option.label}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground">
+                                      {option.description}
+                                    </div>
                                   </div>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div>
+                          <Label>Quality</Label>
+                          <Select
+                            value={quality}
+                            onValueChange={setQuality}
+                            disabled={isGenerating}
+                          >
+                            <SelectTrigger className="mt-2">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {qualityOptions.map((option) => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  <div>
+                                    <div className="font-medium">
+                                      {option.label}
+                                    </div>
+                                    <div className="text-xs text-muted-foreground">
+                                      {option.description}
+                                    </div>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
 
-                      <div>
-                        <Label>Quality</Label>
-                        <Select
-                          value={quality}
-                          onValueChange={setQuality}
-                          disabled={isGenerating}
-                        >
-                          <SelectTrigger className="mt-2">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {qualityOptions.map((option) => (
-                              <SelectItem
-                                key={option.value}
-                                value={option.value}
-                              >
-                                <div>
-                                  <div className="font-medium">
-                                    {option.label}
-                                  </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {option.description}
-                                  </div>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-2 gap-3">
-                        <Button
-                          onClick={generateImage}
-                          disabled={isGenerating || !prompt.trim()}
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                        >
-                          {isGenerating ? (
-                            <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                              Generating...
-                            </>
-                          ) : (
-                            <>
-                              <Sparkles className="w-4 h-4 mr-2" />
-                              Generate Image
-                            </>
-                          )}
-                        </Button>
-
-                        <Button
-                          onClick={regenerateImage}
-                          variant="outline"
-                          disabled={isGenerating || !prompt.trim()}
-                        >
-                          <RefreshCw className="w-4 h-4 mr-2" />
-                          Regenerate
-                        </Button>
-                      </div>
-
-                      <Button
-                        onClick={clearAll}
-                        variant="outline"
-                        className="w-full"
-                        disabled={isGenerating}
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Clear All
-                      </Button>
-                    </div>
-
-                    {isGenerating && (
                       <div className="space-y-3">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">
-                            {currentStage}
-                          </span>
-                          <span>{progress}%</span>
+                        <div className="grid grid-cols-2 gap-3">
+                          <Button
+                            onClick={generateImage}
+                            disabled={isGenerating || !prompt.trim()}
+                            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                          >
+                            {isGenerating ? (
+                              <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Generating...
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-4 h-4 mr-2" />
+                                Generate Image
+                              </>
+                            )}
+                          </Button>
+
+                          <Button
+                            onClick={regenerateImage}
+                            variant="outline"
+                            disabled={isGenerating || !prompt.trim()}
+                          >
+                            <RefreshCw className="w-4 h-4 mr-2" />
+                            Regenerate
+                          </Button>
                         </div>
-                        <Progress value={progress} className="h-3" />
-                        <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
-                          <Clock className="w-3 h-3 inline mr-1" />
-                          Generation typically takes 8-12 seconds. Please
-                          wait...
-                        </div>
+
+                        <Button
+                          onClick={clearAll}
+                          variant="outline"
+                          className="w-full"
+                          disabled={isGenerating}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Clear All
+                        </Button>
                       </div>
-                    )}
-                  </CardContent>
-                </Card>
+
+                      {isGenerating && (
+                        <div className="space-y-3">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">
+                              {currentStage}
+                            </span>
+                            <span>{progress}%</span>
+                          </div>
+                          <Progress value={progress} className="h-3" />
+                          <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
+                            <Clock className="w-3 h-3 inline mr-1" />
+                            Generation typically takes 8-12 seconds. Please
+                            wait...
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </UsageGuard>
 
                 {/* Prompt Suggestions */}
                 <Card>
