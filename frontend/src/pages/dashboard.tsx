@@ -385,14 +385,19 @@ export function Dashboard() {
                           Premium support
                         </li>
                       </ul>
-                      <Link to="/settings">
-                        <Button
-                          variant="outline"
-                          className="w-full border-amber-300 text-amber-800 hover:bg-amber-200"
-                        >
-                          Manage Subscription
-                        </Button>
-                      </Link>
+                      <Button
+                        variant="outline"
+                        className="w-full border-amber-300 text-amber-800 hover:bg-amber-200"
+                        onClick={() => {
+                          // This will open Clerk's user profile which includes billing management
+                          const {
+                            openUserProfile,
+                          } = require("@clerk/clerk-react");
+                          openUserProfile();
+                        }}
+                      >
+                        Manage Account
+                      </Button>
                     </CardContent>
                   </Card>
                 )}
