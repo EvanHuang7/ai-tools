@@ -56,14 +56,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/test"
-          element={
-            <ProtectedRoute>
-              <TestPage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/test" element={<TestPage />} />
       </Routes>
       <Toaster />
     </div>

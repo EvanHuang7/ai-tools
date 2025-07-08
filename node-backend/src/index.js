@@ -6,6 +6,7 @@ import { users } from "./db/schema.js";
 import { ListGcpPubSubMessages } from "./service/gcpPubSubMessages.js";
 import { connectKafkaProducer, kafkaProducer } from "./lib/kafka.js";
 import userRoutes from "./routes/user.route.js";
+import { authMiddleware } from "./middleware/authMiddleware.js";
 
 // Express app config
 const app = express();
@@ -16,7 +17,7 @@ app.use(express.json());
 app.use(morgan("tiny"));
 
 // Test API
-app.get("/", (req, res) => {
+app.get("/", authMiddleware, (req, res) => {
   res.json({ api: "node backend", currentTime: new Date().toISOString() });
 });
 
@@ -83,7 +84,7 @@ app.post("/sendKafkaMessage", async (req, res) => {
 });
 
 // Set up API routes
-app.use("/user", userRoutes);
+app.use("/user", authMiddleware, userRoutes);
 
 // We omit the "host" argument between "port" and "()",
 // so the host is default to be '0.0.0.0', which means
