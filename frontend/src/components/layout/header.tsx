@@ -55,14 +55,14 @@ export function Header() {
               >
                 Audio Chat
               </Link>
+              <Link
+                to="/pricing"
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Pricing
+              </Link>
             </>
           )}
-          <Link
-            to="/pricing"
-            className="text-sm font-medium hover:text-primary transition-colors"
-          >
-            Pricing
-          </Link>
         </nav>
 
         <div className="flex items-center space-x-4">

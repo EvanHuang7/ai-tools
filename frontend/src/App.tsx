@@ -8,6 +8,7 @@ import { VideoGenerator } from "@/pages/video-generator";
 import { AudioChat } from "@/pages/audio-chat";
 import { TextToImage } from "@/pages/text-to-image";
 import { Pricing } from "@/pages/pricing";
+import { TestPage } from "./pages/test";
 
 function App() {
   return (
@@ -52,6 +53,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AudioChat />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/test"
+          element={
+            <ProtectedRoute>
+              <TestPage />
             </ProtectedRoute>
           }
         />
