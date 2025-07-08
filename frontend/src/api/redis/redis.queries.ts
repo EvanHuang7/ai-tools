@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { redisRead, redisWrite } from "../api/redis";
+import { redisRead, redisWrite } from "./redis.api";
 
 export const useRedisRead = (key: string) => {
   return useQuery({

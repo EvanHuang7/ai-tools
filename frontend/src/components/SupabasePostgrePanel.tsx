@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   useSupabasePostgreRead,
   useSupabasePostgreWrite,
-} from "../hooks/useSupabasePostgre";
+} from "../api/supabasePostgre/supabasePostgre.queries";
 
 const SupabasePostgrePanel: React.FC = () => {
   const [name, setName] = useState<string>("");

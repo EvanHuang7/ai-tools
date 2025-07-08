@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   supabasePostgreRead,
   supabasePostgreWrite,
-} from "../api/supabasePostgre";
+} from "./supabasePostgre.api";
 
 export const useSupabasePostgreRead = () => {
   return useQuery({

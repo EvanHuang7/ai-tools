@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { neonPostgreRead, neonPostgreWrite } from "../api/neonPostgre";
+import { neonPostgreRead, neonPostgreWrite } from "./neonPostgre.api";
 
 export const useNeonPostgreRead = () => {
   return useQuery({

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { mongoRead, mongoWrite } from "../api/mongo";
+import { mongoRead, mongoWrite } from "./mongo.api";
 
 export const useMongoRead = (userId: string) => {
   return useQuery({
