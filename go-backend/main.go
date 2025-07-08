@@ -7,6 +7,7 @@ import (
 
 	"go-backend/api"
 	"go-backend/internal/db"
+	"go-backend/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -24,16 +25,22 @@ func main() {
 
     r := gin.Default() // Creates a Gin router with Logger and Recovery middleware
 
+	// Public APIs
     r.GET("/", func(c *gin.Context) {
         c.JSON(200, gin.H{
             "api": "go backend",
 			"currentTime": time.Now().Format(time.RFC3339), // ISO8601 timestamp
         })
     })
-
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, "pong")
 	})
+
+	// Protected APIs
+	// Only applying the Clerk auth middleware to routes registered on
+	// the auth group. Any routes defined outside that group are not protected.
+	auth := r.Group("/")
+	auth.Use(middleware.ClerkMiddleware())
 
 	// Add message APIs:
 	r.POST("/messages", api.CreateMessage)
