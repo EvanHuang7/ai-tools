@@ -3,7 +3,8 @@ from datetime import datetime
 import requests
 from io import BytesIO
 
-from . import config
+from . import secrets
+from . import constants
 from .models import Plan, KafkaMessage
 from .utils import append_transformation
 from .auth_middleware import clerk_auth_required
@@ -97,7 +98,7 @@ def read_plans():
 def grpc_greet():
     try:
         # Connect to the gRPC server (Go server running on 50051 port)
-        channel = grpc.insecure_channel(f"{config.grpc_host}:{config.grpc_port}")
+        channel = grpc.insecure_channel(f"{constants.grpc_host}:{constants.grpc_port}")
         client = greeter_pb2_grpc.GreeterServiceStub(channel)
 
         # Create the request message
@@ -135,10 +136,10 @@ def remove_background():
 
         # 1. Upload original file to ImageKit
         upload_response = requests.post(
-            config.imagekit_upload_url,
+            constants.imagekit_upload_url,
             files={"file": image},
             data={"fileName": image.filename},
-            auth=(config.imagekit_private_key, "")
+            auth=(secrets.imagekit_private_key, "")
         )
         upload_data = upload_response.json()
         original_url = upload_data["url"]
@@ -155,10 +156,10 @@ def remove_background():
 
         # 4. Re-upload transformed image as a new file
         new_upload = requests.post(
-            IMAGEKIT_UPLOAD_URL,
+            constants.imagekit_upload_url,
             files={"file": BytesIO(transformed_img_res.content)},
             data={"fileName": f"bg_removed_{image.filename}"},
-            auth=(IMAGEKIT_PRIVATE_KEY, "")
+            auth=(secrets.imagekit_private_key, "")
         )
 
         if new_upload.status_code != 200:

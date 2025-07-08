@@ -4,9 +4,9 @@ from clerk_backend_api.security import authenticate_request
 from clerk_backend_api.security.types import AuthenticateRequestOptions
 from werkzeug.wrappers import Request as WerkzeugRequest
 
-from . import config
+from . import secrets
 
-clerk = Clerk(bearer_auth=config.clerk_secret_key)
+clerk = Clerk(bearer_auth=secrets.clerk_secret_key)
 
 def clerk_auth_required(f):
     def wrapper(*args, **kwargs):

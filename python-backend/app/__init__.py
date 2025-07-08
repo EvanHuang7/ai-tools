@@ -2,7 +2,7 @@ from flask import Flask
 from mongoengine import connect
 import redis
 import threading
-from . import config
+from . import secrets
 from . import kafka
 
 # Global redis_client to use elsewhere
@@ -12,10 +12,10 @@ def create_app():
     app = Flask(__name__)
 
     # Connect to MongoDB
-    connect(host=config.mongodb_url)
+    connect(host=secrets.mongodb_url)
 
     # Connect to Redis
-    app.redis_client = redis.from_url(config.redis_url)
+    app.redis_client = redis.from_url(secrets.redis_url)
     
     # Start a Kafka connection as consumer once server is running
     # Kafka connection is running in a separate daemon thread or background task,

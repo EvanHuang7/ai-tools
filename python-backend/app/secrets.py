@@ -6,7 +6,3 @@ redis_url = get_env_var("REDIS_URL")
 imagekit_private_key = get_env_var("IMAGEKIT_PRIVATE_KEY")
 clerk_secret_key = get_env_var("CLERK_SECRET_KEY")
 
-# Constants
-imagekit_upload_url = "https://upload.imagekit.io/api/v1/files/upload"
-grpc_host = get_env_var("GRPC_HOST") or "localhost"
-grpc_port = "50051"
