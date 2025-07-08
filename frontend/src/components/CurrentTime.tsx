@@ -1,5 +1,5 @@
 import React from "react";
-import { useCurrentTime } from "../hooks/useCurrentTime";
+import { useCurrentTime } from "../api/currentTime/currentTime.queries";
 
 interface CurrentTimeProps {
   api: string;

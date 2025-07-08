@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { gcpPubSubRead, gcpPubSubWrite } from "../api/gcpPubSub";
+import { gcpPubSubRead, gcpPubSubWrite } from "./gcpPubSub.api";
 
 export const useGcpPubSubRead = () => {
   return useQuery({

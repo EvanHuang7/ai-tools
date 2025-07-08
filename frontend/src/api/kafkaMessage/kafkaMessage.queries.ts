@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { kafkaMessageRead, kafkaMessageWrite } from "../api/kafkaMessage";
+import { kafkaMessageRead, kafkaMessageWrite } from "./kafkaMessage.api";
 
 export const useKafkaMessageRead = () => {
   return useQuery({

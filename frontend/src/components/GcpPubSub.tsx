@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { useGcpPubSubRead, useGcpPubSubWrite } from "../hooks/useGcpPubSub";
+import {
+  useGcpPubSubRead,
+  useGcpPubSubWrite,
+} from "../api/gcpPubSub/gcpPubSub.queries";
 
 const GcpPubSub: React.FC = () => {
   const [message, setMessage] = useState<string>("");

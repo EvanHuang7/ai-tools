@@ -1,5 +1,5 @@
 import React from "react";
-import { useGrpcCall } from "../hooks/useGrpcCall";
+import { useGrpcCall } from "../api/grpcCall/grpcCall.queries";
 
 const GrpcCall: React.FC = () => {
   const { data, isLoading, isError, error, isFetching } = useGrpcCall();

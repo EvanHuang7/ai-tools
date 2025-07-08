@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   useKafkaMessageRead,
   useKafkaMessageWrite,
-} from "../hooks/useKafkaMessage";
+} from "../api/kafkaMessage/kafkaMessage.queries";
 
 const KafkaMessage: React.FC = () => {
   const [message, setMessage] = useState<string>("");
