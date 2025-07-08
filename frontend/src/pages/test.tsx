@@ -11,7 +11,7 @@ import "../App.css";
 export function TestPage() {
   return (
     <div>
-      <h1>AI Tools App 👋 Test nodejs and go auth</h1>
+      <h1>AI Tools App 👋 Test nodejs and go auth!!</h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
       <CurrentTime api="/api/python/" />
