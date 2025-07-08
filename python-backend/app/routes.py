@@ -93,8 +93,8 @@ def read_plans():
         return jsonify({"error": str(e)}), 500
 
 # gRPC call to go backend
-# No Clerk Auth required
 @bp.route("/grpc-greet", methods=["GET"])
+@clerk_auth_required
 def grpc_greet():
     try:
         # Connect to the gRPC server (Go server running on 50051 port)
