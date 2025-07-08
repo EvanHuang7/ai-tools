@@ -12,10 +12,10 @@ def create_app():
     app = Flask(__name__)
 
     # Connect to MongoDB
-    connect(host=config.MONGODB_URL)
+    connect(host=config.mongodb_url)
 
     # Connect to Redis
-    app.redis_client = redis.from_url(config.REDIS_URL)
+    app.redis_client = redis.from_url(config.redis_url)
     
     # Start a Kafka connection as consumer once server is running
     # Kafka connection is running in a separate daemon thread or background task,

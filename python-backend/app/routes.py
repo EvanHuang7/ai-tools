@@ -4,8 +4,8 @@ import os
 import requests
 from io import BytesIO
 
+from . import config
 from .models import Plan, KafkaMessage
-from .config import IMAGEKIT_PRIVATE_KEY, IMAGEKIT_UPLOAD_URL
 from .utils import append_transformation
 from .auth_middleware import clerk_auth_required
 
@@ -98,9 +98,7 @@ def read_plans():
 def grpc_greet():
     try:
         # Connect to the gRPC server (Go server running on 50051 port)
-        grpc_host = os.getenv("GRPC_HOST", "localhost")
-        grpc_port = os.getenv("GRPC_PORT", "50051")
-        channel = grpc.insecure_channel(f"{grpc_host}:{grpc_port}")
+        channel = grpc.insecure_channel(f"{config.grpc_host}:{config.grpc_port}")
         client = greeter_pb2_grpc.GreeterServiceStub(channel)
 
         # Create the request message
@@ -138,10 +136,10 @@ def remove_background():
 
         # 1. Upload original file to ImageKit
         upload_response = requests.post(
-            IMAGEKIT_UPLOAD_URL,
+            config.imagekit_upload_url,
             files={"file": image},
             data={"fileName": image.filename},
-            auth=(IMAGEKIT_PRIVATE_KEY, "")
+            auth=(config.imagekit_private_key, "")
         )
         upload_data = upload_response.json()
         original_url = upload_data["url"]

@@ -1,23 +1,11 @@
-import os
-from dotenv import load_dotenv
+from .utils import get_env_var
 
-load_dotenv()
+# Secrets
+mongodb_url = get_env_var("MONGODB_URL")
+redis_url = get_env_var("REDIS_URL")
+imagekit_private_key = get_env_var("IMAGEKIT_PRIVATE_KEY")
 
-def get_env_var(key):
-    val = os.getenv(key)
-    if val:
-        return val
-    
-    # Read the secret from file Only if creating a docker secret 
-	# within Docker Swarm.
-    file_path = os.getenv(f"{key}_FILE")
-    if file_path and os.path.exists(file_path):
-        with open(file_path, 'r') as f:
-            return f.read().strip()
-
-    return None
-
-MONGODB_URL = get_env_var("MONGODB_URL")
-REDIS_URL = get_env_var("REDIS_URL")
-IMAGEKIT_PRIVATE_KEY = get_env_var("IMAGEKIT_PRIVATE_KEY")
-IMAGEKIT_UPLOAD_URL = "https://upload.imagekit.io/api/v1/files/upload"
+# Constants
+imagekit_upload_url = "https://upload.imagekit.io/api/v1/files/upload"
+grpc_host = get_env_var("GRPC_HOST") or "localhost"
+grpc_port = "50051"
