@@ -1,4 +1,4 @@
-import { clerkClient, requireAuth, getAuth } from "@clerk/express";
+import { clerkClient, getAuth } from "@clerk/express";
 
 export const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization || "";
@@ -10,11 +10,6 @@ export const authMiddleware = async (req, res, next) => {
   }
 
   try {
-    // Use requireAuth() to protect this route
-    // If user isn't authenticated, requireAuth() will redirect back to the homepage
-
-    // requireAuth();
-
     // Use `getAuth()` to get the user's `userId`
     const { userId } = getAuth(req);
     if (!userId) {

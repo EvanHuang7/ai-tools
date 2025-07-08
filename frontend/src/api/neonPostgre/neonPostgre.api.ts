@@ -1,17 +1,17 @@
-import { api } from "../client";
+import type { AxiosInstance } from "axios";
 import type { Message } from "@/types/api";
 
-export const neonPostgreRead = async (): Promise<Message[]> => {
-  const response = await api.get<Message[]>(`/api/go/messages`);
+export const neonPostgreRead = async (
+  axios: AxiosInstance
+): Promise<Message[]> => {
+  const response = await axios.get<Message[]>(`/api/go/messages`);
   return response.data;
 };
 
-export const neonPostgreWrite = async ({
-  userId,
-  text,
-}: {
-  userId: number;
-  text: string;
-}) => {
-  return api.post("/api/go/messages", { userId, text });
+export const neonPostgreWrite = async (
+  userId: number,
+  text: string,
+  axios: AxiosInstance
+) => {
+  return axios.post("/api/go/messages", { userId, text });
 };

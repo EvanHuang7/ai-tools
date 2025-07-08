@@ -1,36 +1,28 @@
+import { useAuth } from "@clerk/clerk-react";
 import axios from "axios";
 
-export const api = axios.create({
-  // It will use the current web page host to make the api calls if
-  // not specifying the api base url
-  timeout: 30000,
-});
+export const useAuthedAxios = () => {
+  const { getToken } = useAuth();
 
-// Request interceptor to add auth token
-api.interceptors.request.use(
-  async (config) => {
-    // Get token from Clerk using the proper method
+  const instance = axios.create({
+    // It will use the current web page host to make the api calls if
+    // not specifying the api base url
+    timeout: 30000,
+  });
+
+  instance.interceptors.request.use(async (config: any) => {
     try {
-      const token = await (window as any).Clerk?.session?.getToken();
+      const token = await getToken();
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers = {
+          ...config.headers,
+          Authorization: `Bearer ${token}`,
+        };
       }
     } catch (error) {
-      console.warn("Failed to get auth token:", error);
+      console.warn("Failed to attach Clerk token:", error);
     }
     return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Response interceptor for error handling
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized access
-      window.location.href = "/";
-    }
-    return Promise.reject(error);
-  }
-);
+  });
+  return instance;
+};

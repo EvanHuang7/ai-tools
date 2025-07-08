@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import { clerkMiddleware } from "@clerk/express";
 import { listenForPubSubMessages } from "./service/gcpPubsubListener.js";
 import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
@@ -12,6 +13,12 @@ import { authMiddleware } from "./middleware/authMiddleware.js";
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(express.json());
+
+// Register Clerk Auth
+// The "clerkMiddleware()" function checks the request's cookies and
+// headers for a session JWT and if found, attaches the
+// Auth object to the request object under the auth key.
+app.use(clerkMiddleware());
 
 // setup the logger
 app.use(morgan("tiny"));
