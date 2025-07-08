@@ -36,7 +36,7 @@ import {
 import { toast } from "sonner";
 import Vapi from "@vapi-ai/web";
 import { configureAssistant } from "@/lib/utils";
-import { voiceOptions, styleOptions } from "@/lib/constants/vapi";
+import { voiceOptions, styleOptions } from "@/constants/vapi";
 import type { TranscriptMessage } from "@/types/vapi";
 
 export function AudioChat() {

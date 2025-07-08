@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { voices } from "./constants/vapi";
+import { voices } from "../constants/vapi";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
