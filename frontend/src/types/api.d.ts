@@ -47,3 +47,34 @@ export interface KafkaResponse {
 export interface MongoResponse {
   plans: Plan[];
 }
+
+export interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  credits: number;
+  plan: "free" | "pro" | "enterprise";
+  createdAt: string;
+}
+
+export interface ProcessImageRequest {
+  imageUrl: string;
+  operation: "remove-background" | "enhance" | "upscale";
+  prompt?: string;
+}
+
+export interface GenerateVideoRequest {
+  imageUrl: string;
+  prompt: string;
+  style: string;
+  duration: number;
+}
+
+export interface ChatMessage {
+  id: string;
+  content: string;
+  role: "user" | "assistant";
+  timestamp: string;
+  isAudio?: boolean;
+}

@@ -1,4 +1,9 @@
 import axios from "axios";
+import type {
+  User,
+  ProcessImageRequest,
+  GenerateVideoRequest,
+} from "../types/api";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3001/api";
@@ -39,54 +44,7 @@ api.interceptors.response.use(
   }
 );
 
-export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  credits: number;
-  plan: "free" | "pro" | "enterprise";
-  createdAt: string;
-}
-
-export interface ProcessImageRequest {
-  imageUrl: string;
-  operation: "remove-background" | "enhance" | "upscale";
-  prompt?: string;
-}
-
-export interface GenerateVideoRequest {
-  imageUrl: string;
-  prompt: string;
-  style: string;
-  duration: number;
-}
-
-export interface ChatMessage {
-  id: string;
-  content: string;
-  role: "user" | "assistant";
-  timestamp: string;
-  isAudio?: boolean;
-}
-
 // API functions
-export const userApi = {
-  getProfile: () => api.get<User>("/user/profile"),
-  updateCredits: (credits: number) => api.patch("/user/credits", { credits }),
-};
-
-export const imageApi = {
-  processImage: (data: ProcessImageRequest) => api.post("/image/process", data),
-  uploadImage: (file: File) => {
-    const formData = new FormData();
-    formData.append("image", file);
-    return api.post("/image/upload", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-  },
-};
-
 export const videoApi = {
   generateVideo: (data: GenerateVideoRequest) =>
     api.post("/video/generate", data),
