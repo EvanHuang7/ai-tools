@@ -81,9 +81,15 @@ services:
     environment:
       - DATABASE_URL_FILE=/run/secrets/neon-postgres-database-url
       - GOOGLE_API_KEY_FILE=/run/secrets/google-api-key
+      - IMAGEKIT_ID_FILE=/run/secrets/go-imagekit-id
+      - IMAGEKIT_PRIVATE_KEY_FILE=/run/secrets/go-imagekit-private-key
+      - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
     secrets:
       - neon-postgres-database-url
       - google-api-key
+      - go-imagekit-id
+      - go-imagekit-private-key
+      - clerk-secret-key
     healthcheck:
       # Use the custom "healthcheck.go" file to test container
       # health because "curl" is not installed in base image of ko
@@ -129,17 +135,27 @@ networks:
   ai-tools:
 
 secrets:
+  # Node service
   supabase-postgres-database-url:
     # We create this secret by ourselves and Docker Swarm doesn't need
     # to manage it as part of this stack
     external: true
+  # Go service
   neon-postgres-database-url:
     external: true
+  google-api-key:
+    external: true
+  go-imagekit-id:
+    external: true
+  go-imagekit-private-key:
+    external: true
+  # Python service
   redis-url:
     external: true
   mongodb-url:
     external: true
   python-imagekit-private-key:
     external: true
+  # Shared secret between all backend services
   clerk-secret-key:
     external: true
