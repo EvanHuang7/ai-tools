@@ -24,7 +24,7 @@ app.use(clerkMiddleware());
 app.use(morgan("tiny"));
 
 // Test API
-app.get("/", authMiddleware, (req, res) => {
+app.get("/", (req, res) => {
   res.json({ api: "node backend", currentTime: new Date().toISOString() });
 });
 
@@ -34,7 +34,7 @@ app.get("/ping", async (_, res) => {
 
 // Test Postgresql db API
 // Create User
-app.post("/users", async (req, res) => {
+app.post("/users", authMiddleware, async (req, res) => {
   const { name, email } = req.body;
   try {
     const result = await postgreDbClient
@@ -50,7 +50,7 @@ app.post("/users", async (req, res) => {
 });
 
 // Get All Users
-app.get("/users", async (_, res) => {
+app.get("/users", authMiddleware, async (_, res) => {
   try {
     const result = await postgreDbClient.select().from(users);
     res.json(result);
@@ -60,7 +60,7 @@ app.get("/users", async (_, res) => {
 });
 
 // Test GCP Pubsub
-app.get("/gcpPubsubMessage", async (_, res) => {
+app.get("/gcpPubsubMessage", authMiddleware, async (_, res) => {
   try {
     const result = await ListGcpPubSubMessages();
     res.json(result);
@@ -70,7 +70,7 @@ app.get("/gcpPubsubMessage", async (_, res) => {
 });
 
 // Test Kafka messagee
-app.post("/sendKafkaMessage", async (req, res) => {
+app.post("/sendKafkaMessage", authMiddleware, async (req, res) => {
   const { message } = req.body;
 
   if (!message) {
