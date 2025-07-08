@@ -55,7 +55,7 @@ services:
     init: true
     environment:
       - DATABASE_URL_FILE=/run/secrets/supabase-postgres-database-url
-    # If service declares the secret, the raw bytes secret kept within the Swarm manager nodes will be available
+    # If running cli to create the secret, the raw bytes secret stored within the Swarm manager nodes will be available
     # inside the container as a file at: "/run/secrets/secret-name"
     secrets:
       - supabase-postgres-database-url
@@ -107,12 +107,13 @@ services:
     environment:
       - REDIS_URL_FILE=/run/secrets/redis-url
       - MONGODB_URL_FILE=/run/secrets/mongodb-url
-      - IMAGEKIT_PRIVATE_KEY_FILE=/run/secrets/imagekit-private-key
+      - IMAGEKIT_PRIVATE_KEY_FILE=/run/secrets/python-imagekit-private-key
       - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
+      - GRPC_HOST=go-backend
     secrets:
       - redis-url
       - mongodb-url
-      - imagekit-private-key
+      - python-imagekit-private-key
       - clerk-secret-key
     healthcheck:
       # Use the custom "healthcheck.py" file to test container
@@ -137,4 +138,8 @@ secrets:
   redis-url:
     external: true
   mongodb-url:
+    external: true
+  python-imagekit-private-key:
+    external: true
+  clerk-secret-key:
     external: true

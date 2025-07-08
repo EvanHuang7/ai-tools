@@ -757,6 +757,7 @@ nano docker-swarm.yml
 - Create docker secrets for Docker swarm services to consume first
   - ⚠️ Note: Remember to replace your url string to real a url string
   - Create secrets for all env variables if there are more
+  - The raw bytes secret stored within the Swarm manager nodes will be available inside the container **as a file** at: `/run/secrets/secret-name` (eg. `/run/secrets/redis-url`)
 
 ```
 printf 'your url' | docker secret create supabase-postgres-database-url -
@@ -766,6 +767,12 @@ printf 'your url' | docker secret create neon-postgres-database-url -
 printf 'your url' | docker secret create redis-url -
 
 printf 'your url' | docker secret create mongodb-url -
+
+printf 'your url' | docker secret create python-imagekit-private-key -
+
+printf 'your url' | docker secret create clerk-secret-key -
+
+etc...
 ```
 
 - Deploy stack of app containers with docker-swarm file
