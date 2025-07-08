@@ -43,17 +43,17 @@ func main() {
 	auth.Use(middleware.ClerkMiddleware())
 
 	// Add message APIs:
-	r.POST("/messages", api.CreateMessage)
-	r.GET("/messages", api.GetMessages)
+	auth.POST("/messages", api.CreateMessage)
+	auth.GET("/messages", api.GetMessages)
 
 	// Add sendPubSubMessage API:
-	r.POST("/pubsubMessage", api.SendPubSubMessage)
+	auth.POST("/pubsubMessage", api.SendPubSubMessage)
 
 	// Generate Gemini Veo2 video API
-	r.POST("/veoVideo", api.GenerateVeo2Video)
+	auth.POST("/veoVideo", api.GenerateVeo2Video)
 
 	// Generate ImageKit image via text API
-	r.POST("/generateImage", api.GenerateImage)
+	auth.POST("/generateImage", api.GenerateImage)
 
 	// Add gRPC APIs:
 	// Start gRPC server in a new goroutine so it doesn't block HTTP server
