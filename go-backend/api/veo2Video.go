@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"path/filepath"
 	"time"
 
@@ -14,6 +13,8 @@ import (
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/genai"
+
+	"go-backend/utils"
 )
 
 func GenerateVeo2Video(c *gin.Context) {
@@ -27,7 +28,7 @@ func GenerateVeo2Video(c *gin.Context) {
 	// Create Gemini AI client
 	ctx := context.Background()
 	client, err := genai.NewClient(ctx, &genai.ClientConfig{
-		APIKey:  os.Getenv("GOOGLE_API_KEY"),
+		APIKey:  utils.GetEnvOrFile("GOOGLE_API_KEY"),
 		Backend: genai.BackendGeminiAPI,
 	})
 	if err != nil {
@@ -86,7 +87,7 @@ func GenerateVeo2Video(c *gin.Context) {
 	}
 
 	// NOTE: GOOGLE_API_KEY is required the GCP project having Billing enabled
-	// Call GenerateVideos
+	// Call "GenerateVideos"
 	op, err := client.Models.GenerateVideos(
 		ctx,
 		"veo-2.0-generate-001",

@@ -2,15 +2,16 @@ package middleware
 
 import (
 	"net/http"
-	"os"
 
 	clerk "github.com/clerk/clerk-sdk-go/v2"
 	clerkhttp "github.com/clerk/clerk-sdk-go/v2/http"
 	"github.com/gin-gonic/gin"
+
+	"go-backend/utils"
 )
 
 func ClerkMiddleware() gin.HandlerFunc {
-	clerk.SetKey(os.Getenv("CLERK_SECRET_KEY"))
+	clerk.SetKey(utils.GetEnvOrFile("CLERK_SECRET_KEY"))
 
 	return func(c *gin.Context) {
 		// Wrap Gin request using Clerk’s built-in HTTP middleware

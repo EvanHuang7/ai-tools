@@ -8,11 +8,12 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+
+	"go-backend/utils"
 )
 
 type requestBody struct {
@@ -28,8 +29,8 @@ func GenerateImage(c *gin.Context) {
 		return
 	}
 
-	imagekitID := os.Getenv("IMAGEKIT_ID")
-	privateKey := os.Getenv("IMAGEKIT_PRIVATE_KEY")
+	imagekitID := utils.GetEnvOrFile("IMAGEKIT_ID")
+	privateKey := utils.GetEnvOrFile("IMAGEKIT_PRIVATE_KEY")
 	if imagekitID == "" || privateKey == "" {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Missing IMAGEKIT_ID or IMAGEKIT_PRIVATE_KEY in environment"})
 		return
