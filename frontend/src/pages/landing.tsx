@@ -1,71 +1,98 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 // import { SignUpButton, useAuth } from '@clerk/clerk-react'
-import { Header } from '@/components/layout/header'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { 
-  ArrowRight, 
-  Image, 
-  Video, 
-  Mic, 
-  Sparkles, 
-  Zap, 
-  Users, 
+import { Navbar } from "@/components/navbar";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowRight,
+  Image,
+  Video,
+  Mic,
+  Sparkles,
+  Zap,
+  Users,
   Check,
-  Star
-} from 'lucide-react'
+  Star,
+} from "lucide-react";
 
 export function LandingPage() {
   // const { isSignedIn } = useAuth()
-  const isSignedIn = false // Temporarily disabled
+  const isSignedIn = false; // Temporarily disabled
 
   const features = [
     {
       icon: Image,
       title: "AI Image Editor",
-      description: "Remove backgrounds, enhance quality, and transform images with advanced AI",
-      features: ["Background Removal", "Image Enhancement", "Object Removal", "Style Transfer"]
+      description:
+        "Remove backgrounds, enhance quality, and transform images with advanced AI",
+      features: [
+        "Background Removal",
+        "Image Enhancement",
+        "Object Removal",
+        "Style Transfer",
+      ],
     },
     {
       icon: Video,
       title: "Video Generator",
-      description: "Create stunning videos from images using AI-powered animation",
-      features: ["Image to Video", "Custom Prompts", "Multiple Styles", "HD Export"]
+      description:
+        "Create stunning videos from images using AI-powered animation",
+      features: [
+        "Image to Video",
+        "Custom Prompts",
+        "Multiple Styles",
+        "HD Export",
+      ],
     },
     {
       icon: Mic,
       title: "AI Voice Chat",
-      description: "Engage in natural conversations with AI using voice recognition",
-      features: ["Voice Recognition", "Natural Speech", "Real-time Chat", "Multiple Voices"]
-    }
-  ]
+      description:
+        "Engage in natural conversations with AI using voice recognition",
+      features: [
+        "Voice Recognition",
+        "Natural Speech",
+        "Real-time Chat",
+        "Multiple Voices",
+      ],
+    },
+  ];
 
   const testimonials = [
     {
       name: "Sarah Johnson",
       role: "Content Creator",
-      content: "This platform has revolutionized my workflow. The AI tools are incredibly powerful and easy to use.",
-      rating: 5
+      content:
+        "This platform has revolutionized my workflow. The AI tools are incredibly powerful and easy to use.",
+      rating: 5,
     },
     {
       name: "Mike Chen",
       role: "Marketing Director",
-      content: "The video generation feature saves us hours of work. Quality is outstanding.",
-      rating: 5
+      content:
+        "The video generation feature saves us hours of work. Quality is outstanding.",
+      rating: 5,
     },
     {
       name: "Emily Davis",
       role: "Designer",
-      content: "Best AI image editor I've used. The background removal is flawless.",
-      rating: 5
-    }
-  ]
+      content:
+        "Best AI image editor I've used. The background removal is flawless.",
+      rating: 5,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      <Header />
-      
+      <Navbar />
+
       {/* Hero Section */}
       <section className="relative py-20 lg:py-32">
         <div className="container mx-auto px-4">
@@ -78,8 +105,9 @@ export function LandingPage() {
               Transform Your Creative Workflow with AI
             </h1>
             <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-              Professional AI-powered tools for image editing, video generation, and intelligent conversation. 
-              Create stunning content in seconds, not hours.
+              Professional AI-powered tools for image editing, video generation,
+              and intelligent conversation. Create stunning content in seconds,
+              not hours.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {isSignedIn ? (
@@ -129,24 +157,33 @@ export function LandingPage() {
               Powerful AI Tools for Every Creator
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Everything you need to create professional content with the power of artificial intelligence
+              Everything you need to create professional content with the power
+              of artificial intelligence
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-white/80 backdrop-blur-sm">
+              <Card
+                key={index}
+                className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-white/80 backdrop-blur-sm"
+              >
                 <CardHeader>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 group-hover:from-blue-600 group-hover:to-indigo-700 transition-colors">
                       <feature.icon className="h-6 w-6 text-white" />
                     </div>
-                    <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
+                    <Badge
+                      variant="secondary"
+                      className="bg-blue-50 text-blue-700 border-blue-200"
+                    >
                       <Zap className="h-3 w-3 mr-1" />
                       AI Powered
                     </Badge>
                   </div>
-                  <CardTitle className="text-xl text-slate-900">{feature.title}</CardTitle>
+                  <CardTitle className="text-xl text-slate-900">
+                    {feature.title}
+                  </CardTitle>
                   <CardDescription className="text-base text-slate-600">
                     {feature.description}
                   </CardDescription>
@@ -154,7 +191,10 @@ export function LandingPage() {
                 <CardContent>
                   <ul className="space-y-2">
                     {feature.features.map((item, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm text-slate-600">
+                      <li
+                        key={idx}
+                        className="flex items-center gap-2 text-sm text-slate-600"
+                      >
                         <Check className="h-4 w-4 text-green-600" />
                         {item}
                       </li>
@@ -178,14 +218,20 @@ export function LandingPage() {
               See what our users are saying about AI Tools Studio
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="text-center bg-white/80 backdrop-blur-sm">
+              <Card
+                key={index}
+                className="text-center bg-white/80 backdrop-blur-sm"
+              >
                 <CardHeader>
                   <div className="flex justify-center mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                      <Star
+                        key={i}
+                        className="h-5 w-5 fill-yellow-400 text-yellow-400"
+                      />
                     ))}
                   </div>
                   <CardDescription className="text-base italic text-slate-700">
@@ -193,8 +239,12 @@ export function LandingPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="font-semibold text-slate-900">{testimonial.name}</div>
-                  <div className="text-sm text-slate-500">{testimonial.role}</div>
+                  <div className="font-semibold text-slate-900">
+                    {testimonial.name}
+                  </div>
+                  <div className="text-sm text-slate-500">
+                    {testimonial.role}
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -209,7 +259,8 @@ export function LandingPage() {
             Ready to Transform Your Creative Process?
           </h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join thousands of creators who are already using AI Tools Studio to create amazing content
+            Join thousands of creators who are already using AI Tools Studio to
+            create amazing content
           </p>
           {isSignedIn ? (
             <Link to="/dashboard">
@@ -237,16 +288,27 @@ export function LandingPage() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600">
                 <Sparkles className="h-4 w-4 text-white" />
               </div>
-              <span className="text-xl font-bold text-slate-900">AI Tools Studio</span>
+              <span className="text-xl font-bold text-slate-900">
+                AI Tools Studio
+              </span>
             </div>
             <div className="flex space-x-6 text-sm text-slate-500">
-              <Link to="/privacy" className="hover:text-slate-900 transition-colors">
+              <Link
+                to="/privacy"
+                className="hover:text-slate-900 transition-colors"
+              >
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="hover:text-slate-900 transition-colors">
+              <Link
+                to="/terms"
+                className="hover:text-slate-900 transition-colors"
+              >
                 Terms of Service
               </Link>
-              <Link to="/contact" className="hover:text-slate-900 transition-colors">
+              <Link
+                to="/contact"
+                className="hover:text-slate-900 transition-colors"
+              >
                 Contact
               </Link>
             </div>
@@ -257,5 +319,5 @@ export function LandingPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

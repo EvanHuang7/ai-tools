@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Zap } from "lucide-react";
 
-export function Header() {
+export function Navbar() {
   const { isSignedIn } = useAuth();
 
   return (

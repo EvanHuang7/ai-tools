@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMongoRead, useMongoWrite } from "../api/mongo/mongo.queries";
+import { useMongoRead, useMongoWrite } from "../../api/mongo/mongo.queries";
 
 const MongoPanel: React.FC = () => {
   const [userId, setUserId] = useState<string>("1");

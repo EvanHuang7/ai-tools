@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { Header } from "@/components/layout/header";
-import { Sidebar } from "@/components/layout/sidebar";
+import { Navbar } from "@/components/navbar";
+import { Sidebar } from "@/components/sidebar";
 import {
   Card,
   CardContent,
@@ -237,7 +237,7 @@ export function ImageEditor() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Navbar />
       <div className="flex">
         <Sidebar />
 

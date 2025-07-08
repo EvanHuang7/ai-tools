@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRedisRead, useRedisWrite } from "../api/redis/redis.queries";
+import { useRedisRead, useRedisWrite } from "../../api/redis/redis.queries";
 
 const RedisPanel: React.FC = () => {
   const [key, setKey] = useState<string>("user-1");

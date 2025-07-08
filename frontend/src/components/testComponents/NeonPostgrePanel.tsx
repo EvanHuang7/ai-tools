@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   useNeonPostgreRead,
   useNeonPostgreWrite,
-} from "../api/neonPostgre/neonPostgre.queries";
+} from "../../api/neonPostgre/neonPostgre.queries";
 
 const NeonPostgrePanel: React.FC = () => {
   const [userId, setUserId] = useState<string>("");

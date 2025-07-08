@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Header } from "@/components/layout/header";
-import { Sidebar } from "@/components/layout/sidebar";
+import { Navbar } from "@/components/navbar";
+import { Sidebar } from "@/components/sidebar";
 import {
   Card,
   CardContent,
@@ -318,7 +318,7 @@ export function TextToImage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Navbar />
       <div className="flex">
         <Sidebar />
 
