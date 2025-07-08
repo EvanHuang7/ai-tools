@@ -1,10 +1,12 @@
 package api
 
 import (
-	"go-backend/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"go-backend/service"
+	"go-backend/utils"
 )
 
 
@@ -19,10 +21,7 @@ func SendPubSubMessage(c *gin.Context) {
 		return
 	}
 
-	projectID := "steadfast-pivot-462821-p7"
-	topicID := "my-first-topic"
-
-	id, err := service.PublishMessage(c.Request.Context(), projectID, topicID, req.Message)
+	id, err := service.PublishMessage(c.Request.Context(), utils.GCPProjectID, utils.GCPPubSubTopicID, req.Message)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
