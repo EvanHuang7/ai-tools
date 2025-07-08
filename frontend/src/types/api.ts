@@ -1,9 +1,9 @@
-export interface ApiResponse {
+export interface CurrentTimeApiResponse {
   api: string;
   currentTime: string;
 }
 
-export interface User {
+export interface SupabaseUser {
   id: number;
   name: string;
   email: string;

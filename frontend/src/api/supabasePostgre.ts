@@ -1,8 +1,8 @@
 import axios from "axios";
-import type { User } from "../types/api";
+import type { SupabaseUser } from "../types/api";
 
-export const supabasePostgreRead = async (): Promise<User[]> => {
-  const response = await axios.get<User[]>(`/api/node/users`);
+export const supabasePostgreRead = async (): Promise<SupabaseUser[]> => {
+  const response = await axios.get<SupabaseUser[]>(`/api/node/users`);
   return response.data;
 };
 
