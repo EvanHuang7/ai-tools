@@ -38,6 +38,7 @@ spec:
           envFrom:
             # NOTE: This "python-backend-secrets" K8s Secret would be availale only if we
             # deployed external secrets for app services to consume
+            # Otherwise, it should use "python-backend-database-url" from "Secret.ymal" file
             - secretRef:
                 name: python-backend-secrets
           ports:

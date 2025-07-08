@@ -103,14 +103,17 @@ services:
     networks:
       - ai-tools
     init: true
+    # TODO: Fix all envs for all services in this file if need to use it latter
     environment:
       - REDIS_URL_FILE=/run/secrets/redis-url
       - MONGODB_URL_FILE=/run/secrets/mongodb-url
       - IMAGEKIT_PRIVATE_KEY_FILE=/run/secrets/imagekit-private-key
+      - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
     secrets:
       - redis-url
       - mongodb-url
       - imagekit-private-key
+      - clerk-secret-key
     healthcheck:
       # Use the custom "healthcheck.py" file to test container
       # health because "curl" is not installed in python3.12 base image

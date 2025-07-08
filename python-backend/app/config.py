@@ -4,6 +4,7 @@ from .utils import get_env_var
 mongodb_url = get_env_var("MONGODB_URL")
 redis_url = get_env_var("REDIS_URL")
 imagekit_private_key = get_env_var("IMAGEKIT_PRIVATE_KEY")
+clerk_secret_key = get_env_var("CLERK_SECRET_KEY")
 
 # Constants
 imagekit_upload_url = "https://upload.imagekit.io/api/v1/files/upload"

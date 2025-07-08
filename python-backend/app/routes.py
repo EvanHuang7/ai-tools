@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app
 from datetime import datetime
-import os
 import requests
 from io import BytesIO
 
