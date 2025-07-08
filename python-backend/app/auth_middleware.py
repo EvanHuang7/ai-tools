@@ -36,8 +36,7 @@ def clerk_auth_required(f):
                 return jsonify({"error": "Unauthorized"}), 401
 
             # Attach user id to flask.g
-            print("request_state:", request_state)
-            g.user_id = request_state.session_claims.subject
+            g.user_id = request_state.payload.get("sub")
 
             return f(*args, **kwargs)
 
