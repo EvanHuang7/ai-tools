@@ -11,9 +11,7 @@ import "../App.css";
 export function TestPage() {
   return (
     <div>
-      <h1>
-        AI Tools App 👋 GCP VM Test after updating video generator to call API
-      </h1>
+      <h1>AI Tools App 👋 Test node js auth</h1>
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
       <CurrentTime api="/api/python/" />
