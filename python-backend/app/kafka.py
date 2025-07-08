@@ -1,18 +1,19 @@
 from confluent_kafka import Consumer, KafkaException
 from .models import KafkaMessage
+from . import constants
 
 conf = {
-    'bootstrap.servers': 'd1fgarsdfulgj4bj0b60.any.us-west-2.mpx.prd.cloud.redpanda.com:9092',
-    'group.id': 'python-consumer-group',
-    'auto.offset.reset': 'earliest',
-    'security.protocol': 'SASL_SSL',
-    'sasl.mechanism': 'SCRAM-SHA-256', 
-    'sasl.username': 'ai-tools-redpanda-user',
-    'sasl.password': 'Ab12345678!',
+    'bootstrap.servers': constants.kafka_bootstrap_server,
+    'group.id': constants.kafka_group_id,
+    'auto.offset.reset': constants.kafka_auto_offset_reset,
+    'security.protocol': constants.kafka_security_protocol,
+    'sasl.mechanism': constants.kafka_sasl_mechanism, 
+    'sasl.username': constants.kafka_sasl_username,
+    'sasl.password': constants.kafka_sasl_password,
 }
 
 consumer = Consumer(conf)
-topic = "hello-world"
+topic = constants.kafka_topic
 
 def connectKafkaConsumer():
     consumer.subscribe([topic])
