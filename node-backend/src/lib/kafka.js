@@ -1,15 +1,20 @@
 import { Kafka } from "kafkajs";
+import {
+  kafkaClientId,
+  kafkaBrokers,
+  kafkaMechanism,
+  kafkaUsername,
+  kafkaPassword,
+} from "../utils/constants.js";
 
 const kafkaClient = new Kafka({
-  clientId: "nodejs-app",
-  brokers: [
-    "d1fgarsdfulgj4bj0b60.any.us-west-2.mpx.prd.cloud.redpanda.com:9092",
-  ],
+  clientId: kafkaClientId,
+  brokers: kafkaBrokers,
   ssl: true,
   sasl: {
-    mechanism: "SCRAM-SHA-256",
-    username: "ai-tools-redpanda-user",
-    password: "Ab12345678!",
+    mechanism: kafkaMechanism,
+    username: kafkaUsername,
+    password: kafkaPassword,
   },
 });
 

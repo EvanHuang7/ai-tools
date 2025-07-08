@@ -1,5 +1,4 @@
 import { PubSub } from "@google-cloud/pubsub";
+import { gcpProjectId } from "../utils/constants.js";
 
-const projectId = "steadfast-pivot-462821-p7";
-
-export const gcpPubsubClient = new PubSub({ projectId });
+export const gcpPubsubClient = new PubSub({ gcpProjectId });
