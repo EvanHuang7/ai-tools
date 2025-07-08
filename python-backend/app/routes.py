@@ -7,6 +7,7 @@ from io import BytesIO
 from .models import Plan, KafkaMessage
 from .config import IMAGEKIT_PRIVATE_KEY, IMAGEKIT_UPLOAD_URL
 from .utils import append_transformation
+from .auth_middleware import clerk_auth_required
 
 # gRPC imports
 import grpc
@@ -14,6 +15,7 @@ from gen import greeter_pb2, greeter_pb2_grpc
 
 bp = Blueprint("main", __name__)
 
+# Public routes
 @bp.route("/")
 def time():
     return jsonify({
@@ -26,7 +28,9 @@ def time():
 def ping():
     return jsonify({"message": "pong"}), 200
 
+# Protected routes
 @bp.route("/redis_write", methods=["POST"])
+@clerk_auth_required
 def redis_write():
     try:
         data = request.get_json()
@@ -43,6 +47,7 @@ def redis_write():
         return jsonify({"error": str(e)}), 500
 
 @bp.route("/redis_read", methods=["GET"])
+@clerk_auth_required
 def redis_read():
     key = request.args.get("key")
     if not key:
@@ -58,6 +63,7 @@ def redis_read():
         return jsonify({"error": str(e)}), 500
 
 @bp.route("/plan_write", methods=["POST"])
+@clerk_auth_required
 def create_plan():
     try:
         data = request.get_json()
@@ -72,6 +78,7 @@ def create_plan():
         return jsonify({"error": str(e)}), 500
 
 @bp.route("/plan_read", methods=["GET"])
+@clerk_auth_required
 def read_plans():
     try:
         userId = request.args.get("userId", type=int)
@@ -86,6 +93,7 @@ def read_plans():
         return jsonify({"error": str(e)}), 500
 
 # gRPC call to go backend
+# No Clerk Auth required
 @bp.route("/grpc-greet", methods=["GET"])
 def grpc_greet():
     try:
@@ -108,6 +116,7 @@ def grpc_greet():
     
 # List kafka message
 @bp.route("/listKafkaMessages", methods=["GET"])
+@clerk_auth_required
 def listKafkaMessages():
     try:
         kafkaMessages = KafkaMessage.objects()
@@ -120,6 +129,7 @@ def listKafkaMessages():
     
 # TODO: use Ingest latteer
 @bp.route("/remove-bg", methods=["POST"])
+@clerk_auth_required
 def remove_background():
     try:
         image = request.files.get("image")
