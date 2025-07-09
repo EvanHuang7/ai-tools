@@ -130,7 +130,6 @@ func GenerateVeo2Video(c *gin.Context) {
 	}
 
 	// Step 3: Upload generated video to GCS
-	timestamp = time.Now().Format("20060102_150405")
 	if baseFilename == "" {
 		baseFilename = "video"
 	}
