@@ -20,6 +20,11 @@ type requestBody struct {
 	Prompt string `json:"prompt" binding:"required"`
 }
 
+// Parse response to get uploaded image URL
+type uploadResponse struct {
+	URL string `json:"url"`
+}
+
 // GenerateImage downloads an AI-generated image from ImageKit via text prompt,
 // then uploads that generated image into your ImageKit media library with a timestamped filename.
 func GenerateImage(c *gin.Context) {
@@ -42,7 +47,7 @@ func GenerateImage(c *gin.Context) {
 	escapedPrompt := urlPathEscape(req.Prompt)
 
 	// URL format per ImageKit AI transformation docs
-	generatedImageURL := fmt.Sprintf("https://ik.imagekit.io/%s/ik-genimg-prompt-%s/%s", imagekitID, escapedPrompt, filename)
+	generatedImageURL := fmt.Sprintf(utils.GeneratedImageURLTemplate, imagekitID, escapedPrompt, filename)
 
 	// Step 1: Generate image and download it
 	resp, err := http.Get(generatedImageURL)
@@ -64,8 +69,6 @@ func GenerateImage(c *gin.Context) {
 	}
 
 	// Step 2: Upload downloaded image bytes to ImageKit upload API using Basic Auth (privateKey)
-	uploadURL := "https://upload.imagekit.io/api/v1/files/upload"
-
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
@@ -93,7 +96,7 @@ func GenerateImage(c *gin.Context) {
 	}
 
 	// Create HTTP POST request with Basic Auth (privateKey as username, blank password)
-	reqUpload, err := http.NewRequest("POST", uploadURL, body)
+	reqUpload, err := http.NewRequest("POST", utils.UploadImageAPIURL, body)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create upload request"})
 		return
@@ -118,11 +121,6 @@ func GenerateImage(c *gin.Context) {
 			"response": string(bodyBytes),
 		})
 		return
-	}
-
-	// Parse response to get uploaded image URL
-	type uploadResponse struct {
-		URL string `json:"url"`
 	}
 
 	var upResp uploadResponse

@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"cloud.google.com/go/storage"
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/genai"
@@ -64,8 +63,7 @@ func GenerateVeo2Video(c *gin.Context) {
 		imageObjectName := fmt.Sprintf("images/%s_%s%s", baseFilename, timestamp, ext)
 
 		// Upload input image to GCS
-		bucketName := "ai-tools-gcs-bucket"
-		if err := uploadToGCS(ctx, bucketName, imageObjectName, buf.Bytes()); err != nil {
+		if err := utils.UploadToGCS(ctx, imageObjectName, buf.Bytes()); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload input image to GCS", "detail": err.Error()})
 			return
 		}
@@ -78,19 +76,19 @@ func GenerateVeo2Video(c *gin.Context) {
 	}
 
 	// Prepare video config
-	duration := int32(5)
+	duration := int32(utils.VideoDuration)
 	videoConfig := &genai.GenerateVideosConfig{
-		AspectRatio:      "16:9",
-		NumberOfVideos:   1,
+		AspectRatio:      utils.VideoAspectRatio,
+		NumberOfVideos:   utils.VideoNumber,
 		DurationSeconds:  &duration,
-		PersonGeneration: "dont_allow",
+		PersonGeneration: utils.VideoPersonGeneration,
 	}
 
 	// NOTE: GOOGLE_API_KEY is required the GCP project having Billing enabled
 	// Call "GenerateVideos"
 	op, err := client.Models.GenerateVideos(
 		ctx,
-		"veo-2.0-generate-001",
+		utils.VeoModel,
 		prompt,
 		imageInput,
 		videoConfig,
@@ -125,34 +123,17 @@ func GenerateVeo2Video(c *gin.Context) {
 	}
 
 	// Upload to GCS
-	bucketName := "ai-tools-gcs-bucket"
 	timestamp := time.Now().Format("20060102_150405")
 	if baseFilename == "" {
 		baseFilename = "video"
 	}
-	objectName := fmt.Sprintf("videos/%s_%s_generated_video.mp4", baseFilename, timestamp)
+	videoName := fmt.Sprintf("videos/%s_%s_generated_video.mp4", baseFilename, timestamp)
 
-	if err := uploadToGCS(ctx, bucketName, objectName, video.VideoBytes); err != nil {
+	if err := utils.UploadToGCS(ctx, videoName, video.VideoBytes); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to upload video to GCS", "detail": err.Error()})
 		return
 	}
 
-	publicURL := fmt.Sprintf("https://storage.googleapis.com/%s/%s", bucketName, objectName)
+	publicURL := fmt.Sprintf(utils.GeneratedVeoPublicURLTemplate, videoName)
 	c.JSON(http.StatusOK, gin.H{"videoUrl": publicURL})
-}
-
-func uploadToGCS(ctx context.Context, bucketName, objectName string, data []byte) error {
-	client, err := storage.NewClient(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to create storage client: %w", err)
-	}
-	defer client.Close()
-
-	wc := client.Bucket(bucketName).Object(objectName).NewWriter(ctx)
-	defer wc.Close()
-
-	if _, err := wc.Write(data); err != nil {
-		return fmt.Errorf("failed to write to GCS object: %w", err)
-	}
-	return nil
 }

@@ -1,8 +1,12 @@
 package utils
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"os"
+
+	"cloud.google.com/go/storage"
 )
 
 // Gets the environment variable by key.
@@ -30,4 +34,21 @@ func GetEnvOrFile(key string, defaultValue ...string) string {
 	}
 
 	return ""
+}
+
+// Upload image or video to GCS
+func UploadToGCS(ctx context.Context, objectName string, data []byte) error {
+	client, err := storage.NewClient(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to create storage client: %w", err)
+	}
+	defer client.Close()
+
+	wc := client.Bucket(GCSBucketName).Object(objectName).NewWriter(ctx)
+	defer wc.Close()
+
+	if _, err := wc.Write(data); err != nil {
+		return fmt.Errorf("failed to write to GCS object: %w", err)
+	}
+	return nil
 }

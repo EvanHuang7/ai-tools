@@ -1,9 +1,9 @@
 import { gcpPubsubClient } from "../lib/gcpPubSub.js";
 import { CreateGcpPubSubMessage } from "./gcpPubSubMessages.js";
+import { gcpPubsubSubscriptionName } from "../utils/constants.js";
 
 export const listenForPubSubMessages = async () => {
-  const subscriptionName = "nodejs-subscription";
-  const subscription = gcpPubsubClient.subscription(subscriptionName);
+  const subscription = gcpPubsubClient.subscription(gcpPubsubSubscriptionName);
 
   const messageHandler = async (message) => {
     try {
@@ -19,5 +19,5 @@ export const listenForPubSubMessages = async () => {
     console.error(`Error receiving message:`, error);
   });
 
-  console.log(`Listening for messages on ${subscriptionName}...`);
+  console.log(`Listening for messages on ${gcpPubsubSubscriptionName}...`);
 };
