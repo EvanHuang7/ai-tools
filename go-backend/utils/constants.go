@@ -14,7 +14,7 @@ const (
 	VideoNumber = 1
 	VideoPersonGeneration = "dont_allow"
 	VeoModel = "veo-2.0-generate-001"
-	GeneratedVeoPublicURLTemplate = "https://storage.googleapis.com/ai-tools-gcs-bucket/%s"
+	GCSObjectPublicURLTemplate = "https://storage.googleapis.com/ai-tools-gcs-bucket/%s"
 
 	// Imagekit infi
 	GeneratedImageURLTemplate = "https://ik.imagekit.io/%s/ik-genimg-prompt-%s/%s"
