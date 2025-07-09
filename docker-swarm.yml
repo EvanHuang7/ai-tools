@@ -55,10 +55,18 @@ services:
     init: true
     environment:
       - DATABASE_URL_FILE=/run/secrets/supabase-postgres-database-url
+      - CLERK_PUBLISHABLE_KEY_FILE=/run/secrets/clerk-publishable-key
+      - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
+      - KAFKA_BOOTSTRAP_SERVER_FILE=/run/secrets/kafka-bootstrap-server
+      - KAFKA_SASL_USER_PASSWORD_FILE=/run/secrets/kafka-sasl-user-password
     # If running cli to create the secret, the raw bytes secret stored within the Swarm manager nodes will be available
     # inside the container as a file at: "/run/secrets/secret-name"
     secrets:
       - supabase-postgres-database-url
+      - clerk-publishable-key
+      - clerk-secret-key
+      - kafka-bootstrap-server
+      - kafka-sasl-user-password
     healthcheck:
       # Use the custom "healthcheck.js" file to test container
       # health because "curl" is not installed in node20 base image
@@ -160,7 +168,9 @@ secrets:
     external: true
   python-imagekit-private-key:
     external: true
-  # Shared secret between all backend services
+  # Shared secret between backend services
+  clerk-publishable-key:
+    external: true
   clerk-secret-key:
     external: true
   kafka-bootstrap-server:
