@@ -20,7 +20,7 @@ func Init() {
 	log.Fatalf("failed to connect to DB: %v", err)
 	}
 
-	// Auto migrate the Message table
+	// Auto migrate all GORM tables to Neon db
 	if err := DB.AutoMigrate(&Message{}, &Image{}, &Video{}); err != nil {
 	log.Fatalf("failed to migrate DB: %v", err)
 	}

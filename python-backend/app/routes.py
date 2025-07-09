@@ -134,7 +134,7 @@ def remove_background():
         if not image:
             return jsonify({"error": "No image provided"}), 400
 
-        # 1. Upload original file to ImageKit
+        # Step1: Upload original file to ImageKit
         upload_response = requests.post(
             constants.imagekit_upload_url,
             files={"file": image},
@@ -146,15 +146,15 @@ def remove_background():
         if not original_url:
             return jsonify({"error": "Upload to ImageKit failed", "details": upload_data}), 500
 
-        # 2. Apply background removal transformation
+        # Step2: Apply background removal transformation
         transformed_url = append_transformation(original_url, "e-bgremove")
 
-        # 3. Download transformed image (background removed)
+        # Step3: Download transformed image (background removed)
         transformed_img_res = requests.get(transformed_url)
         if transformed_img_res.status_code != 200:
             return jsonify({"error": "Failed to download transformed image"}), 500
 
-        # 4. Re-upload transformed image as a new file
+        # Step4: Re-upload transformed image as a new file
         new_upload = requests.post(
             constants.imagekit_upload_url,
             files={"file": BytesIO(transformed_img_res.content)},
