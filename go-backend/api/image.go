@@ -162,6 +162,7 @@ func GenerateImage(c *gin.Context) {
 // List all generated images for logged in user
 func ListImages(c *gin.Context) {
 	// Get Clerk userId from Gin context
+	// TODO: make sure it works when calling this API from front-end
 	userIdRaw, exists := c.Get("userId")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
