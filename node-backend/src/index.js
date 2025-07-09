@@ -20,14 +20,14 @@ app.use(express.json());
 // Auth object to the request object under the auth key.
 app.use(clerkMiddleware());
 
-// setup the logger
+// Setup the logger
 app.use(morgan("tiny"));
 
-// Test API
+// Manual health check API
 app.get("/", (req, res) => {
   res.json({ api: "node backend", currentTime: new Date().toISOString() });
 });
-
+// Health check API for node-backend service pod in K8s Cluster
 app.get("/ping", async (_, res) => {
   res.send("pong");
 });

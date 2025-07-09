@@ -9,7 +9,7 @@ const (
 	// GCS info
 	GCSBucketName = "ai-tools-gcs-bucket"
 	// Video duration in seconds
-	VideoDuration = 5
+	VideoDuration = 1
 	VideoAspectRatio = "16:9"
 	VideoNumber = 1
 	VideoPersonGeneration = "dont_allow"

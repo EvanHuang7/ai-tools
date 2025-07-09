@@ -17,21 +17,24 @@ import (
 func main() {
 	// Load .env file
 	if err := godotenv.Load(); err != nil {
-	log.Println("No .env file found, relying on environment variables")
+		log.Println("No .env file found, relying on environment variables")
 	}
 
-	// Connect Postgre db
+	// Connect Neon Postgre db
 	db.Init()
-
-    r := gin.Default() // Creates a Gin router with Logger and Recovery middleware
+	
+	// Creates a Gin router with Logger and Recovery middleware
+    r := gin.Default()
 
 	// Public APIs
+	// Manual health check API
     r.GET("/", func(c *gin.Context) {
         c.JSON(200, gin.H{
             "api": "go backend",
-			"currentTime": time.Now().Format(time.RFC3339), // ISO8601 timestamp
+			"currentTime": time.Now().Format(time.RFC3339),
         })
     })
+	// Health check API for go-backend service pod in K8s Cluster
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, "pong")
 	})
@@ -46,14 +49,14 @@ func main() {
 	auth.POST("/messages", api.CreateMessage)
 	auth.GET("/messages", api.GetMessages)
 
-	// Add sendPubSubMessage API:
+	// Add sendPubSubMessage API
 	auth.POST("/pubsubMessage", api.SendPubSubMessage)
 
-	// Generate Gemini Veo2 video API
-	auth.POST("/veoVideo", api.GenerateVeo2Video)
+	// Generate video API (Gemini Veo2)
+	auth.POST("/generate-video", api.GenerateVeo2Video)
 
-	// Generate ImageKit image via text API
-	auth.POST("/generateImage", api.GenerateImage)
+	// Generate image API (ImageKit)
+	auth.POST("/generate-image", api.GenerateImage)
 
 	// Add gRPC APIs:
 	// Start gRPC server in a new goroutine so it doesn't block HTTP server

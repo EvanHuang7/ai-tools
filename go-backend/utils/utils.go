@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
+	"strings"
 
 	"cloud.google.com/go/storage"
 )
@@ -51,4 +53,9 @@ func UploadToGCS(ctx context.Context, objectName string, data []byte) error {
 		return fmt.Errorf("failed to write to GCS object: %w", err)
 	}
 	return nil
+}
+
+// Escapes text prompt for URL path usage (used for generating imagekit image)
+func UrlPathEscape(s string) string {
+	return strings.ReplaceAll(url.QueryEscape(s), "+", "%20")
 }

@@ -181,7 +181,7 @@ export function TextToImage() {
 
       // Call the API
       const response = await axios.post(
-        "/api/go/generateImage",
+        "/api/go/generate-image",
         {
           prompt: prompt.trim(),
           style,
