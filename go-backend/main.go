@@ -52,12 +52,12 @@ func main() {
 	// Add sendPubSubMessage API
 	auth.POST("/pubsubMessage", api.SendPubSubMessage)
 
-	// Generate video API (Gemini Veo2)
+	// Video APIs (Gemini Veo2)
 	auth.POST("/generate-video", api.GenerateVeo2Video)
 
-	// image API (ImageKit)
+	// Image APIs (ImageKit)
 	auth.POST("/generate-image", api.GenerateImage)
-	auth.get("/list-images", api.ListImages)
+	auth.GET("/list-images", api.ListImages)
 
 	// Add gRPC APIs:
 	// Start gRPC server in a new goroutine so it doesn't block HTTP server

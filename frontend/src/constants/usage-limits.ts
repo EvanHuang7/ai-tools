@@ -25,7 +25,7 @@ export const CURRENT_USAGE = {
   imageProcessing: 8,
   textToImage: 3,
   audioChat: 2,
-  videoGeneration: 1,
+  videoGeneration: 0,
 };
 
 // Feature descriptions for UI

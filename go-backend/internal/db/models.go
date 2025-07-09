@@ -17,3 +17,14 @@ type Image struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type Video struct {
+	ID        uint      `gorm:"primaryKey"`
+	UserID    string    `gorm:"not null"`
+	Prompt    string    `gorm:"type:text; not null"`
+	ImageURL  string    `gorm:"type:text; not null"`
+  VideoDuration int   `gorm:"not null"`
+  VideoURL  string    `gorm:"type:text; not null"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
