@@ -21,7 +21,7 @@ func Init() {
 	}
 
 	// Auto migrate the Message table
-	if err := DB.AutoMigrate(&Message{}); err != nil {
+	if err := DB.AutoMigrate(&Message{}, &Image{}); err != nil {
 	log.Fatalf("failed to migrate DB: %v", err)
 	}
 }
