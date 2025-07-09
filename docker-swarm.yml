@@ -115,12 +115,16 @@ services:
       - MONGODB_URL_FILE=/run/secrets/mongodb-url
       - IMAGEKIT_PRIVATE_KEY_FILE=/run/secrets/python-imagekit-private-key
       - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
+      - KAFKA_BOOTSTRAP_SERVER_FILE=/run/secrets/kafka-bootstrap-server
+      - KAFKA_SASL_USER_PASSWORD_FILE=/run/secrets/kafka-sasl-user-password
       - GRPC_HOST=go-backend
     secrets:
       - redis-url
       - mongodb-url
       - python-imagekit-private-key
       - clerk-secret-key
+      - kafka-bootstrap-server
+      - kafka-sasl-user-password
     healthcheck:
       # Use the custom "healthcheck.py" file to test container
       # health because "curl" is not installed in python3.12 base image
@@ -158,4 +162,8 @@ secrets:
     external: true
   # Shared secret between all backend services
   clerk-secret-key:
+    external: true
+  kafka-bootstrap-server:
+    external: true
+  kafka-sasl-user-password:
     external: true

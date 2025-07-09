@@ -1,7 +1,7 @@
 package utils
 
 const (
-	GCPProjectID     = "steadfast-pivot-462821-p7"
+	GCPProjectID = "steadfast-pivot-462821-p7"
 
 	// GCP pubsub info
 	GCPPubSubTopicID = "my-first-topic"

@@ -1,15 +1,16 @@
 from confluent_kafka import Consumer, KafkaException
 from .models import KafkaMessage
 from . import constants
+from . import secrets
 
 conf = {
-    'bootstrap.servers': constants.kafka_bootstrap_server,
+    'bootstrap.servers': secrets.kafka_bootstrap_server,
     'group.id': constants.kafka_group_id,
     'auto.offset.reset': constants.kafka_auto_offset_reset,
     'security.protocol': constants.kafka_security_protocol,
     'sasl.mechanism': constants.kafka_sasl_mechanism, 
     'sasl.username': constants.kafka_sasl_username,
-    'sasl.password': constants.kafka_sasl_password,
+    'sasl.password': secrets.kafka_sasl_user_password,
 }
 
 consumer = Consumer(conf)
