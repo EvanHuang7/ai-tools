@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"go-backend/internal/db"
 	"go-backend/utils"
 )
 
@@ -130,12 +131,30 @@ func GenerateImage(c *gin.Context) {
 		return
 	}
 
-	// Step 3: Create an entry in Neon db table
+	// Step 3: Create data in Neon db
+	// Get Clerk userId from Gin context
+	userIdRaw, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
 	
+	clerkUserId := userIdRaw.(string)
 
-	// Return uploaded image URL and original prompt
-	c.JSON(http.StatusOK, gin.H{
-		"uploaded_image_url": upResp.URL,
-		"prompt":            req.Prompt,
-	})
+	// Create an entry in Image table.
+	// Don't need to add CreatedAt and UpdatedAt fields
+	// because GORM automatically populates these fields.
+	image := db.Image{
+		UserID:	clerkUserId,
+		Prompt: req.Prompt,
+		ImageURL: upResp.URL,
+	}
+
+	if err := db.DB.Create(&image).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Return created image in API response
+	c.JSON(http.StatusOK, image)
 }

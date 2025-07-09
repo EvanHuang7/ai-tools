@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -40,14 +39,14 @@ func GetMessages(c *gin.Context) {
 	var messages []db.Message
 	var err error
 
-	userIdRaw, exists := c.Get("userId")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		return
-	}
+	// userIdRaw, exists := c.Get("userId")
+	// if !exists {
+	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+	// 	return
+	// }
 	
-	userId := userIdRaw.(string)
-	fmt.Println("Clerk userId:", userId)
+	// userId := userIdRaw.(string)
+	// fmt.Println("Clerk userId:", userId)
 
 
 	if userIdStr != "" {
