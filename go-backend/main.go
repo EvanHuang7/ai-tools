@@ -54,6 +54,7 @@ func main() {
 
 	// Video APIs (Gemini Veo2)
 	auth.POST("/generate-video", api.GenerateVeo2Video)
+	auth.GET("/list-videos", api.ListVideos)
 
 	// Image APIs (ImageKit)
 	auth.POST("/generate-image", api.GenerateImage)

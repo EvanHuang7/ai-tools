@@ -173,3 +173,24 @@ func GenerateVeo2Video(c *gin.Context) {
 	// Return created video in API response
 	c.JSON(http.StatusOK, createdVideo)
 }
+
+// List all generated videos for logged in user
+func ListVideos(c *gin.Context) {
+	// Get Clerk userId from Gin context
+	userIdRaw, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+	clerkUserId := userIdRaw.(string)
+
+	// Get all existing generated videos for this user
+	var videos []db.Video
+	err := db.DB.Where("user_id = ?", clerkUserId).Find(&videos).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, videos)
+}
