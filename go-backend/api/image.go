@@ -50,6 +50,7 @@ func GenerateImage(c *gin.Context) {
 	generatedImageURL := fmt.Sprintf(utils.GeneratedImageURLTemplate, imagekitID, escapedPrompt, filename)
 
 	// Step 1: Generate image and download it
+	// Make generate image API call
 	resp, err := http.Get(generatedImageURL)
 	if err != nil || resp.StatusCode != 200 {
 		statusText := "Failed to download AI-generated image"
@@ -62,6 +63,7 @@ func GenerateImage(c *gin.Context) {
 	}
 	defer resp.Body.Close()
 
+	// Read the generated image
 	imgBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read AI-generated image bytes"})
@@ -138,7 +140,6 @@ func GenerateImage(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
-	
 	clerkUserId := userIdRaw.(string)
 
 	// Create an entry in Image table.
@@ -149,7 +150,6 @@ func GenerateImage(c *gin.Context) {
 		Prompt: req.Prompt,
 		ImageURL: upResp.URL,
 	}
-
 	if err := db.DB.Create(&image).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -157,4 +157,25 @@ func GenerateImage(c *gin.Context) {
 
 	// Return created image in API response
 	c.JSON(http.StatusOK, image)
+}
+
+// List all generated images for logged in user
+func ListImages(c *gin.Context) {
+	// Get Clerk userId from Gin context
+	userIdRaw, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+	clerkUserId := userIdRaw.(string)
+
+	// Get all existing generated image for this user
+	var images []db.Image
+	err := db.DB.Where("user_id = ?", clerkUserId).Find(&images).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, images)
 }
