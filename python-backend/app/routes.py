@@ -171,8 +171,7 @@ def remove_background():
             return jsonify({"error": "Upload processed image to ImageKit failed", "details": new_upload_data}), 500
         
         # Step5: Create data in mongodb
-        userId = g.user_id
-        created_image = Image(userId=userId, inputImageUrl=original_url, resultImageUrl=result_image_url).save()
+        created_image = Image(userId=g.user_id, inputImageUrl=original_url, resultImageUrl=result_image_url).save()
         
         return jsonify({
             "success": True,
@@ -181,6 +180,19 @@ def remove_background():
                 "inputImageUrl": original_url,
                 "resultImageUrl": result_image_url
             }
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@bp.route("/list-removed-bg-images", methods=["GET"])
+@clerk_auth_required
+def list_removed_bg_images():
+    try:
+        images = Image.objects(userId=g.user_id)
+
+        return jsonify({
+            "images": [{"id": str(img.id), "inputImageUrl": img.inputImageUrl, "resultImageUrl": img.resultImageUrl} for img in images]
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
