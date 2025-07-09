@@ -1,11 +1,11 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, g
 from datetime import datetime
 import requests
 from io import BytesIO
 
 from . import secrets
 from . import constants
-from .models import Plan, KafkaMessage
+from .models import Plan, KafkaMessage, Image
 from .utils import append_transformation
 from .auth_middleware import clerk_auth_required
 
@@ -155,17 +155,32 @@ def remove_background():
             return jsonify({"error": "Failed to download transformed image"}), 500
 
         # Step4: Re-upload transformed image as a new file
-        new_upload = requests.post(
+        new_upload_response = requests.post(
             constants.imagekit_upload_url,
             files={"file": BytesIO(transformed_img_res.content)},
             data={"fileName": f"bg_removed_{image.filename}"},
             auth=(secrets.imagekit_private_key, "")
         )
 
-        if new_upload.status_code != 200:
+        if new_upload_response.status_code != 200:
             return jsonify({"error": "Failed to upload background-removed image"}), 500
 
-        new_data = new_upload.json()
-        return jsonify({"processed_url": new_data["url"]})
+        new_upload_data = new_upload_response.json()
+        result_image_url = new_upload_data["url"]
+        if not result_image_url:
+            return jsonify({"error": "Upload processed image to ImageKit failed", "details": new_upload_data}), 500
+        
+        # Step5: Create data in mongodb
+        userId = g.user_id
+        created_image = Image(userId=userId, inputImageUrl=original_url, resultImageUrl=result_image_url).save()
+        
+        return jsonify({
+            "success": True,
+            "image": {
+                "id": str(created_image.id),
+                "inputImageUrl": original_url,
+                "resultImageUrl": result_image_url
+            }
+        }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
