@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"go-backend/db"
+	"go-backend/service"
 	"go-backend/utils"
 )
 
@@ -28,6 +29,45 @@ type uploadImageResponse struct {
 // GenerateImage downloads an AI-generated image from ImageKit via text prompt,
 // then uploads that generated image into your ImageKit media library with a timestamped filename.
 func GenerateImage(c *gin.Context) {
+	// Step 1: Check app feature monthly usage
+	// Get Clerk userId and userPlan from Gin context
+	userIDRaw, idOk := c.Get("userId")
+	userPlanRaw, planOk := c.Get("userPlan")
+	if !idOk || !planOk {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+	userID := userIDRaw.(string)
+	userPlan := userPlanRaw.(string)
+	
+	// Check the current monthly usage based on user plan first
+	currentMonthlyUsage, err := service.GetImageFeatureMonthlyUsage(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get usage: " + err.Error()})
+		return
+	}
+
+	monthlyLimit := 0
+	switch userPlan {
+	case "free_user":
+		monthlyLimit = utils.FreeUserImageFeatureMonthlyLimit
+	case "standard_user":
+		monthlyLimit = utils.StandardUserImageFeatureMonthlyLimit
+	case "pro_user":
+		monthlyLimit = utils.ProUserImageFeatureMonthlyLimit
+	default:
+		monthlyLimit = 0
+	}
+
+	if currentMonthlyUsage >= monthlyLimit {
+		c.JSON(http.StatusTooManyRequests, gin.H{
+			"error": "You've exceeded your monthly image generation feature usage limit. Please upgrade your plan to continue.",
+		})
+		return
+	}
+
+	// Step 2: Generate image with Imagekit and download it
+	// Get api request body and check the Imagekit credentials
 	var req generateImageRequestBody
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing or invalid prompt"})
@@ -49,7 +89,6 @@ func GenerateImage(c *gin.Context) {
 	// Build generate image API URL
 	generatedImageURL := fmt.Sprintf(utils.GeneratedImageURLTemplate, imagekitID, escapedPrompt, filename)
 
-	// Step 1: Generate image and download it
 	// Make generate image API call
 	resp, err := http.Get(generatedImageURL)
 	if err != nil || resp.StatusCode != 200 {
@@ -70,7 +109,7 @@ func GenerateImage(c *gin.Context) {
 		return
 	}
 
-	// Step 2: Upload downloaded image to ImageKit
+	// Step 3: Upload downloaded image to ImageKit
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
@@ -133,20 +172,12 @@ func GenerateImage(c *gin.Context) {
 		return
 	}
 
-	// Step 3: Create data in Neon db
-	// Get Clerk userId from Gin context
-	userIdRaw, exists := c.Get("userId")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		return
-	}
-	clerkUserId := userIdRaw.(string)
-
+	// Step 4: Create data in Neon db
 	// Create an entry in Image table.
 	// Don't need to add CreatedAt and UpdatedAt fields
 	// because GORM automatically populates these fields.
 	image := db.Image{
-		UserID:	clerkUserId,
+		UserID:	userID,
 		Prompt: req.Prompt,
 		ImageURL: upResp.URL,
 	}
@@ -155,6 +186,12 @@ func GenerateImage(c *gin.Context) {
 		return
 	}
 
+	// Step 5: Increment monthly usage in DB
+	if err := service.IncrementImageFeatureMonthlyUsage(userID, 1); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update monthly usage"})
+		return
+	}
+	
 	// Return created image in API response
 	c.JSON(http.StatusOK, image)
 }
