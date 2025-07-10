@@ -22,6 +22,7 @@ func SendPubSubMessage(c *gin.Context) {
 	}
 
 	payload := map[string]interface{}{
+		"type": 	  "test",
 		"message":    req.Message + "Published from Go service",
 	}
 	id, err := service.PublishMessage(c.Request.Context(), utils.GCPProjectID, utils.GCPPubSubTopicID, payload)

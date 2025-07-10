@@ -36,6 +36,7 @@ func (s *appServer) GetAppMonthlyUsageKey(ctx context.Context, req *apppb.GetApp
 	// Step 3: Send a pubsub message to Node backend with all info
 	// eg. UserId, redisKey, currentImageMonthlyUsage, currentVideoMonthlyUsage
 	payload := map[string]interface{}{
+		"type": 	  			  "app-monthly-usage",
 		"userId":                 req.UserId,
 		"redisKey":               redisKey,
 		"imageFeatureUsage":      currentImageMonthlyUsage,

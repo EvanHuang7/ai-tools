@@ -7,10 +7,21 @@ export const listenForPubSubMessages = async () => {
 
   const messageHandler = async (message) => {
     try {
-      await CreateGcpPubSubMessage(message.data.toString());
+      // Parse Pub/Sub message
+      const payloadString = message.data.toString();
+      const payload = JSON.parse(payloadString);
+
+      if (payload.type == "test") {
+        await CreateGcpPubSubMessage(payload.message);
+      } else {
+        // TODO: get audio usage and add that to payload and sent it to kafkas
+        console.log("Parsed Pub/Sub message:", payload);
+      }
+
       message.ack();
     } catch (err) {
-      console.error("Failed to store Pub/Sub message:", err);
+      console.error("Failed to process or store Pub/Sub message:", err);
+      message.nack(); // requeue for retry
     }
   };
 
