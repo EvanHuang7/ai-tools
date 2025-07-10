@@ -21,7 +21,10 @@ func SendPubSubMessage(c *gin.Context) {
 		return
 	}
 
-	id, err := service.PublishMessage(c.Request.Context(), utils.GCPProjectID, utils.GCPPubSubTopicID, req.Message)
+	payload := map[string]interface{}{
+		"message":    req.Message + "Published from Go service",
+	}
+	id, err := service.PublishMessage(c.Request.Context(), utils.GCPProjectID, utils.GCPPubSubTopicID, payload)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

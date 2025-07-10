@@ -2,12 +2,19 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"cloud.google.com/go/pubsub"
 )
 
-func PublishMessage(ctx context.Context, projectID, topicID, message string) (string, error) {
+func PublishMessage(ctx context.Context, projectID, topicID string, messagePayload any) (string, error) {
+	// Marshal structured payload to JSON
+	msgBytes, err := json.Marshal(messagePayload)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal message payload: %w", err)
+	}
+
 	client, err := pubsub.NewClient(ctx, projectID)
 	if err != nil {
 		return "", fmt.Errorf("failed to create pubsub client: %w", err)
@@ -16,7 +23,7 @@ func PublishMessage(ctx context.Context, projectID, topicID, message string) (st
 
 	topic := client.Topic(topicID)
 	result := topic.Publish(ctx, &pubsub.Message{
-		Data: []byte(message + "(published from Go service)"),
+		Data: msgBytes,
 	})
 
 	id, err := result.Get(ctx)
