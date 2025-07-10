@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { defineConfig } from "drizzle-kit";
 
-// Whenever adding a new schema,
+// Note: Whenever adding a new schema,
 // run "npx drizzle-kit generate" and "npx drizzle-kit migrate" clis
 export default defineConfig({
   out: "./drizzle",
