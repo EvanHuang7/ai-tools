@@ -7,6 +7,7 @@ import (
 
 	"go-backend/api"
 	"go-backend/db"
+	"go-backend/grpc"
 	"go-backend/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -62,7 +63,7 @@ func main() {
 
 	// Add gRPC APIs:
 	// Start gRPC server in a new goroutine so it doesn't block HTTP server
-    go api.StartGrpcServer()
+    go grpc.StartGrpcServer()
 
 	port := os.Getenv("PORT")
 	if port == "" {
