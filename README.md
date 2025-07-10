@@ -39,6 +39,7 @@
   - **React.js, TypeScript**,
   - **Clerk** for Authentication
   - **Clerk Bill** for Payment
+  - **Vapi**
 
 - **📡 Node Backend Service**:
 
@@ -49,6 +50,7 @@
 
   - **Go, Gin**,
   - **Neon PostgreSql DB, GORM**
+  - **Gemini AI Veo2, Imagekit.io**
 
 - **📡 Python Backend Service**:
 
@@ -78,7 +80,8 @@
     - **HTTP** (frontend -> backends commnunication)
     - **gRPC** (Python backend -> Go backend commnunication)
     - Message broker via **GCP Pub/Sub** (Go backend -> Nodejs backend commnunication)
-    - Event Streaming via **Kafka** in RedPanda (Nodejs backend -> Python backend commnunication)
+    - Message broker via **RabbitMQ** in CloudAMQP (Nodejs backend -> Python backend commnunication)
+    - Event Streaming via **Kafka** in RedPanda Cloud (Nodejs backend -> Python backend commnunication)
 
 ## <a name="features">🚀 Features</a>
 
@@ -269,16 +272,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 
 - Create a free **RabbitMQ Little Lemur** instance
 
--
-
--
-
--
-
--
-
--
--
+- Copy the `AMQP URL` (eg. `amqps://user:pass@host.rmq.cloudamqp.com/vhost`)
 
 ### <a name="set-up-clerk">⭐ Set up Clerk</a>
 
@@ -1335,7 +1329,7 @@ TODO: Consider adding lint build and test build steps into the GitHub workflow.
 
 - ⚠️ We should **delete all resources** in clusters to get two fresh Staging and Production clusters first **if we manually deployed app** into these cluster by using the task clis in `kluctl` folder.
 
-  - only delete the **resources in cluster**, but still **keeping the cluster** by running
+  - ONLY delete the **resources in cluster**, but still **keeping the cluster** by running
 
   ```
   task kluctl:delete-staging
@@ -1345,10 +1339,14 @@ TODO: Consider adding lint build and test build steps into the GitHub workflow.
   task kluctl:delete-production
   ```
 
-  - OR Delete the **entire cluster** by running
+  - OR Delete the **entire cluster** and recreate a new one by running
 
   ```
   gcloud container clusters delete ai-tools-staging --zone us-central1-a
+  ```
+
+  ```
+  task gcp:06-create-cluster
   ```
 
 - Deploy app to **Staing cluster** by deploying `Kluctl GitOps` to the fresh Staing cluster.
