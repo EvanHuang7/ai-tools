@@ -44,9 +44,16 @@ func GetMessages(c *gin.Context) {
 	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 	// 	return
 	// }
-	
 	// userId := userIdRaw.(string)
 	// fmt.Println("Clerk userId:", userId)
+
+	// userPlanRaw, exists := c.Get("userPlan")
+	// if !exists {
+	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+	// 	return
+	// }
+	// userPlan := userPlanRaw.(string)
+	// fmt.Println("Clerk userPlan:", userPlan)
 
 
 	if userIdStr != "" {
