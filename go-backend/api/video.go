@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/genai"
 
-	"go-backend/internal/db"
+	"go-backend/db"
 	"go-backend/utils"
 )
 

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"go-backend/internal/db"
+	"go-backend/db"
 
 	"github.com/gin-gonic/gin"
 )

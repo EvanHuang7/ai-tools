@@ -11,7 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go-backend/internal/db"
+	"go-backend/db"
 	"go-backend/utils"
 )
 

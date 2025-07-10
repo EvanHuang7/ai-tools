@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"go-backend/api"
-	"go-backend/internal/db"
+	"go-backend/db"
 	"go-backend/middleware"
 
 	"github.com/gin-gonic/gin"
