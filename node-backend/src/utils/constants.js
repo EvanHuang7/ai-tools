@@ -8,6 +8,6 @@ export const kafkaMechanism = "SCRAM-SHA-256";
 export const kafkaUsername = "ai-tools-redpanda-user";
 
 // Audio features monthly usage limit
-export const freeUserImageFeatureMonthlyLimit = 3;
-export const standardUserImageFeatureMonthlyLimit = 5;
-export const proUserImageFeatureMonthlyLimit = 10;
+export const freeUserAudioFeatureMonthlyLimit = 3;
+export const standardUserAudioFeatureMonthlyLimit = 5;
+export const proUserAudioFeatureMonthlyLimit = 10;

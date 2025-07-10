@@ -19,6 +19,7 @@ export function getEnvOrFile(key, defaultValue = "") {
 }
 
 // Get the current year and month start (1st day of the month at midnight)
+// "date" is an optional parameter with a default current date and time value.
 export function getCurrentYearAndMonthStart(date = new Date()) {
   return new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0);
 }
