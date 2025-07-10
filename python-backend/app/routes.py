@@ -12,7 +12,7 @@ from .auth_middleware import clerk_auth_required
 
 # gRPC imports
 import grpc
-from gen import greeter_pb2, greeter_pb2_grpc
+from gen import greeter_pb2, greeter_pb2_grpc, app_pb2, app_pb2_grpc
 
 bp = Blueprint("main", __name__)
 
@@ -106,9 +106,6 @@ def grpc_greet():
         request_message = greeter_pb2.HelloRequest(name="Python Backend")
 
         # Call the SayHello gRPC
-        # IMPORTANT NOTE: KICKOFF send gGCP pubsub and and send Kafka message, get a random string key from RPC response
-        # Recieve kafka message for all feature usage and store it Redish with random string key.
-        # Check the Redish value every second until get value and at most 5 times.
         response = client.SayHello(request_message, timeout=3)  # 3 seconds timeout
 
         return jsonify({"message": response.message})
@@ -217,3 +214,26 @@ def list_removed_bg_images():
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# gRPC call to get app features usage
+@bp.route("/get-app-usage", methods=["GET"])
+@clerk_auth_required
+def get_app_usage():
+    try:
+        # Connect to the gRPC server (Go server running on 50051 port)
+        channel = grpc.insecure_channel(f"{constants.grpc_host}:{constants.grpc_port}")
+        client = app_pb2_grpc.AppServiceStub(channel)
+
+        # Create the request message
+        request_message = app_pb2.GetAppMonthlyUsageKeyRequest(userId=g.user_id)
+
+        # Call the GetAppMonthlyUsageKey gRPC
+        # IMPORTANT NOTE: KICKOFF send gGCP pubsub and and send Kafka message, get a random string key from RPC response
+        # Recieve kafka message for all feature usage and store it Redish with random string key.
+        # Check the Redish value every second until get value and at most 5 times.
+        response = client.GetAppMonthlyUsageKey(request_message, timeout=3)  # 3 seconds timeout
+
+        return jsonify({"redisKey": response.redisKey})
+
+    except grpc.RpcError as e:
+        return jsonify({"error": f"gRPC call failed: {e}"}), 500
