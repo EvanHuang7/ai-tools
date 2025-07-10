@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 
 	"cloud.google.com/go/storage"
 	"github.com/golang-jwt/jwt/v5"
@@ -82,4 +83,9 @@ func ExtractUserPlan(claims map[string]interface{}) (string, error) {
 		return "", fmt.Errorf("invalid 'pla' format: %s", raw)
 	}
 	return parts[1], nil // "pro_user"
+}
+
+// Get the current year, month, first day of month
+func GetCurrentYearAndMonthStart(t time.Time) time.Time {
+    return time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, t.Location())
 }
