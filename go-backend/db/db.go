@@ -21,7 +21,7 @@ func Init() {
 	}
 
 	// Auto migrate all GORM tables to Neon db
-	if err := DB.AutoMigrate(&Message{}, &Image{}, &Video{}); err != nil {
+	if err := DB.AutoMigrate(&Message{}, &Image{}, &Video{}, &AppFeatureMonthlyUsage{}); err != nil {
 	log.Fatalf("failed to migrate DB: %v", err)
 	}
 }

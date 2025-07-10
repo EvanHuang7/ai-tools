@@ -29,11 +29,12 @@ type Video struct {
 	UpdatedAt time.Time
 }
 
-type ImageFeatureMonthlyUsage struct {
-    ID           uint      `gorm:"primaryKey"`
-    UserID       string    `gorm:"type:varchar(255);not null;index:idx_user_month,unique"` // indexed with month
-    Usage        int       `gorm:"not null"`
-    MonthAndYear time.Time `gorm:"not null;index:idx_user_month,unique"` // stored as first day of month for queryability
-    CreatedAt    time.Time
-    UpdatedAt    time.Time
+type AppFeatureMonthlyUsage struct {
+	ID           uint      `gorm:"primaryKey"`
+	UserID       string    `gorm:"type:varchar(255);not null;index:idx_user_month,unique"`
+	ImageUsage   int       `gorm:"not null"`
+	VideoUsage   int       `gorm:"not null"`
+	MonthAndYear time.Time `gorm:"not null;index:idx_user_month,unique"`
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }

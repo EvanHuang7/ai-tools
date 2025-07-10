@@ -19,4 +19,9 @@ const (
 	// Imagekit infi
 	GeneratedImageURLTemplate = "https://ik.imagekit.io/%s/ik-genimg-prompt-%s/%s"
 	UploadImageAPIURL = "https://upload.imagekit.io/api/v1/files/upload"
+
+	// App features monthly usage limit
+	FreeUserImageFeatureMonthlyLimit = 2
+	StandardUserImageFeatureMonthlyLimit = 3
+	ProUserImageFeatureMonthlyLimit = 5
 )
