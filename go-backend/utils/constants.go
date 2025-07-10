@@ -24,4 +24,7 @@ const (
 	FreeUserImageFeatureMonthlyLimit = 2
 	StandardUserImageFeatureMonthlyLimit = 3
 	ProUserImageFeatureMonthlyLimit = 5
+	FreeUserVideoFeatureMonthlyLimit = 0
+	StandardUserVideoFeatureMonthlyLimit = 1
+	ProUserVideoFeatureMonthlyLimit = 2
 )
