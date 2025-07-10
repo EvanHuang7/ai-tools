@@ -30,12 +30,12 @@ def append_transformation(url: str, tr: str) -> str:
     new_query = urlencode(query, doseq=True)
     return urlunparse(parsed._replace(query=new_query))
 
-# Get the the first day of current month
+# Get the current year, month, first day of month
 def get_current_year_and_month_start(dt: datetime) -> datetime:
     return datetime(dt.year, dt.month, 1)
 
-# Check user image feature monthly usage
-def check_image_feature_monthly_usage(user_id: str) -> int:
+# Get user image feature monthly usage
+def get_image_feature_monthly_usage(user_id: str) -> int:
     # Get current year and 1st day of current month
     now = datetime.utcnow()
     month_start = get_current_year_and_month_start(now)
@@ -47,7 +47,6 @@ def check_image_feature_monthly_usage(user_id: str) -> int:
 
     if usage_record:
         return usage_record.usage
-    # Create a record if not exist
     else:
         return 0
     
