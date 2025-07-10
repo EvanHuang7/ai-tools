@@ -245,7 +245,9 @@ ls ~/Downloads/ai-tools-gsa-local-key.json
 GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 ```
 
-### <a name="set-up-redpanda-cloud">⭐ Set up Redpanda Cloud</a>
+### <a name="set-up-redpanda-cloud">⭐ Set up Redpanda Cloud (Optional)</a>
+
+⚠️ Note: This step is optional because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between node service and python service.
 
 - Create a **Redpanda Cloud** account with a free default cluster created
 
@@ -260,6 +262,23 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 - Select **ACLs** tab and click the new created user (eg. `ai-tools-redpanda-user`)
 
 - Click **Allow all operations** and **Save** buttons
+
+### <a name="set-up-rabbitmq">⭐ Set up CloudAMQP RabbitMQ</a>
+
+- Create a **CloudAMQP RabbitMQ** account with a free default cluster created
+
+- Create a free **RabbitMQ Little Lemur** instance
+
+-
+
+-
+
+-
+
+-
+
+-
+-
 
 ### <a name="set-up-clerk">⭐ Set up Clerk</a>
 
@@ -329,12 +348,6 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 - If you don't have this new user free credit anymore, you have to go to **Google AI Studio**, enable the Billing for **Gemini API** GCP project and generate a `GOOGLE_API_KEY` in **Google AI Studio**.
 
 🚨🚨 Important: The video generation via Veo2 costs around 💸💸 **0.35-0.50$ per second**💸💸, so make sure specify the **IP address restrictions** of this ** API Key restrictions** to only allow your `GKE Cluster external public IP` and `GCP VM public IP` to access it.
-
-### <a name="set-up-magic-hour">⭐ Set up Magic hour</a>
-
-- Create a **Magic hour** account.
-
-- Get a `API key` by creating a new API key in your **Magic hour** account.
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
@@ -1322,13 +1335,21 @@ TODO: Consider adding lint build and test build steps into the GitHub workflow.
 
 - ⚠️ We should **delete all resources** in clusters to get two fresh Staging and Production clusters first **if we manually deployed app** into these cluster by using the task clis in `kluctl` folder.
 
-```
-task kluctl:delete-staging
-```
+  - only delete the **resources in cluster**, but still **keeping the cluster** by running
 
-```
-task kluctl:delete-production
-```
+  ```
+  task kluctl:delete-staging
+  ```
+
+  ```
+  task kluctl:delete-production
+  ```
+
+  - OR Delete the **entire cluster** by running
+
+  ```
+  gcloud container clusters delete ai-tools-staging --zone us-central1-a
+  ```
 
 - Deploy app to **Staing cluster** by deploying `Kluctl GitOps` to the fresh Staing cluster.
 
