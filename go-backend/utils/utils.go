@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"cloud.google.com/go/storage"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // Gets the environment variable by key.
@@ -58,4 +59,14 @@ func UploadToGCS(ctx context.Context, objectName string, data []byte) error {
 // Escapes text prompt for URL path usage (used for generating imagekit image)
 func UrlPathEscape(s string) string {
 	return strings.ReplaceAll(url.QueryEscape(s), "+", "%20")
+}
+
+// Get V2 claims including Clerk user subscription plan from Clerk user auth token
+func ParseJWT(tokenString string) (jwt.MapClaims, error) {
+    parser := jwt.NewParser()
+    token, _, err := parser.ParseUnverified(tokenString, jwt.MapClaims{})
+    if err != nil {
+        return nil, err
+    }
+    return token.Claims.(jwt.MapClaims), nil
 }
