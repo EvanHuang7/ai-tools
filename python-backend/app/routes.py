@@ -104,7 +104,10 @@ def grpc_greet():
         # Create the request message
         request_message = greeter_pb2.HelloRequest(name="Python Backend")
 
-        # Call the SayHello RPC
+        # Call the SayHello gRPC
+        # IMPORTANT NOTE: KICKOFF send gGCP pubsub and and send Kafka message, get a random string key from RPC response
+        # Recieve kafka message for all feature usage and store it Redish with random string key.
+        # Check the Redish value every second until get value and at most 5 times.
         response = client.SayHello(request_message, timeout=3)  # 3 seconds timeout
 
         return jsonify({"message": response.message})
