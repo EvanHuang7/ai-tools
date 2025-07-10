@@ -35,9 +35,20 @@ def clerk_auth_required(f):
 
             if not request_state.is_signed_in:
                 return jsonify({"error": "Unauthorized"}), 401
+            
+            # Get raw user plan. e.g. "u:pro_user"
+            raw_plan = request_state.payload.get("pla")
 
-            # Attach user id to flask.g
+            if raw_plan and raw_plan.startswith("u:"):
+                # "pro_user"
+                plan = raw_plan.split(":")[1]
+            # If format is unexpected
+            else:
+                return jsonify({"error": "failed to get user plan"}), 500
+
+            # Attach user id and plan to flask.g
             g.user_id = request_state.payload.get("sub")
+            g.user_plan = plan
 
             return f(*args, **kwargs)
 
