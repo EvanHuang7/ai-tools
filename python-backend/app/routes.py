@@ -5,8 +5,8 @@ from io import BytesIO
 
 from . import secrets
 from . import constants
+from . import utils
 from .models import Plan, KafkaMessage, Image
-from .utils import append_transformation
 from .auth_middleware import clerk_auth_required
 
 # gRPC imports
@@ -133,11 +133,25 @@ def listKafkaMessages():
 @clerk_auth_required
 def remove_background():
     try:
+        # Check the current monthly usage based on user plan first
+        current_monthly_usage = utils.get_image_feature_monthly_usage(g.user_id)
+        
+        monthly_limit = 0
+        if g.user_plan == "free_user":
+            monthly_limit = constants.free_user_image_feature_monthly_limit
+        elif g.user_plan == "standard_user":
+            monthly_limit = constants.standard_user_image_feature_monthly_limit
+        elif g.user_plan == "pro_user":
+            monthly_limit = constants.pro_user_image_feature_monthly_limit
+        
+        if current_monthly_usage >= monthly_limit:
+            return jsonify({"error": "You've exceeded your monthly remove bg image feature usage limit. Please upgrade your plan to continue."}), 500
+        
+        # Step1: Upload original file to ImageKit
         image = request.files.get("image")
         if not image:
             return jsonify({"error": "No image provided"}), 400
 
-        # Step1: Upload original file to ImageKit
         upload_response = requests.post(
             constants.imagekit_upload_url,
             files={"file": image},
@@ -150,7 +164,7 @@ def remove_background():
             return jsonify({"error": "Upload to ImageKit failed", "details": upload_data}), 500
 
         # Step2: Apply background removal transformation
-        transformed_url = append_transformation(original_url, "e-bgremove")
+        transformed_url = utils.append_transformation(original_url, "e-bgremove")
 
         # Step3: Download transformed image (background removed)
         transformed_img_res = requests.get(transformed_url)
@@ -175,6 +189,9 @@ def remove_background():
         
         # Step5: Create data in mongodb
         created_image = Image(userId=g.user_id, inputImageUrl=original_url, resultImageUrl=result_image_url).save()
+        
+        # Step6: Increase feature montly usage for user
+        utils.increment_image_feature_monthly_usage(g.user_id)
         
         return jsonify({
             "success": True,
