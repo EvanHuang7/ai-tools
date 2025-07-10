@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package app;
+
+// Generate proto stubs for Go backend (run CLI in Repo Root level):
+// "protoc --proto_path=proto --go_out=go-backend/gen --go-grpc_out=go-backend/gen proto/app.proto"
+
+// Generate proto stubs for Python backend (run CLI in Repo Root level):
+// "python -m grpc_tools.protoc --proto_path=proto --python_out=python-backend/gen --grpc_python_out=python-backend/gen proto/app.proto"
+option go_package = "./app;app";
+
+service AppService {
+  rpc GetAppMonthlyUsageKey (GetAppMonthlyUsageKeyRequest) returns (GetAppMonthlyUsageKeyResponse);
+}
+
+message GetAppMonthlyUsageKeyRequest {
+  string userId = 1;
+}
+
+message GetAppMonthlyUsageKeyResponse {
+  string redisKey = 1;
+}
