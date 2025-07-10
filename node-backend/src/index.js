@@ -7,6 +7,7 @@ import { users } from "./db/schema.js";
 import { ListGcpPubSubMessages } from "./service/gcpPubSubMessages.js";
 import { connectKafkaProducer, kafkaProducer } from "./lib/kafka.js";
 import userRoutes from "./routes/user.route.js";
+import userRoutes from "./routes/audio.route.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
 
 // Express app config
@@ -92,6 +93,7 @@ app.post("/sendKafkaMessage", authMiddleware, async (req, res) => {
 
 // Set up API routes
 app.use("/user", authMiddleware, userRoutes);
+app.use("/audio", authMiddleware, audioRoutes);
 
 // We omit the "host" argument between "port" and "()",
 // so the host is default to be '0.0.0.0', which means
