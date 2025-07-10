@@ -3,8 +3,7 @@ import {
   serial,
   text,
   timestamp,
-  int,
-  index,
+  integer,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
@@ -49,7 +48,7 @@ export const audioFeatureMonthlyUsage = pgTable(
   {
     id: serial("id").primaryKey().notNull(),
     userId: text("userId").notNull(),
-    usage: int("usage").notNull(),
+    usage: integer("usage").notNull(),
     monthAndYear: timestamp("monthAndYear", {
       withTimezone: false,
       mode: "date",
