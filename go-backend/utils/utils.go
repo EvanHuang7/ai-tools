@@ -70,3 +70,16 @@ func ParseJWT(tokenString string) (jwt.MapClaims, error) {
     }
     return token.Claims.(jwt.MapClaims), nil
 }
+
+// ExtractUserPlan extracts "pro_user" from a raw V2 JWT claim map (expecting "pla": "u:pro_user")
+func ExtractUserPlan(claims map[string]interface{}) (string, error) {
+	raw, ok := claims["pla"].(string)
+	if !ok {
+		return "", fmt.Errorf("'pla' field missing or not a string")
+	}
+	parts := strings.Split(raw, ":")
+	if len(parts) != 2 {
+		return "", fmt.Errorf("invalid 'pla' format: %s", raw)
+	}
+	return parts[1], nil // "pro_user"
+}
