@@ -14,10 +14,49 @@ import (
 	"google.golang.org/genai"
 
 	"go-backend/db"
+	"go-backend/service"
 	"go-backend/utils"
 )
 
 func GenerateVeo2Video(c *gin.Context) {
+	// Step 1: Check app feature monthly usage
+	// Get Clerk userId and userPlan from Gin context
+	userIDRaw, idOk := c.Get("userId")
+	userPlanRaw, planOk := c.Get("userPlan")
+	if !idOk || !planOk {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+	userID := userIDRaw.(string)
+	userPlan := userPlanRaw.(string)
+	
+	// Check the current monthly usage based on user plan first
+	currentMonthlyUsage, err := service.GetVideoFeatureMonthlyUsage(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get usage: " + err.Error()})
+		return
+	}
+
+	monthlyLimit := 0
+	switch userPlan {
+	case "free_user":
+		monthlyLimit = utils.FreeUserVideoFeatureMonthlyLimit
+	case "standard_user":
+		monthlyLimit = utils.StandardUserVideoFeatureMonthlyLimit
+	case "pro_user":
+		monthlyLimit = utils.ProUserVideoFeatureMonthlyLimit
+	default:
+		monthlyLimit = 0
+	}
+
+	if currentMonthlyUsage >= monthlyLimit {
+		c.JSON(http.StatusTooManyRequests, gin.H{
+			"error": "You've exceeded your monthly video generation feature usage limit. Please upgrade your plan to continue.",
+		})
+		return
+	}
+
+	// Step 2: Get input prompt and init Gemini AI client
 	// Get prompt from form data
 	prompt := c.PostForm("prompt")
 	if prompt == "" {
@@ -36,7 +75,7 @@ func GenerateVeo2Video(c *gin.Context) {
 		return
 	}
 
-	// Step 1: Upload input image to GCS
+	// Step 3: Upload input image to GCS
 	// Get image file from multipart form data
 	var imageInput *genai.Image
 	var baseFilename string
@@ -81,7 +120,7 @@ func GenerateVeo2Video(c *gin.Context) {
 		MIMEType:   mime.String(),
 	}
 
-	// Step 2: Generate video
+	// Step 4: Generate video
 	// Set video generation config
 	duration := int32(utils.VideoDuration)
 	videoConfig := &genai.GenerateVideosConfig{
@@ -129,7 +168,7 @@ func GenerateVeo2Video(c *gin.Context) {
 		return
 	}
 
-	// Step 3: Upload generated video to GCS
+	// Step 5: Upload generated video to GCS
 	if baseFilename == "" {
 		baseFilename = "video"
 	}
@@ -144,20 +183,12 @@ func GenerateVeo2Video(c *gin.Context) {
 	inputImageURL := fmt.Sprintf(utils.GCSObjectPublicURLTemplate, imageObjectName)
 	publicVideoURL := fmt.Sprintf(utils.GCSObjectPublicURLTemplate, videoName)
 
-	// Step 4: Create data in Neon db
-	// Get Clerk userId from Gin context
-	userIdRaw, exists := c.Get("userId")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-		return
-	}
-	clerkUserId := userIdRaw.(string)
-
+	// Step 6: Create data in Neon db
 	// Create an entry in Video table.
 	// Don't need to add CreatedAt and UpdatedAt fields
 	// because GORM automatically populates these fields.
 	createdVideo := db.Video{
-		UserID:	clerkUserId,
+		UserID:	userID,
 		Prompt: prompt,
 		ImageURL: inputImageURL,
 		// TODO: change to request input duration
@@ -166,6 +197,12 @@ func GenerateVeo2Video(c *gin.Context) {
 	}
 	if err := db.DB.Create(&createdVideo).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Step 7: Increment monthly usage in DB
+	if err := service.IncrementVideoFeatureMonthlyUsage(userID, 1); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update monthly usage"})
 		return
 	}
 
