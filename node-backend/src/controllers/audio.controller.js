@@ -53,3 +53,28 @@ export const startAudio = async (req, res) => {
     });
   }
 };
+
+export const createAudio = async (req, res) => {
+  try {
+    // Get Clerk userId and userPlan from req after auth middleware
+    const userId = req.userId;
+
+    // Get topic and audio from reqest body
+    const { topic, audio } = req.body;
+
+    // TODO: Upload the audio to GCS bucket to get audioUrl
+
+    const result = await postgreDbClient
+      .insert(audios)
+      .values({ userId, topic, audioUrl: "" })
+      .returning();
+    const newAudio = result[0];
+
+    return res.status(201).json(newAudio);
+  } catch (error) {
+    console.log("Error in createAudio controller", error.message);
+    return res.status(500).json({
+      message: "Interal server error",
+    });
+  }
+};
