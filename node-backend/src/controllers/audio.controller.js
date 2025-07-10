@@ -78,3 +78,19 @@ export const createAudio = async (req, res) => {
     });
   }
 };
+
+export const listAudios = async (req, res) => {
+  try {
+    // Get Clerk userId and userPlan from req after auth middleware
+    const userId = req.userId;
+
+    const allAudios = await postgreDbClient.select(userId).from(audios);
+
+    return res.status(200).json(allAudios);
+  } catch (error) {
+    console.log("Error in listAudios controller", error.message);
+    return res.status(500).json({
+      message: "Interal server error",
+    });
+  }
+};
