@@ -79,9 +79,14 @@ app.post("/sendKafkaMessage", authMiddleware, async (req, res) => {
   }
 
   try {
+    const payload = {
+      type: "test",
+      message: message,
+    };
+
     await kafkaProducer.send({
       topic: "hello-world",
-      messages: [{ value: message }],
+      messages: [{ value: JSON.stringify(payload) }],
     });
 
     res.json({ success: true, message });

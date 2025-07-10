@@ -1,6 +1,8 @@
 import { gcpPubsubClient } from "../lib/gcpPubSub.js";
 import { CreateGcpPubSubMessage } from "./gcpPubSubMessages.js";
 import { gcpPubsubSubscriptionName } from "../utils/constants.js";
+import { getAudioFeatureMonthlyUsage } from "./audioFeatureMonthlyUsage.js";
+import { kafkaProducer } from "../lib/kafka.js";
 
 export const listenForPubSubMessages = async () => {
   const subscription = gcpPubsubClient.subscription(gcpPubsubSubscriptionName);
@@ -14,8 +16,21 @@ export const listenForPubSubMessages = async () => {
       if (payload.type == "test") {
         await CreateGcpPubSubMessage(payload.message);
       } else {
-        // TODO: get audio usage and add that to payload and sent it to kafkas
-        console.log("Parsed Pub/Sub message:", payload);
+        // Get audio usage and attach it to payload
+        const currentAudioMonthlyUsage = await getAudioFeatureMonthlyUsage(
+          payload.userId
+        );
+
+        const updatedPayload = {
+          ...payload,
+          audioFeatureUsage: currentAudioMonthlyUsage,
+        };
+
+        // Send updated payload to Kafka
+        await kafkaProducer.send({
+          topic: "hello-world",
+          messages: [{ value: JSON.stringify(updatedPayload) }],
+        });
       }
 
       message.ack();
