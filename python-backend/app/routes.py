@@ -6,6 +6,7 @@ from io import BytesIO
 from . import secrets
 from . import constants
 from . import utils
+from . import service
 from .models import Plan, KafkaMessage, Image
 from .auth_middleware import clerk_auth_required
 
@@ -134,7 +135,7 @@ def listKafkaMessages():
 def remove_background():
     try:
         # Check the current monthly usage based on user plan first
-        current_monthly_usage = utils.get_image_feature_monthly_usage(g.user_id)
+        current_monthly_usage = service.get_image_feature_monthly_usage(g.user_id)
         
         monthly_limit = 0
         if g.user_plan == "free_user":
@@ -191,7 +192,7 @@ def remove_background():
         created_image = Image(userId=g.user_id, inputImageUrl=original_url, resultImageUrl=result_image_url).save()
         
         # Step6: Increase feature montly usage for user
-        utils.increment_image_feature_monthly_usage(g.user_id)
+        service.increment_image_feature_monthly_usage(g.user_id)
         
         return jsonify({
             "success": True,
