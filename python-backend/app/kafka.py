@@ -1,3 +1,5 @@
+import json
+from flask import current_app
 from confluent_kafka import Consumer, KafkaException
 from .models import KafkaMessage
 from . import constants
@@ -26,9 +28,32 @@ def connectKafkaConsumer():
                 continue
             if msg.error():
                 raise KafkaException(msg.error())
-            decodedMessage = msg.value().decode('utf-8') 
-            print(f"Received message: {decodedMessage}")
-            createKafkaMessage(decodedMessage)
+            
+            # Kafka message handler
+            try:
+                # Decode and parse JSON
+                decodedMessage = msg.value().decode('utf-8')
+                parsedMessage = json.loads(decodedMessage)
+
+                print(f"Received message: {parsedMessage}")
+                
+                if parsedMessage.get("type") == "test":
+                    createKafkaMessage(parsedMessage.get("message"))
+                # Case type: 'app-monthly-usage'
+                else:
+                    # Store the kafka message to Redis
+                    redis_client = current_app.redis_client
+
+                    # Serialize the value as a JSON string.
+                    # Message expires after 1 hour, and when a 
+                    # Redis key expires, Redis automatically deletes it.
+                    redis_client.setex(parsedMessage.get("redisKey"), 3600, json.dumps(parsedMessage))
+                        
+            except json.JSONDecodeError:
+                print("Failed to parse JSON from Kafka message")
+            except Exception as e:
+                print(f"Unexpected error while handling message: {e}")
+              
     except KeyboardInterrupt:
         pass
     finally:

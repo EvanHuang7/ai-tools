@@ -16,6 +16,7 @@ export const listenForPubSubMessages = async () => {
       if (payload.type == "test") {
         await CreateGcpPubSubMessage(payload.message);
       } else {
+        // Case type: 'app-monthly-usage'
         // Get audio usage and attach it to payload
         const currentAudioMonthlyUsage = await getAudioFeatureMonthlyUsage(
           payload.userId
