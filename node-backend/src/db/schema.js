@@ -20,3 +20,25 @@ export const gcpPubSubMessages = pgTable("gcpPubSubMessages", {
     mode: "date", // important
   }).defaultNow(),
 });
+
+export const audios = pgTable("audios", {
+  id: serial("id").primaryKey().notNull(), // serial will be auto-generated
+  userId: text("userId").notNull(),
+  topic: text("topic").notNull(),
+  audioUrl: text("audioUrl"),
+  createdAt: timestamp("created_at", {
+    withTimezone: false,
+    mode: "date", // important
+  }).defaultNow(),
+});
+
+export const audioFeatureMonthlyUsage = pgTable("audioFeatureMonthlyUsage", {
+  id: serial("id").primaryKey().notNull(), // serial will be auto-generated
+  userId: text("userId").notNull(),
+  usage: int("usage").notNull(),
+  monthAndYear: timestamp("monthAndYear"),
+  createdAt: timestamp("created_at", {
+    withTimezone: false,
+    mode: "date", // important
+  }).defaultNow(),
+});
