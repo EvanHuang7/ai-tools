@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app, g
 from datetime import datetime
+import time as pytime
 import requests
 from io import BytesIO
 from json import loads
@@ -240,7 +241,8 @@ def get_app_usage():
             redis_value = redis_client.get(response.redisKey)
             if redis_value:
                 break
-            time.sleep(1)  # wait 1 second before retry
+            # wait 1 second before retry
+            pytime.sleep(1)
 
         # Decode JSON if get the value
         if redis_value:
