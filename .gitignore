@@ -6,3 +6,4 @@ bin/
 
 kind-config.yaml
 kind-bind-mount*
+.env
