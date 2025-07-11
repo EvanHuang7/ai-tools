@@ -18,46 +18,45 @@ conf = {
 consumer = Consumer(conf)
 topic = constants.kafka_topic
 
-def connectKafkaConsumer():
-    consumer.subscribe([topic])
-    print(f"Subscribed to topic: {topic}")
-    try:
-        while True:
-            msg = consumer.poll(timeout=1.0)
-            if msg is None:
-                continue
-            if msg.error():
-                raise KafkaException(msg.error())
-            
-            # Kafka message handler
-            try:
-                # Decode and parse JSON
-                decodedMessage = msg.value().decode('utf-8')
-                parsedMessage = json.loads(decodedMessage)
-
-                print(f"Received message: {parsedMessage}")
+def connectKafkaConsumer(app):
+    # Activate Flask app context to use redis client in this file
+    with app.app_context():
+        consumer.subscribe([topic])
+        print(f"Subscribed to topic: {topic}")
+        try:
+            while True:
+                msg = consumer.poll(timeout=1.0)
+                if msg is None:
+                    continue
+                if msg.error():
+                    raise KafkaException(msg.error())
                 
-                if parsedMessage.get("type") == "test":
-                    createKafkaMessage(parsedMessage.get("message"))
-                # Case type: 'app-monthly-usage'
-                else:
-                    # Store the kafka message to Redis
-                    redis_client = current_app.redis_client
+                # Kafka message handler
+                try:
+                    # Decode and parse JSON
+                    decodedMessage = msg.value().decode('utf-8')
+                    parsedMessage = json.loads(decodedMessage)
 
-                    # Serialize the value as a JSON string.
-                    # Message expires after 1 hour, and when a 
-                    # Redis key expires, Redis automatically deletes it.
-                    redis_client.setex(parsedMessage.get("redisKey"), 3600, json.dumps(parsedMessage))
-                        
-            except json.JSONDecodeError:
-                print("Failed to parse JSON from Kafka message")
-            except Exception as e:
-                print(f"Unexpected error while handling message: {e}")
-              
-    except KeyboardInterrupt:
-        pass
-    finally:
-        consumer.close()
+                    print(f"Received Kafka message: {parsedMessage}")
+                    
+                    if parsedMessage.get("type") == "test":
+                        createKafkaMessage(parsedMessage.get("message"))
+                    # Case type: 'app-monthly-usage'
+                    else:
+                        # Serialize the value as a JSON string.
+                        # Message expires after 1 hour, and when a 
+                        # Redis key expires, Redis automatically deletes it.
+                        current_app.redis_client.setex(parsedMessage.get("redisKey"), 3600, json.dumps(parsedMessage))
+                            
+                except json.JSONDecodeError:
+                    print("Failed to parse JSON from Kafka message")
+                except Exception as e:
+                    print(f"Unexpected error while handling message: {e}")
+                
+        except KeyboardInterrupt:
+            pass
+        finally:
+            consumer.close()
         
 def createKafkaMessage(message):
     try:
