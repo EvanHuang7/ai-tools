@@ -2,9 +2,9 @@
 export const USAGE_LIMITS = {
   free: {
     imageProcessing: 10, // Image editor operations per month
-    textToImage: 5, // Text-to-image generations per month
-    audioChat: 3, // Audio chat sessions per month (each session = 10 minutes max)
-    videoGeneration: 1, // Video generations per month
+    textToImage: 10, // Text-to-image generations per month
+    audioChat: 10, // Audio chat sessions per month (each session = 10 minutes max)
+    videoGeneration: 10, // Video generations per month
   },
   pro: {
     imageProcessing: -1, // -1 means unlimited

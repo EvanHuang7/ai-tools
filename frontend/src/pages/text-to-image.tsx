@@ -37,6 +37,7 @@ import {
 import { toast } from "sonner";
 import axios from "axios";
 import { UsageGuard } from "@/components/usage-guard";
+import { useAuth } from "@clerk/clerk-react";
 
 export function TextToImage() {
   const [prompt, setPrompt] = useState("");
@@ -50,6 +51,7 @@ export function TextToImage() {
   const [generationHistory, setGenerationHistory] = useState<
     Array<{ id: string; prompt: string; image: string; timestamp: Date }>
   >([]);
+  const { getToken } = useAuth();
 
   const styleOptions = [
     {
@@ -180,6 +182,7 @@ export function TextToImage() {
       }, 1500); // Update every 1.5 seconds (9 seconds total for 6 stages)
 
       // Call the API
+      const token = await getToken();
       const response = await axios.post(
         "/api/go/generate-image",
         {
@@ -189,7 +192,10 @@ export function TextToImage() {
           quality,
         },
         {
-          timeout: 15000, // 15 second timeout
+          timeout: 30000, // 30 second timeout
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -201,8 +207,8 @@ export function TextToImage() {
       setCurrentStage("Image generated successfully!");
 
       // Handle the response
-      if (response.data && response.data.imageUrl) {
-        const newImage = response.data.imageUrl;
+      if (response.data && response.data.ImageURL) {
+        const newImage = response.data.ImageURL;
         setGeneratedImage(newImage);
 
         // Add to history
@@ -213,20 +219,6 @@ export function TextToImage() {
           timestamp: new Date(),
         };
         setGenerationHistory((prev) => [historyItem, ...prev.slice(0, 9)]); // Keep last 10 items
-
-        toast.success("Image generated successfully!");
-      } else if (response.data && response.data.image_url) {
-        // Handle different response format if needed
-        const newImage = response.data.image_url;
-        setGeneratedImage(newImage);
-
-        const historyItem = {
-          id: Date.now().toString(),
-          prompt: prompt.trim(),
-          image: newImage,
-          timestamp: new Date(),
-        };
-        setGenerationHistory((prev) => [historyItem, ...prev.slice(0, 9)]);
 
         toast.success("Image generated successfully!");
       } else {

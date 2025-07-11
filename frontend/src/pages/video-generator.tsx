@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useAuth } from "@clerk/clerk-react";
 
 export function VideoGenerator() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -45,6 +46,7 @@ export function VideoGenerator() {
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentStage, setCurrentStage] = useState("");
+  const { getToken } = useAuth();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -116,9 +118,11 @@ export function VideoGenerator() {
       }, 6000); // Update every 6 seconds (48 seconds total for 8 stages)
 
       // Call your API
+      const token = await getToken();
       const response = await axios.post("/api/go/generate-video", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
         timeout: 120000, // 2 minute timeout for the 40-50 second generation
         onUploadProgress: (progressEvent) => {
@@ -143,12 +147,8 @@ export function VideoGenerator() {
       setCurrentStage("Video generated successfully!");
 
       // Handle the response
-      if (response.data && response.data.videoUrl) {
-        setGeneratedVideo(response.data.videoUrl);
-        toast.success("Video generated successfully!");
-      } else if (response.data && response.data.video_url) {
-        // Handle different response format if needed
-        setGeneratedVideo(response.data.video_url);
+      if (response.data && response.data.VideoURL) {
+        setGeneratedVideo(response.data.VideoURL);
         toast.success("Video generated successfully!");
       } else {
         throw new Error("Invalid response from server - no video URL received");
