@@ -229,12 +229,12 @@ def get_app_usage():
         # Create the request message
         request_message = app_pb2.GetAppMonthlyUsageKeyRequest(userId=g.user_id)
 
-        # Call the GetAppMonthlyUsageKey gRPC
+        # Step 1: Call the GetAppMonthlyUsageKey gRPC to collect app usage
         # NOTE: Python service (via gRPC) -> Go service (via GCP pubsub) ->
         # Node service (via Kafka message) -> Python service create redis record.
         response = client.GetAppMonthlyUsageKey(request_message, timeout=3)  # 3 seconds timeout
         
-        # Poll Redis every second up to 5 times
+        # Step 2: Poll app usage from Redis every second up to 5 times
         redis_client = current_app.redis_client
         redis_value = None
         for _ in range(5):
@@ -244,20 +244,25 @@ def get_app_usage():
             # wait 1 second before retry
             pytime.sleep(1)
 
-        # Decode JSON if get the value
+        # Step 3: Decode redis value and add remove bg image feature usage to it
         if redis_value:
             try:
                 parsed_value = loads(redis_value)
             except Exception:
                 parsed_value = redis_value.decode("utf-8") if isinstance(redis_value, bytes) else redis_value
-
+                
+            # Get remove bg image feature usage
+            current_rm_bg_image_monthly_usage = service.get_image_feature_monthly_usage(g.user_id)
+            
+            # Add "removeBgImageFeatureUsage" to parsed_value
+            if isinstance(parsed_value, dict):
+                parsed_value["removeBgImageFeatureUsage"] = current_rm_bg_image_monthly_usage
+                
             return jsonify({
-                "redisKey": response.redisKey,
                 "appFeaturesUsage": parsed_value,
             })
         else:
             return jsonify({
-                "redisKey": response.redisKey,
                 "message": "Timed out waiting for Redis value"
             }), 504
     except grpc.RpcError as e:
