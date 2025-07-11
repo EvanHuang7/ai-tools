@@ -312,6 +312,14 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 
 - Copy the `privte key` and `imagekit id` of your **Imagekit.io** account.
 
+🚨 Important: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
+
+### <a name="set-up-vapi">⭐ Set up VAPI</a>
+
+- Create a **VAPI** account.
+
+- Copy the `public Key` from the **Vapi API Keys** tab of your **VAPI account dashboard**.
+
 ### <a name="set-up-gcs-and-get-gemini-api-key">⭐ Set up Google Cloud Storage and Get Gemini API Key</a>
 
 1. Create Google Cloud Storage bucket and add public Read access to this bucket
