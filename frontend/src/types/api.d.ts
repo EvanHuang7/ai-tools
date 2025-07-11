@@ -64,17 +64,16 @@ export interface ProcessImageRequest {
   prompt?: string;
 }
 
-export interface GenerateVideoRequest {
-  imageUrl: string;
-  prompt: string;
-  style: string;
-  duration: number;
-}
-
 export interface ChatMessage {
   id: string;
   content: string;
   role: "user" | "assistant";
   timestamp: string;
   isAudio?: boolean;
+}
+
+// NEW LINE
+export interface GenerateVideoRequest {
+  prompt: string;
+  image: File;
 }
