@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
+import { useGetAppUsage } from "@/api/imageRemoveBg/imageRmBg.queries";
 import {
   Card,
   CardContent,
@@ -21,17 +22,54 @@ import {
   Zap,
   ArrowRight,
   Crown,
+  Loader2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { getUsageText, getUsagePercentage } from "@/constants/usage-limits";
 
 export function Dashboard() {
   const { user } = useUser();
+  const { data: appUsage, isLoading: isLoadingUsage } = useGetAppUsage();
+
+  // Check if user has pro subscription using publicMetadata
+  const userPlan = (user?.publicMetadata?.plan as string) || "free";
+  const hasPro = userPlan === "pro" || userPlan === "enterprise";
+
+  // Convert app usage data to the format expected by helper functions
+  const currentUsage = appUsage
+    ? {
+        imageProcessing: appUsage.removeBgImageCount || 0,
+        textToImage: appUsage.textToImageCount || 0,
+        audioChat: appUsage.audioChatCount || 0,
+        videoGeneration: appUsage.videoGenerationCount || 0,
+      }
+    : {};
 
   const stats = [
-    { label: "Images Processed", value: "24", icon: Image, change: "+12%" },
-    { label: "Images Generated", value: "18", icon: Wand2, change: "+35%" },
-    { label: "Videos Generated", value: "8", icon: Video, change: "+25%" },
-    { label: "Audio Chats", value: "15", icon: Mic, change: "+8%" },
+    {
+      label: "Images Processed",
+      value: currentUsage.imageProcessing?.toString() || "0",
+      icon: Image,
+      change: "+12%",
+    },
+    {
+      label: "Images Generated",
+      value: currentUsage.textToImage?.toString() || "0",
+      icon: Wand2,
+      change: "+35%",
+    },
+    {
+      label: "Videos Generated",
+      value: currentUsage.videoGeneration?.toString() || "0",
+      icon: Video,
+      change: "+25%",
+    },
+    {
+      label: "Audio Chats",
+      value: currentUsage.audioChat?.toString() || "0",
+      icon: Mic,
+      change: "+8%",
+    },
   ];
 
   const recentActivity = [
@@ -88,10 +126,6 @@ export function Dashboard() {
     },
   ];
 
-  // Check if user has pro subscription using publicMetadata
-  const userPlan = (user?.publicMetadata?.plan as string) || "free";
-  const hasPro = userPlan === "pro" || userPlan === "enterprise";
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -110,24 +144,36 @@ export function Dashboard() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {stats.map((stat, index) => (
-                <Card key={index}>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      {stat.label}
-                    </CardTitle>
-                    <stat.icon className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{stat.value}</div>
-                    <p className="text-xs text-muted-foreground">
-                      {stat.change}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            {isLoadingUsage ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {[...Array(4)].map((_, index) => (
+                  <Card key={index}>
+                    <CardContent className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {stats.map((stat, index) => (
+                  <Card key={index}>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        {stat.label}
+                      </CardTitle>
+                      <stat.icon className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{stat.value}</div>
+                      <p className="text-xs text-muted-foreground">
+                        This month
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Quick Actions */}
@@ -226,52 +272,105 @@ export function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium">
-                            Image Processing
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {hasPro ? "Unlimited" : "8/10"}
-                          </span>
-                        </div>
-                        <Progress value={hasPro ? 100 : 80} className="h-2" />
+                    {isLoadingUsage ? (
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                        <span className="text-muted-foreground">
+                          Loading usage data...
+                        </span>
                       </div>
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium">
-                            Text to Image
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {hasPro ? "Unlimited" : "3/5"}
-                          </span>
+                    ) : (
+                      <div className="space-y-4">
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium">
+                              Image Processing
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              {getUsageText(
+                                "imageProcessing",
+                                userPlan,
+                                currentUsage
+                              )}
+                            </span>
+                          </div>
+                          <Progress
+                            value={getUsagePercentage(
+                              "imageProcessing",
+                              userPlan,
+                              currentUsage
+                            )}
+                            className="h-2"
+                          />
                         </div>
-                        <Progress value={hasPro ? 100 : 60} className="h-2" />
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium">
-                            Audio Chat Sessions
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {hasPro ? "Unlimited" : "2/3"}
-                          </span>
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium">
+                              Text to Image
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              {getUsageText(
+                                "textToImage",
+                                userPlan,
+                                currentUsage
+                              )}
+                            </span>
+                          </div>
+                          <Progress
+                            value={getUsagePercentage(
+                              "textToImage",
+                              userPlan,
+                              currentUsage
+                            )}
+                            className="h-2"
+                          />
                         </div>
-                        <Progress value={hasPro ? 100 : 67} className="h-2" />
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium">
-                            Video Generation
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {hasPro ? "Unlimited" : "1/1"}
-                          </span>
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium">
+                              Audio Chat Sessions
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              {getUsageText(
+                                "audioChat",
+                                userPlan,
+                                currentUsage
+                              )}
+                            </span>
+                          </div>
+                          <Progress
+                            value={getUsagePercentage(
+                              "audioChat",
+                              userPlan,
+                              currentUsage
+                            )}
+                            className="h-2"
+                          />
                         </div>
-                        <Progress value={hasPro ? 100 : 100} className="h-2" />
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium">
+                              Video Generation
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              {getUsageText(
+                                "videoGeneration",
+                                userPlan,
+                                currentUsage
+                              )}
+                            </span>
+                          </div>
+                          <Progress
+                            value={getUsagePercentage(
+                              "videoGeneration",
+                              userPlan,
+                              currentUsage
+                            )}
+                            className="h-2"
+                          />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>
