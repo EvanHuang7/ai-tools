@@ -7,6 +7,9 @@ export const kafkaClientId = "nodejs-app";
 export const kafkaMechanism = "SCRAM-SHA-256";
 export const kafkaUsername = "ai-tools-redpanda-user";
 
+// CloudAMQP RabbitMQ
+export const rabbitmqQueueName = "ai-tools";
+
 // Audio features monthly usage limit
 export const freeUserAudioFeatureMonthlyLimit = 3;
 export const standardUserAudioFeatureMonthlyLimit = 5;

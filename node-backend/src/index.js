@@ -6,6 +6,7 @@ import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
 import { ListGcpPubSubMessages } from "./service/gcpPubSubMessages.js";
 import { connectKafkaProducer, kafkaProducer } from "./lib/kafka.js";
+import { sendToRabbitMQ } from "./lib/rabbitMQClient.js";
 import userRoutes from "./routes/user.route.js";
 import audioRoutes from "./routes/audio.route.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
@@ -84,10 +85,13 @@ app.post("/sendKafkaMessage", authMiddleware, async (req, res) => {
       message: message,
     };
 
-    await kafkaProducer.send({
-      topic: "hello-world",
-      messages: [{ value: JSON.stringify(payload) }],
-    });
+    // await kafkaProducer.send({
+    //   topic: "hello-world",
+    //   messages: [{ value: JSON.stringify(payload) }],
+    // });
+
+    // 🔁 Send to RabbitMQ instead of Kafka
+    await sendToRabbitMQ(payload);
 
     res.json({ success: true, message });
   } catch (err) {
