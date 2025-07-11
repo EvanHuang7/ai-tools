@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { useUser } from "@clerk/clerk-react";
+import { useGetAppUsage } from "@/api/imageRemoveBg/imageRmBg.queries";
 import {
   Card,
   CardContent,
@@ -10,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Crown, Lock, Zap } from "lucide-react";
+import { Crown, Lock, Zap, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   canUseFeature,
@@ -27,13 +28,37 @@ interface UsageGuardProps {
 
 export function UsageGuard({ children, feature, action }: UsageGuardProps) {
   const { user } = useUser();
+  const { data: appUsage, isLoading: isLoadingUsage } = useGetAppUsage();
 
   // Check user's subscription plan
   const userPlan = (user?.publicMetadata?.plan as string) || "free";
-  const canUse = canUseFeature(feature, userPlan);
-  const usageText = getUsageText(feature, userPlan);
-  const usagePercentage = getUsagePercentage(feature, userPlan);
+
+  // Convert app usage data to the format expected by helper functions
+  const currentUsage = appUsage
+    ? {
+        imageProcessing: appUsage.removeBgImageCount || 0,
+        textToImage: appUsage.textToImageCount || 0,
+        audioChat: appUsage.audioChatCount || 0,
+        videoGeneration: appUsage.videoGenerationCount || 0,
+      }
+    : {};
+
+  const canUse = canUseFeature(feature, userPlan, currentUsage);
+  const usageText = getUsageText(feature, userPlan, currentUsage);
+  const usagePercentage = getUsagePercentage(feature, userPlan, currentUsage);
   const featureInfo = FEATURE_DESCRIPTIONS[feature];
+
+  // Show loading state while fetching usage data
+  if (isLoadingUsage) {
+    return (
+      <Card className="border-2 border-dashed border-muted-foreground/25">
+        <CardContent className="flex items-center justify-center py-8">
+          <Loader2 className="w-6 h-6 animate-spin mr-2" />
+          <span className="text-muted-foreground">Loading usage data...</span>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (canUse) {
     return <>{children}</>;

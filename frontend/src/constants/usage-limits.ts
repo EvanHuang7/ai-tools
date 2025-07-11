@@ -20,14 +20,6 @@ export const USAGE_LIMITS = {
   },
 } as const;
 
-// Current usage tracking (in a real app, this would come from your database)
-export const CURRENT_USAGE = {
-  imageProcessing: 8,
-  textToImage: 3,
-  audioChat: 2,
-  videoGeneration: 0,
-};
-
 // Feature descriptions for UI
 export const FEATURE_DESCRIPTIONS = {
   imageProcessing: {
@@ -55,12 +47,13 @@ export const FEATURE_DESCRIPTIONS = {
 // Helper functions
 export function getRemainingUsage(
   feature: keyof typeof USAGE_LIMITS.free,
-  userPlan: string = "free"
+  userPlan: string = "free",
+  currentUsage: any = {}
 ) {
   const limits =
     USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.free;
   const limit = limits[feature];
-  const used = CURRENT_USAGE[feature];
+  const used = currentUsage[feature] || 0;
 
   if (limit === -1) return -1; // Unlimited
   return Math.max(0, limit - used);
@@ -68,12 +61,13 @@ export function getRemainingUsage(
 
 export function getUsagePercentage(
   feature: keyof typeof USAGE_LIMITS.free,
-  userPlan: string = "free"
+  userPlan: string = "free",
+  currentUsage: any = {}
 ) {
   const limits =
     USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.free;
   const limit = limits[feature];
-  const used = CURRENT_USAGE[feature];
+  const used = currentUsage[feature] || 0;
 
   if (limit === -1) return 100; // Unlimited shows as 100%
   return Math.min(100, (used / limit) * 100);
@@ -81,20 +75,22 @@ export function getUsagePercentage(
 
 export function canUseFeature(
   feature: keyof typeof USAGE_LIMITS.free,
-  userPlan: string = "free"
+  userPlan: string = "free",
+  currentUsage: any = {}
 ) {
-  const remaining = getRemainingUsage(feature, userPlan);
+  const remaining = getRemainingUsage(feature, userPlan, currentUsage);
   return remaining === -1 || remaining > 0;
 }
 
 export function getUsageText(
   feature: keyof typeof USAGE_LIMITS.free,
-  userPlan: string = "free"
+  userPlan: string = "free",
+  currentUsage: any = {}
 ) {
   const limits =
     USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.free;
   const limit = limits[feature];
-  const used = CURRENT_USAGE[feature];
+  const used = currentUsage[feature] || 0;
 
   if (limit === -1) return "Unlimited";
   return `${used}/${limit}`;
