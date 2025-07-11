@@ -39,10 +39,10 @@ export function Sidebar() {
   // Convert app usage data to the format expected by helper functions
   const currentUsage = appUsage
     ? {
-        imageProcessing: appUsage.removeBgImageCount || 0,
-        textToImage: appUsage.textToImageCount || 0,
-        audioChat: appUsage.audioChatCount || 0,
-        videoGeneration: appUsage.videoGenerationCount || 0,
+        imageProcessing: appUsage.removeBgImageFeatureUsage || 0,
+        textToImage: appUsage.imageFeatureUsage || 0,
+        audioChat: appUsage.audioFeatureUsage || 0,
+        videoGeneration: appUsage.videoFeatureUsage || 0,
       }
     : {};
 
