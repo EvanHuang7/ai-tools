@@ -24,17 +24,19 @@ import {
   Grid3X3,
   Eye,
   EyeOff,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import axios from "axios";
+import { useRemoveBackground } from "@/api/imageRemoveBg/imageRmBg.queries";
 
 export function ImageEditor() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
-  const [progress, setProgress] = useState(0);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [showGrid, setShowGrid] = useState(true);
+
+  // Use the remove background mutation hook
+  const removeBackgroundMutation = useRemoveBackground();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -44,7 +46,6 @@ export function ImageEditor() {
         setUploadedImage(e.target?.result as string);
         setUploadedFile(file);
         setProcessedImage(null);
-        setProgress(0);
         toast.success("Image uploaded successfully!");
       };
       reader.readAsDataURL(file);
@@ -66,68 +67,25 @@ export function ImageEditor() {
       return;
     }
 
-    setIsProcessing(true);
-    setProgress(0);
-
     try {
-      // Create FormData to send the file
-      const formData = new FormData();
-      formData.append("image", uploadedFile);
-
-      // Simulate progress updates
-      const progressInterval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return 90;
-          }
-          return prev + 10;
-        });
-      }, 200);
-
-      // Call your Python API
-      const response = await axios.post("/api/python/remove-bg", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        timeout: 60000, // 60 second timeout for processing
+      const result = await removeBackgroundMutation.mutateAsync({
+        image: uploadedFile,
       });
 
-      clearInterval(progressInterval);
-      setProgress(100);
-
-      // Assuming your API returns the processed image URL
-      if (response.data && response.data.processed_url) {
-        setProcessedImage(response.data.processed_url);
+      if (result.success && result.image?.resultImageUrl) {
+        setProcessedImage(result.image.resultImageUrl);
         toast.success("Background removed successfully!");
       } else {
-        throw new Error("Invalid response from server");
+        throw new Error("Failed to process image - no result URL received");
       }
     } catch (error) {
       console.error("Error processing image:", error);
-      setProgress(0);
 
-      if (axios.isAxiosError(error)) {
-        if (error.code === "ECONNABORTED") {
-          toast.error("Processing timeout. Please try with a smaller image.");
-        } else if (error.response?.status === 413) {
-          toast.error(
-            "Image file is too large. Please use an image under 10MB."
-          );
-        } else if (error.response?.status === 400) {
-          toast.error("Invalid image format. Please use JPG, PNG, or WebP.");
-        } else {
-          toast.error(
-            `Failed to process image: ${
-              error.response?.data?.message || error.message
-            }`
-          );
-        }
+      if (error instanceof Error) {
+        toast.error(`Failed to process image: ${error.message}`);
       } else {
         toast.error("Failed to process image. Please try again.");
       }
-    } finally {
-      setIsProcessing(false);
     }
   };
 
@@ -135,7 +93,6 @@ export function ImageEditor() {
     if (!processedImage) return;
 
     try {
-      // If the processed image is a URL, fetch it and download
       const response = await fetch(processedImage);
       const blob = await response.blob();
 
@@ -159,7 +116,6 @@ export function ImageEditor() {
     if (!processedImage) return;
 
     try {
-      // Create a canvas to render the image without the grid background
       const img = new Image();
       img.crossOrigin = "anonymous";
 
@@ -169,7 +125,6 @@ export function ImageEditor() {
         img.src = processedImage;
       });
 
-      // Create canvas with higher resolution for better quality
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
@@ -177,19 +132,14 @@ export function ImageEditor() {
         throw new Error("Could not get canvas context");
       }
 
-      // Set canvas size to match or enhance the image dimensions
-      const scaleFactor = 2; // 2x resolution for higher quality
+      const scaleFactor = 2;
       canvas.width = img.naturalWidth * scaleFactor;
       canvas.height = img.naturalHeight * scaleFactor;
 
-      // Enable high-quality rendering
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
-
-      // Draw the image at higher resolution
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      // Convert to blob and download
       canvas.toBlob(
         (blob) => {
           if (!blob) {
@@ -210,7 +160,7 @@ export function ImageEditor() {
           toast.success("High quality PNG downloaded!");
         },
         "image/png",
-        1.0 // Maximum quality
+        1.0
       );
     } catch (error) {
       console.error("Error downloading high quality image:", error);
@@ -228,11 +178,9 @@ export function ImageEditor() {
     setUploadedImage(null);
     setUploadedFile(null);
     setProcessedImage(null);
-    setProgress(0);
     toast.info("Images cleared");
   };
 
-  // Define the grid pattern as a constant
   const gridPattern = `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`;
 
   return (
@@ -321,10 +269,10 @@ export function ImageEditor() {
                       <div className="mt-6 space-y-4">
                         <Button
                           onClick={processImage}
-                          disabled={isProcessing}
+                          disabled={removeBackgroundMutation.isPending}
                           className="w-full"
                         >
-                          {isProcessing ? (
+                          {removeBackgroundMutation.isPending ? (
                             <>
                               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                               Processing...
@@ -337,19 +285,33 @@ export function ImageEditor() {
                           )}
                         </Button>
 
-                        {isProcessing && (
+                        {removeBackgroundMutation.isPending && (
                           <div className="space-y-2">
                             <div className="flex justify-between text-sm">
                               <span className="text-muted-foreground">
                                 Processing image...
                               </span>
-                              <span>{progress}%</span>
                             </div>
-                            <Progress value={progress} className="h-2" />
+                            <Progress value={50} className="h-2" />
                             <p className="text-xs text-muted-foreground text-center">
-                              This may take a few moments depending on image
-                              size
+                              Please wait while we process your image
                             </p>
+                          </div>
+                        )}
+
+                        {removeBackgroundMutation.isError && (
+                          <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                            <div className="text-sm">
+                              <p className="text-red-800 font-medium">
+                                Processing Failed
+                              </p>
+                              <p className="text-red-700">
+                                {removeBackgroundMutation.error instanceof Error
+                                  ? removeBackgroundMutation.error.message
+                                  : "An error occurred while processing your image"}
+                              </p>
+                            </div>
                           </div>
                         )}
 
@@ -357,7 +319,7 @@ export function ImageEditor() {
                           onClick={clearImages}
                           variant="outline"
                           className="w-full"
-                          disabled={isProcessing}
+                          disabled={removeBackgroundMutation.isPending}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
                           Clear Images
@@ -431,7 +393,6 @@ export function ImageEditor() {
                       </div>
 
                       <div className="space-y-3">
-                        {/* Primary download buttons */}
                         <div className="grid grid-cols-2 gap-3">
                           <Button
                             onClick={downloadImage}
@@ -449,7 +410,6 @@ export function ImageEditor() {
                           </Button>
                         </div>
 
-                        {/* Download info */}
                         <div className="text-xs text-muted-foreground bg-muted/30 rounded-lg p-3 space-y-1">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
