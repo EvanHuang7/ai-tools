@@ -81,3 +81,12 @@ export interface GenerateVideoRequest {
 export interface GenerateImageRequest {
   prompt: string;
 }
+
+export interface RemoveBgResponse {
+  success: boolean;
+  image: {
+    id: string;
+    inputImageUrl: string;
+    resultImageUrl: string;
+  };
+}

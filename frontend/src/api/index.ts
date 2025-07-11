@@ -1,2 +1,2 @@
 export * from "./client";
-export * from "./video/video.api";
+export * from "./videoGeneration/video.api";
