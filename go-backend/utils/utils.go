@@ -87,5 +87,5 @@ func ExtractUserPlan(claims map[string]interface{}) (string, error) {
 
 // Get the current year, month, first day of month
 func GetCurrentYearAndMonthStart(t time.Time) time.Time {
-    return time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, t.Location())
+    return time.Date(t.Year(), t.Month(), 1, 0, 0, 0, 0, time.UTC)
 }
