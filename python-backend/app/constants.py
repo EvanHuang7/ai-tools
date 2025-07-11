@@ -13,6 +13,8 @@ kafka_sasl_mechanism = 'SCRAM-SHA-256'
 kafka_sasl_username = 'ai-tools-redpanda-user'
 kafka_topic = "hello-world"
 
+rabbitmq_queue = "ai-tools"
+
 free_user_image_feature_monthly_limit = 5
 standard_user_image_feature_monthly_limit = 10
 pro_user_image_feature_monthly_limit = 20
