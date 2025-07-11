@@ -191,8 +191,7 @@ func GenerateVeo2Video(c *gin.Context) {
 		UserID:	userID,
 		Prompt: prompt,
 		ImageURL: inputImageURL,
-		// TODO: change to request input duration
-		VideoDuration: 1,
+		VideoDuration: utils.VideoDuration,
 		VideoURL: publicVideoURL,
 	}
 	if err := db.DB.Create(&createdVideo).Error; err != nil {
