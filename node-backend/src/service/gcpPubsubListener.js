@@ -3,6 +3,7 @@ import { CreateGcpPubSubMessage } from "./gcpPubSubMessages.js";
 import { gcpPubsubSubscriptionName } from "../utils/constants.js";
 import { getAudioFeatureMonthlyUsage } from "./audioFeatureMonthlyUsage.js";
 import { kafkaProducer } from "../lib/kafka.js";
+import { sendToRabbitMQ } from "../lib/rabbitMQClient.js";
 
 export const listenForPubSubMessages = async () => {
   const subscription = gcpPubsubClient.subscription(gcpPubsubSubscriptionName);
@@ -32,6 +33,9 @@ export const listenForPubSubMessages = async () => {
           topic: "hello-world",
           messages: [{ value: JSON.stringify(updatedPayload) }],
         });
+
+        // 🔁 Send to RabbitMQ instead of Kafka
+        // await sendToRabbitMQ(updatedPayload);
       }
 
       message.ack();

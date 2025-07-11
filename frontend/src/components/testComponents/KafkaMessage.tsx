@@ -18,7 +18,7 @@ const KafkaMessage: React.FC = () => {
 
   return (
     <div>
-      <h2>⭐ Kafka Message</h2>
+      <h2>⭐ RabbitMQ Message</h2>
       <h4>Frontend -(via Http) Nodejs Backend - (via Kafka) Python Backend</h4>
       <input
         value={message}
