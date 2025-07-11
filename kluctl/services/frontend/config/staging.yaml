@@ -1,3 +1,3 @@
 frontend:
-  version: 0.0.0-263-g0447932 # STAGING_IMAGE_TAG
+  version: 0.0.0-265-g47ca55e # STAGING_IMAGE_TAG
   replicas: 1
