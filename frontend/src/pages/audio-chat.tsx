@@ -38,6 +38,7 @@ import Vapi from "@vapi-ai/web";
 import { configureAssistant } from "@/lib/utils";
 import { voiceOptions, styleOptions } from "@/constants/vapi";
 import type { TranscriptMessage } from "@/types/vapi";
+import { getVapi } from "@/lib/vapi";
 
 export function AudioChat() {
   // Vapi instance
@@ -64,91 +65,77 @@ export function AudioChat() {
 
   // Initialize Vapi
   useEffect(() => {
-    const publicKey = import.meta.env.VITE_VAPI_PUBLIC_KEY;
-    if (!publicKey) {
-      toast.error("Vapi public key not configured");
-      return;
-    }
+    vapiRef.current = getVapi();
 
-    // Only initialize Vapi once and avoid duplicates
-    if (!vapiRef.current) {
-      vapiRef.current = new Vapi(publicKey);
+    // Set up event listeners only ONCE
+    vapiRef.current.on("call-start", () => {
+      console.log("Call started");
+      setIsConnected(true);
+      setIsConnecting(false);
+      startCallTimer();
+      toast.success("Connected to AI assistant");
+    });
 
-      // Set up event listeners only ONCE
-      vapiRef.current.on("call-start", () => {
-        console.log("Call started");
-        setIsConnected(true);
-        setIsConnecting(false);
-        startCallTimer();
-        toast.success("Connected to AI assistant");
-      });
+    vapiRef.current.on("call-end", () => {
+      console.log("Call ended");
+      setIsConnected(false);
+      setIsConnecting(false);
+      setIsListening(false);
+      stopCallTimer();
+      toast.info("Call ended");
+    });
 
-      vapiRef.current.on("call-end", () => {
-        console.log("Call ended");
-        setIsConnected(false);
-        setIsConnecting(false);
-        setIsListening(false);
-        stopCallTimer();
-        toast.info("Call ended");
-      });
+    vapiRef.current.on("speech-start", () => {
+      console.log("User started speaking");
+      setIsListening(true);
+    });
 
-      vapiRef.current.on("speech-start", () => {
-        console.log("User started speaking");
-        setIsListening(true);
-      });
+    vapiRef.current.on("speech-end", () => {
+      console.log("User stopped speaking");
+      setIsListening(false);
+    });
 
-      vapiRef.current.on("speech-end", () => {
-        console.log("User stopped speaking");
-        setIsListening(false);
-      });
+    vapiRef.current.on("message", (message: any) => {
+      console.log("Message received:", message);
 
-      vapiRef.current.on("message", (message: any) => {
-        console.log("Message received:", message);
+      if (message.type === "transcript") {
+        const newMessage: TranscriptMessage = {
+          id: Date.now().toString() + Math.random(),
+          type: message.role === "user" ? "user" : "assistant",
+          content: message.transcript,
+          timestamp: new Date(),
+          isPartial:
+            !message.transcriptType || message.transcriptType === "partial",
+        };
 
-        if (message.type === "transcript") {
-          const newMessage: TranscriptMessage = {
-            id: Date.now().toString() + Math.random(),
-            type: message.role === "user" ? "user" : "assistant",
-            content: message.transcript,
-            timestamp: new Date(),
-            isPartial:
-              !message.transcriptType || message.transcriptType === "partial",
-          };
-
-          setTranscript((prev) => {
-            // Remove previous partial message of the same type if this is a final transcript
-            if (!newMessage.isPartial) {
-              const filtered = prev.filter(
-                (msg) => !(msg.type === newMessage.type && msg.isPartial)
-              );
-              return [...filtered, newMessage];
-            }
-
-            // For partial messages, replace the previous partial of the same type
+        setTranscript((prev) => {
+          // Remove previous partial message of the same type if this is a final transcript
+          if (!newMessage.isPartial) {
             const filtered = prev.filter(
               (msg) => !(msg.type === newMessage.type && msg.isPartial)
             );
             return [...filtered, newMessage];
-          });
-        }
-      });
+          }
 
-      vapiRef.current.on("error", (error: any) => {
-        console.error("Vapi error:", error);
-        toast.error("Connection error occurred");
-        setIsConnecting(false);
-        setIsConnected(false);
-      });
-    }
+          // For partial messages, replace the previous partial of the same type
+          const filtered = prev.filter(
+            (msg) => !(msg.type === newMessage.type && msg.isPartial)
+          );
+          return [...filtered, newMessage];
+        });
+      }
+    });
+
+    vapiRef.current.on("error", (error: any) => {
+      console.error("Vapi error:", error);
+      toast.error("Connection error occurred");
+      setIsConnecting(false);
+      setIsConnected(false);
+    });
 
     // Clean up in useEffect
     return () => {
-      // On pagee unmount, stop the call and reset Vapi
-      if (vapiRef.current) {
-        vapiRef.current.stop();
-        // Clean up previous Vapi instance to prevent lingering instance
-        vapiRef.current = null;
-      }
+      vapiRef.current?.stop();
       stopCallTimer();
     };
   }, []);
