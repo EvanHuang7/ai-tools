@@ -77,3 +77,7 @@ export interface GenerateVideoRequest {
   prompt: string;
   image: File;
 }
+
+export interface GenerateImageRequest {
+  prompt: string;
+}
