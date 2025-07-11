@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, current_app, g
 from datetime import datetime
 import requests
 from io import BytesIO
+from json import loads
 
 from . import secrets
 from . import constants
@@ -228,12 +229,34 @@ def get_app_usage():
         request_message = app_pb2.GetAppMonthlyUsageKeyRequest(userId=g.user_id)
 
         # Call the GetAppMonthlyUsageKey gRPC
-        # IMPORTANT NOTE: KICKOFF send gGCP pubsub and and send Kafka message, get a random string key from RPC response
-        # Recieve kafka message for all feature usage and store it Redish with random string key.
-        # Check the Redish value every second until get value and at most 5 times.
+        # NOTE: Python service (via gRPC) -> Go service (via GCP pubsub) ->
+        # Node service (via Kafka message) -> Python service create redis record.
         response = client.GetAppMonthlyUsageKey(request_message, timeout=3)  # 3 seconds timeout
+        
+        # Poll Redis every second up to 5 times
+        redis_client = current_app.redis_client
+        redis_value = None
+        for _ in range(5):
+            redis_value = redis_client.get(response.redisKey)
+            if redis_value:
+                break
+            time.sleep(1)  # wait 1 second before retry
 
-        return jsonify({"redisKey": response.redisKey})
+        # Decode JSON if get the value
+        if redis_value:
+            try:
+                parsed_value = loads(redis_value)
+            except Exception:
+                parsed_value = redis_value.decode("utf-8") if isinstance(redis_value, bytes) else redis_value
 
+            return jsonify({
+                "redisKey": response.redisKey,
+                "appFeaturesUsage": parsed_value,
+            })
+        else:
+            return jsonify({
+                "redisKey": response.redisKey,
+                "message": "Timed out waiting for Redis value"
+            }), 504
     except grpc.RpcError as e:
         return jsonify({"error": f"gRPC call failed: {e}"}), 500
