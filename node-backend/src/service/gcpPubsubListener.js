@@ -29,13 +29,13 @@ export const listenForPubSubMessages = async () => {
         };
 
         // Send updated payload to Kafka
-        await kafkaProducer.send({
-          topic: "hello-world",
-          messages: [{ value: JSON.stringify(updatedPayload) }],
-        });
+        // await kafkaProducer.send({
+        //   topic: "hello-world",
+        //   messages: [{ value: JSON.stringify(updatedPayload) }],
+        // });
 
         // 🔁 Send to RabbitMQ instead of Kafka
-        // await sendToRabbitMQ(updatedPayload);
+        await sendToRabbitMQ(updatedPayload);
       }
 
       message.ack();

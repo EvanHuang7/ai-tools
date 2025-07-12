@@ -197,6 +197,7 @@ export function AudioChat() {
       console.log("Starting conversation with config:", config);
       await vapiRef.current.start(config);
     } catch (error) {
+      // TODO: Change to display different error toast if it is no HTTPS set up issue
       console.error("Failed to start conversation:", error);
       toast.error(
         "Failed to start conversation. Please check your configuration."
