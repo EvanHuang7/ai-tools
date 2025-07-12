@@ -4,7 +4,7 @@ import { clerkMiddleware } from "@clerk/express";
 import { listenForPubSubMessages } from "./service/gcpPubsubListener.js";
 import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
-import { connectKafkaProducer, kafkaProducer } from "./lib/kafka.js";
+// import { connectKafkaProducer, kafkaProducer } from "./lib/kafkaClient.js";
 import userRoutes from "./routes/user.route.js";
 import audioRoutes from "./routes/audio.route.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
@@ -74,7 +74,8 @@ const server = app.listen(port, () => {
     console.error("Failed to start GCP Pub/Sub listener:", err);
   });
 
-  // Start a Kafka connection as producer once server is running
+  // Comment: Start a Kafka connection as producer once server is running.
+  // DEPRECATED Kafka code:
   // connectKafkaProducer().catch((err) => {
   //   console.error("Failed to connect Kafka producer:", err);
   // });

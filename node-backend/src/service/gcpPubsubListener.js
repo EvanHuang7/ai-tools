@@ -1,8 +1,7 @@
 import { gcpPubsubClient } from "../lib/gcpPubSub.js";
-import { CreateGcpPubSubMessage } from "./gcpPubSubMessages.js";
 import { gcpPubsubSubscriptionName } from "../utils/constants.js";
 import { getAudioFeatureMonthlyUsage } from "./audioFeatureMonthlyUsage.js";
-import { kafkaProducer } from "../lib/kafka.js";
+// import { kafkaProducer } from "../lib/kafkaClient.js";
 import { sendToRabbitMQ } from "../lib/rabbitMQClient.js";
 
 export const listenForPubSubMessages = async () => {
@@ -14,29 +13,24 @@ export const listenForPubSubMessages = async () => {
       const payloadString = message.data.toString();
       const payload = JSON.parse(payloadString);
 
-      if (payload.type == "test") {
-        await CreateGcpPubSubMessage(payload.message);
-      } else {
-        // Case type: 'app-monthly-usage'
-        // Get audio usage and attach it to payload
-        const currentAudioMonthlyUsage = await getAudioFeatureMonthlyUsage(
-          payload.userId
-        );
+      // Get audio usage and attach it to payload
+      const currentAudioMonthlyUsage = await getAudioFeatureMonthlyUsage(
+        payload.userId
+      );
+      const updatedPayload = {
+        ...payload,
+        audioFeatureUsage: currentAudioMonthlyUsage,
+      };
 
-        const updatedPayload = {
-          ...payload,
-          audioFeatureUsage: currentAudioMonthlyUsage,
-        };
+      // Send to RabbitMQ instead of Kafka
+      await sendToRabbitMQ(updatedPayload);
 
-        // Send updated payload to Kafka
-        // await kafkaProducer.send({
-        //   topic: "hello-world",
-        //   messages: [{ value: JSON.stringify(updatedPayload) }],
-        // });
-
-        // 🔁 Send to RabbitMQ instead of Kafka
-        await sendToRabbitMQ(updatedPayload);
-      }
+      // Comment: Send updated payload to Kafka.
+      // DEPRECATED Kafka code:
+      // await kafkaProducer.send({
+      //   topic: "hello-world",
+      //   messages: [{ value: JSON.stringify(updatedPayload) }],
+      // });
 
       message.ack();
     } catch (err) {

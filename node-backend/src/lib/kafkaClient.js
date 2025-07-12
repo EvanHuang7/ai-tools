@@ -1,3 +1,4 @@
+// DEPRECATED Kafka code:
 import { Kafka } from "kafkajs";
 import {
   kafkaClientId,
