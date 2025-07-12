@@ -4,7 +4,6 @@ import { clerkMiddleware } from "@clerk/express";
 import { listenForPubSubMessages } from "./service/gcpPubsubListener.js";
 import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
-import { ListGcpPubSubMessages } from "./service/gcpPubSubMessages.js";
 import { connectKafkaProducer, kafkaProducer } from "./lib/kafka.js";
 import { sendToRabbitMQ } from "./lib/rabbitMQClient.js";
 import userRoutes from "./routes/user.route.js";
@@ -55,16 +54,6 @@ app.post("/users", authMiddleware, async (req, res) => {
 app.get("/users", authMiddleware, async (_, res) => {
   try {
     const result = await postgreDbClient.select().from(users);
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Test GCP Pubsub
-app.get("/gcpPubsubMessage", authMiddleware, async (_, res) => {
-  try {
-    const result = await ListGcpPubSubMessages();
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });

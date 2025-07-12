@@ -14,12 +14,3 @@ export const CreateGcpPubSubMessage = async (message) => {
     throw err;
   }
 };
-
-export const ListGcpPubSubMessages = async () => {
-  try {
-    return await postgreDbClient.select().from(gcpPubSubMessages);
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};

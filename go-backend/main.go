@@ -50,9 +50,6 @@ func main() {
 	auth.POST("/messages", api.CreateMessage)
 	auth.GET("/messages", api.GetMessages)
 
-	// Add sendPubSubMessage API
-	auth.POST("/pubsubMessage", api.SendPubSubMessage)
-
 	// Video APIs (Gemini Veo2)
 	auth.POST("/generate-video", api.GenerateVeo2Video)
 	auth.GET("/list-videos", api.ListVideos)
