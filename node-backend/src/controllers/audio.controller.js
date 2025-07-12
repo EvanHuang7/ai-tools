@@ -1,4 +1,5 @@
 import { postgreDbClient } from "../lib/postgre.js";
+import { uploadAudioToGCS } from "../lib/gcsClient.js";
 import { audios } from "../db/schema.js";
 import {
   getAudioFeatureMonthlyUsage,
@@ -9,6 +10,7 @@ import {
   standardUserAudioFeatureMonthlyLimit,
   proUserAudioFeatureMonthlyLimit,
 } from "../utils/constants.js";
+import { Buffer } from "buffer";
 
 export const startAudio = async (req, res) => {
   try {
@@ -62,14 +64,27 @@ export const createAudio = async (req, res) => {
     // Get topic and audio from reqest body
     const { topic, audio } = req.body;
 
-    // TODO: Upload the audio to GCS bucket to get audioUrl
+    // Input check
+    if (!audio || !topic) {
+      return res.status(400).json({ message: "Missing audio or topic" });
+    }
 
+    // Decode base64 if necessary
+    const base64Regex = /^data:audio\/\w+;base64,/;
+    const audioBuffer = base64Regex.test(audio)
+      ? Buffer.from(audio.replace(base64Regex, ""), "base64")
+      : Buffer.from(audio, "base64");
+
+    // Upload audio to GCS bucket
+    const audioUrl = await uploadAudioToGCS(audioBuffer);
+
+    // Create db record
     const result = await postgreDbClient
       .insert(audios)
-      .values({ userId, topic, audioUrl: "" })
+      .values({ userId, topic, audioUrl })
       .returning();
-    const newAudio = result[0];
 
+    const newAudio = result[0];
     return res.status(201).json(newAudio);
   } catch (error) {
     console.log("Error in createAudio controller", error.message);
