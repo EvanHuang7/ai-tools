@@ -19,15 +19,6 @@ export const users = pgTable("users", {
   }).defaultNow(),
 });
 
-export const gcpPubSubMessages = pgTable("gcpPubSubMessages", {
-  id: serial("id").primaryKey().notNull(), // serial will be auto-generated
-  message: text("message").notNull(),
-  createdAt: timestamp("created_at", {
-    withTimezone: false,
-    mode: "date", // important
-  }).defaultNow(),
-});
-
 export const audios = pgTable("audios", {
   id: serial("id").primaryKey().notNull(), // serial will be auto-generated
   userId: text("userId").notNull(),

@@ -4,7 +4,7 @@ import { clerkMiddleware } from "@clerk/express";
 import { listenForPubSubMessages } from "./service/gcpPubsubListener.js";
 import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
-// import { connectKafkaProducer, kafkaProducer } from "./lib/kafkaClient.js";
+// import { connectKafkaProducer } from "./lib/kafkaClient.js";
 import userRoutes from "./routes/user.route.js";
 import audioRoutes from "./routes/audio.route.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
