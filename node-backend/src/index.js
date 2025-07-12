@@ -9,7 +9,8 @@ import { authMiddleware } from "./middleware/authMiddleware.js";
 // Express app config
 const app = express();
 const port = process.env.PORT || 3000;
-app.use(express.json());
+// Allow us to extrat the json data form api request body
+app.use(express.json({ limit: "3mb" }));
 
 // Register Clerk Auth
 // The "clerkMiddleware()" function checks the request's cookies and

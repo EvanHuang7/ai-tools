@@ -16,7 +16,6 @@ export async function uploadAudioToGCS(
     metadata: {
       contentType,
     },
-    public: true,
     resumable: false,
   });
 
