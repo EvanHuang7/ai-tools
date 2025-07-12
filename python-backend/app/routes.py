@@ -95,19 +95,6 @@ def read_plans():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-# List kafka message
-@bp.route("/listKafkaMessages", methods=["GET"])
-@clerk_auth_required
-def listKafkaMessages():
-    try:
-        kafkaMessages = KafkaMessage.objects()
-        return jsonify({
-            "messages": [{"message": m.message} for m in kafkaMessages]
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    
-    
 # TODO: use Ingest latteer
 @bp.route("/remove-bg", methods=["POST"])
 @clerk_auth_required

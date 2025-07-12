@@ -5,7 +5,6 @@ import { listenForPubSubMessages } from "./service/gcpPubsubListener.js";
 import { postgreDbClient } from "./lib/postgre.js";
 import { users } from "./db/schema.js";
 import { connectKafkaProducer, kafkaProducer } from "./lib/kafka.js";
-import { sendToRabbitMQ } from "./lib/rabbitMQClient.js";
 import userRoutes from "./routes/user.route.js";
 import audioRoutes from "./routes/audio.route.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
@@ -57,35 +56,6 @@ app.get("/users", authMiddleware, async (_, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
-});
-
-// Test Kafka messagee
-app.post("/sendKafkaMessage", authMiddleware, async (req, res) => {
-  const { message } = req.body;
-
-  if (!message) {
-    return res.status(400).json({ error: "Missing message in request body" });
-  }
-
-  try {
-    const payload = {
-      type: "test",
-      message: message,
-    };
-
-    // await kafkaProducer.send({
-    //   topic: "hello-world",
-    //   messages: [{ value: JSON.stringify(payload) }],
-    // });
-
-    // 🔁 Send to RabbitMQ instead of Kafka
-    await sendToRabbitMQ(payload);
-
-    res.json({ success: true, message });
-  } catch (err) {
-    console.error("Failed to send Kafka message:", err);
-    res.status(500).json({ error: "Failed to send Kafka message" });
   }
 });
 
