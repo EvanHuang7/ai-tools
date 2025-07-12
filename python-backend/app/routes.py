@@ -9,12 +9,12 @@ from . import secrets
 from . import constants
 from . import utils
 from . import service
-from .models import Plan, KafkaMessage, Image
+from .models import Plan, Image
 from .auth_middleware import clerk_auth_required
 
 # gRPC imports
 import grpc
-from gen import greeter_pb2, greeter_pb2_grpc, app_pb2, app_pb2_grpc
+from gen import app_pb2, app_pb2_grpc
 
 bp = Blueprint("main", __name__)
 

@@ -1,8 +1,8 @@
+# DEPRECATED Kafka code:
 import json
 import threading
 from flask import current_app
 from confluent_kafka import Consumer, KafkaException
-from .models import KafkaMessage
 from . import constants
 from . import secrets
 
@@ -41,14 +41,9 @@ def connectKafkaConsumer(app):
 
                         print(f"Received Kafka message: {parsedMessage}")
                         
-                        if parsedMessage.get("type") == "test":
-                            createKafkaMessage(parsedMessage.get("message"))
-                        # Case type: 'app-monthly-usage'
-                        else:
-                            # Serialize the value as a JSON string.
-                            # Message expires after 1 hour, and when a 
-                            # Redis key expires, Redis automatically deletes it.
-                            current_app.redis_client.setex(parsedMessage.get("redisKey"), 3600, json.dumps(parsedMessage))
+                        # Message expires after 1 hour, and when a 
+                        # Redis key expires, Redis automatically deletes it.
+                        current_app.redis_client.setex(parsedMessage.get("redisKey"), 3600, json.dumps(parsedMessage))
                                 
                     except json.JSONDecodeError:
                         print("Failed to parse JSON from Kafka message")
@@ -64,8 +59,3 @@ def connectKafkaConsumer(app):
     # so that it won't block starting the python app server.
     threading.Thread(target=consume, daemon=True).start()
         
-def createKafkaMessage(message):
-    try:
-        KafkaMessage(message=message).save()
-    except Exception as e:
-        print(f"Failed to save Kafka message: {e}")

@@ -3,7 +3,6 @@ import json
 import threading
 import pika
 from flask import current_app
-from .models import KafkaMessage  # reuse this Mongo model
 from . import secrets, constants
 
 def connectRabbitMQConsumer(app):
@@ -23,15 +22,13 @@ def connectRabbitMQConsumer(app):
 
                     print(f"Received RabbitMQ message: {parsed_message}")
 
-                    if parsed_message.get("type") == "test":
-                        createRabbitMessage(parsed_message.get("message"))
-                    else:
-                        # Store in Redis with 1-hour expiry
-                        current_app.redis_client.setex(
-                            parsed_message.get("redisKey"),
-                            3600,
-                            json.dumps(parsed_message)
-                        )
+                    # Message expires after 1 hour, and when a 
+                    # Redis key expires, Redis automatically deletes it.
+                    current_app.redis_client.setex(
+                        parsed_message.get("redisKey"),
+                        3600,
+                        json.dumps(parsed_message)
+                    )
                 except json.JSONDecodeError:
                     print("Failed to parse RabbitMQ JSON message")
                 except Exception as e:
@@ -50,10 +47,3 @@ def connectRabbitMQConsumer(app):
                 connection.close()
 
     threading.Thread(target=consume, daemon=True).start()
-
-
-def createRabbitMessage(message):
-    try:
-        KafkaMessage(message=message).save()  # Reuse existing model
-    except Exception as e:
-        print(f"Failed to save RabbitMQ message: {e}")

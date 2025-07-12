@@ -2,7 +2,7 @@ from flask import Flask
 from mongoengine import connect
 import redis
 from . import secrets
-from . import kafka
+# from . import kafka_listener
 from . import rabbitmq_listener
 
 # Global redis_client to use elsewhere
@@ -17,11 +17,12 @@ def create_app():
     # Connect to Redis
     app.redis_client = redis.from_url(secrets.redis_url)
     
-    # Start a Kafka connection as consumer once server is running
-    # kafka.connectKafkaConsumer(app)
-    
-    # 🔁 Replace Kafka with RabbitMQ
+    # Start a RabbitMQ connection as consumer once server is running
     rabbitmq_listener.connectRabbitMQConsumer(app)
+    
+    # Comment: Start a Kafka connection as consumer once server is running
+    # DEPRECATED Kafka code:
+    # kafka_listener.connectKafkaConsumer(app)
 
     from .routes import bp as main_bp
     app.register_blueprint(main_bp)
