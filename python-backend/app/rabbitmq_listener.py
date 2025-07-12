@@ -6,19 +6,18 @@ from flask import current_app
 from .models import KafkaMessage  # reuse this Mongo model
 from . import secrets, constants
 
-RABBITMQ_URL = secrets.rabbitmq_url 
-QUEUE_NAME = constants.rabbitmq_queue 
-
 def connectRabbitMQConsumer(app):
     def consume():
+        # Activate Flask app context to use redis client in this file
         with app.app_context():
-            params = pika.URLParameters(RABBITMQ_URL)
+            params = pika.URLParameters(secrets.rabbitmq_url)
             connection = pika.BlockingConnection(params)
             channel = connection.channel()
-            channel.queue_declare(queue=QUEUE_NAME, durable=True)
+            channel.queue_declare(queue=constants.rabbitmq_queue, durable=True)
 
             def callback(ch, method, properties, body):
                 try:
+                    # Decode and parse JSON
                     decoded_message = body.decode("utf-8")
                     parsed_message = json.loads(decoded_message)
 
@@ -39,10 +38,10 @@ def connectRabbitMQConsumer(app):
                     print(f"Unexpected error while handling RabbitMQ message: {e}")
 
             channel.basic_consume(
-                queue=QUEUE_NAME, on_message_callback=callback, auto_ack=True
+                queue=constants.rabbitmq_queue, on_message_callback=callback, auto_ack=True
             )
 
-            print(f"Subscribed to RabbitMQ queue: {QUEUE_NAME}")
+            print(f"Subscribed to RabbitMQ queue: {constants.rabbitmq_queue}")
             try:
                 channel.start_consuming()
             except KeyboardInterrupt:

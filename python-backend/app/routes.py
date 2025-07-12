@@ -231,7 +231,7 @@ def get_app_usage():
 
         # Step 1: Call the GetAppMonthlyUsageKey gRPC to collect app usage
         # NOTE: Python service (via gRPC) -> Go service (via GCP pubsub) ->
-        # Node service (via Kafka message) -> Python service create redis record.
+        # Node service (via RabbitMQ message) -> Python service create redis record.
         response = client.GetAppMonthlyUsageKey(request_message, timeout=3)  # 3 seconds timeout
         
         # Step 2: Poll app usage from Redis every second up to 5 times

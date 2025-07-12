@@ -16,10 +16,10 @@ conf = {
     'sasl.password': secrets.kafka_sasl_user_password,
 }
 
-consumer = Consumer(conf)
-topic = constants.kafka_topic
-
 def connectKafkaConsumer(app):
+    consumer = Consumer(conf)
+    topic = constants.kafka_topic
+    
     def consume():
         # Activate Flask app context to use redis client in this file
         with app.app_context():
