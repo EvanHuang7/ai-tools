@@ -46,10 +46,6 @@ func main() {
 	auth := r.Group("/")
 	auth.Use(middleware.ClerkMiddleware())
 
-	// Add message APIs:
-	auth.POST("/messages", api.CreateMessage)
-	auth.GET("/messages", api.GetMessages)
-
 	// Video APIs (Gemini Veo2)
 	auth.POST("/generate-video", api.GenerateVeo2Video)
 	auth.GET("/list-videos", api.ListVideos)
@@ -58,7 +54,7 @@ func main() {
 	auth.POST("/generate-image", api.GenerateImage)
 	auth.GET("/list-images", api.ListImages)
 
-	// Add gRPC APIs:
+	// gRPC API ("GetAppMonthlyUsageKey"):
 	// Start gRPC server in a new goroutine so it doesn't block HTTP server
     go grpc.StartGrpcServer()
 
