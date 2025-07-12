@@ -5,7 +5,6 @@ import (
 	"net"
 
 	apppb "go-backend/gen/app"
-	pb "go-backend/gen/greeter"
 
 	"google.golang.org/grpc"
 )
@@ -20,7 +19,6 @@ func StartGrpcServer() {
 	s := grpc.NewServer()
 
 	// Register all gRPC services
-	pb.RegisterGreeterServiceServer(s, &greeterServer{})
 	apppb.RegisterAppServiceServer(s, &appServer{})
 
 	log.Println("go gRPC server listening on port 50051")
