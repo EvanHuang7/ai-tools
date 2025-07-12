@@ -40,17 +40,20 @@ export const startAudio = async (req, res) => {
     // Step 3: Reject if over limit
     if (currentMonthlyUsage >= monthlyLimit) {
       return res.status(429).json({
-        error:
+        passUsageCheck: false,
+        message:
           "You've exceeded your monthly audio feature usage limit. Please upgrade your plan to continue.",
       });
     }
 
     return res.status(200).json({
+      passUsageCheck: true,
       message: "Audio monthly usage check passed",
     });
   } catch (error) {
     console.log("Error in startAudio controller", error.message);
     return res.status(500).json({
+      passUsageCheck: false,
       message: "Interal server error",
     });
   }
@@ -83,6 +86,9 @@ export const createAudio = async (req, res) => {
       .insert(audios)
       .values({ userId, topic, audioUrl })
       .returning();
+
+    // increase audio monthly usage for user
+    await incrementAudioFeatureMonthlyUsage(userId);
 
     const newAudio = result[0];
     return res.status(201).json(newAudio);
