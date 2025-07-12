@@ -9,7 +9,7 @@ from . import secrets
 from . import constants
 from . import utils
 from . import service
-from .models import Plan, Image
+from .models import Image
 from .auth_middleware import clerk_auth_required
 
 # gRPC imports
