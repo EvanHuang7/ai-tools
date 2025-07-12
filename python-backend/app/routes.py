@@ -234,15 +234,15 @@ def get_app_usage():
         # Node service (via RabbitMQ message) -> Python service create redis record.
         response = client.GetAppMonthlyUsageKey(request_message, timeout=3)  # 3 seconds timeout
         
-        # Step 2: Poll app usage from Redis every second up to 5 times
+        # Step 2: Poll app usage from Redis every 0.5 up to 8 times
         redis_client = current_app.redis_client
         redis_value = None
-        for _ in range(5):
+        for _ in range(8):
             redis_value = redis_client.get(response.redisKey)
             if redis_value:
                 break
-            # wait 1 second before retry
-            pytime.sleep(1)
+            # wait 0.5 second before retry
+            pytime.sleep(0.5)
 
         # Step 3: Decode redis value and add remove bg image feature usage to it
         if redis_value:

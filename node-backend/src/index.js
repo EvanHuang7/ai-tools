@@ -116,9 +116,9 @@ const server = app.listen(port, () => {
   });
 
   // Start a Kafka connection as producer once server is running
-  connectKafkaProducer().catch((err) => {
-    console.error("Failed to connect Kafka producer:", err);
-  });
+  // connectKafkaProducer().catch((err) => {
+  //   console.error("Failed to connect Kafka producer:", err);
+  // });
 });
 
 process.on("SIGTERM", () => {
