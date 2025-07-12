@@ -46,4 +46,7 @@ def connectRabbitMQConsumer(app):
             finally:
                 connection.close()
 
+    # Run the consuming function in a daemon thread
+    # RabbitMQ connection is running in a separate daemon thread or background task,
+    # so that it won't block starting the python app server.
     threading.Thread(target=consume, daemon=True).start()

@@ -5,9 +5,6 @@ from datetime import datetime
 class Plan(Document):
     userId = IntField(required=True)
     plan = StringField(required=True)
-    
-class KafkaMessage(Document):
-    message = StringField(required=True)
 
 class Image(Document):
     userId = StringField(required=True)
