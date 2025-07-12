@@ -32,39 +32,6 @@ def ping():
     return jsonify({"message": "pong"}), 200
 
 # Protected routes
-@bp.route("/redis_write", methods=["POST"])
-@clerk_auth_required
-def redis_write():
-    try:
-        data = request.get_json()
-        key = data.get("key")
-        value = data.get("value")
-        if not key or value is None:
-            return jsonify({"error": "key and value required"}), 400
-
-        redis_client = current_app.redis_client
-        redis_client.set(key, value)
-
-        return jsonify({"message": f"Set {key} = {value}"})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@bp.route("/redis_read", methods=["GET"])
-@clerk_auth_required
-def redis_read():
-    key = request.args.get("key")
-    if not key:
-        return jsonify({"error": "key query param required"}), 400
-
-    redis_client = current_app.redis_client
-    try:
-        value = redis_client.get(key)
-        if value is None:
-            return jsonify({"error": "key not found"}), 404
-        return jsonify({"key": key, "value": value.decode()})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 @bp.route("/plan_write", methods=["POST"])
 @clerk_auth_required
 def create_plan():
