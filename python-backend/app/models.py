@@ -2,10 +2,6 @@ from mongoengine import Document, IntField, StringField, DateTimeField
 from datetime import datetime
 
 # NOTE: Don't need do anything after adding a new schema for mongodb case
-class Plan(Document):
-    userId = IntField(required=True)
-    plan = StringField(required=True)
-
 class Image(Document):
     userId = StringField(required=True)
     inputImageUrl = StringField(required=True)

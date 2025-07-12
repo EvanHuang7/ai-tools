@@ -32,37 +32,6 @@ def ping():
     return jsonify({"message": "pong"}), 200
 
 # Protected routes
-@bp.route("/plan_write", methods=["POST"])
-@clerk_auth_required
-def create_plan():
-    try:
-        data = request.get_json()
-        userId = data.get("userId")
-        plan_text = data.get("plan")
-        if userId is None or not plan_text:
-            return jsonify({"error": "Missing userId or plan"}), 400
-        plan = Plan(userId=int(userId), plan=plan_text).save()
-
-        return jsonify({"message": "Plan saved", "plan": plan_text})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@bp.route("/plan_read", methods=["GET"])
-@clerk_auth_required
-def read_plans():
-    try:
-        userId = request.args.get("userId", type=int)
-        if userId is None:
-            return jsonify({"error": "userId query param required"}), 400
-        plans = Plan.objects(userId=userId)
-
-        return jsonify({
-            "plans": [{"userId": p.userId, "plan": p.plan} for p in plans]
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-    
-# TODO: use Ingest latteer
 @bp.route("/remove-bg", methods=["POST"])
 @clerk_auth_required
 def remove_background():
