@@ -59,6 +59,7 @@ services:
       - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
       - KAFKA_BOOTSTRAP_SERVER_FILE=/run/secrets/kafka-bootstrap-server
       - KAFKA_SASL_USER_PASSWORD_FILE=/run/secrets/kafka-sasl-user-password
+      - RABBITMQ_URL_FILE=/run/secrets/rabbitmq-url
     # If running cli to create the secret, the raw bytes secret stored within the Swarm manager nodes will be available
     # inside the container as a file at: "/run/secrets/secret-name"
     secrets:
@@ -67,6 +68,7 @@ services:
       - clerk-secret-key
       - kafka-bootstrap-server
       - kafka-sasl-user-password
+      - rabbitmq-url
     healthcheck:
       # Use the custom "healthcheck.js" file to test container
       # health because "curl" is not installed in node20 base image
@@ -125,6 +127,7 @@ services:
       - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
       - KAFKA_BOOTSTRAP_SERVER_FILE=/run/secrets/kafka-bootstrap-server
       - KAFKA_SASL_USER_PASSWORD_FILE=/run/secrets/kafka-sasl-user-password
+      - RABBITMQ_URL_FILE=/run/secrets/rabbitmq-url
       - GRPC_HOST=go-backend
     secrets:
       - redis-url
@@ -133,6 +136,7 @@ services:
       - clerk-secret-key
       - kafka-bootstrap-server
       - kafka-sasl-user-password
+      - rabbitmq-url
     healthcheck:
       # Use the custom "healthcheck.py" file to test container
       # health because "curl" is not installed in python3.12 base image
@@ -176,4 +180,6 @@ secrets:
   kafka-bootstrap-server:
     external: true
   kafka-sasl-user-password:
+    external: true
+  rabbitmq-url:
     external: true
