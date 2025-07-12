@@ -1,8 +1,4 @@
 import CurrentTime from "@/components/testComponents/CurrentTime";
-import RedisPanel from "@/components/testComponents/RedisPanel";
-import SupabasePostgrePanel from "@/components/testComponents/SupabasePostgrePanel";
-import NeonPostgrePanel from "@/components/testComponents/NeonPostgrePanel";
-import MongoPanel from "@/components/testComponents/MongoPanel";
 import "../App.css";
 
 export function TestPage() {
@@ -12,10 +8,6 @@ export function TestPage() {
       <CurrentTime api="/api/node/" />
       <CurrentTime api="/api/go/" />
       <CurrentTime api="/api/python/" />
-      <RedisPanel />
-      <MongoPanel />
-      <SupabasePostgrePanel />
-      <NeonPostgrePanel />
     </div>
   );
 }
