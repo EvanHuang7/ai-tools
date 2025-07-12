@@ -90,3 +90,9 @@ export interface RemoveBgResponse {
     resultImageUrl: string;
   };
 }
+
+export interface CreateAudioRequest {
+  topic: string;
+  // base64 string or base64-encoded audio
+  audio: string;
+}
