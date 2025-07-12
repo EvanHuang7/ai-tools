@@ -19,6 +19,7 @@ from gen import app_pb2, app_pb2_grpc
 bp = Blueprint("main", __name__)
 
 # Public routes
+# Manual health check API
 @bp.route("/")
 def time():
     return jsonify({
@@ -26,6 +27,7 @@ def time():
         "currentTime": datetime.now().isoformat()
     })
 
+# Health check API for python-backend service pod in K8s Cluster
 @bp.route("/ping", methods=["GET"])
 @bp.route("/ping/", methods=["GET"])
 def ping():

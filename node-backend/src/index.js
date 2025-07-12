@@ -2,10 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import { clerkMiddleware } from "@clerk/express";
 import { listenForPubSubMessages } from "./service/gcpPubsubListener.js";
-import { postgreDbClient } from "./lib/postgre.js";
-import { users } from "./db/schema.js";
 // import { connectKafkaProducer } from "./lib/kafkaClient.js";
-import userRoutes from "./routes/user.route.js";
 import audioRoutes from "./routes/audio.route.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
 
@@ -32,35 +29,7 @@ app.get("/ping", async (_, res) => {
   res.send("pong");
 });
 
-// Test Postgresql db API
-// Create User
-app.post("/users", authMiddleware, async (req, res) => {
-  const { name, email } = req.body;
-  try {
-    const result = await postgreDbClient
-      .insert(users)
-      .values({ name, email }) // no id or createdAt!
-      .returning();
-
-    res.json(result[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Get All Users
-app.get("/users", authMiddleware, async (_, res) => {
-  try {
-    const result = await postgreDbClient.select().from(users);
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 // Set up API routes
-app.use("/user", authMiddleware, userRoutes);
 app.use("/audio", authMiddleware, audioRoutes);
 
 // We omit the "host" argument between "port" and "()",
