@@ -1358,6 +1358,8 @@ TODO: Consider adding lint build and test build steps into the GitHub workflow.
   ```
 
 - Deploy app to **Staing cluster** by deploying `Kluctl GitOps` to the fresh Staing cluster.
+  - 🚨 Important: Remember to config **GCP service access** for app after deploying it in GKE Cluster, and create a **DNS record** for new traefik load balancer `external IP` and `domain`.
+  - If you **already have a GSA** for this app with required GCP service access, you only need to **bind default KSA in namespace with GSA** and **annotate default KSA in namespace with GSA**. Otherwise, you need to go through all steps in **⭐ Set up GCP services access for app** section.
 
 ```
 task cicd:kluctl-gitops:deploy-app-with-gitops-to-staging-cluster
