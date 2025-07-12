@@ -1,6 +1,11 @@
-// GCP services for gcpPubsub
+// GCP project
 export const gcpProjectId = "steadfast-pivot-462821-p7";
+
+// GCP Pubsub info
 export const gcpPubsubSubscriptionName = "nodejs-subscription";
+
+// GCS info
+export const gcsBucketName = "ai-tools-gcs-bucket";
 
 // RedPanda for Kafka
 export const kafkaClientId = "nodejs-app";
