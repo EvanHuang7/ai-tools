@@ -38,7 +38,7 @@ export const startAudio = async (req, res) => {
 
     // Step 3: Reject if over limit
     if (currentMonthlyUsage >= monthlyLimit) {
-      return res.status(429).json({
+      return res.status(200).json({
         passUsageCheck: false,
         message:
           "You've exceeded your monthly audio feature usage limit. Please upgrade your plan to continue.",

@@ -38,7 +38,7 @@ import { vapi } from "@/lib/vapi";
 import type { AudioTranscriptMessage } from "@/types/index";
 import { useStartAudio, useCreateAudio } from "@/api/audioChat/audio.queries";
 
-// Call status enum following ai-interview pattern
+// Call status enum
 enum CallStatus {
   INACTIVE = "INACTIVE",
   CONNECTING = "CONNECTING",
@@ -176,7 +176,7 @@ export function AudioChat() {
     }
   }, [groupedMessages, callStatus]);
 
-  // Start conversation - following ai-interview pattern
+  // Start conversation
   const startConversation = async () => {
     if (!topic.trim()) {
       toast.error("Please enter a topic for conversation");
@@ -213,7 +213,7 @@ export function AudioChat() {
     }
   };
 
-  // End conversation - following ai-interview pattern
+  // End conversation
   const endConversation = () => {
     setCallStatus(CallStatus.FINISHED);
     vapi.stop();
@@ -222,8 +222,22 @@ export function AudioChat() {
   // Call timer functions
   const startCallTimer = () => {
     setCallDuration(0);
+    // Set callDuration every 1s and auto end the call after 3 mins
     callTimerRef.current = setInterval(() => {
-      setCallDuration((prev) => prev + 1);
+      setCallDuration((prev) => {
+        const next = prev + 1;
+
+        // Auto end the call after 3 mins
+        if (next >= 180) {
+          // End conversation and stop the timer to skip interval loop
+          endConversation();
+          stopCallTimer();
+          setIsAiSpeaking(false);
+          toast.info("Call automatically ended after 3 minutes.");
+        }
+
+        return next;
+      });
     }, 1000);
   };
 
@@ -257,7 +271,10 @@ export function AudioChat() {
               <h1 className="text-3xl font-bold mb-2">AI Voice Chat</h1>
               <p className="text-muted-foreground">
                 Have natural voice conversations with AI. Choose your topic,
-                select a voice style, and start chatting!
+                select a voice style, and start chatting!{" "}
+                <span className="font-bold text-amber-700">
+                  Each session is limited to 3 minutes.
+                </span>
               </p>
             </div>
 
