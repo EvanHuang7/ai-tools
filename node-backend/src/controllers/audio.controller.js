@@ -10,6 +10,7 @@ import {
   standardUserAudioFeatureMonthlyLimit,
   proUserAudioFeatureMonthlyLimit,
 } from "../utils/constants.js";
+import { eq } from "drizzle-orm";
 
 export const startAudio = async (req, res) => {
   try {
@@ -103,7 +104,10 @@ export const listAudios = async (req, res) => {
     // Get Clerk userId and userPlan from req after auth middleware
     const userId = req.userId;
 
-    const allAudios = await postgreDbClient.select(userId).from(audios);
+    const allAudios = await postgreDbClient
+      .select()
+      .from(audios)
+      .where(eq(audios.userId, userId));
 
     return res.status(200).json(allAudios);
   } catch (error) {

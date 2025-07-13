@@ -36,7 +36,11 @@ import { configureAssistant } from "@/lib/utils";
 import { CallStatus, voiceOptions, styleOptions } from "@/constants/vapi";
 import { vapi } from "@/lib/vapi";
 import type { AudioTranscriptMessage } from "@/types/index";
-import { useStartAudio, useCreateAudio } from "@/api/audioChat/audio.queries";
+import {
+  useStartAudio,
+  useCreateAudio,
+  useListAudios,
+} from "@/api/audioChat/audio.queries";
 
 export function AudioChat() {
   // Vapi Call state
@@ -57,6 +61,24 @@ export function AudioChat() {
   // API hooks
   const startAudioMutation = useStartAudio();
   const createAudioMutation = useCreateAudio();
+  const { data: audioHistory, isLoading: isLoadingHistory } = useListAudios();
+
+  // Format date for display
+  const formatDate = (date: Date | string | null | undefined) => {
+    const d = new Date(date ?? "");
+    if (isNaN(d.getTime())) {
+      console.warn("Invalid date value passed to formatDate:", date);
+      return "Invalid Date";
+    }
+
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(d);
+  };
 
   // Group messages by consecutive same-role
   const groupedMessages = useMemo(() => {
@@ -506,6 +528,132 @@ export function AudioChat() {
                   </CardContent>
                 </Card>
               </div>
+            </div>
+
+            {/* Audio History Section */}
+            <div className="mt-12">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageCircle className="h-5 w-5" />
+                    Audio Chat History
+                  </CardTitle>
+                  <CardDescription>
+                    Your previous voice conversations with AI
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingHistory ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                      <span className="ml-2">Loading history...</span>
+                    </div>
+                  ) : !audioHistory || audioHistory.length === 0 ? (
+                    <div className="text-center py-8">
+                      <MessageCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-2">
+                        No audio history yet
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Start your first conversation to see it here
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {audioHistory.map((audio: any) => (
+                        <Card
+                          key={audio.id}
+                          className="border-l-4 border-l-primary"
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between mb-3">
+                              <div>
+                                <h3 className="font-semibold text-lg mb-1">
+                                  {audio.topic}
+                                </h3>
+                                <p className="text-sm text-muted-foreground">
+                                  {formatDate(audio.createdAt)}
+                                </p>
+                              </div>
+                              <Badge variant="secondary">
+                                {Array.isArray(audio.transcript)
+                                  ? audio.transcript.length
+                                  : 0}{" "}
+                                messages
+                              </Badge>
+                            </div>
+
+                            {/* Transcript Preview */}
+                            <div className="space-y-2 max-h-40 overflow-y-auto">
+                              {Array.isArray(audio.transcript) &&
+                              audio.transcript.length > 0 ? (
+                                audio.transcript
+                                  .slice(0, 3)
+                                  .map((message: any, idx: number) => (
+                                    <div
+                                      key={idx}
+                                      className={`flex ${
+                                        message.role === "user"
+                                          ? "justify-end"
+                                          : "justify-start"
+                                      }`}
+                                    >
+                                      <div
+                                        className={`max-w-[80%] px-3 py-2 rounded-lg text-sm ${
+                                          message.role === "user"
+                                            ? "bg-primary text-primary-foreground"
+                                            : "bg-muted"
+                                        }`}
+                                      >
+                                        <div className="flex items-center gap-1 mb-1">
+                                          {message.role === "user" ? (
+                                            <User className="w-3 h-3" />
+                                          ) : (
+                                            <Bot className="w-3 h-3" />
+                                          )}
+                                          <span className="text-xs font-medium">
+                                            {message.role === "user"
+                                              ? "You"
+                                              : "AI"}
+                                          </span>
+                                        </div>
+                                        <p className="leading-relaxed">
+                                          {message.content.length > 100
+                                            ? `${message.content.substring(
+                                                0,
+                                                100
+                                              )}...`
+                                            : message.content}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ))
+                              ) : (
+                                <p className="text-sm text-muted-foreground italic">
+                                  No transcript available
+                                </p>
+                              )}
+
+                              {Array.isArray(audio.transcript) &&
+                                audio.transcript.length > 3 && (
+                                  <div className="text-center">
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs"
+                                    >
+                                      +{audio.transcript.length - 3} more
+                                      messages
+                                    </Badge>
+                                  </div>
+                                )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             {/* Features */}
