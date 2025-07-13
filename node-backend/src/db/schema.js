@@ -13,7 +13,7 @@ export const audios = pgTable("audios", {
   id: serial("id").primaryKey().notNull(), // serial will be auto-generated
   userId: text("userId").notNull(),
   topic: text("topic").notNull(),
-  audioUrl: text("audioUrl").notNull(),
+  transcript: text("topic").notNull(),
   createdAt: timestamp("created_at", {
     withTimezone: false,
     mode: "date",
