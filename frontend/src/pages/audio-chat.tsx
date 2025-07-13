@@ -55,6 +55,11 @@ export function AudioChat() {
   const [messages, setMessages] = useState<SavedMessage[]>([]);
   const [isAiSpeaking, setIsAiSpeaking] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
+
+  // Refs
+  const callTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const transcriptEndRef = useRef<HTMLDivElement>(null);
+
   // Group messages by consecutive same-role
   const groupedMessages = useMemo(() => {
     const groups: { role: string; content: string }[] = [];
@@ -76,8 +81,13 @@ export function AudioChat() {
   const [conversationStyle, setConversationStyle] = useState("friendly");
   const [selectedVoice, setSelectedVoice] = useState("sarah");
 
-  // Refs
-  const callTimerRef = useRef<NodeJS.Timeout | null>(null);
+  // Auto scroll to bottom when new messages arrive
+  useEffect(() => {
+    const container = transcriptEndRef.current?.parentElement;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [groupedMessages]);
 
   // Subscribe to VAPI event
   useEffect(() => {
@@ -384,7 +394,7 @@ export function AudioChat() {
                       </div>
                       {groupedMessages.length > 0 && (
                         <Badge variant="secondary">
-                          {groupedMessages.length} groupedMessages
+                          {groupedMessages.length} Messages
                         </Badge>
                       )}
                     </div>
@@ -393,7 +403,7 @@ export function AudioChat() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col">
-                    <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+                    <div className="flex-1 overflow-y-auto space-y-4 mb-4 max-h-[500px]">
                       {groupedMessages.length === 0 ? (
                         <div className="flex items-center justify-center h-full">
                           <div className="text-center">
@@ -444,6 +454,7 @@ export function AudioChat() {
                               </div>
                             </div>
                           ))}
+                          <div ref={transcriptEndRef} />
                         </>
                       )}
                     </div>
