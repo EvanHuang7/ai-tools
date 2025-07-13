@@ -4,6 +4,7 @@ import {
   text,
   timestamp,
   integer,
+  jsonb,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 
@@ -13,7 +14,7 @@ export const audios = pgTable("audios", {
   id: serial("id").primaryKey().notNull(), // serial will be auto-generated
   userId: text("userId").notNull(),
   topic: text("topic").notNull(),
-  transcript: text("topic").notNull(),
+  transcript: jsonb("transcript").notNull(),
   createdAt: timestamp("created_at", {
     withTimezone: false,
     mode: "date",
