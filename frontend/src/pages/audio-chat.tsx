@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
 import {
@@ -22,7 +22,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { UsageGuard } from "@/components/usage-guard";
 import {
   Mic,
-  MicOff,
   Phone,
   PhoneOff,
   Settings,
@@ -31,119 +30,159 @@ import {
   Volume2,
   User,
   Bot,
-  RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
-import Vapi from "@vapi-ai/web";
 import { configureAssistant } from "@/lib/utils";
 import { voiceOptions, styleOptions } from "@/constants/vapi";
-import type { TranscriptMessage } from "@/types/vapi";
-import { getVapi } from "@/lib/vapi";
+import { vapi } from "@/lib/vapi";
+
+interface SavedMessage {
+  role: "user" | "system" | "assistant";
+  content: string;
+}
+
+// Call status enum following ai-interview pattern
+enum CallStatus {
+  INACTIVE = "INACTIVE",
+  CONNECTING = "CONNECTING",
+  ACTIVE = "ACTIVE",
+  FINISHED = "FINISHED",
+}
 
 export function AudioChat() {
-  // Vapi instance
-  const vapiRef = useRef<any>(null);
-
-  // Call state
-  const [isConnected, setIsConnected] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  // Call state - simplified like ai-interview
+  const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
+  const [messages, setMessages] = useState<SavedMessage[]>([]);
+  const [isAiSpeaking, setIsAiSpeaking] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
+  // Group messages by consecutive same-role
+  const groupedMessages = useMemo(() => {
+    const groups: { role: string; content: string }[] = [];
+
+    for (const msg of messages) {
+      const last = groups[groups.length - 1];
+      if (last && last.role === msg.role) {
+        last.content += ` ${msg.content}`;
+      } else {
+        groups.push({ role: msg.role, content: msg.content });
+      }
+    }
+
+    return groups;
+  }, [messages]);
 
   // Configuration
   const [topic, setTopic] = useState("");
   const [conversationStyle, setConversationStyle] = useState("friendly");
   const [selectedVoice, setSelectedVoice] = useState("sarah");
 
-  // Transcript
-  const [transcript, setTranscript] = useState<TranscriptMessage[]>([]);
-  const [isListening, setIsListening] = useState(false);
-
   // Refs
   const transcriptEndRef = useRef<HTMLDivElement>(null);
   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Initialize Vapi
+  // Subscribe to VAPI event
   useEffect(() => {
-    vapiRef.current = getVapi();
-
-    // Set up event listeners only ONCE
-    vapiRef.current.on("call-start", () => {
+    const onCallStart = () => {
       console.log("Call started");
-      setIsConnected(true);
-      setIsConnecting(false);
+      setCallStatus(CallStatus.ACTIVE);
       startCallTimer();
       toast.success("Connected to AI assistant");
-    });
+    };
 
-    vapiRef.current.on("call-end", () => {
+    const onCallEnd = () => {
       console.log("Call ended");
-      setIsConnected(false);
-      setIsConnecting(false);
-      setIsListening(false);
+      setCallStatus(CallStatus.FINISHED);
+      setIsAiSpeaking(false);
       stopCallTimer();
       toast.info("Call ended");
-    });
+    };
 
-    vapiRef.current.on("speech-start", () => {
-      console.log("User started speaking");
-      setIsListening(true);
-    });
-
-    vapiRef.current.on("speech-end", () => {
-      console.log("User stopped speaking");
-      setIsListening(false);
-    });
-
-    vapiRef.current.on("message", (message: any) => {
+    const onMessage = (message: any) => {
       console.log("Message received:", message);
 
-      if (message.type === "transcript") {
-        const newMessage: TranscriptMessage = {
-          id: Date.now().toString() + Math.random(),
-          type: message.role === "user" ? "user" : "assistant",
-          content: message.transcript,
-          timestamp: new Date(),
-          isPartial:
-            !message.transcriptType || message.transcriptType === "partial",
-        };
-
-        setTranscript((prev) => {
-          // Remove previous partial message of the same type if this is a final transcript
-          if (!newMessage.isPartial) {
-            const filtered = prev.filter(
-              (msg) => !(msg.type === newMessage.type && msg.isPartial)
-            );
-            return [...filtered, newMessage];
-          }
-
-          // For partial messages, replace the previous partial of the same type
-          const filtered = prev.filter(
-            (msg) => !(msg.type === newMessage.type && msg.isPartial)
-          );
-          return [...filtered, newMessage];
-        });
+      // Follow ai-interview pattern for transcript handling
+      if (message.type === "transcript" && message.transcriptType === "final") {
+        const newMessage = { role: message.role, content: message.transcript };
+        setMessages((prev) => [...prev, newMessage]);
       }
-    });
+    };
 
-    vapiRef.current.on("error", (error: any) => {
+    const onSpeechStart = () => {
+      console.log("AI started speaking");
+      setIsAiSpeaking(true);
+    };
+
+    const onSpeechEnd = () => {
+      console.log("AI stopped speaking");
+      setIsAiSpeaking(false);
+    };
+
+    const onError = (error: any) => {
+      // Ignore specific "meeting ended" errors like ai-interview
+      if (error?.message?.includes("Meeting has ended")) return;
       console.error("Vapi error:", error);
       toast.error("Connection error occurred");
-      setIsConnecting(false);
-      setIsConnected(false);
-    });
+      setCallStatus(CallStatus.INACTIVE);
+    };
 
-    // Clean up in useEffect
+    // Subscribe to events
+    vapi.on("call-start", onCallStart);
+    vapi.on("call-end", onCallEnd);
+    vapi.on("message", onMessage);
+    vapi.on("speech-start", onSpeechStart);
+    vapi.on("speech-end", onSpeechEnd);
+    vapi.on("error", onError);
+
+    // Cleanup
     return () => {
-      vapiRef.current?.stop();
-      stopCallTimer();
+      vapi.off("call-start", onCallStart);
+      vapi.off("call-end", onCallEnd);
+      vapi.off("message", onMessage);
+      vapi.off("speech-start", onSpeechStart);
+      vapi.off("speech-end", onSpeechEnd);
+      vapi.off("error", onError);
     };
   }, []);
 
   // Auto-scroll transcript
   useEffect(() => {
-    transcriptEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [transcript]);
+    if (messages.length > 0 && transcriptEndRef.current) {
+      transcriptEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
+  // Start conversation - following ai-interview pattern
+  const startConversation = async () => {
+    if (!topic.trim()) {
+      toast.error("Please enter a topic for conversation");
+      return;
+    }
+
+    try {
+      setCallStatus(CallStatus.CONNECTING);
+      setMessages([]);
+
+      const config = configureAssistant(
+        selectedVoice,
+        conversationStyle,
+        topic
+      ) as any;
+
+      await vapi.start(config);
+    } catch (error) {
+      console.error("Failed to start conversation:", error);
+      toast.error(
+        "Failed to start conversation. Please check your configuration."
+      );
+      setCallStatus(CallStatus.INACTIVE);
+    }
+  };
+
+  // End conversation - following ai-interview pattern
+  const endConversation = () => {
+    setCallStatus(CallStatus.FINISHED);
+    vapi.stop();
+  };
 
   // Call timer functions
   const startCallTimer = () => {
@@ -167,72 +206,9 @@ export function AudioChat() {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  // Start conversation
-  const startConversation = async () => {
-    if (!vapiRef.current) {
-      toast.error("Vapi not initialized");
-      return;
-    }
-
-    // Make sure it's not already on a call before calling start
-    if (isConnected) {
-      toast.info("You're already in a call");
-      return;
-    }
-
-    if (!topic.trim()) {
-      toast.error("Please enter a topic for conversation");
-      return;
-    }
-
-    setIsConnecting(true);
-    setTranscript([]);
-
-    try {
-      const config = configureAssistant(
-        selectedVoice,
-        conversationStyle,
-        topic
-      );
-      console.log("Starting conversation with config:", config);
-      await vapiRef.current.start(config);
-    } catch (error) {
-      // TODO: Change to display different error toast if it is no HTTPS set up issue
-      console.error("Failed to start conversation:", error);
-      toast.error(
-        "Failed to start conversation. Please check your configuration."
-      );
-      setIsConnecting(false);
-    }
-  };
-
-  // End conversation
-  const endConversation = () => {
-    if (vapiRef.current) {
-      vapiRef.current.stop();
-    }
-  };
-
-  // Toggle mute
-  const toggleMute = () => {
-    if (vapiRef.current && isConnected) {
-      if (isMuted) {
-        vapiRef.current.setMuted(false);
-        setIsMuted(false);
-        toast.info("Microphone unmuted");
-      } else {
-        vapiRef.current.setMuted(true);
-        setIsMuted(true);
-        toast.info("Microphone muted");
-      }
-    }
-  };
-
-  // Clear transcript
-  const clearTranscript = () => {
-    setTranscript([]);
-    toast.info("Transcript cleared");
-  };
+  // Check if call is active
+  const isConnected = callStatus === CallStatus.ACTIVE;
+  const isConnecting = callStatus === CallStatus.CONNECTING;
 
   return (
     <div className="min-h-screen bg-background">
@@ -362,36 +338,8 @@ export function AudioChat() {
                             <PhoneOff className="w-4 h-4 mr-2" />
                             End Conversation
                           </Button>
-
-                          <Button
-                            onClick={toggleMute}
-                            variant="outline"
-                            className="w-full"
-                          >
-                            {isMuted ? (
-                              <>
-                                <MicOff className="w-4 h-4 mr-2" />
-                                Unmute
-                              </>
-                            ) : (
-                              <>
-                                <Mic className="w-4 h-4 mr-2" />
-                                Mute
-                              </>
-                            )}
-                          </Button>
                         </div>
                       )}
-
-                      <Button
-                        onClick={clearTranscript}
-                        variant="outline"
-                        className="w-full"
-                        disabled={transcript.length === 0}
-                      >
-                        <RotateCcw className="w-4 h-4 mr-2" />
-                        Clear Transcript
-                      </Button>
                     </div>
 
                     {/* Call Status */}
@@ -414,25 +362,18 @@ export function AudioChat() {
 
                         <div className="flex items-center gap-4 text-sm text-green-700">
                           <div className="flex items-center gap-1">
-                            {isListening ? (
+                            {isAiSpeaking ? (
+                              <>
+                                <Volume2 className="w-3 h-3" />
+                                <span>AI Speaking...</span>
+                              </>
+                            ) : (
                               <>
                                 <Mic className="w-3 h-3" />
                                 <span>Listening...</span>
                               </>
-                            ) : (
-                              <>
-                                <Volume2 className="w-3 h-3" />
-                                <span>Ready</span>
-                              </>
                             )}
                           </div>
-
-                          {isMuted && (
-                            <div className="flex items-center gap-1">
-                              <MicOff className="w-3 h-3" />
-                              <span>Muted</span>
-                            </div>
-                          )}
                         </div>
                       </div>
                     )}
@@ -449,10 +390,9 @@ export function AudioChat() {
                         <MessageCircle className="h-5 w-5" />
                         <CardTitle>Live Transcript</CardTitle>
                       </div>
-                      {transcript.length > 0 && (
+                      {groupedMessages.length > 0 && (
                         <Badge variant="secondary">
-                          {transcript.filter((m) => !m.isPartial).length}{" "}
-                          messages
+                          {groupedMessages.length} groupedMessages
                         </Badge>
                       )}
                     </div>
@@ -462,7 +402,7 @@ export function AudioChat() {
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col">
                     <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-                      {transcript.length === 0 ? (
+                      {groupedMessages.length === 0 ? (
                         <div className="flex items-center justify-center h-full">
                           <div className="text-center">
                             <MessageCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
@@ -478,48 +418,37 @@ export function AudioChat() {
                         </div>
                       ) : (
                         <>
-                          {transcript.map((message) => (
+                          {groupedMessages.map((message, idx) => (
                             <div
-                              key={message.id}
+                              key={idx}
                               className={`flex ${
-                                message.type === "user"
+                                message.role === "user"
                                   ? "justify-end"
                                   : "justify-start"
                               }`}
                             >
                               <div
                                 className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                                  message.type === "user"
+                                  message.role === "user"
                                     ? "bg-primary text-primary-foreground"
                                     : "bg-muted"
-                                } ${message.isPartial ? "opacity-70" : ""}`}
+                                }`}
                               >
                                 <div className="flex items-center gap-2 mb-2">
-                                  {message.type === "user" ? (
+                                  {message.role === "user" ? (
                                     <User className="w-4 h-4" />
                                   ) : (
                                     <Bot className="w-4 h-4" />
                                   )}
                                   <span className="text-xs font-medium">
-                                    {message.type === "user"
+                                    {message.role === "user"
                                       ? "You"
                                       : "AI Assistant"}
                                   </span>
-                                  {message.isPartial && (
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs"
-                                    >
-                                      Typing...
-                                    </Badge>
-                                  )}
                                 </div>
                                 <p className="text-sm leading-relaxed">
                                   {message.content}
                                 </p>
-                                <div className="text-xs opacity-70 mt-2">
-                                  {message.timestamp.toLocaleTimeString()}
-                                </div>
                               </div>
                             </div>
                           ))}
