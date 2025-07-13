@@ -169,7 +169,7 @@ export function AudioChat() {
     if (callStatus === CallStatus.FINISHED) {
       handleCreateTranscriptRecord(groupedMessages);
     }
-  }, [groupedMessages, callStatus]);
+  }, [callStatus]);
 
   // Start conversation
   const startConversation = async () => {
