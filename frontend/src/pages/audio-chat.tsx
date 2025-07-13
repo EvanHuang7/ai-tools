@@ -153,6 +153,12 @@ export function AudioChat() {
           topic: topic,
           transcript: groupedMessages,
         });
+
+        // Clear topic and transcript messages after a record created successfully
+        // to aviod accidental mutiple createAudio API call.
+        setTopic("");
+        setMessages([]);
+
         toast.success("Transcript record created successfully");
       } catch (error) {
         console.error("Error creating transcript record :", error);
