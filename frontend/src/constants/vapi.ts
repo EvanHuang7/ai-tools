@@ -1,3 +1,11 @@
+// Vapi Call status enum
+export enum CallStatus {
+  INACTIVE = "INACTIVE",
+  CONNECTING = "CONNECTING",
+  ACTIVE = "ACTIVE",
+  FINISHED = "FINISHED",
+}
+
 // Vapi voice configuration
 export const voices = {
   sarah: {

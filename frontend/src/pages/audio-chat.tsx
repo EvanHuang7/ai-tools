@@ -33,25 +33,22 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { configureAssistant } from "@/lib/utils";
-import { voiceOptions, styleOptions } from "@/constants/vapi";
+import { CallStatus, voiceOptions, styleOptions } from "@/constants/vapi";
 import { vapi } from "@/lib/vapi";
 import type { AudioTranscriptMessage } from "@/types/index";
 import { useStartAudio, useCreateAudio } from "@/api/audioChat/audio.queries";
 
-// Call status enum
-enum CallStatus {
-  INACTIVE = "INACTIVE",
-  CONNECTING = "CONNECTING",
-  ACTIVE = "ACTIVE",
-  FINISHED = "FINISHED",
-}
-
 export function AudioChat() {
-  // Call state - simplified like ai-interview
+  // Vapi Call state
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<AudioTranscriptMessage[]>([]);
   const [isAiSpeaking, setIsAiSpeaking] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
+
+  // Vapi Configuration
+  const [topic, setTopic] = useState("");
+  const [conversationStyle, setConversationStyle] = useState("friendly");
+  const [selectedVoice, setSelectedVoice] = useState("sarah");
 
   // Refs
   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -77,19 +74,6 @@ export function AudioChat() {
     return groups;
   }, [messages]);
 
-  // Configuration
-  const [topic, setTopic] = useState("");
-  const [conversationStyle, setConversationStyle] = useState("friendly");
-  const [selectedVoice, setSelectedVoice] = useState("sarah");
-
-  // Auto scroll to bottom when new messages arrive
-  useEffect(() => {
-    const container = transcriptEndRef.current?.parentElement;
-    if (container) {
-      container.scrollTop = container.scrollHeight;
-    }
-  }, [groupedMessages]);
-
   // Subscribe to VAPI event
   useEffect(() => {
     const onCallStart = () => {
@@ -108,9 +92,6 @@ export function AudioChat() {
     };
 
     const onMessage = (message: any) => {
-      console.log("Message received:", message);
-
-      // Follow ai-interview pattern for transcript handling
       if (message.type === "transcript" && message.transcriptType === "final") {
         const newMessage = { role: message.role, content: message.transcript };
         setMessages((prev) => [...prev, newMessage]);
@@ -128,7 +109,7 @@ export function AudioChat() {
     };
 
     const onError = (error: any) => {
-      // Ignore specific "meeting ended" errors like ai-interview
+      // Ignore specific "meeting ended" errors
       if (error?.message?.includes("Meeting has ended")) return;
       console.error("Vapi error:", error);
       toast.error("Connection error occurred");
@@ -153,6 +134,14 @@ export function AudioChat() {
       vapi.off("error", onError);
     };
   }, []);
+
+  // Auto scroll to bottom of "Live Transcript" container when new messages arrive
+  useEffect(() => {
+    const container = transcriptEndRef.current?.parentElement;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [groupedMessages]);
 
   // Create transcript record after finishing conversation
   useEffect(() => {
@@ -187,7 +176,7 @@ export function AudioChat() {
       // Check if user has available app usage
       const usageResponse = await startAudioMutation.mutateAsync();
 
-      // If user has run out of audio usage, STOP starting conversation
+      // If user has ran out of audio usage, STOP starting conversation
       if (!usageResponse.passUsageCheck) {
         toast.error("You've reached your monthly audio chat limit");
         return;
@@ -279,7 +268,7 @@ export function AudioChat() {
             </div>
 
             <div className="grid lg:grid-cols-3 gap-8">
-              {/* Settings Panel */}
+              {/* Conversation Setup Card */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -433,7 +422,7 @@ export function AudioChat() {
                 </CardContent>
               </Card>
 
-              {/* Transcript */}
+              {/* Transcript Card */}
               <div className="lg:col-span-2">
                 <Card className="h-[700px] flex flex-col">
                   <CardHeader>
