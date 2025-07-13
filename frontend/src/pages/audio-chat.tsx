@@ -35,11 +35,8 @@ import { toast } from "sonner";
 import { configureAssistant } from "@/lib/utils";
 import { voiceOptions, styleOptions } from "@/constants/vapi";
 import { vapi } from "@/lib/vapi";
-
-interface SavedMessage {
-  role: "user" | "system" | "assistant";
-  content: string;
-}
+import type { AudioTranscriptMessage } from "@/types/index";
+import { useStartAudio, useCreateAudio } from "@/api/audioChat/audio.queries";
 
 // Call status enum following ai-interview pattern
 enum CallStatus {
@@ -52,7 +49,7 @@ enum CallStatus {
 export function AudioChat() {
   // Call state - simplified like ai-interview
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
-  const [messages, setMessages] = useState<SavedMessage[]>([]);
+  const [messages, setMessages] = useState<AudioTranscriptMessage[]>([]);
   const [isAiSpeaking, setIsAiSpeaking] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
 
@@ -60,9 +57,13 @@ export function AudioChat() {
   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
   const transcriptEndRef = useRef<HTMLDivElement>(null);
 
+  // API hooks
+  const startAudioMutation = useStartAudio();
+  const createAudioMutation = useCreateAudio();
+
   // Group messages by consecutive same-role
   const groupedMessages = useMemo(() => {
-    const groups: { role: string; content: string }[] = [];
+    const groups: AudioTranscriptMessage[] = [];
 
     for (const msg of messages) {
       const last = groups[groups.length - 1];
@@ -152,6 +153,28 @@ export function AudioChat() {
       vapi.off("error", onError);
     };
   }, []);
+
+  // Create transcript record after finishing conversation
+  useEffect(() => {
+    const handleCreateTranscriptRecord = async (
+      groupedMessages: AudioTranscriptMessage[]
+    ) => {
+      try {
+        await createAudioMutation.mutateAsync({
+          topic: topic,
+          transcript: groupedMessages,
+        });
+        toast.success("Transcript record created successfully");
+      } catch (error) {
+        console.error("Error creating transcript record :", error);
+        toast.error("An error occurs when creating transcript record");
+      }
+    };
+
+    if (callStatus === CallStatus.FINISHED) {
+      handleCreateTranscriptRecord(groupedMessages);
+    }
+  }, [groupedMessages, callStatus]);
 
   // Start conversation - following ai-interview pattern
   const startConversation = async () => {
