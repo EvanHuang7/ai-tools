@@ -77,7 +77,6 @@ export function AudioChat() {
   const [selectedVoice, setSelectedVoice] = useState("sarah");
 
   // Refs
-  const transcriptEndRef = useRef<HTMLDivElement>(null);
   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Subscribe to VAPI event
@@ -143,13 +142,6 @@ export function AudioChat() {
       vapi.off("error", onError);
     };
   }, []);
-
-  // Auto-scroll transcript
-  useEffect(() => {
-    if (messages.length > 0 && transcriptEndRef.current) {
-      transcriptEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
 
   // Start conversation - following ai-interview pattern
   const startConversation = async () => {
@@ -452,7 +444,6 @@ export function AudioChat() {
                               </div>
                             </div>
                           ))}
-                          <div ref={transcriptEndRef} />
                         </>
                       )}
                     </div>
