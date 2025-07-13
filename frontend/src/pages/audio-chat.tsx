@@ -184,6 +184,16 @@ export function AudioChat() {
     }
 
     try {
+      // Check if user has available app usage
+      const usageResponse = await startAudioMutation.mutateAsync();
+
+      // If user has run out of audio usage, STOP starting conversation
+      if (!usageResponse.passUsageCheck) {
+        toast.error("You've reached your monthly audio chat limit");
+        return;
+      }
+
+      // If user has available usage, start the conversation
       setCallStatus(CallStatus.CONNECTING);
       setMessages([]);
 
