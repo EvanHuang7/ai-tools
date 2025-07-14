@@ -44,6 +44,7 @@ export const FEATURE_DESCRIPTIONS = {
   },
 } as const;
 
+// TODO: move to utils file
 // Helper functions
 export function getRemainingUsage(
   feature: keyof typeof USAGE_LIMITS.free,

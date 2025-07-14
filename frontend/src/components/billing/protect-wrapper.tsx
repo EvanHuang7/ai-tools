@@ -11,6 +11,7 @@ interface ProtectWrapperProps {
   requiredPlan?: "pro" | "enterprise";
 }
 
+// Component to check if clerk user has access to app feature based on user plan
 export function ProtectWrapper({
   children,
   permission,

@@ -18,6 +18,7 @@ interface SubscriptionGuardProps {
   feature: string;
 }
 
+// Component used by protect-wrapper component
 export function SubscriptionGuard({
   children,
   requiredPlan = "pro",

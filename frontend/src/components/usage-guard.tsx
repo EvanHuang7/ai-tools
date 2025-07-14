@@ -26,6 +26,7 @@ interface UsageGuardProps {
   action?: string; // e.g., "process this image", "generate this video"
 }
 
+// Component to lock the app feature by checking app feature usage and limit
 export function UsageGuard({ children, feature, action }: UsageGuardProps) {
   const { user } = useUser();
   const { data: appUsage, isLoading: isLoadingUsage } = useGetAppUsage();
