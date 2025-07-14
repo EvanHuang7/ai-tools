@@ -30,15 +30,19 @@ import { toast } from "sonner";
 import { useRemoveBackground } from "@/api/imageRemoveBg/imageRmBg.queries";
 
 export function ImageEditor() {
+  // Used to diplay the image in <img>
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  // Used to call remove imaeg bg API
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [showGrid, setShowGrid] = useState(true);
 
-  // Use the remove background mutation hook
+  // API hook
   const removeBackgroundMutation = useRemoveBackground();
 
+  // Reads the file from disk and returns a base64 data URL when recieving a file
   const onDrop = useCallback((acceptedFiles: File[]) => {
+    // Limits to only 1 file
     const file = acceptedFiles[0];
     if (file) {
       const reader = new FileReader();
@@ -52,7 +56,12 @@ export function ImageEditor() {
     }
   }, []);
 
+  // "useDropzone" is a hook that handles drag-and-drop file uploads.
+  // "getRootProps" gives props to spread onto the outer dropzone container (e.g., div).
+  // "getInputProps" gives props for a hidden <input type="file" />.
+  // "isDragActive" specifys whether a file is currently being dragged over the dropzone.
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    // "onDrop" runs when the user drops a file onto the drop area or selects one via file picker.
     onDrop,
     accept: {
       "image/*": [".jpeg", ".jpg", ".png", ".webp"],
@@ -61,7 +70,8 @@ export function ImageEditor() {
     maxSize: 10 * 1024 * 1024, // 10MB limit
   });
 
-  const processImage = async () => {
+  // Call remove image bg API
+  const handleProcessImage = async () => {
     if (!uploadedFile) {
       toast.error("Please upload an image first");
       return;
@@ -268,7 +278,7 @@ export function ImageEditor() {
                     {uploadedImage && (
                       <div className="mt-6 space-y-4">
                         <Button
-                          onClick={processImage}
+                          onClick={handleProcessImage}
                           disabled={removeBackgroundMutation.isPending}
                           className="w-full"
                         >
