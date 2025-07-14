@@ -41,9 +41,6 @@ import { useAuth } from "@clerk/clerk-react";
 
 export function TextToImage() {
   const [prompt, setPrompt] = useState("");
-  const [style, setStyle] = useState("realistic");
-  const [aspectRatio, setAspectRatio] = useState("1:1");
-  const [quality, setQuality] = useState("standard");
   const [progress, setProgress] = useState(0);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -52,102 +49,6 @@ export function TextToImage() {
     Array<{ id: string; prompt: string; image: string; timestamp: Date }>
   >([]);
   const { getToken } = useAuth();
-
-  const styleOptions = [
-    {
-      value: "realistic",
-      label: "Realistic",
-      description: "Photorealistic images",
-    },
-    {
-      value: "artistic",
-      label: "Artistic",
-      description: "Painterly and creative style",
-    },
-    { value: "anime", label: "Anime", description: "Japanese animation style" },
-    {
-      value: "digital-art",
-      label: "Digital Art",
-      description: "Modern digital artwork",
-    },
-    {
-      value: "oil-painting",
-      label: "Oil Painting",
-      description: "Classic oil painting style",
-    },
-    {
-      value: "watercolor",
-      label: "Watercolor",
-      description: "Soft watercolor effect",
-    },
-    {
-      value: "sketch",
-      label: "Sketch",
-      description: "Hand-drawn sketch style",
-    },
-    {
-      value: "cyberpunk",
-      label: "Cyberpunk",
-      description: "Futuristic neon aesthetic",
-    },
-  ];
-
-  const aspectRatioOptions = [
-    {
-      value: "1:1",
-      label: "Square (1:1)",
-      description: "Perfect for social media",
-    },
-    {
-      value: "16:9",
-      label: "Landscape (16:9)",
-      description: "Widescreen format",
-    },
-    {
-      value: "9:16",
-      label: "Portrait (9:16)",
-      description: "Mobile-friendly vertical",
-    },
-    {
-      value: "4:3",
-      label: "Classic (4:3)",
-      description: "Traditional photo ratio",
-    },
-    {
-      value: "3:2",
-      label: "Photo (3:2)",
-      description: "Standard camera ratio",
-    },
-  ];
-
-  const qualityOptions = [
-    {
-      value: "standard",
-      label: "Standard",
-      description: "Good quality, faster generation",
-    },
-    {
-      value: "hd",
-      label: "HD",
-      description: "High definition, detailed output",
-    },
-    {
-      value: "ultra",
-      label: "Ultra HD",
-      description: "Maximum quality and detail",
-    },
-  ];
-
-  const promptSuggestions = [
-    "A majestic mountain landscape at sunset with golden light",
-    "A futuristic city with flying cars and neon lights",
-    "A cozy coffee shop on a rainy day with warm lighting",
-    "A magical forest with glowing mushrooms and fairy lights",
-    "A vintage car driving through a desert highway",
-    "A serene lake with mountains reflected in the water",
-    "A steampunk airship floating above clouds",
-    "A minimalist modern living room with natural light",
-  ];
 
   const generateImage = async () => {
     if (!prompt.trim()) {
@@ -187,9 +88,6 @@ export function TextToImage() {
         "/api/go/generate-image",
         {
           prompt: prompt.trim(),
-          style,
-          aspectRatio,
-          quality,
         },
         {
           timeout: 30000, // 30 second timeout
@@ -356,98 +254,6 @@ export function TextToImage() {
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <Label>Art Style</Label>
-                          <Select
-                            value={style}
-                            onValueChange={setStyle}
-                            disabled={isGenerating}
-                          >
-                            <SelectTrigger className="mt-2">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {styleOptions.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  <div>
-                                    <div className="font-medium">
-                                      {option.label}
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                      {option.description}
-                                    </div>
-                                  </div>
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
-                          <Label>Aspect Ratio</Label>
-                          <Select
-                            value={aspectRatio}
-                            onValueChange={setAspectRatio}
-                            disabled={isGenerating}
-                          >
-                            <SelectTrigger className="mt-2">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {aspectRatioOptions.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  <div>
-                                    <div className="font-medium">
-                                      {option.label}
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                      {option.description}
-                                    </div>
-                                  </div>
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
-                          <Label>Quality</Label>
-                          <Select
-                            value={quality}
-                            onValueChange={setQuality}
-                            disabled={isGenerating}
-                          >
-                            <SelectTrigger className="mt-2">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {qualityOptions.map((option) => (
-                                <SelectItem
-                                  key={option.value}
-                                  value={option.value}
-                                >
-                                  <div>
-                                    <div className="font-medium">
-                                      {option.label}
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                      {option.description}
-                                    </div>
-                                  </div>
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
                       <div className="space-y-3">
                         <div className="grid grid-cols-2 gap-3">
                           <Button
@@ -508,34 +314,6 @@ export function TextToImage() {
                     </CardContent>
                   </Card>
                 </UsageGuard>
-
-                {/* Prompt Suggestions */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Lightbulb className="h-5 w-5" />
-                      Prompt Suggestions
-                    </CardTitle>
-                    <CardDescription>
-                      Get inspired with these example prompts
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {promptSuggestions.map((suggestion, index) => (
-                        <div
-                          key={index}
-                          className="p-3 bg-muted/30 rounded-lg border border-border hover:border-primary/50 transition-colors cursor-pointer group"
-                          onClick={() => usePromptSuggestion(suggestion)}
-                        >
-                          <p className="text-sm text-foreground group-hover:text-primary transition-colors">
-                            {suggestion}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
 
               {/* Result Section */}
@@ -596,28 +374,6 @@ export function TextToImage() {
                             <h4 className="font-medium mb-2">
                               Generation Details
                             </h4>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">
-                                  Style:
-                                </span>
-                                <span className="capitalize">
-                                  {style.replace("-", " ")}
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">
-                                  Ratio:
-                                </span>
-                                <span>{aspectRatio}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">
-                                  Quality:
-                                </span>
-                                <span className="capitalize">{quality}</span>
-                              </div>
-                            </div>
                             <div className="mt-3 pt-3 border-t">
                               <span className="text-muted-foreground text-sm">
                                 Prompt:
