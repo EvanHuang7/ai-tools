@@ -163,9 +163,7 @@ def get_app_usage():
             if isinstance(parsed_value, dict):
                 parsed_value["removeBgImageFeatureUsage"] = current_rm_bg_image_monthly_usage
                 
-            return jsonify({
-                "appFeaturesUsage": parsed_value,
-            })
+            return jsonify(parsed_value)
         else:
             return jsonify({
                 "message": "Timed out waiting for Redis value"
