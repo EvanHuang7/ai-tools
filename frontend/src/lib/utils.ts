@@ -6,17 +6,22 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCredits(credits: number): string {
-  return new Intl.NumberFormat().format(credits);
-}
+// Format date for display
+export const formatDate = (date: Date | string | null | undefined) => {
+  const d = new Date(date ?? "");
+  if (isNaN(d.getTime())) {
+    console.warn("Invalid date value passed to formatDate:", date);
+    return "Invalid Date";
+  }
 
-export function formatDate(date: Date): string {
   return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "long",
+    month: "short",
     day: "numeric",
-  }).format(date);
-}
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(d);
+};
 
 // Vapi assistant configuration
 export const configureAssistant = (

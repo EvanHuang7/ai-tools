@@ -32,7 +32,7 @@ import {
   Bot,
 } from "lucide-react";
 import { toast } from "sonner";
-import { configureAssistant } from "@/lib/utils";
+import { configureAssistant, formatDate } from "@/lib/utils";
 import { CallStatus, voiceOptions, styleOptions } from "@/constants/vapi";
 import { vapi } from "@/lib/vapi";
 import type { AudioTranscriptMessage } from "@/types/index";
@@ -62,23 +62,6 @@ export function AudioChat() {
   const startAudioMutation = useStartAudio();
   const createAudioMutation = useCreateAudio();
   const { data: audioHistory, isLoading: isLoadingHistory } = useListAudios();
-
-  // Format date for display
-  const formatDate = (date: Date | string | null | undefined) => {
-    const d = new Date(date ?? "");
-    if (isNaN(d.getTime())) {
-      console.warn("Invalid date value passed to formatDate:", date);
-      return "Invalid Date";
-    }
-
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(d);
-  };
 
   // Group messages by consecutive same-role
   const groupedMessages = useMemo(() => {
