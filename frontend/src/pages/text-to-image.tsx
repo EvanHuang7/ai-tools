@@ -41,16 +41,23 @@ import { useAuth } from "@clerk/clerk-react";
 
 export function TextToImage() {
   const [prompt, setPrompt] = useState("");
-  const [progress, setProgress] = useState(0);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+
+  // Image generation status
   const [isGenerating, setIsGenerating] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [currentStage, setCurrentStage] = useState("");
+
+  // TODO: remove it after adding list images api hook
   const [generationHistory, setGenerationHistory] = useState<
     Array<{ id: string; prompt: string; image: string; timestamp: Date }>
   >([]);
+
+  // Get clerk token
   const { getToken } = useAuth();
 
-  const generateImage = async () => {
+  // Generate image API call
+  const handleGenerateImage = async () => {
     if (!prompt.trim()) {
       toast.error("Please enter a prompt to generate an image");
       return;
@@ -62,6 +69,7 @@ export function TextToImage() {
     setGeneratedImage(null);
 
     try {
+      // TODO: move to constant file
       // Progress simulation for the 10-second generation
       const progressStages = [
         { progress: 15, stage: "Processing prompt..." },
@@ -185,25 +193,12 @@ export function TextToImage() {
     toast.success("Prompt copied to clipboard!");
   };
 
-  const usePromptSuggestion = (suggestion: string) => {
-    setPrompt(suggestion);
-    toast.info("Prompt suggestion applied!");
-  };
-
   const clearAll = () => {
     setPrompt("");
     setGeneratedImage(null);
     setProgress(0);
     setCurrentStage("");
     toast.info("All data cleared");
-  };
-
-  const regenerateImage = () => {
-    if (prompt.trim()) {
-      generateImage();
-    } else {
-      toast.error("Please enter a prompt first");
-    }
   };
 
   return (
@@ -255,34 +250,23 @@ export function TextToImage() {
                       </div>
 
                       <div className="space-y-3">
-                        <div className="grid grid-cols-2 gap-3">
-                          <Button
-                            onClick={generateImage}
-                            disabled={isGenerating || !prompt.trim()}
-                            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                          >
-                            {isGenerating ? (
-                              <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Generating...
-                              </>
-                            ) : (
-                              <>
-                                <Sparkles className="w-4 h-4 mr-2" />
-                                Generate Image
-                              </>
-                            )}
-                          </Button>
-
-                          <Button
-                            onClick={regenerateImage}
-                            variant="outline"
-                            disabled={isGenerating || !prompt.trim()}
-                          >
-                            <RefreshCw className="w-4 h-4 mr-2" />
-                            Regenerate
-                          </Button>
-                        </div>
+                        <Button
+                          onClick={handleGenerateImage}
+                          disabled={isGenerating || !prompt.trim()}
+                          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                        >
+                          {isGenerating ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Generating...
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-4 h-4 mr-2" />
+                              Generate Image
+                            </>
+                          )}
+                        </Button>
 
                         <Button
                           onClick={clearAll}
