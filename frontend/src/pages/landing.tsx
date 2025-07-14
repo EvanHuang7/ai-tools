@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-// import { SignUpButton, useAuth } from '@clerk/clerk-react'
+import { useAuth } from "@clerk/clerk-react";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,9 +23,7 @@ import {
 } from "lucide-react";
 
 export function LandingPage() {
-  // TODO: fix it to check Clerk auth user
-  // const { isSignedIn } = useAuth()
-  const isSignedIn = false; // Temporarily disabled
+  const { isLoaded, isSignedIn } = useAuth();
 
   const features = [
     {
