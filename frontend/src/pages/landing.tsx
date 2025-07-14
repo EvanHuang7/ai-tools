@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 
 export function LandingPage() {
+  // TODO: fix it to check Clerk auth user
   // const { isSignedIn } = useAuth()
   const isSignedIn = false; // Temporarily disabled
 
