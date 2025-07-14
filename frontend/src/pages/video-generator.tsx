@@ -14,13 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { UsageGuard } from "@/components/usage-guard";
 import {
   Upload,
@@ -37,17 +30,21 @@ import axios from "axios";
 import { useAuth } from "@clerk/clerk-react";
 
 export function VideoGenerator() {
+  // Video info
+  const [prompt, setPrompt] = useState("");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [prompt, setPrompt] = useState("");
-  const [style, setStyle] = useState("cinematic");
-  const [duration, setDuration] = useState("3");
-  const [progress, setProgress] = useState(0);
   const [generatedVideo, setGeneratedVideo] = useState<string | null>(null);
+
+  // Video generation status
   const [isGenerating, setIsGenerating] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [currentStage, setCurrentStage] = useState("");
+
+  // Get clerk token
   const { getToken } = useAuth();
 
+  // Reads the file from disk and returns a base64 data URL when recieving a file
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
@@ -64,7 +61,12 @@ export function VideoGenerator() {
     }
   }, []);
 
+  // "useDropzone" is a hook that handles drag-and-drop file uploads.
+  // "getRootProps" gives props to spread onto the outer dropzone container (e.g., div).
+  // "getInputProps" gives props for a hidden <input type="file" />.
+  // "isDragActive" specifys whether a file is currently being dragged over the dropzone.
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    // "onDrop" runs when the user drops a file onto the drop area or selects one via file picker.
     onDrop,
     accept: {
       "image/*": [".jpeg", ".jpg", ".png", ".webp"],
@@ -73,7 +75,8 @@ export function VideoGenerator() {
     maxSize: 10 * 1024 * 1024, // 10MB limit
   });
 
-  const generateVideo = async () => {
+  // Generate Video API call
+  const handleGenerateVideo = async () => {
     if (!uploadedFile) {
       toast.error("Please upload an image first");
       return;
@@ -94,6 +97,7 @@ export function VideoGenerator() {
       formData.append("image", uploadedFile);
       formData.append("prompt", prompt.trim());
 
+      // TODO: move to const file latter
       // Simulate progress updates during the 40-50 second generation
       const progressStages = [
         { progress: 10, stage: "Uploading image..." },
@@ -332,55 +336,6 @@ export function VideoGenerator() {
                           rows={4}
                           disabled={isGenerating}
                         />
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Be specific about the type of movement or animation
-                          you want
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label>Style</Label>
-                          <Select
-                            value={style}
-                            onValueChange={setStyle}
-                            disabled={isGenerating}
-                          >
-                            <SelectTrigger className="mt-2">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="cinematic">
-                                Cinematic
-                              </SelectItem>
-                              <SelectItem value="anime">Anime</SelectItem>
-                              <SelectItem value="realistic">
-                                Realistic
-                              </SelectItem>
-                              <SelectItem value="artistic">Artistic</SelectItem>
-                              <SelectItem value="fantasy">Fantasy</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
-                          <Label>Duration</Label>
-                          <Select
-                            value={duration}
-                            onValueChange={setDuration}
-                            disabled={isGenerating}
-                          >
-                            <SelectTrigger className="mt-2">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="3">3 seconds</SelectItem>
-                              <SelectItem value="5">5 seconds</SelectItem>
-                              <SelectItem value="10">10 seconds</SelectItem>
-                              <SelectItem value="15">15 seconds</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
                       </div>
 
                       {/* Generation Time Warning */}
@@ -399,7 +354,7 @@ export function VideoGenerator() {
 
                       <div className="space-y-3">
                         <Button
-                          onClick={generateVideo}
+                          onClick={handleGenerateVideo}
                           disabled={
                             isGenerating || !uploadedImage || !prompt.trim()
                           }
@@ -511,13 +466,13 @@ export function VideoGenerator() {
                                 <span className="text-muted-foreground">
                                   Duration:
                                 </span>
-                                <span className="ml-2">{duration}s</span>
+                                <span className="ml-2">5s</span>
                               </div>
                               <div>
                                 <span className="text-muted-foreground">
                                   Style:
                                 </span>
-                                <span className="ml-2 capitalize">{style}</span>
+                                <span className="ml-2 capitalize">default</span>
                               </div>
                               <div>
                                 <span className="text-muted-foreground">

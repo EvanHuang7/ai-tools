@@ -40,6 +40,7 @@ import { UsageGuard } from "@/components/usage-guard";
 import { useAuth } from "@clerk/clerk-react";
 
 export function TextToImage() {
+  // Image info
   const [prompt, setPrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
 
