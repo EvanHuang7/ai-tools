@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   useClerk,
@@ -13,6 +13,7 @@ import { Sparkles, Zap } from "lucide-react";
 
 export function Navbar() {
   const { isSignedIn } = useAuth();
+  const [userPlan, setUserPlan] = useState("Free plan");
 
   // Test log for getting billing subscriptions info in frontend
   const { billing } = useClerk();
@@ -24,6 +25,7 @@ export function Navbar() {
           pageSize: 10,
         });
         console.log("✅ subscriptionsResult in front-end", result);
+        setUserPlan(result.data[0].plan.name);
       } catch (err) {
         console.error("❌ Failed to fetch subscriptions", err);
       }
@@ -88,7 +90,7 @@ export function Navbar() {
           {isSignedIn ? (
             <>
               <Badge variant="secondary" className="hidden sm:flex">
-                Free Plan
+                {userPlan} plan
               </Badge>
               <UserButton afterSignOutUrl="/" />
             </>
