@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
+  useClerk,
   SignInButton,
   SignUpButton,
   UserButton,
@@ -11,6 +13,23 @@ import { Sparkles, Zap } from "lucide-react";
 
 export function Navbar() {
   const { isSignedIn } = useAuth();
+
+  // Test log for getting billing subscriptions info in frontend
+  const { billing } = useClerk();
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const result = await billing.getSubscriptions({
+          initialPage: 1,
+          pageSize: 10,
+        });
+        console.log("✅ subscriptionsResult in front-end", result);
+      } catch (err) {
+        console.error("❌ Failed to fetch subscriptions", err);
+      }
+    };
+    fetch();
+  }, [billing]); // include billing in deps
 
   return (
     <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
