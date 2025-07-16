@@ -21,10 +21,6 @@ app.use(clerkMiddleware());
 // Setup the logger
 app.use(morgan("tiny"));
 
-// Manual health check API
-app.get("/", (req, res) => {
-  res.json({ api: "node backend", currentTime: new Date().toISOString() });
-});
 // Health check API for node-backend service pod in K8s Cluster
 app.get("/ping", async (_, res) => {
   res.send("pong");
