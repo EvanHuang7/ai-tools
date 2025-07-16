@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"time"
 
 	"go-backend/api"
 	"go-backend/db"
@@ -28,13 +27,6 @@ func main() {
     r := gin.Default()
 
 	// Public APIs
-	// Manual health check API
-    r.GET("/", func(c *gin.Context) {
-        c.JSON(200, gin.H{
-            "api": "go backend",
-			"currentTime": time.Now().Format(time.RFC3339),
-        })
-    })
 	// Health check API for go-backend service pod in K8s Cluster
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, "pong")
