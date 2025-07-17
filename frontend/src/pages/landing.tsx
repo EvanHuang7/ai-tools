@@ -292,28 +292,19 @@ export function LandingPage() {
               </span>
             </div>
             <div className="flex space-x-6 text-sm text-slate-500">
-              <Link
-                to="/privacy"
-                className="hover:text-slate-900 transition-colors"
-              >
+              <Link to="#" className="hover:text-slate-900 transition-colors">
                 Privacy Policy
               </Link>
-              <Link
-                to="/terms"
-                className="hover:text-slate-900 transition-colors"
-              >
+              <Link to="#" className="hover:text-slate-900 transition-colors">
                 Terms of Service
               </Link>
-              <Link
-                to="/contact"
-                className="hover:text-slate-900 transition-colors"
-              >
+              <Link to="#" className="hover:text-slate-900 transition-colors">
                 Contact
               </Link>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-slate-200 text-center text-sm text-slate-500">
-            © 2024 AI Tools Studio. All rights reserved.
+            © 2025 AI Tools Studio. All rights reserved.
           </div>
         </div>
       </footer>
