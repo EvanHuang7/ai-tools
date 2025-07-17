@@ -1,6 +1,6 @@
 // service/audioFeatureUsage.js
 import { eq, and } from "drizzle-orm";
-import { postgreDbClient } from "../lib/postgre.js";
+import { postgreDbClient } from "../lib/postgreClient.js";
 import { audioFeatureMonthlyUsage } from "../db/schema.js";
 import { getCurrentYearAndMonthStart } from "../utils/utils.js";
 

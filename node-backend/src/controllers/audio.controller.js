@@ -1,4 +1,4 @@
-import { postgreDbClient } from "../lib/postgre.js";
+import { postgreDbClient } from "../lib/postgreClient.js";
 // import { uploadAudioToGCS } from "../lib/gcsClient.js";
 import { audios } from "../db/schema.js";
 import {

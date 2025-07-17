@@ -1,4 +1,4 @@
-import { gcpPubsubClient } from "../lib/gcpPubSub.js";
+import { gcpPubsubClient } from "../lib/gcpPubSubClient.js";
 import { gcpPubsubSubscriptionName } from "../utils/constants.js";
 import { getAudioFeatureMonthlyUsage } from "./audioFeatureMonthlyUsage.js";
 // import { kafkaProducer } from "../lib/kafkaClient.js";
