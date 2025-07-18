@@ -11,6 +11,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -30,6 +46,9 @@ import {
   Volume2,
   User,
   Bot,
+  Eye,
+  Calendar,
+  Hash,
 } from "lucide-react";
 import { toast } from "sonner";
 import { configureAssistant, formatDate } from "@/lib/utils";
@@ -54,6 +73,9 @@ export function AudioChat() {
   const [conversationStyle, setConversationStyle] = useState("friendly");
   const [selectedVoice, setSelectedVoice] = useState("sarah");
 
+  // Modal state
+  const [selectedAudio, setSelectedAudio] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // Refs
   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
   const transcriptEndRef = useRef<HTMLDivElement>(null);
@@ -259,6 +281,11 @@ export function AudioChat() {
   const isConnected = callStatus === CallStatus.ACTIVE;
   const isConnecting = callStatus === CallStatus.CONNECTING;
 
+  // Handle viewing chat history
+  const handleViewHistory = (audio: any) => {
+    setSelectedAudio(audio);
+    setIsModalOpen(true);
+  };
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -433,7 +460,7 @@ export function AudioChat() {
                 </CardContent>
               </Card>
 
-              {/* Transcript Card */}
+              {/* Live Transcript Card */}
               <div className="lg:col-span-2">
                 <Card className="h-[700px] flex flex-col">
                   <CardHeader>
@@ -513,8 +540,8 @@ export function AudioChat() {
               </div>
             </div>
 
-            {/* Audio History Section */}
-            <div className="mt-12">
+            {/* Audio Chat History Section */}
+            <div className="mt-8">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -542,103 +569,143 @@ export function AudioChat() {
                       </p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
-                      {audioHistory.map((audio: any) => (
-                        <Card
-                          key={audio.id}
-                          className="border-l-4 border-l-primary"
-                        >
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between mb-3">
-                              <div>
-                                <h3 className="font-semibold text-lg mb-1">
+                    <div className="rounded-md border">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Topic</TableHead>
+                            <TableHead className="text-center">
+                              Messages
+                            </TableHead>
+                            <TableHead>Created</TableHead>
+                            <TableHead className="text-center">
+                              Action
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {audioHistory.map((audio: any) => (
+                            <TableRow key={audio.id}>
+                              <TableCell className="font-medium">
+                                <div className="max-w-[200px] truncate">
                                   {audio.topic}
-                                </h3>
-                                <p className="text-sm text-muted-foreground">
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <Badge
+                                  variant="secondary"
+                                  className="flex items-center gap-1 w-fit mx-auto"
+                                >
+                                  <Hash className="w-3 h-3" />
+                                  {Array.isArray(audio.transcript)
+                                    ? audio.transcript.length
+                                    : 0}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                  <Calendar className="w-3 h-3" />
                                   {formatDate(audio.createdAt)}
-                                </p>
-                              </div>
-                              <Badge variant="secondary">
-                                {Array.isArray(audio.transcript)
-                                  ? audio.transcript.length
-                                  : 0}{" "}
-                                messages
-                              </Badge>
-                            </div>
-
-                            {/* Transcript Preview */}
-                            <div className="space-y-2 max-h-40 overflow-y-auto">
-                              {Array.isArray(audio.transcript) &&
-                              audio.transcript.length > 0 ? (
-                                audio.transcript
-                                  .slice(0, 3)
-                                  .map((message: any, idx: number) => (
-                                    <div
-                                      key={idx}
-                                      className={`flex ${
-                                        message.role === "user"
-                                          ? "justify-end"
-                                          : "justify-start"
-                                      }`}
-                                    >
-                                      <div
-                                        className={`max-w-[80%] px-3 py-2 rounded-lg text-sm ${
-                                          message.role === "user"
-                                            ? "bg-primary text-primary-foreground"
-                                            : "bg-muted"
-                                        }`}
-                                      >
-                                        <div className="flex items-center gap-1 mb-1">
-                                          {message.role === "user" ? (
-                                            <User className="w-3 h-3" />
-                                          ) : (
-                                            <Bot className="w-3 h-3" />
-                                          )}
-                                          <span className="text-xs font-medium">
-                                            {message.role === "user"
-                                              ? "You"
-                                              : "AI"}
-                                          </span>
-                                        </div>
-                                        <p className="leading-relaxed">
-                                          {message.content.length > 100
-                                            ? `${message.content.substring(
-                                                0,
-                                                100
-                                              )}...`
-                                            : message.content}
-                                        </p>
-                                      </div>
-                                    </div>
-                                  ))
-                              ) : (
-                                <p className="text-sm text-muted-foreground italic">
-                                  No transcript available
-                                </p>
-                              )}
-
-                              {Array.isArray(audio.transcript) &&
-                                audio.transcript.length > 3 && (
-                                  <div className="text-center">
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs"
-                                    >
-                                      +{audio.transcript.length - 3} more
-                                      messages
-                                    </Badge>
-                                  </div>
-                                )}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleViewHistory(audio)}
+                                  className="flex items-center gap-1"
+                                >
+                                  <Eye className="w-3 h-3" />
+                                  View
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </div>
                   )}
                 </CardContent>
               </Card>
             </div>
 
+            {/* Chat History Modal */}
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <MessageCircle className="h-5 w-5" />
+                    Chat History: {selectedAudio?.topic}
+                  </DialogTitle>
+                  <DialogDescription className="flex items-center gap-4">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      {selectedAudio && formatDate(selectedAudio.createdAt)}
+                    </span>
+                    <Badge
+                      variant="secondary"
+                      className="flex items-center gap-1"
+                    >
+                      <Hash className="w-3 h-3" />
+                      {Array.isArray(selectedAudio?.transcript)
+                        ? selectedAudio.transcript.length
+                        : 0}{" "}
+                      messages
+                    </Badge>
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+                  {selectedAudio &&
+                  Array.isArray(selectedAudio.transcript) &&
+                  selectedAudio.transcript.length > 0 ? (
+                    selectedAudio.transcript.map(
+                      (message: any, idx: number) => (
+                        <div
+                          key={idx}
+                          className={`flex ${
+                            message.role === "user"
+                              ? "justify-end"
+                              : "justify-start"
+                          }`}
+                        >
+                          <div
+                            className={`max-w-[80%] px-4 py-3 rounded-2xl ${
+                              message.role === "user"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2 mb-2">
+                              {message.role === "user" ? (
+                                <User className="w-4 h-4" />
+                              ) : (
+                                <Bot className="w-4 h-4" />
+                              )}
+                              <span className="text-xs font-medium">
+                                {message.role === "user"
+                                  ? "You"
+                                  : "AI Assistant"}
+                              </span>
+                            </div>
+                            <p className="text-sm leading-relaxed">
+                              {message.content}
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    )
+                  ) : (
+                    <div className="text-center py-8">
+                      <MessageCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground">
+                        No transcript available
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
             {/* Features */}
             <div className="mt-12 grid md:grid-cols-4 gap-6">
               <Card className="text-center p-6">
