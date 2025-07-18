@@ -20,6 +20,7 @@ import {
   Users,
   Check,
   Star,
+  Wand2,
 } from "lucide-react";
 
 export function LandingPage() {
@@ -36,6 +37,17 @@ export function LandingPage() {
         "Image Enhancement",
         "Object Removal",
         "Style Transfer",
+      ],
+    },
+    {
+      icon: Wand2,
+      title: "Text to Image",
+      description: "Generate stunning images from text descriptions using AI",
+      features: [
+        "Text to Image",
+        "Multiple Styles",
+        "High Resolution",
+        "Custom Prompts",
       ],
     },
     {
@@ -161,7 +173,7 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <Card
                 key={index}
