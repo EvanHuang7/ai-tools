@@ -48,7 +48,9 @@ export function Navbar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
             <Sparkles className="h-4 w-4 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold">AI Tools Studio</span>
+          <span className="text-xl font-bold hidden xl:inline">
+            AI Tools Studio
+          </span>
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6">
