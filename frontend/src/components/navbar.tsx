@@ -9,7 +9,15 @@ import {
 } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Zap } from "lucide-react";
+import {
+  Sparkles,
+  LayoutDashboard,
+  Image,
+  Wand2,
+  Video,
+  Mic,
+  DollarSign,
+} from "lucide-react";
 
 export function Navbar() {
   const { isSignedIn } = useAuth();
@@ -48,38 +56,44 @@ export function Navbar() {
             <>
               <Link
                 to="/dashboard"
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
               >
+                <LayoutDashboard className="h-4 w-4" />
                 Dashboard
               </Link>
               <Link
                 to="/image-editor"
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
               >
+                <Image className="h-4 w-4" />
                 Image Editor
               </Link>
               <Link
                 to="/text-to-image"
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
               >
+                <Wand2 className="h-4 w-4" />
                 Text to Image
               </Link>
               <Link
                 to="/video-generator"
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
               >
+                <Video className="h-4 w-4" />
                 Video Generator
               </Link>
               <Link
                 to="/audio-chat"
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
               >
+                <Mic className="h-4 w-4" />
                 Audio Chat
               </Link>
               <Link
                 to="/pricing"
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
               >
+                <DollarSign className="h-4 w-4" />
                 Pricing
               </Link>
             </>
