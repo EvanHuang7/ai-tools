@@ -13,6 +13,7 @@ import {
   ExternalLink,
   ChevronLeft,
   ChevronRight,
+  DollarSign,
 } from "lucide-react";
 
 const navigation = [
@@ -21,6 +22,7 @@ const navigation = [
   { name: "Text to Image", href: "/text-to-image", icon: Wand2 },
   { name: "Audio Chat", href: "/audio-chat", icon: Mic },
   { name: "Video Generator", href: "/video-generator", icon: Video },
+  { name: "Pricing", href: "/pricing", icon: DollarSign },
 ];
 
 export function Sidebar() {
