@@ -44,6 +44,7 @@ export function Navbar() {
   return (
     <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
+        {/* Left section, App Icon */}
         <Link to="/" className="flex items-center space-x-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
             <Sparkles className="h-4 w-4 text-primary-foreground" />
@@ -53,7 +54,8 @@ export function Navbar() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-6">
+        {/* Middle Section */}
+        <nav className="hidden lg:flex items-center space-x-6">
           {isSignedIn && (
             <>
               <Link
@@ -102,6 +104,7 @@ export function Navbar() {
           )}
         </nav>
 
+        {/* Right section, App Icon */}
         <div className="flex items-center space-x-4">
           {isSignedIn ? (
             <>
