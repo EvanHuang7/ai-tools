@@ -8,7 +8,7 @@ interface ProtectWrapperProps {
   role?: string;
   fallback?: ReactNode;
   feature?: string;
-  requiredPlan?: "pro" | "enterprise";
+  requiredPlan?: "Standard" | "Pro";
 }
 
 // Component to check if clerk user has access to app feature based on user plan
@@ -18,7 +18,7 @@ export function ProtectWrapper({
   role,
   fallback,
   feature = "this feature",
-  requiredPlan = "pro",
+  requiredPlan = "Pro",
 }: ProtectWrapperProps) {
   // If we have a permission or role, use Clerk's Protect component
   if (permission || role) {

@@ -1,5 +1,5 @@
-import { useUser } from "@clerk/clerk-react";
 import { ReactNode } from "react";
+import { useUserPlan } from "@/contexts/UserPlanContext";
 import {
   Card,
   CardContent,
@@ -14,24 +14,22 @@ import { Link } from "react-router-dom";
 
 interface SubscriptionGuardProps {
   children: ReactNode;
-  requiredPlan?: "pro" | "enterprise";
+  requiredPlan?: "Standard" | "Pro";
   feature: string;
 }
 
 // Component used by protect-wrapper component
 export function SubscriptionGuard({
   children,
-  requiredPlan = "pro",
+  requiredPlan = "Pro",
   feature,
 }: SubscriptionGuardProps) {
-  const { user } = useUser();
+  const { userPlan } = useUserPlan();
 
   // Check if user has the required subscription
-  // Using Clerk's publicMetadata to check subscription status
-  const userPlan = (user?.publicMetadata?.plan as string) || "free";
   const hasRequiredPlan =
     userPlan === requiredPlan ||
-    (requiredPlan === "pro" && userPlan === "enterprise");
+    (requiredPlan === "Standard" && userPlan === "Pro");
 
   if (!hasRequiredPlan) {
     return (
@@ -42,11 +40,10 @@ export function SubscriptionGuard({
           </div>
           <CardTitle className="flex items-center justify-center gap-2">
             <Crown className="w-5 h-5 text-amber-500" />
-            {requiredPlan === "pro" ? "Pro" : "Enterprise"} Feature
+            {requiredPlan} Feature
           </CardTitle>
           <CardDescription>
-            Upgrade to {requiredPlan === "pro" ? "Pro" : "Enterprise"} to access{" "}
-            {feature}
+            Upgrade to {requiredPlan} to access {feature}
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
@@ -55,13 +52,10 @@ export function SubscriptionGuard({
               variant="outline"
               className="text-amber-600 border-amber-200"
             >
-              {requiredPlan === "pro"
-                ? "Pro Plan Required"
-                : "Enterprise Plan Required"}
+              {requiredPlan} Plan Required
             </Badge>
             <p className="text-sm text-muted-foreground">
-              This feature is available for{" "}
-              {requiredPlan === "pro" ? "Pro" : "Enterprise"} subscribers only.
+              This feature is available for {requiredPlan} subscribers only.
             </p>
             <Link to="/pricing">
               <Button className="w-full">
