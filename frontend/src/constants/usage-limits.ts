@@ -1,18 +1,18 @@
 // Usage limits for different subscription plans
 export const USAGE_LIMITS = {
-  free: {
+  Free: {
     imageProcessing: 5, // Image editor operations per month
     textToImage: 2, // Text-to-image generations per month
     audioChat: 3, // Audio chat sessions per month (each session = 10 minutes max)
     videoGeneration: 0, // Video generations per month
   },
-  standard: {
+  Standard: {
     imageProcessing: 10,
     textToImage: 3,
     audioChat: 5,
     videoGeneration: 1,
   },
-  pro: {
+  Pro: {
     imageProcessing: 20,
     textToImage: 5,
     audioChat: 10,
@@ -47,12 +47,12 @@ export const FEATURE_DESCRIPTIONS = {
 // TODO: move to utils file
 // Helper functions
 export function getRemainingUsage(
-  feature: keyof typeof USAGE_LIMITS.free,
-  userPlan: string = "free",
+  feature: keyof typeof USAGE_LIMITS.Free,
+  userPlan: string = "Free",
   currentUsage: any = {}
 ) {
   const limits =
-    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.free;
+    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.Free;
   const limit = limits[feature];
   const used = currentUsage[feature] || 0;
 
@@ -60,12 +60,12 @@ export function getRemainingUsage(
 }
 
 export function getUsagePercentage(
-  feature: keyof typeof USAGE_LIMITS.free,
-  userPlan: string = "free",
+  feature: keyof typeof USAGE_LIMITS.Free,
+  userPlan: string = "Free",
   currentUsage: any = {}
 ) {
   const limits =
-    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.free;
+    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.Free;
   const limit = limits[feature];
   const used = currentUsage[feature] || 0;
 
@@ -73,8 +73,8 @@ export function getUsagePercentage(
 }
 
 export function canUseFeature(
-  feature: keyof typeof USAGE_LIMITS.free,
-  userPlan: string = "free",
+  feature: keyof typeof USAGE_LIMITS.Free,
+  userPlan: string = "Free",
   currentUsage: any = {}
 ) {
   const remaining = getRemainingUsage(feature, userPlan, currentUsage);
@@ -82,12 +82,12 @@ export function canUseFeature(
 }
 
 export function getUsageText(
-  feature: keyof typeof USAGE_LIMITS.free,
-  userPlan: string = "free",
+  feature: keyof typeof USAGE_LIMITS.Free,
+  userPlan: string = "Free",
   currentUsage: any = {}
 ) {
   const limits =
-    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.free;
+    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.Free;
   const limit = limits[feature];
   const used = currentUsage[feature] || 0;
 
