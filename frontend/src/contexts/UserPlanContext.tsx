@@ -31,13 +31,21 @@ export function UserPlanProvider({ children }: UserPlanProviderProps) {
   const refreshUserPlan = async () => {
     setIsLoading(true);
     try {
+      if (!billing || !billing.getSubscriptions) {
+        console.warn("Billing is not available");
+        return;
+      }
+
       const result = await billing.getSubscriptions({
         initialPage: 1,
         pageSize: 10,
       });
 
+      // TODO: remove test logs
+      console.log("result", result);
       if (result.data && result.data.length > 0) {
         const planName = result.data[0].plan.name;
+        console.log("planName", planName);
 
         // Map Clerk plan names to our standardized plan types
         switch (planName.toLowerCase()) {

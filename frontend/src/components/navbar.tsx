@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  useClerk,
   SignInButton,
   SignUpButton,
   UserButton,
   useAuth,
 } from "@clerk/clerk-react";
+import { useUserPlan } from "@/contexts/UserPlanContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -21,25 +21,7 @@ import {
 
 export function Navbar() {
   const { isSignedIn } = useAuth();
-  const [userPlan, setUserPlan] = useState("Free plan");
-
-  // Test log for getting billing subscriptions info in frontend
-  const { billing } = useClerk();
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const result = await billing.getSubscriptions({
-          initialPage: 1,
-          pageSize: 10,
-        });
-        console.log("✅ subscriptionsResult in front-end", result);
-        setUserPlan(result.data[0].plan.name);
-      } catch (err) {
-        console.error("❌ Failed to fetch subscriptions", err);
-      }
-    };
-    fetch();
-  }, [billing]); // include billing in deps
+  const { userPlan, isLoading } = useUserPlan();
 
   return (
     <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -108,9 +90,11 @@ export function Navbar() {
         <div className="flex items-center space-x-4">
           {isSignedIn ? (
             <>
-              <Badge variant="secondary" className="hidden sm:flex">
-                {userPlan} plan
-              </Badge>
+              {!isLoading && (
+                <Badge variant="secondary" className="hidden sm:flex">
+                  {userPlan} plan
+                </Badge>
+              )}
               <UserButton afterSignOutUrl="/" />
             </>
           ) : (
