@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
-import { useUser } from "@clerk/clerk-react";
 import { useGetAppUsage } from "@/api/imageRemoveBg/imageRmBg.queries";
+import { useUserPlan } from "@/contexts/UserPlanContext";
 import {
   Card,
   CardContent,
@@ -28,11 +28,8 @@ interface UsageGuardProps {
 
 // Component to lock the app feature by checking app feature usage and limit
 export function UsageGuard({ children, feature, action }: UsageGuardProps) {
-  const { user } = useUser();
+  const { userPlan, isLoading: isPlanLoading } = useUserPlan();
   const { data: appUsage, isLoading: isLoadingUsage } = useGetAppUsage();
-
-  // Check user's subscription plan
-  const userPlan = (user?.publicMetadata?.plan as string) || "free";
 
   // Convert app usage data to the format expected by helper functions
   const currentUsage = appUsage
@@ -50,7 +47,7 @@ export function UsageGuard({ children, feature, action }: UsageGuardProps) {
   const featureInfo = FEATURE_DESCRIPTIONS[feature];
 
   // Show loading state while fetching usage data
-  if (isLoadingUsage) {
+  if (isLoadingUsage || isPlanLoading) {
     return (
       <Card className="border-2 border-dashed border-muted-foreground/25">
         <CardContent className="flex items-center justify-center py-8">

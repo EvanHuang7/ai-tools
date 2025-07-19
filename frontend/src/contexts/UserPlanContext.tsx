@@ -44,6 +44,7 @@ export function UserPlanProvider({ children }: UserPlanProviderProps) {
       // TODO: remove test logs
       console.log("result", result);
       if (result.data && result.data.length > 0) {
+        // TODO: change to find the active user plan instead of get the first one
         const planName = result.data[0].plan.name;
         console.log("planName", planName);
 
