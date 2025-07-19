@@ -18,7 +18,7 @@ export function ProtectWrapper({
   role,
   fallback,
   feature = "this feature",
-  requiredPlan = "Pro",
+  requiredPlan = "Standard",
 }: ProtectWrapperProps) {
   // If we have a permission or role, use Clerk's Protect component
   if (permission || role) {

@@ -1,3 +1,4 @@
+import { useUser } from "@clerk/clerk-react";
 import { ReactNode } from "react";
 import { useUserPlan } from "@/contexts/UserPlanContext";
 import {
@@ -21,7 +22,7 @@ interface SubscriptionGuardProps {
 // Component used by protect-wrapper component
 export function SubscriptionGuard({
   children,
-  requiredPlan = "Pro",
+  requiredPlan = "Standard",
   feature,
 }: SubscriptionGuardProps) {
   const { userPlan } = useUserPlan();
