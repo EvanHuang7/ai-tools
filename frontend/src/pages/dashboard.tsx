@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
 import { useGetAppUsage } from "@/api/imageRemoveBg/imageRmBg.queries";
+import { useUserPlan } from "@/contexts/UserPlanContext";
 import {
   Card,
   CardContent,
@@ -11,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProtectWrapper } from "@/components/billing/protect-wrapper";
-import { useUser } from "@clerk/clerk-react";
 import {
   Image,
   Wand2,
@@ -25,12 +25,11 @@ import { Link } from "react-router-dom";
 import { USAGE_LIMITS } from "@/constants/usage-limits";
 
 export function Dashboard() {
-  const { user } = useUser();
+  const { userPlan, isLoading: isPlanLoading } = useUserPlan();
   const { data: appUsage, isLoading: isLoadingUsage } = useGetAppUsage();
 
-  // Check if user has pro subscription using publicMetadata
-  const userPlan = (user?.publicMetadata?.plan as string) || "free";
-  const hasPro = userPlan === "pro" || userPlan === "enterprise";
+  // Check if user has pro subscription
+  const hasPro = userPlan === "Pro";
 
   // Convert app usage data to the format expected by helper functions
   const currentUsage = appUsage
@@ -46,28 +45,28 @@ export function Dashboard() {
     {
       label: "Images Processed",
       value: `${currentUsage.imageProcessing || 0}/${
-        hasPro ? "∞" : USAGE_LIMITS.free.imageProcessing
+        hasPro ? "∞" : USAGE_LIMITS.Free.imageProcessing
       }`,
       icon: Image,
     },
     {
       label: "Images Generated",
       value: `${currentUsage.textToImage || 0}/${
-        hasPro ? "∞" : USAGE_LIMITS.free.textToImage
+        hasPro ? "∞" : USAGE_LIMITS.Free.textToImage
       }`,
       icon: Wand2,
     },
     {
       label: "Videos Generated",
       value: `${currentUsage.videoGeneration || 0}/${
-        hasPro ? "∞" : USAGE_LIMITS.free.videoGeneration
+        hasPro ? "∞" : USAGE_LIMITS.Free.videoGeneration
       }`,
       icon: Video,
     },
     {
       label: "Audio Chats",
       value: `${currentUsage.audioChat || 0}/${
-        hasPro ? "∞" : USAGE_LIMITS.free.audioChat
+        hasPro ? "∞" : USAGE_LIMITS.Free.audioChat
       }`,
       icon: Mic,
     },
@@ -117,16 +116,14 @@ export function Dashboard() {
         <div className="flex-1 overflow-auto">
           <div className="p-8">
             <div className="mb-8">
-              <h1 className="text-3xl font-bold mb-2">
-                Welcome back{user?.firstName ? `, ${user.firstName}` : ""}!
-              </h1>
+              <h1 className="text-3xl font-bold mb-2">Welcome back!</h1>
               <p className="text-muted-foreground">
                 Here's feature usages with your AI tools this month.
               </p>
             </div>
 
             {/* Stats Grid */}
-            {isLoadingUsage ? (
+            {isLoadingUsage || isPlanLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {[...Array(4)].map((_, index) => (
                   <Card key={index}>
@@ -171,7 +168,7 @@ export function Dashboard() {
                           <ProtectWrapper
                             permission="subscription:pro"
                             feature={action.title}
-                            requiredPlan="pro"
+                            requiredPlan="Pro"
                           >
                             <Link to={action.href}>
                               <Card className="hover:shadow-md transition-shadow cursor-pointer group">
