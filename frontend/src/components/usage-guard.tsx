@@ -97,13 +97,13 @@ export function UsageGuard({ children, feature, action }: UsageGuardProps) {
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
               {action ? `To ${action}, ` : "To continue using this feature, "}
-              upgrade to Pro for unlimited access.
+              upgrade your plan for higher limits.
             </p>
 
             <Link to="/pricing">
               <Button className="w-full">
                 <Crown className="w-4 h-4 mr-2" />
-                Upgrade to Pro
+                Upgrade Plan
               </Button>
             </Link>
 
