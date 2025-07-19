@@ -170,7 +170,6 @@ export function Dashboard() {
                       <div key={index} className="relative">
                         {action.requiresStandardOrPro && userPlan === "Free" ? (
                           <ProtectWrapper
-                            permission="subscription:standard"
                             feature={action.title}
                             requiredPlan="Standard"
                           >
