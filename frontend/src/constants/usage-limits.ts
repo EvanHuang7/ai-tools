@@ -1,22 +1,22 @@
 // Usage limits for different subscription plans
 export const USAGE_LIMITS = {
   free: {
-    imageProcessing: 10, // Image editor operations per month
-    textToImage: 10, // Text-to-image generations per month
-    audioChat: 10, // Audio chat sessions per month (each session = 10 minutes max)
-    videoGeneration: 10, // Video generations per month
+    imageProcessing: 5, // Image editor operations per month
+    textToImage: 2, // Text-to-image generations per month
+    audioChat: 3, // Audio chat sessions per month (each session = 10 minutes max)
+    videoGeneration: 0, // Video generations per month
+  },
+  standard: {
+    imageProcessing: 10,
+    textToImage: 3,
+    audioChat: 5,
+    videoGeneration: 1,
   },
   pro: {
-    imageProcessing: -1, // -1 means unlimited
-    textToImage: -1,
-    audioChat: -1,
-    videoGeneration: -1,
-  },
-  enterprise: {
-    imageProcessing: -1,
-    textToImage: -1,
-    audioChat: -1,
-    videoGeneration: -1,
+    imageProcessing: 20,
+    textToImage: 5,
+    audioChat: 10,
+    videoGeneration: 2,
   },
 } as const;
 
@@ -56,7 +56,6 @@ export function getRemainingUsage(
   const limit = limits[feature];
   const used = currentUsage[feature] || 0;
 
-  if (limit === -1) return -1; // Unlimited
   return Math.max(0, limit - used);
 }
 
@@ -70,7 +69,6 @@ export function getUsagePercentage(
   const limit = limits[feature];
   const used = currentUsage[feature] || 0;
 
-  if (limit === -1) return 100; // Unlimited shows as 100%
   return Math.min(100, (used / limit) * 100);
 }
 
@@ -80,7 +78,7 @@ export function canUseFeature(
   currentUsage: any = {}
 ) {
   const remaining = getRemainingUsage(feature, userPlan, currentUsage);
-  return remaining === -1 || remaining > 0;
+  return remaining > 0;
 }
 
 export function getUsageText(
@@ -93,6 +91,5 @@ export function getUsageText(
   const limit = limits[feature];
   const used = currentUsage[feature] || 0;
 
-  if (limit === -1) return "Unlimited";
   return `${used}/${limit}`;
 }
