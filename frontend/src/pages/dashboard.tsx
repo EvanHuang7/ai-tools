@@ -45,28 +45,32 @@ export function Dashboard() {
     {
       label: "Images Processed",
       value: `${currentUsage.imageProcessing || 0}/${
-        hasPro ? "∞" : USAGE_LIMITS.Free.imageProcessing
+        USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS]?.imageProcessing ||
+        USAGE_LIMITS.Free.imageProcessing
       }`,
       icon: Image,
     },
     {
       label: "Images Generated",
       value: `${currentUsage.textToImage || 0}/${
-        hasPro ? "∞" : USAGE_LIMITS.Free.textToImage
+        USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS]?.textToImage ||
+        USAGE_LIMITS.Free.textToImage
       }`,
       icon: Wand2,
     },
     {
       label: "Videos Generated",
       value: `${currentUsage.videoGeneration || 0}/${
-        hasPro ? "∞" : USAGE_LIMITS.Free.videoGeneration
+        USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS]?.videoGeneration ||
+        USAGE_LIMITS.Free.videoGeneration
       }`,
       icon: Video,
     },
     {
       label: "Audio Chats",
       value: `${currentUsage.audioChat || 0}/${
-        hasPro ? "∞" : USAGE_LIMITS.Free.audioChat
+        USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS]?.audioChat ||
+        USAGE_LIMITS.Free.audioChat
       }`,
       icon: Mic,
     },
@@ -79,7 +83,7 @@ export function Dashboard() {
       icon: Image,
       href: "/image-editor",
       color: "bg-blue-500",
-      requiresPro: false,
+      requiresStandardOrPro: false,
     },
     {
       title: "Generate Images",
@@ -87,7 +91,7 @@ export function Dashboard() {
       icon: Wand2,
       href: "/text-to-image",
       color: "bg-emerald-500",
-      requiresPro: false,
+      requiresStandardOrPro: false,
     },
     {
       title: "Voice Chat",
@@ -95,7 +99,7 @@ export function Dashboard() {
       icon: Mic,
       href: "/audio-chat",
       color: "bg-green-500",
-      requiresPro: true,
+      requiresStandardOrPro: false,
     },
     {
       title: "Generate Videos",
@@ -103,7 +107,7 @@ export function Dashboard() {
       icon: Video,
       href: "/video-generator",
       color: "bg-purple-500",
-      requiresPro: true,
+      requiresStandardOrPro: true,
     },
   ];
 
@@ -164,11 +168,11 @@ export function Dashboard() {
                   <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {quickActions.map((action, index) => (
                       <div key={index} className="relative">
-                        {action.requiresPro && !hasPro ? (
+                        {action.requiresStandardOrPro && userPlan === "Free" ? (
                           <ProtectWrapper
-                            permission="subscription:pro"
+                            permission="subscription:standard"
                             feature={action.title}
-                            requiredPlan="Pro"
+                            requiredPlan="Standard"
                           >
                             <Link to={action.href}>
                               <Card className="hover:shadow-md transition-shadow cursor-pointer group">
@@ -206,13 +210,13 @@ export function Dashboard() {
                                   >
                                     <action.icon className="h-6 w-6 text-white" />
                                   </div>
-                                  {action.requiresPro && (
+                                  {action.requiresStandardOrPro && (
                                     <Badge
                                       variant="secondary"
                                       className="text-amber-600"
                                     >
                                       <Crown className="w-3 h-3 mr-1" />
-                                      Pro
+                                      Standard+
                                     </Badge>
                                   )}
                                 </div>
