@@ -109,9 +109,7 @@ def list_removed_bg_images():
     try:
         images = Image.objects(userId=g.user_id)
 
-        return jsonify({
-            "images": [{"id": str(img.id), "inputImageUrl": img.inputImageUrl, "resultImageUrl": img.resultImageUrl} for img in images]
-        }), 200
+        return jsonify([{"id": str(img.id), "inputImageUrl": img.inputImageUrl, "resultImageUrl": img.resultImageUrl} for img in images]), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
