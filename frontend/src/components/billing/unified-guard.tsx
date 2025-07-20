@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/clerk-react";
 import { ReactNode } from "react";
 import { useUserPlan } from "@/contexts/UserPlanContext";
 import {
@@ -13,18 +12,18 @@ import { Badge } from "@/components/ui/badge";
 import { Crown, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 
-interface SubscriptionGuardProps {
+interface UnifiedGuardProps {
   children: ReactNode;
+  feature?: string;
   requiredPlan?: "Standard" | "Pro";
-  feature: string;
 }
 
-// Component used by protect-wrapper component
-export function SubscriptionGuard({
+// Unified component that combines ProtectWrapper and SubscriptionGuard functionality
+export function UnifiedGuard({
   children,
+  feature = "this feature",
   requiredPlan = "Standard",
-  feature,
-}: SubscriptionGuardProps) {
+}: UnifiedGuardProps) {
   const { userPlan } = useUserPlan();
 
   // Check if user has the required subscription
