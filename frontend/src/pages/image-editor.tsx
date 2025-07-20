@@ -25,6 +25,7 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
+  Clock,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useRemoveBackground } from "@/api/imageRemoveBg/imageRmBg.queries";
@@ -36,6 +37,10 @@ export function ImageEditor() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [showGrid, setShowGrid] = useState(true);
+
+  // Progress tracking
+  const [progress, setProgress] = useState(0);
+  const [currentStage, setCurrentStage] = useState("");
 
   // API hook
   const removeBackgroundMutation = useRemoveBackground();
@@ -77,10 +82,41 @@ export function ImageEditor() {
       return;
     }
 
+    // Reset progress
+    setProgress(0);
+    setCurrentStage("Preparing...");
+
+    // Progress simulation for the 30-second processing
+    const progressStages = [
+      { progress: 15, stage: "Uploading image..." },
+      { progress: 30, stage: "Analyzing image content..." },
+      { progress: 50, stage: "Detecting background..." },
+      { progress: 70, stage: "Removing background..." },
+      { progress: 85, stage: "Optimizing edges..." },
+      { progress: 95, stage: "Finalizing image..." },
+    ];
+
+    let stageIndex = 0;
+    const progressInterval = setInterval(() => {
+      if (stageIndex < progressStages.length) {
+        const currentProgressStage = progressStages[stageIndex];
+        setProgress(currentProgressStage.progress);
+        setCurrentStage(currentProgressStage.stage);
+        stageIndex++;
+      }
+    }, 4500); // Update every 4.5 seconds (27 seconds total for 6 stages)
+
     try {
       const result = await removeBackgroundMutation.mutateAsync({
         image: uploadedFile,
       });
+
+      // Clear the progress interval
+      clearInterval(progressInterval);
+
+      // Complete the progress
+      setProgress(100);
+      setCurrentStage("Background removed successfully!");
 
       if (result.success && result.image?.resultImageUrl) {
         setProcessedImage(result.image.resultImageUrl);
@@ -89,6 +125,11 @@ export function ImageEditor() {
         throw new Error("Failed to process image - no result URL received");
       }
     } catch (error) {
+      // Clear the progress interval on error
+      clearInterval(progressInterval);
+      setProgress(0);
+      setCurrentStage("");
+
       console.error("Error processing image:", error);
 
       if (error instanceof Error) {
@@ -188,6 +229,8 @@ export function ImageEditor() {
     setUploadedImage(null);
     setUploadedFile(null);
     setProcessedImage(null);
+    setProgress(0);
+    setCurrentStage("");
     toast.info("Images cleared");
   };
 
@@ -296,16 +339,34 @@ export function ImageEditor() {
                         </Button>
 
                         {removeBackgroundMutation.isPending && (
-                          <div className="space-y-2">
+                          <div className="space-y-3">
                             <div className="flex justify-between text-sm">
                               <span className="text-muted-foreground">
-                                Processing image...
+                                {currentStage}
                               </span>
+                              <span>{progress}%</span>
                             </div>
-                            <Progress value={50} className="h-2" />
-                            <p className="text-xs text-muted-foreground text-center">
-                              Please wait while we process your image
-                            </p>
+                            <Progress value={progress} className="h-3" />
+                            <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
+                              <Clock className="w-3 h-3 inline mr-1" />
+                              Image processing typically takes around 30
+                              seconds. Please wait...
+                            </div>
+                          </div>
+                        )}
+
+                        {!removeBackgroundMutation.isPending && (
+                          <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                            <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                            <div className="text-sm">
+                              <p className="text-amber-800 font-medium">
+                                Processing Time
+                              </p>
+                              <p className="text-amber-700">
+                                Background removal takes around 30 seconds.
+                                Please be patient!
+                              </p>
+                            </div>
                           </div>
                         )}
 
