@@ -18,7 +18,7 @@ export const listRemovedBgImages = async (
   axios: AxiosInstance
 ): Promise<RemoveBgResponse["image"][]> => {
   const response = await axios.get("/api/python/list-removed-bg-images");
-  return response.data.images;
+  return response.data;
 };
 
 export const getAppUsage = async (axios: AxiosInstance) => {
