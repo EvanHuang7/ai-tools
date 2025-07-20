@@ -33,11 +33,11 @@ import {
   Palette,
   Lightbulb,
   Trash2,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import axios from "axios";
 import { UsageGuard } from "@/components/usage-guard";
-import { useAuth } from "@clerk/clerk-react";
+import { useGenerateImage } from "@/api/imageGeneration/image.queries";
 
 export function TextToImage() {
   // Image info
@@ -54,8 +54,8 @@ export function TextToImage() {
     Array<{ id: string; prompt: string; image: string; timestamp: Date }>
   >([]);
 
-  // Get clerk token
-  const { getToken } = useAuth();
+  // API hook
+  const generateImageMutation = useGenerateImage();
 
   // Generate image API call
   const handleGenerateImage = async () => {
@@ -71,7 +71,7 @@ export function TextToImage() {
 
     try {
       // TODO: move to constant file
-      // Progress simulation for the 10-second generation
+      // Progress simulation for the 40-second generation
       const progressStages = [
         { progress: 15, stage: "Processing prompt..." },
         { progress: 30, stage: "Analyzing style preferences..." },
@@ -89,22 +89,12 @@ export function TextToImage() {
           setCurrentStage(currentProgressStage.stage);
           stageIndex++;
         }
-      }, 1500); // Update every 1.5 seconds (9 seconds total for 6 stages)
+      }, 6000); // Update every 6 seconds (36 seconds total for 6 stages)
 
-      // Call the API
-      const token = await getToken();
-      const response = await axios.post(
-        "/api/go/generate-image",
-        {
-          prompt: prompt.trim(),
-        },
-        {
-          timeout: 30000, // 30 second timeout
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // Call the API using the hook
+      const response = await generateImageMutation.mutateAsync({
+        prompt: prompt.trim(),
+      });
 
       // Clear the progress interval
       clearInterval(progressInterval);
@@ -114,8 +104,8 @@ export function TextToImage() {
       setCurrentStage("Image generated successfully!");
 
       // Handle the response
-      if (response.data && response.data.ImageURL) {
-        const newImage = response.data.ImageURL;
+      if (response && response.ImageURL) {
+        const newImage = response.ImageURL;
         setGeneratedImage(newImage);
 
         // Add to history
@@ -136,30 +126,10 @@ export function TextToImage() {
       setProgress(0);
       setCurrentStage("");
 
-      if (axios.isAxiosError(error)) {
-        if (error.code === "ECONNABORTED") {
-          toast.error("Image generation timeout. Please try again.");
-        } else if (error.response?.status === 400) {
-          toast.error(
-            `Invalid request: ${
-              error.response?.data?.message || "Please check your prompt."
-            }`
-          );
-        } else if (error.response?.status === 500) {
-          toast.error(
-            "Server error during image generation. Please try again."
-          );
-        } else {
-          toast.error(
-            `Failed to generate image: ${
-              error.response?.data?.message || error.message
-            }`
-          );
-        }
+      if (error instanceof Error) {
+        toast.error(`Failed to generate image: ${error.message}`);
       } else {
-        toast.error(
-          "Failed to generate image. Please check your connection and try again."
-        );
+        toast.error("Failed to generate image. Please try again.");
       }
     } finally {
       setIsGenerating(false);
@@ -250,6 +220,20 @@ export function TextToImage() {
                         </p>
                       </div>
 
+                      {/* Generation Time Warning */}
+                      <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                        <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                        <div className="text-sm">
+                          <p className="text-amber-800 font-medium">
+                            Processing Time
+                          </p>
+                          <p className="text-amber-700">
+                            Image generation takes up to 40 seconds. Please be
+                            patient!
+                          </p>
+                        </div>
+                      </div>
+
                       <div className="space-y-3">
                         <Button
                           onClick={handleGenerateImage}
@@ -291,7 +275,7 @@ export function TextToImage() {
                           <Progress value={progress} className="h-3" />
                           <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
                             <Clock className="w-3 h-3 inline mr-1" />
-                            Generation typically takes 8-12 seconds. Please
+                            Generation typically takes 30-40 seconds. Please
                             wait...
                           </div>
                         </div>
@@ -446,9 +430,11 @@ export function TextToImage() {
               </Card>
               <Card className="text-center p-6">
                 <Clock className="w-8 h-8 text-primary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Fast Generation</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  Quality Generation
+                </h3>
                 <p className="text-muted-foreground text-sm">
-                  High-quality images in just 10 seconds
+                  High-quality images in 30-40 seconds
                 </p>
               </Card>
               <Card className="text-center p-6">
