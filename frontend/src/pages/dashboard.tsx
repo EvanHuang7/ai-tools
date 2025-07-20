@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ProtectWrapper } from "@/components/billing/protect-wrapper";
+import { UnifiedGuard } from "@/components/billing/unified-guard";
 import {
   Image,
   Wand2,
@@ -169,22 +169,22 @@ export function Dashboard() {
                     {quickActions.map((action, index) => (
                       <div key={index} className="relative">
                         {action.requiresStandardOrPro && userPlan === "Free" ? (
-                          <ProtectWrapper
+                          <UnifiedGuard
                             feature={action.title}
                             requiredPlan="Standard"
                           >
                             <Link to={action.href}>
-                              <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-                                <CardContent className="p-4 h-full flex flex-col">
+                              <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
+                                <CardContent className="p-4 h-full flex flex-col min-h-[180px]">
                                   <div
                                     className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
                                   >
                                     <action.icon className="h-6 w-6 text-white" />
                                   </div>
-                                  <h3 className="font-semibold mb-2">
+                                  <h3 className="font-semibold mb-2 text-base">
                                     {action.title}
                                   </h3>
-                                  <p className="text-sm text-muted-foreground mb-4">
+                                  <p className="text-sm text-muted-foreground mb-4 flex-1 line-clamp-2">
                                     {action.description}
                                   </p>
                                   <Button
@@ -198,11 +198,11 @@ export function Dashboard() {
                                 </CardContent>
                               </Card>
                             </Link>
-                          </ProtectWrapper>
+                          </UnifiedGuard>
                         ) : (
                           <Link to={action.href}>
-                            <Card className="hover:shadow-md transition-shadow cursor-pointer group">
-                              <CardContent className="p-4 h-full flex flex-col">
+                            <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
+                              <CardContent className="p-4 h-full flex flex-col min-h-[180px]">
                                 <div className="flex items-center justify-between mb-4">
                                   <div
                                     className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
@@ -219,10 +219,10 @@ export function Dashboard() {
                                     </Badge>
                                   )}
                                 </div>
-                                <h3 className="font-semibold mb-2">
+                                <h3 className="font-semibold mb-2 text-base">
                                   {action.title}
                                 </h3>
-                                <p className="text-sm text-muted-foreground mb-4">
+                                <p className="text-sm text-muted-foreground mb-4 flex-1 line-clamp-2">
                                   {action.description}
                                 </p>
                                 <Button
