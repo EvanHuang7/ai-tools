@@ -28,9 +28,6 @@ export function Dashboard() {
   const { userPlan, isLoading: isPlanLoading } = useUserPlan();
   const { data: appUsage, isLoading: isLoadingUsage } = useGetAppUsage();
 
-  // Check if user has pro subscription
-  const hasPro = userPlan === "Pro";
-
   // Convert app usage data to the format expected by helper functions
   const currentUsage = appUsage
     ? {

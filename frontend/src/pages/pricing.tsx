@@ -3,18 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Zap } from "lucide-react";
-import { useAuth } from "@clerk/clerk-react";
 import { ClerkPricingTable } from "@/components/billing/pricing-table";
 import { toast } from "sonner";
 
 export function Pricing() {
-  const { isSignedIn } = useAuth();
-
   const faqs = [
     {
-      question: "What are credits and how do they work?",
+      question: "How do user plans and usage limits work?",
       answer:
-        "Credits are used to process your content with our AI tools. Different operations consume different amounts of credits based on complexity and processing time.",
+        "Our app uses tiered user plans (Free, Standard, and Pro), each with its own limits for different features. Higher-tier plans unlock increased usage and access to advanced tools. You can upgrade at any time based on your needs.",
     },
     {
       question: "Can I change my plan anytime?",
@@ -28,8 +25,7 @@ export function Pricing() {
     },
     {
       question: "Is there a free trial for paid plans?",
-      answer:
-        "Yes, all new users get a 7-day free trial of the Pro plan to experience all premium features.",
+      answer: "No, we currently do not offer a free trial for paid plans.",
     },
   ];
 
