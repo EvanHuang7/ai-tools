@@ -14,13 +14,6 @@ import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Wand2,
   Download,
   Image as ImageIcon,
@@ -28,16 +21,34 @@ import {
   Clock,
   Loader2,
   Copy,
-  RefreshCw,
   Eye,
   Palette,
-  Lightbulb,
+  Calendar,
   Trash2,
   AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { UsageGuard } from "@/components/usage-guard";
-import { useGenerateImage } from "@/api/imageGeneration/image.queries";
+import {
+  useGenerateImage,
+  useListImages,
+} from "@/api/imageGeneration/image.queries";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { formatDate } from "@/lib/utils";
 
 export function TextToImage() {
   // Image info
@@ -56,6 +67,11 @@ export function TextToImage() {
 
   // API hook
   const generateImageMutation = useGenerateImage();
+  const { data: imageHistory, isLoading: isLoadingHistory } = useListImages();
+
+  // Modal state for viewing images
+  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Generate image API call
   const handleGenerateImage = async () => {
@@ -170,6 +186,11 @@ export function TextToImage() {
     setProgress(0);
     setCurrentStage("");
     toast.info("All data cleared");
+  };
+
+  const handleViewImage = (image: any) => {
+    setSelectedImage(image);
+    setIsModalOpen(true);
   };
 
   return (
@@ -413,6 +434,170 @@ export function TextToImage() {
             </div>
 
             {/* Features */}
+            {/* Image Generation History Section */}
+            <div className="mt-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ImageIcon className="h-5 w-5" />
+                    Image Generation History
+                  </CardTitle>
+                  <CardDescription>
+                    Your previous AI-generated images
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingHistory ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                      <span className="ml-2">Loading history...</span>
+                    </div>
+                  ) : !imageHistory || imageHistory.length === 0 ? (
+                    <div className="text-center py-8">
+                      <ImageIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-2">
+                        No images generated yet
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Generate your first image to see it here
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="rounded-md border">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Preview</TableHead>
+                            <TableHead>Prompt</TableHead>
+                            <TableHead>Created</TableHead>
+                            <TableHead className="text-center">
+                              Action
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {imageHistory.map((image: any) => (
+                            <TableRow key={image.id}>
+                              <TableCell>
+                                <img
+                                  src={image.ImageURL}
+                                  alt="Generated"
+                                  className="w-16 h-16 rounded object-cover"
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <div className="max-w-[300px] truncate">
+                                  {image.Prompt}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                  <Calendar className="w-3 h-3" />
+                                  {formatDate(image.CreatedAt)}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleViewImage(image)}
+                                  className="flex items-center gap-1"
+                                >
+                                  <Eye className="w-3 h-3" />
+                                  View
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Image View Modal */}
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <ImageIcon className="h-5 w-5" />
+                    Generated Image
+                  </DialogTitle>
+                  <DialogDescription className="flex items-center gap-4">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      {selectedImage && formatDate(selectedImage.CreatedAt)}
+                    </span>
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="flex-1 overflow-y-auto space-y-4">
+                  {selectedImage && (
+                    <>
+                      <div className="relative">
+                        <img
+                          src={selectedImage.ImageURL}
+                          alt="Generated artwork"
+                          className="w-full rounded-lg object-contain max-h-96"
+                        />
+                        <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                          <Sparkles className="w-3 h-3 mr-1" />
+                          AI Generated
+                        </Badge>
+                      </div>
+
+                      <Card>
+                        <CardContent className="p-4">
+                          <h4 className="font-medium mb-2">
+                            Generation Details
+                          </h4>
+                          <div className="space-y-2">
+                            <div>
+                              <span className="text-muted-foreground text-sm">
+                                Prompt:
+                              </span>
+                              <p className="text-sm mt-1 italic">
+                                "{selectedImage.Prompt}"
+                              </p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <div className="flex gap-3">
+                        <Button
+                          onClick={() => {
+                            const link = document.createElement("a");
+                            link.href = selectedImage.ImageURL;
+                            link.download = `ai-generated-${selectedImage.ID}.png`;
+                            link.target = "_blank";
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            toast.success("Image download started!");
+                          }}
+                          className="flex-1"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download Image
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => copyPrompt(selectedImage.Prompt)}
+                          className="flex-1"
+                        >
+                          <Copy className="w-4 h-4 mr-2" />
+                          Copy Prompt
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <div className="mt-12 grid md:grid-cols-4 gap-6">
               <Card className="text-center p-6">
                 <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
