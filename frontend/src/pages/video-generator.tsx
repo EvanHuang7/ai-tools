@@ -26,8 +26,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import axios from "axios";
-import { useAuth } from "@clerk/clerk-react";
+import { useGenerateVideo } from "@/api/videoGeneration/video.queries";
 
 export function VideoGenerator() {
   // Video info
@@ -41,8 +40,8 @@ export function VideoGenerator() {
   const [progress, setProgress] = useState(0);
   const [currentStage, setCurrentStage] = useState("");
 
-  // Get clerk token
-  const { getToken } = useAuth();
+  // API hook
+  const generateVideoMutation = useGenerateVideo();
 
   // Reads the file from disk and returns a base64 data URL when recieving a file
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -92,11 +91,6 @@ export function VideoGenerator() {
     setGeneratedVideo(null);
 
     try {
-      // Create FormData with the required fields
-      const formData = new FormData();
-      formData.append("image", uploadedFile);
-      formData.append("prompt", prompt.trim());
-
       // TODO: move to const file latter
       // Simulate progress updates during the 40-50 second generation
       const progressStages = [
@@ -121,26 +115,10 @@ export function VideoGenerator() {
         }
       }, 6000); // Update every 6 seconds (48 seconds total for 8 stages)
 
-      // Call your API
-      const token = await getToken();
-      const response = await axios.post("/api/go/generate-video", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-        timeout: 120000, // 2 minute timeout for the 40-50 second generation
-        onUploadProgress: (progressEvent) => {
-          // Handle upload progress if needed
-          if (progressEvent.total) {
-            const uploadProgress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            if (uploadProgress < 100) {
-              setProgress(Math.min(uploadProgress / 10, 10)); // Cap upload progress at 10%
-              setCurrentStage("Uploading image...");
-            }
-          }
-        },
+      // Call the API using the hook
+      const response = await generateVideoMutation.mutateAsync({
+        prompt: prompt.trim(),
+        image: uploadedFile,
       });
 
       // Clear the progress interval
@@ -151,8 +129,8 @@ export function VideoGenerator() {
       setCurrentStage("Video generated successfully!");
 
       // Handle the response
-      if (response.data && response.data.VideoURL) {
-        setGeneratedVideo(response.data.VideoURL);
+      if (response && response.VideoURL) {
+        setGeneratedVideo(response.VideoURL);
         toast.success("Video generated successfully!");
       } else {
         throw new Error("Invalid response from server - no video URL received");
@@ -162,37 +140,10 @@ export function VideoGenerator() {
       setProgress(0);
       setCurrentStage("");
 
-      if (axios.isAxiosError(error)) {
-        if (error.code === "ECONNABORTED") {
-          toast.error(
-            "Video generation timeout. The process is taking longer than expected."
-          );
-        } else if (error.response?.status === 413) {
-          toast.error(
-            "Image file is too large. Please use an image under 10MB."
-          );
-        } else if (error.response?.status === 400) {
-          toast.error(
-            `Invalid request: ${
-              error.response?.data?.message ||
-              "Please check your image and prompt."
-            }`
-          );
-        } else if (error.response?.status === 500) {
-          toast.error(
-            "Server error during video generation. Please try again."
-          );
-        } else {
-          toast.error(
-            `Failed to generate video: ${
-              error.response?.data?.message || error.message
-            }`
-          );
-        }
+      if (error instanceof Error) {
+        toast.error(`Failed to generate video: ${error.message}`);
       } else {
-        toast.error(
-          "Failed to generate video. Please check your connection and try again."
-        );
+        toast.error("Failed to generate video. Please try again.");
       }
     } finally {
       setIsGenerating(false);
