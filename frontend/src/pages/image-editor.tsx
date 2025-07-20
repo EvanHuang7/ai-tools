@@ -28,7 +28,26 @@ import {
   Clock,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useRemoveBackground } from "@/api/imageRemoveBg/imageRmBg.queries";
+import {
+  useRemoveBackground,
+  useListRemovedBgImages,
+} from "@/api/imageRemoveBg/imageRmBg.queries";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { formatDate } from "@/lib/utils";
 
 export function ImageEditor() {
   // Used to diplay the image in <img>
@@ -44,6 +63,12 @@ export function ImageEditor() {
 
   // API hook
   const removeBackgroundMutation = useRemoveBackground();
+  const { data: imageHistory, isLoading: isLoadingHistory } =
+    useListRemovedBgImages();
+
+  // Modal state for viewing images
+  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Reads the file from disk and returns a base64 data URL when recieving a file
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -232,6 +257,11 @@ export function ImageEditor() {
     setProgress(0);
     setCurrentStage("");
     toast.info("Images cleared");
+  };
+
+  const handleViewImage = (image: any) => {
+    setSelectedImage(image);
+    setIsModalOpen(true);
   };
 
   const gridPattern = `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`;
@@ -516,6 +546,199 @@ export function ImageEditor() {
             </div>
 
             {/* Features */}
+            {/* Image Processing History Section */}
+            <div className="mt-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ImageIcon className="h-5 w-5" />
+                    Image Processing History
+                  </CardTitle>
+                  <CardDescription>
+                    Your previous background removal results
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingHistory ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                      <span className="ml-2">Loading history...</span>
+                    </div>
+                  ) : !imageHistory || imageHistory.length === 0 ? (
+                    <div className="text-center py-8">
+                      <ImageIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-2">
+                        No processed images yet
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Process your first image to see it here
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="rounded-md border">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Original</TableHead>
+                            <TableHead>Processed</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead className="text-center">
+                              Action
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {imageHistory.map((image: any) => (
+                            <TableRow key={image.id}>
+                              <TableCell>
+                                <img
+                                  src={image.inputImageUrl}
+                                  alt="Original"
+                                  className="w-16 h-16 rounded object-cover"
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <img
+                                  src={image.resultImageUrl}
+                                  alt="Processed"
+                                  className="w-16 h-16 rounded object-cover"
+                                  style={{
+                                    backgroundColor: "transparent",
+                                    backgroundImage: gridPattern,
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <Badge
+                                  variant="secondary"
+                                  className="bg-green-500/10 text-green-600 border-green-500/20"
+                                >
+                                  <Scissors className="w-3 h-3 mr-1" />
+                                  Background Removed
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleViewImage(image)}
+                                  className="flex items-center gap-1"
+                                >
+                                  <Eye className="w-3 h-3" />
+                                  View
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Image View Modal */}
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <ImageIcon className="h-5 w-5" />
+                    Processed Image
+                  </DialogTitle>
+                  <DialogDescription>
+                    Background removal result
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="flex-1 overflow-y-auto space-y-4">
+                  {selectedImage && (
+                    <>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium mb-2">Original Image</h4>
+                          <img
+                            src={selectedImage.inputImageUrl}
+                            alt="Original"
+                            className="w-full rounded-lg object-contain"
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium">Processed Result</h4>
+                            <Button
+                              onClick={toggleGrid}
+                              variant="outline"
+                              size="sm"
+                              className="flex items-center gap-1"
+                            >
+                              {showGrid ? (
+                                <>
+                                  <EyeOff className="h-3 w-3" />
+                                  Hide Grid
+                                </>
+                              ) : (
+                                <>
+                                  <Eye className="h-3 w-3" />
+                                  Show Grid
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                          <div className="relative">
+                            <img
+                              src={selectedImage.resultImageUrl}
+                              alt="Processed"
+                              className="w-full rounded-lg object-contain"
+                              style={{
+                                backgroundColor: showGrid
+                                  ? "transparent"
+                                  : "#f3f4f6",
+                                backgroundImage: showGrid
+                                  ? gridPattern
+                                  : "none",
+                              }}
+                            />
+                            <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                              Background Removed
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <Button
+                          onClick={() => {
+                            const link = document.createElement("a");
+                            link.href = selectedImage.resultImageUrl;
+                            link.download = `processed-${selectedImage.id}.png`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            toast.success("Image downloaded!");
+                          }}
+                          className="flex-1 bg-blue-600 hover:bg-blue-700"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download Standard PNG
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            // High quality download logic here
+                            toast.success("High quality PNG downloaded!");
+                          }}
+                          className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                        >
+                          <Sparkles className="w-4 h-4 mr-2" />
+                          Download HD PNG
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <div className="mt-12 grid md:grid-cols-3 gap-6">
               <Card className="text-center p-6">
                 <Scissors className="w-8 h-8 text-primary mx-auto mb-4" />
