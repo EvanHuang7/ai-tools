@@ -24,9 +24,30 @@ import {
   Clock,
   Loader2,
   AlertCircle,
+  Calendar,
+  Eye,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useGenerateVideo } from "@/api/videoGeneration/video.queries";
+import {
+  useGenerateVideo,
+  useListVideos,
+} from "@/api/videoGeneration/video.queries";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { formatDate } from "@/lib/utils";
 
 export function VideoGenerator() {
   // Video info
@@ -42,6 +63,11 @@ export function VideoGenerator() {
 
   // API hook
   const generateVideoMutation = useGenerateVideo();
+  const { data: videoHistory, isLoading: isLoadingHistory } = useListVideos();
+
+  // Modal state for viewing videos
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Reads the file from disk and returns a base64 data URL when recieving a file
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -178,6 +204,11 @@ export function VideoGenerator() {
     setProgress(0);
     setCurrentStage("");
     toast.info("All data cleared");
+  };
+
+  const handleViewVideo = (video: any) => {
+    setSelectedVideo(video);
+    setIsModalOpen(true);
   };
 
   return (
@@ -465,6 +496,202 @@ export function VideoGenerator() {
             </div>
 
             {/* Features */}
+            {/* Video Generation History Section */}
+            <div className="mt-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Video className="h-5 w-5" />
+                    Video Generation History
+                  </CardTitle>
+                  <CardDescription>
+                    Your previous AI-generated videos
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingHistory ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                      <span className="ml-2">Loading history...</span>
+                    </div>
+                  ) : !videoHistory || videoHistory.length === 0 ? (
+                    <div className="text-center py-8">
+                      <Video className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-2">
+                        No videos generated yet
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Generate your first video to see it here
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="rounded-md border">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Preview</TableHead>
+                            <TableHead>Prompt</TableHead>
+                            <TableHead>Duration</TableHead>
+                            <TableHead>Created</TableHead>
+                            <TableHead className="text-center">
+                              Action
+                            </TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {videoHistory.map((video: any) => (
+                            <TableRow key={video.id}>
+                              <TableCell>
+                                <video
+                                  src={video.VideoURL}
+                                  className="w-16 h-16 rounded object-cover"
+                                  muted
+                                  poster={video.ImageURL}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <div className="max-w-[300px] truncate">
+                                  {video.Prompt}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant="secondary">
+                                  {video.VideoDuration}s
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                  <Calendar className="w-3 h-3" />
+                                  {formatDate(video.CreatedAt)}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleViewVideo(video)}
+                                  className="flex items-center gap-1"
+                                >
+                                  <Eye className="w-3 h-3" />
+                                  View
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Video View Modal */}
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <Video className="h-5 w-5" />
+                    Generated Video
+                  </DialogTitle>
+                  <DialogDescription className="flex items-center gap-4">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      {selectedVideo && formatDate(selectedVideo.CreatedAt)}
+                    </span>
+                    <Badge variant="secondary">
+                      {selectedVideo?.VideoDuration}s duration
+                    </Badge>
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="flex-1 overflow-y-auto space-y-4">
+                  {selectedVideo && (
+                    <>
+                      <div className="relative bg-black rounded-lg overflow-hidden">
+                        <video
+                          src={selectedVideo.VideoURL}
+                          controls
+                          className="w-full aspect-video"
+                          poster={selectedVideo.ImageURL}
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                        <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                          Generated
+                        </Badge>
+                      </div>
+
+                      <Card>
+                        <CardContent className="p-4">
+                          <h4 className="font-medium mb-2">Video Details</h4>
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <span className="text-muted-foreground">
+                                Duration:
+                              </span>
+                              <span className="ml-2">
+                                {selectedVideo.VideoDuration}s
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">
+                                Format:
+                              </span>
+                              <span className="ml-2">MP4</span>
+                            </div>
+                          </div>
+                          <div className="mt-3 pt-3 border-t">
+                            <span className="text-muted-foreground text-sm">
+                              Prompt:
+                            </span>
+                            <p className="text-sm mt-1 italic">
+                              "{selectedVideo.Prompt}"
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <div className="flex gap-3">
+                        <Button
+                          onClick={() => {
+                            const link = document.createElement("a");
+                            link.href = selectedVideo.VideoURL;
+                            link.download = `generated-video-${selectedVideo.ID}.mp4`;
+                            link.target = "_blank";
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            toast.success("Video download started!");
+                          }}
+                          className="flex-1 bg-green-600 hover:bg-green-700"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download MP4
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            const video = document.querySelector(
+                              "video"
+                            ) as HTMLVideoElement;
+                            if (video) {
+                              video.currentTime = 0;
+                              video.play();
+                            }
+                          }}
+                          className="flex-1"
+                        >
+                          <Play className="w-4 h-4 mr-2" />
+                          Replay
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <div className="mt-12 grid md:grid-cols-4 gap-6">
               <Card className="text-center p-6">
                 <Wand2 className="w-8 h-8 text-primary mx-auto mb-4" />
