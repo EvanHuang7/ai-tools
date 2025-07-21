@@ -1,5 +1,5 @@
-// Usage limits for different subscription plans
-export const USAGE_LIMITS = {
+// App features usage limits for different subscription plans
+export const FEATURE_USAGE_LIMITS = {
   Free: {
     imageProcessing: 5, // Image editor operations per month
     textToImage: 2, // Text-to-image generations per month
@@ -44,6 +44,7 @@ export const FEATURE_DESCRIPTIONS = {
   },
 } as const;
 
+// Progress stages for image editor
 export const IMAGE_EDITOR_PROGRESS_STAGES = [
   { progress: 15, stage: "Uploading image..." },
   { progress: 30, stage: "Analyzing image content..." },

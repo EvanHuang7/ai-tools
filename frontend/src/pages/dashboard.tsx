@@ -22,7 +22,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { USAGE_LIMITS } from "@/constants";
+import { FEATURE_USAGE_LIMITS } from "@/constants";
 
 export function Dashboard() {
   const { userPlan, isLoading: isPlanLoading } = useUserPlan();
@@ -42,32 +42,32 @@ export function Dashboard() {
     {
       label: "Images Processed",
       value: `${currentUsage.imageProcessing || 0}/${
-        USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS]?.imageProcessing ||
-        USAGE_LIMITS.Free.imageProcessing
+        FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS]
+          ?.imageProcessing || FEATURE_USAGE_LIMITS.Free.imageProcessing
       }`,
       icon: Image,
     },
     {
       label: "Images Generated",
       value: `${currentUsage.textToImage || 0}/${
-        USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS]?.textToImage ||
-        USAGE_LIMITS.Free.textToImage
+        FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS]
+          ?.textToImage || FEATURE_USAGE_LIMITS.Free.textToImage
       }`,
       icon: Wand2,
     },
     {
       label: "Videos Generated",
       value: `${currentUsage.videoGeneration || 0}/${
-        USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS]?.videoGeneration ||
-        USAGE_LIMITS.Free.videoGeneration
+        FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS]
+          ?.videoGeneration || FEATURE_USAGE_LIMITS.Free.videoGeneration
       }`,
       icon: Video,
     },
     {
       label: "Audio Chats",
       value: `${currentUsage.audioChat || 0}/${
-        USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS]?.audioChat ||
-        USAGE_LIMITS.Free.audioChat
+        FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS]
+          ?.audioChat || FEATURE_USAGE_LIMITS.Free.audioChat
       }`,
       icon: Mic,
     },

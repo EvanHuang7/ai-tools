@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { voices } from "../constants/vapi";
-import { USAGE_LIMITS } from "@/constants";
+import { FEATURE_USAGE_LIMITS } from "@/constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -26,12 +26,13 @@ export const formatDate = (date: Date | string | null | undefined) => {
 
 // Usage-guard component helper functions
 function getRemainingUsage(
-  feature: keyof typeof USAGE_LIMITS.Free,
+  feature: keyof typeof FEATURE_USAGE_LIMITS.Free,
   userPlan: string = "Free",
   currentUsage: any = {}
 ) {
   const limits =
-    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.Free;
+    FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS] ||
+    FEATURE_USAGE_LIMITS.Free;
   const limit = limits[feature];
   const used = currentUsage[feature] || 0;
 
@@ -40,7 +41,7 @@ function getRemainingUsage(
 
 // Check if user run out of usage limit or not
 export function hasRemainingUsage(
-  feature: keyof typeof USAGE_LIMITS.Free,
+  feature: keyof typeof FEATURE_USAGE_LIMITS.Free,
   userPlan: string = "Free",
   currentUsage: any = {}
 ) {
@@ -50,12 +51,13 @@ export function hasRemainingUsage(
 
 // Display app feature usage number and limit, eg. "2/10"
 export function getUsageText(
-  feature: keyof typeof USAGE_LIMITS.Free,
+  feature: keyof typeof FEATURE_USAGE_LIMITS.Free,
   userPlan: string = "Free",
   currentUsage: any = {}
 ) {
   const limits =
-    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.Free;
+    FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS] ||
+    FEATURE_USAGE_LIMITS.Free;
   const limit = limits[feature];
   const used = currentUsage[feature] || 0;
 
@@ -64,12 +66,13 @@ export function getUsageText(
 
 // Display app feature usage number and limit percent, eg. "20%"
 export function getUsagePercentage(
-  feature: keyof typeof USAGE_LIMITS.Free,
+  feature: keyof typeof FEATURE_USAGE_LIMITS.Free,
   userPlan: string = "Free",
   currentUsage: any = {}
 ) {
   const limits =
-    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.Free;
+    FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS] ||
+    FEATURE_USAGE_LIMITS.Free;
   const limit = limits[feature];
   const used = currentUsage[feature] || 0;
 
