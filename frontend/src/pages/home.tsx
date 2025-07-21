@@ -14,91 +14,16 @@ import {
   ArrowRight,
   Image,
   Video,
-  Mic,
   Sparkles,
   Zap,
   Users,
   Check,
   Star,
-  Wand2,
 } from "lucide-react";
+import { HOME_PAGE_FEATURES, APP_USER_REVIEWS } from "@/constants";
 
 export function HomePage() {
   const { isLoaded, isSignedIn } = useAuth();
-
-  const features = [
-    {
-      icon: Image,
-      title: "AI Image Editor",
-      description:
-        "Remove backgrounds, enhance quality, and transform images with advanced AI",
-      features: [
-        "Background Removal",
-        "Image Enhancement",
-        "Object Removal",
-        "Style Transfer",
-      ],
-    },
-    {
-      icon: Wand2,
-      title: "Text to Image",
-      description: "Generate stunning images from text descriptions using AI",
-      features: [
-        "Text to Image",
-        "Multiple Styles",
-        "High Resolution",
-        "Custom Prompts",
-      ],
-    },
-    {
-      icon: Video,
-      title: "Video Generator",
-      description:
-        "Create stunning videos from images using AI-powered animation",
-      features: [
-        "Image to Video",
-        "Custom Prompts",
-        "Multiple Styles",
-        "HD Export",
-      ],
-    },
-    {
-      icon: Mic,
-      title: "AI Voice Chat",
-      description:
-        "Engage in natural conversations with AI using voice recognition",
-      features: [
-        "Voice Recognition",
-        "Natural Speech",
-        "Real-time Chat",
-        "Multiple Voices",
-      ],
-    },
-  ];
-
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      role: "Content Creator",
-      content:
-        "This platform has revolutionized my workflow. The AI tools are incredibly powerful and easy to use.",
-      rating: 5,
-    },
-    {
-      name: "Mike Chen",
-      role: "Marketing Director",
-      content:
-        "The video generation feature saves us hours of work. Quality is outstanding.",
-      rating: 5,
-    },
-    {
-      name: "Emily Davis",
-      role: "Designer",
-      content:
-        "Best AI image editor I've used. The background removal is flawless.",
-      rating: 5,
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -174,7 +99,7 @@ export function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
+            {HOME_PAGE_FEATURES.map((feature, index) => (
               <Card
                 key={index}
                 className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-white/80 backdrop-blur-sm"
@@ -231,7 +156,7 @@ export function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
+            {APP_USER_REVIEWS.map((testimonial, index) => (
               <Card
                 key={index}
                 className="text-center bg-white/80 backdrop-blur-sm"

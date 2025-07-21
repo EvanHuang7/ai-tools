@@ -24,6 +24,7 @@ export const useListRemovedBgImages = () => {
   });
 };
 
+// TODO: move to index.ts
 // Query hook to get app usage (including remove background image usage)
 export const useGetAppUsage = () => {
   const axios = useAuthedAxios();

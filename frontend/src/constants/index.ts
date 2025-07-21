@@ -94,3 +94,79 @@ export const SIDE_BAR_NAVIGATION = [
   { name: "Video Generator", href: "/video-generator", icon: Video },
   { name: "Pricing", href: "/pricing", icon: DollarSign },
 ];
+
+// Home page feature description
+export const HOME_PAGE_FEATURES = [
+  {
+    icon: Image,
+    title: "AI Image Editor",
+    description:
+      "Remove backgrounds, enhance quality, and transform images with advanced AI",
+    features: [
+      "Background Removal",
+      "Image Enhancement",
+      "Object Removal",
+      "Style Transfer",
+    ],
+  },
+  {
+    icon: Wand2,
+    title: "Text to Image",
+    description: "Generate stunning images from text descriptions using AI",
+    features: [
+      "Text to Image",
+      "Multiple Styles",
+      "High Resolution",
+      "Custom Prompts",
+    ],
+  },
+  {
+    icon: Video,
+    title: "Video Generator",
+    description:
+      "Create stunning videos from images using AI-powered animation",
+    features: [
+      "Image to Video",
+      "Custom Prompts",
+      "Multiple Styles",
+      "HD Export",
+    ],
+  },
+  {
+    icon: Mic,
+    title: "AI Voice Chat",
+    description:
+      "Engage in natural conversations with AI using voice recognition",
+    features: [
+      "Voice Recognition",
+      "Natural Speech",
+      "Real-time Chat",
+      "Multiple Voices",
+    ],
+  },
+];
+
+// Home page app user reviews
+export const APP_USER_REVIEWS = [
+  {
+    name: "Sarah Johnson",
+    role: "Content Creator",
+    content:
+      "This platform has revolutionized my workflow. The AI tools are incredibly powerful and easy to use.",
+    rating: 5,
+  },
+  {
+    name: "Mike Chen",
+    role: "Marketing Director",
+    content:
+      "The video generation feature saves us hours of work. Quality is outstanding.",
+    rating: 5,
+  },
+  {
+    name: "Emily Davis",
+    role: "Designer",
+    content:
+      "Best AI image editor I've used. The background removal is flawless.",
+    rating: 5,
+  },
+];
