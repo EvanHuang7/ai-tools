@@ -1,9 +1,3 @@
-export interface CurrentTimeApiResponse {
-  api: string;
-  currentTime: string;
-}
-
-// NEW LINE
 export interface GenerateVideoRequest {
   prompt: string;
   image: File;
