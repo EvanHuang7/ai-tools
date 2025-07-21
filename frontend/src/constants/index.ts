@@ -30,7 +30,7 @@ export const FEATURE_USAGE_LIMITS = {
 } as const;
 
 // Feature descriptions for UI
-export const FEATURE_DESCRIPTIONS = {
+export const USAGE_GUARD_FEATURE_DESCRIPTIONS = {
   imageProcessing: {
     name: "Image Processing",
     description: "Background removal, enhancement, and editing operations",

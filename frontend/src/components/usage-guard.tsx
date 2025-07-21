@@ -18,7 +18,7 @@ import {
   getUsageText,
   getUsagePercentage,
 } from "@/lib/utils";
-import { FEATURE_DESCRIPTIONS } from "@/constants";
+import { USAGE_GUARD_FEATURE_DESCRIPTIONS } from "@/constants";
 import { UsageGuardProps } from "@/types/props";
 
 // Component to lock the app feature by checking app feature usage and limit
@@ -39,7 +39,7 @@ export function UsageGuard({ children, feature, action }: UsageGuardProps) {
   const canUse = hasRemainingUsage(feature, userPlan, currentUsage);
   const usageText = getUsageText(feature, userPlan, currentUsage);
   const usagePercentage = getUsagePercentage(feature, userPlan, currentUsage);
-  const featureInfo = FEATURE_DESCRIPTIONS[feature];
+  const featureInfo = USAGE_GUARD_FEATURE_DESCRIPTIONS[feature];
 
   // Show loading state while fetching usage data
   if (isLoadingUsage || isPlanLoading) {
