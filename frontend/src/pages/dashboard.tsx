@@ -22,7 +22,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { USAGE_LIMITS } from "@/constants/usage-limits";
+import { USAGE_LIMITS } from "@/constants";
 
 export function Dashboard() {
   const { userPlan, isLoading: isPlanLoading } = useUserPlan();

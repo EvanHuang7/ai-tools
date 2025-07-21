@@ -18,7 +18,7 @@ import {
   getUsageText,
   getUsagePercentage,
 } from "@/lib/utils";
-import { FEATURE_DESCRIPTIONS } from "@/constants/usage-limits";
+import { FEATURE_DESCRIPTIONS } from "@/constants";
 
 interface UsageGuardProps {
   children: ReactNode;
