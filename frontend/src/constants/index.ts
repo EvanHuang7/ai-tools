@@ -53,3 +53,13 @@ export const IMAGE_EDITOR_PROGRESS_STAGES = [
   { progress: 85, stage: "Optimizing edges..." },
   { progress: 95, stage: "Finalizing image..." },
 ];
+
+// Progress stages for image generator
+export const IMAGE_GENERATOR_PROGRESS_STAGES = [
+  { progress: 15, stage: "Processing prompt..." },
+  { progress: 30, stage: "Analyzing style preferences..." },
+  { progress: 50, stage: "Generating image composition..." },
+  { progress: 70, stage: "Adding details and textures..." },
+  { progress: 85, stage: "Applying final touches..." },
+  { progress: 95, stage: "Optimizing image quality..." },
+];

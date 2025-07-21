@@ -49,6 +49,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { formatDate } from "@/lib/utils";
+import { IMAGE_GENERATOR_PROGRESS_STAGES } from "@/constants";
 
 export function TextToImage() {
   // Image info
@@ -86,21 +87,12 @@ export function TextToImage() {
     setGeneratedImage(null);
 
     try {
-      // TODO: move to constant file
       // Progress simulation for the 40-second generation
-      const progressStages = [
-        { progress: 15, stage: "Processing prompt..." },
-        { progress: 30, stage: "Analyzing style preferences..." },
-        { progress: 50, stage: "Generating image composition..." },
-        { progress: 70, stage: "Adding details and textures..." },
-        { progress: 85, stage: "Applying final touches..." },
-        { progress: 95, stage: "Optimizing image quality..." },
-      ];
-
       let stageIndex = 0;
       const progressInterval = setInterval(() => {
-        if (stageIndex < progressStages.length) {
-          const currentProgressStage = progressStages[stageIndex];
+        if (stageIndex < IMAGE_GENERATOR_PROGRESS_STAGES.length) {
+          const currentProgressStage =
+            IMAGE_GENERATOR_PROGRESS_STAGES[stageIndex];
           setProgress(currentProgressStage.progress);
           setCurrentStage(currentProgressStage.stage);
           stageIndex++;
