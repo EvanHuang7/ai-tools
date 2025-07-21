@@ -4,26 +4,12 @@ import { useClerk } from "@clerk/clerk-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
-  LayoutDashboard,
-  Image,
-  Wand2,
-  Video,
-  Mic,
   Settings,
   ExternalLink,
   ChevronLeft,
   ChevronRight,
-  DollarSign,
 } from "lucide-react";
-
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Image Editor", href: "/image-editor", icon: Image },
-  { name: "Text to Image", href: "/text-to-image", icon: Wand2 },
-  { name: "Audio Chat", href: "/audio-chat", icon: Mic },
-  { name: "Video Generator", href: "/video-generator", icon: Video },
-  { name: "Pricing", href: "/pricing", icon: DollarSign },
-];
+import { SIDE_BAR_NAVIGATION } from "@/constants";
 
 export function Sidebar() {
   const location = useLocation();
@@ -71,7 +57,7 @@ export function Sidebar() {
 
       <div className="flex-1 overflow-y-auto py-4">
         <nav className="space-y-1 px-3">
-          {navigation.map((item) => {
+          {SIDE_BAR_NAVIGATION.map((item) => {
             const isActive = location.pathname === item.href;
             return (
               <Link key={item.name} to={item.href}>

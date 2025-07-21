@@ -1,3 +1,12 @@
+import {
+  LayoutDashboard,
+  Image,
+  Wand2,
+  Video,
+  Mic,
+  DollarSign,
+} from "lucide-react";
+
 // App features usage limits for different subscription plans
 export const FEATURE_USAGE_LIMITS = {
   Free: {
@@ -74,4 +83,14 @@ export const VIDEO_GENERATOR_PROGRESS_STAGES = [
   { progress: 75, stage: "Rendering video..." },
   { progress: 85, stage: "Optimizing quality..." },
   { progress: 95, stage: "Finalizing video..." },
+];
+
+// Side bar navigation
+export const SIDE_BAR_NAVIGATION = [
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Image Editor", href: "/image-editor", icon: Image },
+  { name: "Text to Image", href: "/text-to-image", icon: Wand2 },
+  { name: "Audio Chat", href: "/audio-chat", icon: Mic },
+  { name: "Video Generator", href: "/video-generator", icon: Video },
+  { name: "Pricing", href: "/pricing", icon: DollarSign },
 ];
