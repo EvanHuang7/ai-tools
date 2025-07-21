@@ -36,17 +36,19 @@ export function UserPlanProvider({ children }: UserPlanProviderProps) {
         return;
       }
 
-      const result = await billing.getSubscriptions({
+      const userSubscriptions = await billing.getSubscriptions({
         initialPage: 1,
         pageSize: 10,
       });
 
-      // TODO: remove test logs
-      console.log("result", result);
-      if (result.data && result.data.length > 0) {
-        // TODO: change to find the active user plan instead of get the first one
-        const planName = result.data[0].plan.name;
-        console.log("planName", planName);
+      if (userSubscriptions.data && userSubscriptions.data.length > 0) {
+        const activeSubscription = userSubscriptions.data.find(
+          (subscription) => subscription.status === "active"
+        );
+
+        const planName = activeSubscription
+          ? activeSubscription.plan.name
+          : "Free";
 
         // Map Clerk plan names to our standardized plan types
         switch (planName.toLowerCase()) {
