@@ -1,13 +1,10 @@
 import { useAuth } from "@clerk/clerk-react";
 import { Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
+import type { AuthProtectedRouteProps } from "@/types/props";
 
 // Redirect user to home page if user is not logged in
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
+export function AuthProtectedRoute({ children }: AuthProtectedRouteProps) {
   const { isLoaded, isSignedIn } = useAuth();
 
   if (!isLoaded) {

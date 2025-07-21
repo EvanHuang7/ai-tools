@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
-import { ProtectedRoute } from "@/components/auth/protected-route";
+import { AuthProtectedRoute } from "@/components/auth-protected-route";
 import { LandingPage } from "@/pages/landing";
 import { Dashboard } from "@/pages/dashboard";
 import { ImageEditor } from "@/pages/image-editor";
@@ -18,41 +18,41 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <AuthProtectedRoute>
               <Dashboard />
-            </ProtectedRoute>
+            </AuthProtectedRoute>
           }
         />
         <Route
           path="/image-editor"
           element={
-            <ProtectedRoute>
+            <AuthProtectedRoute>
               <ImageEditor />
-            </ProtectedRoute>
+            </AuthProtectedRoute>
           }
         />
         <Route
           path="/text-to-image"
           element={
-            <ProtectedRoute>
+            <AuthProtectedRoute>
               <TextToImage />
-            </ProtectedRoute>
+            </AuthProtectedRoute>
           }
         />
         <Route
           path="/video-generator"
           element={
-            <ProtectedRoute>
+            <AuthProtectedRoute>
               <VideoGenerator />
-            </ProtectedRoute>
+            </AuthProtectedRoute>
           }
         />
         <Route
           path="/audio-chat"
           element={
-            <ProtectedRoute>
+            <AuthProtectedRoute>
               <AudioChat />
-            </ProtectedRoute>
+            </AuthProtectedRoute>
           }
         />
       </Routes>
