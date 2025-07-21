@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Zap } from "lucide-react";
-import { ClerkPricingTable } from "@/components/billing/pricing-table";
+import { ClerkPricingTable } from "@/components/clerk-pricing-table";
 import { toast } from "sonner";
 
 export function Pricing() {
