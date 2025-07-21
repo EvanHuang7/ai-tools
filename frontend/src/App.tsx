@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProtectedRoute } from "@/components/auth-protected-route";
-import { LandingPage } from "@/pages/landing";
+import { HomePage } from "@/pages/home";
 import { Dashboard } from "@/pages/dashboard";
 import { ImageEditor } from "@/pages/image-editor";
 import { VideoGenerator } from "@/pages/video-generator";
@@ -13,7 +13,7 @@ function App() {
   return (
     <div className="min-h-screen bg-background">
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route
           path="/dashboard"

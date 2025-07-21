@@ -23,7 +23,7 @@ import {
   Wand2,
 } from "lucide-react";
 
-export function LandingPage() {
+export function HomePage() {
   const { isLoaded, isSignedIn } = useAuth();
 
   const features = [
