@@ -61,11 +61,6 @@ export function TextToImage() {
   const [progress, setProgress] = useState(0);
   const [currentStage, setCurrentStage] = useState("");
 
-  // TODO: remove it after adding list images api hook
-  const [generationHistory, setGenerationHistory] = useState<
-    Array<{ id: string; prompt: string; image: string; timestamp: Date }>
-  >([]);
-
   // API hook
   const generateImageMutation = useGenerateImage();
   const { data: imageHistory, isLoading: isLoadingHistory } = useListImages();
@@ -115,16 +110,6 @@ export function TextToImage() {
       if (response && response.ImageURL) {
         const newImage = response.ImageURL;
         setGeneratedImage(newImage);
-
-        // Add to history
-        const historyItem = {
-          id: Date.now().toString(),
-          prompt: prompt.trim(),
-          image: newImage,
-          timestamp: new Date(),
-        };
-        setGenerationHistory((prev) => [historyItem, ...prev.slice(0, 9)]); // Keep last 10 items
-
         toast.success("Image generated successfully!");
       } else {
         throw new Error("Invalid response from server - no image URL received");
@@ -379,49 +364,6 @@ export function TextToImage() {
                     )}
                   </CardContent>
                 </Card>
-
-                {/* Generation History */}
-                {generationHistory.length > 0 && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Clock className="h-5 w-5" />
-                        Recent Generations
-                      </CardTitle>
-                      <CardDescription>
-                        Your latest AI creations
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3 max-h-96 overflow-y-auto">
-                        {generationHistory.map((item) => (
-                          <div
-                            key={item.id}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                            onClick={() => {
-                              setGeneratedImage(item.image);
-                              setPrompt(item.prompt);
-                            }}
-                          >
-                            <img
-                              src={item.image}
-                              alt="Generated"
-                              className="w-12 h-12 rounded object-cover"
-                            />
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium truncate">
-                                {item.prompt}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {item.timestamp.toLocaleTimeString()}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
               </div>
             </div>
 
