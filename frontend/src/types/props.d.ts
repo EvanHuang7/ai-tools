@@ -5,3 +5,9 @@ export interface AuthProtectedRouteProps {
 export interface ClerkPricingTableProps {
   className?: string;
 }
+
+export interface FeatureGuardProps {
+  children: ReactNode;
+  feature?: string;
+  requiredPlan?: "Standard" | "Pro";
+}

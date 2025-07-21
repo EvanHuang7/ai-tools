@@ -11,19 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
+import { FeatureGuardProps } from "@/types/props";
 
-interface UnifiedGuardProps {
-  children: ReactNode;
-  feature?: string;
-  requiredPlan?: "Standard" | "Pro";
-}
-
-// Unified component that combines ProtectWrapper and SubscriptionGuard functionality
-export function UnifiedGuard({
+// Component to check if user has access to app feature or not based on user plan
+export function FeatureGuard({
   children,
   feature = "this feature",
   requiredPlan = "Standard",
-}: UnifiedGuardProps) {
+}: FeatureGuardProps) {
   const { userPlan } = useUserPlan();
 
   // Check if user has the required subscription

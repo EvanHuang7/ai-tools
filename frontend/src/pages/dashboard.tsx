@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { UnifiedGuard } from "@/components/billing/unified-guard";
+import { FeatureGuard } from "@/components/feature-guard";
 import {
   Image,
   Wand2,
@@ -166,7 +166,7 @@ export function Dashboard() {
                     {quickActions.map((action, index) => (
                       <div key={index} className="relative">
                         {action.requiresStandardOrPro && userPlan === "Free" ? (
-                          <UnifiedGuard
+                          <FeatureGuard
                             feature={action.title}
                             requiredPlan="Standard"
                           >
@@ -195,7 +195,7 @@ export function Dashboard() {
                                 </CardContent>
                               </Card>
                             </Link>
-                          </UnifiedGuard>
+                          </FeatureGuard>
                         ) : (
                           <Link to={action.href}>
                             <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
