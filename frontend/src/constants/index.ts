@@ -63,3 +63,15 @@ export const IMAGE_GENERATOR_PROGRESS_STAGES = [
   { progress: 85, stage: "Applying final touches..." },
   { progress: 95, stage: "Optimizing image quality..." },
 ];
+
+// Progress stages for video generator
+export const VIDEO_GENERATOR_PROGRESS_STAGES = [
+  { progress: 10, stage: "Uploading image..." },
+  { progress: 20, stage: "Analyzing image content..." },
+  { progress: 30, stage: "Processing AI prompt..." },
+  { progress: 45, stage: "Generating video frames..." },
+  { progress: 60, stage: "Creating animations..." },
+  { progress: 75, stage: "Rendering video..." },
+  { progress: 85, stage: "Optimizing quality..." },
+  { progress: 95, stage: "Finalizing video..." },
+];
