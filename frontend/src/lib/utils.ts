@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { voices } from "../constants/vapi";
+import { USAGE_LIMITS } from "@/constants/usage-limits";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -22,6 +23,58 @@ export const formatDate = (date: Date | string | null | undefined) => {
     minute: "2-digit",
   }).format(d);
 };
+
+// Usage-guard component helper functions
+function getRemainingUsage(
+  feature: keyof typeof USAGE_LIMITS.Free,
+  userPlan: string = "Free",
+  currentUsage: any = {}
+) {
+  const limits =
+    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.Free;
+  const limit = limits[feature];
+  const used = currentUsage[feature] || 0;
+
+  return Math.max(0, limit - used);
+}
+
+// Check if user run out of usage limit or not
+export function hasRemainingUsage(
+  feature: keyof typeof USAGE_LIMITS.Free,
+  userPlan: string = "Free",
+  currentUsage: any = {}
+) {
+  const remaining = getRemainingUsage(feature, userPlan, currentUsage);
+  return remaining > 0;
+}
+
+// Display app feature usage number and limit, eg. "2/10"
+export function getUsageText(
+  feature: keyof typeof USAGE_LIMITS.Free,
+  userPlan: string = "Free",
+  currentUsage: any = {}
+) {
+  const limits =
+    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.Free;
+  const limit = limits[feature];
+  const used = currentUsage[feature] || 0;
+
+  return `${used}/${limit}`;
+}
+
+// Display app feature usage number and limit percent, eg. "20%"
+export function getUsagePercentage(
+  feature: keyof typeof USAGE_LIMITS.Free,
+  userPlan: string = "Free",
+  currentUsage: any = {}
+) {
+  const limits =
+    USAGE_LIMITS[userPlan as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.Free;
+  const limit = limits[feature];
+  const used = currentUsage[feature] || 0;
+
+  return Math.min(100, (used / limit) * 100);
+}
 
 // Vapi assistant configuration
 export const configureAssistant = (

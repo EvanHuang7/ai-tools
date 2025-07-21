@@ -14,11 +14,11 @@ import { Progress } from "@/components/ui/progress";
 import { Crown, Lock, Zap, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
-  canUseFeature,
+  hasRemainingUsage,
   getUsageText,
   getUsagePercentage,
-  FEATURE_DESCRIPTIONS,
-} from "@/constants/usage-limits";
+} from "@/lib/utils";
+import { FEATURE_DESCRIPTIONS } from "@/constants/usage-limits";
 
 interface UsageGuardProps {
   children: ReactNode;
@@ -41,7 +41,7 @@ export function UsageGuard({ children, feature, action }: UsageGuardProps) {
       }
     : {};
 
-  const canUse = canUseFeature(feature, userPlan, currentUsage);
+  const canUse = hasRemainingUsage(feature, userPlan, currentUsage);
   const usageText = getUsageText(feature, userPlan, currentUsage);
   const usagePercentage = getUsagePercentage(feature, userPlan, currentUsage);
   const featureInfo = FEATURE_DESCRIPTIONS[feature];
