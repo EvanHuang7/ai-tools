@@ -47,7 +47,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { formatDate } from "@/lib/utils";
+import { IMAGE_EDITOR_PROGRESS_STAGES } from "@/constants";
 
 export function ImageEditor() {
   // Used to diplay the image in <img>
@@ -112,19 +112,10 @@ export function ImageEditor() {
     setCurrentStage("Preparing...");
 
     // Progress simulation for the 30-second processing
-    const progressStages = [
-      { progress: 15, stage: "Uploading image..." },
-      { progress: 30, stage: "Analyzing image content..." },
-      { progress: 50, stage: "Detecting background..." },
-      { progress: 70, stage: "Removing background..." },
-      { progress: 85, stage: "Optimizing edges..." },
-      { progress: 95, stage: "Finalizing image..." },
-    ];
-
     let stageIndex = 0;
     const progressInterval = setInterval(() => {
-      if (stageIndex < progressStages.length) {
-        const currentProgressStage = progressStages[stageIndex];
+      if (stageIndex < IMAGE_EDITOR_PROGRESS_STAGES.length) {
+        const currentProgressStage = IMAGE_EDITOR_PROGRESS_STAGES[stageIndex];
         setProgress(currentProgressStage.progress);
         setCurrentStage(currentProgressStage.stage);
         stageIndex++;

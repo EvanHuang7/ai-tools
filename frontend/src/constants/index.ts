@@ -43,3 +43,12 @@ export const FEATURE_DESCRIPTIONS = {
     icon: "Video",
   },
 } as const;
+
+export const IMAGE_EDITOR_PROGRESS_STAGES = [
+  { progress: 15, stage: "Uploading image..." },
+  { progress: 30, stage: "Analyzing image content..." },
+  { progress: 50, stage: "Detecting background..." },
+  { progress: 70, stage: "Removing background..." },
+  { progress: 85, stage: "Optimizing edges..." },
+  { progress: 95, stage: "Finalizing image..." },
+];
