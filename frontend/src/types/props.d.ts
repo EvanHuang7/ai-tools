@@ -11,3 +11,9 @@ export interface FeatureGuardProps {
   feature?: string;
   requiredPlan?: "Standard" | "Pro";
 }
+
+export interface UsageGuardProps {
+  children: ReactNode;
+  feature: "imageProcessing" | "textToImage" | "audioChat" | "videoGeneration";
+  action?: string; // e.g., "process this image", "generate this video"
+}

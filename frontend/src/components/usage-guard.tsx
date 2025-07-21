@@ -19,12 +19,7 @@ import {
   getUsagePercentage,
 } from "@/lib/utils";
 import { FEATURE_DESCRIPTIONS } from "@/constants";
-
-interface UsageGuardProps {
-  children: ReactNode;
-  feature: "imageProcessing" | "textToImage" | "audioChat" | "videoGeneration";
-  action?: string; // e.g., "process this image", "generate this video"
-}
+import { UsageGuardProps } from "@/types/props";
 
 // Component to lock the app feature by checking app feature usage and limit
 export function UsageGuard({ children, feature, action }: UsageGuardProps) {
