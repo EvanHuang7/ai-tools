@@ -3,7 +3,6 @@ import { generateVideo, listVideos } from "./video.api";
 import type { GenerateVideoRequest } from "@/types/api";
 import { useAuthedAxios } from "../client";
 
-// TODO: Fix and Call them in page file
 // Mutation to generate a video
 export const useGenerateVideo = () => {
   const axios = useAuthedAxios();

@@ -4,7 +4,6 @@ import { generateImage, listImages } from "./image.api";
 import type { GenerateImageRequest } from "@/types/api";
 import { useAuthedAxios } from "../client";
 
-// TODO: Fix and Call them in page file
 export const useGenerateImage = () => {
   const axios = useAuthedAxios();
   return useMutation({

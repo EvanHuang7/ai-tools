@@ -1,4 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { RemoveBgRequest } from "@/types/api";
+
 import {
   removeBackground,
   listRemovedBgImages,
@@ -6,12 +8,11 @@ import {
 } from "./imageRmBg.api";
 import { useAuthedAxios } from "../client";
 
-// TODO: Fix and Call them in page file
 // Mutation hook to remove background from an image
 export const useRemoveBackground = () => {
   const axios = useAuthedAxios();
   return useMutation({
-    mutationFn: (data: { image: File }) => removeBackground(data, axios),
+    mutationFn: (data: RemoveBgRequest) => removeBackground(data, axios),
   });
 };
 

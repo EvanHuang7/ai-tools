@@ -4,7 +4,6 @@ import { startAudio, createAudio, listAudios } from "./audio.api";
 import type { CreateAudioRequest } from "@/types/api";
 import { useAuthedAxios } from "../client";
 
-// TODO: Fix and Call them in page file
 // NOTE: This hook should be mutation instead of query bc
 // it is triggered by a button or await.
 export const useStartAudio = () => {

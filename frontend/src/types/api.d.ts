@@ -1,10 +1,10 @@
-export interface GenerateVideoRequest {
-  prompt: string;
-  image: File;
+export interface CreateAudioRequest {
+  topic: string;
+  transcript: AudioTranscriptMessage[];
 }
 
-export interface GenerateImageRequest {
-  prompt: string;
+export interface RemoveBgRequest {
+  image: File;
 }
 
 export interface RemoveBgResponse {
@@ -16,7 +16,11 @@ export interface RemoveBgResponse {
   };
 }
 
-export interface CreateAudioRequest {
-  topic: string;
-  transcript: AudioTranscriptMessage[];
+export interface GenerateImageRequest {
+  prompt: string;
+}
+
+export interface GenerateVideoRequest {
+  prompt: string;
+  image: File;
 }
