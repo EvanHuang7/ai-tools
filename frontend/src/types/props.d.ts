@@ -17,3 +17,7 @@ export interface UsageGuardProps {
   feature: "imageProcessing" | "textToImage" | "audioChat" | "videoGeneration";
   action?: string; // e.g., "process this image", "generate this video"
 }
+
+export interface UserPlanProviderProps {
+  children: ReactNode;
+}

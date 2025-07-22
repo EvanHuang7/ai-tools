@@ -6,22 +6,12 @@ import React, {
   ReactNode,
 } from "react";
 import { useClerk } from "@clerk/clerk-react";
-
-export type UserPlan = "Free" | "Standard" | "Pro";
-
-interface UserPlanContextType {
-  userPlan: UserPlan;
-  isLoading: boolean;
-  refreshUserPlan: () => Promise<void>;
-}
+import { UserPlanProviderProps } from "@/types/props";
+import { UserPlan, UserPlanContextType } from "@/types";
 
 const UserPlanContext = createContext<UserPlanContextType | undefined>(
   undefined
 );
-
-interface UserPlanProviderProps {
-  children: ReactNode;
-}
 
 export function UserPlanProvider({ children }: UserPlanProviderProps) {
   const [userPlan, setUserPlan] = useState<UserPlan>("Free");
