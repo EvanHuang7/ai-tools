@@ -12,7 +12,7 @@ export interface CreateAudioResponse {
   updatedAt: string;
 }
 
-export interface ListAudiosResponse {
+export interface AudioItem {
   id: string;
   userId: string;
   topic: string;
@@ -20,7 +20,8 @@ export interface ListAudiosResponse {
   createdAt: string;
   updatedAt: string;
 }
-[];
+
+export type ListAudiosResponse = AudioItem[];
 
 export interface StartAudioResponse {
   passUsageCheck: boolean;
@@ -40,12 +41,13 @@ export interface RemoveBgResponse {
   };
 }
 
-export interface ListRemovedBgImagesResponse {
+export interface RemovedBgImage {
   id: string;
   inputImageUrl: string;
   resultImageUrl: string;
 }
-[];
+
+export type ListRemovedBgImagesResponse = RemovedBgImage[];
 
 export interface GetAppUsageResponse {
   removeBgImageFeatureUsage: number;
@@ -67,7 +69,7 @@ export interface GenerateImageResponse {
   UpdatedAt: string;
 }
 
-export interface ListImagesResponse {
+export interface Image {
   ID: number;
   UserID: string;
   Prompt: string;
@@ -75,7 +77,8 @@ export interface ListImagesResponse {
   CreatedAt: string;
   UpdatedAt: string;
 }
-[];
+
+export type ListImagesResponse = Image[];
 
 export interface GenerateVideoRequest {
   prompt: string;
@@ -93,7 +96,7 @@ export interface GenerateVideoResponse {
   UpdatedAt: string;
 }
 
-export interface ListVideosResponse {
+export interface Video {
   ID: number;
   UserID: string;
   Prompt: string;
@@ -103,7 +106,8 @@ export interface ListVideosResponse {
   CreatedAt: string;
   UpdatedAt: string;
 }
-[];
+
+export type ListVideosResponse = Video[];
 
 export interface AudioTranscriptMessage {
   role: "user" | "system" | "assistant";
