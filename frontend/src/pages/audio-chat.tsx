@@ -54,7 +54,7 @@ import { toast } from "sonner";
 import { configureAssistant, formatDate } from "@/lib/utils";
 import { CallStatus, voiceOptions, styleOptions } from "@/constants/vapi";
 import { vapi } from "@/lib/vapiClient";
-import type { AudioTranscriptMessage } from "@/types/index";
+import type { AudioTranscriptMessage } from "@/types/api";
 import {
   useStartAudio,
   useCreateAudio,
