@@ -287,7 +287,7 @@ export function ImageEditor() {
                 </CardHeader>
                 <CardContent>
                   <UsageGuard
-                    feature="imageProcessing"
+                    feature="imageEditing"
                     action="process this image"
                   >
                     <div
