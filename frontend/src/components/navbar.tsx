@@ -54,11 +54,11 @@ export function Navbar() {
                 Image Editor
               </Link>
               <Link
-                to="/text-to-image"
+                to="/image-generator"
                 className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
               >
                 <Wand2 className="h-4 w-4" />
-                Text to Image
+                Image Generator
               </Link>
               <Link
                 to="/video-generator"
