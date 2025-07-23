@@ -14,7 +14,7 @@ export interface FeatureGuardProps {
 
 export interface UsageGuardProps {
   children: ReactNode;
-  feature: "imageProcessing" | "textToImage" | "audioChat" | "videoGeneration";
+  feature: "imageEditing" | "imageGeneration" | "audioChat" | "videoGeneration";
   action?: string; // e.g., "process this image", "generate this video"
 }
 

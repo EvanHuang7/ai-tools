@@ -29,8 +29,8 @@ export function UsageGuard({ children, feature, action }: UsageGuardProps) {
   // Convert app usage data to the format expected by helper functions
   const currentUsage = appUsage
     ? {
-        imageProcessing: appUsage.removeBgImageFeatureUsage || 0,
-        textToImage: appUsage.imageFeatureUsage || 0,
+        imageEditing: appUsage.removeBgImageFeatureUsage || 0,
+        imageGeneration: appUsage.imageFeatureUsage || 0,
         audioChat: appUsage.audioFeatureUsage || 0,
         videoGeneration: appUsage.videoFeatureUsage || 0,
       }
