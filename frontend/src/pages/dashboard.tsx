@@ -31,8 +31,8 @@ export function Dashboard() {
   // Convert app usage data to the format expected by helper functions
   const currentUsage = appUsage
     ? {
-        imageProcessing: appUsage.removeBgImageFeatureUsage || 0,
-        textToImage: appUsage.imageFeatureUsage || 0,
+        imageEditing: appUsage.removeBgImageFeatureUsage || 0,
+        imageGeneration: appUsage.imageFeatureUsage || 0,
         audioChat: appUsage.audioFeatureUsage || 0,
         videoGeneration: appUsage.videoFeatureUsage || 0,
       }
@@ -40,18 +40,18 @@ export function Dashboard() {
 
   const stats = [
     {
-      label: "Images Processed",
-      value: `${currentUsage.imageProcessing || 0}/${
+      label: "Images Edited",
+      value: `${currentUsage.imageEditing || 0}/${
         FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS]
-          ?.imageProcessing || FEATURE_USAGE_LIMITS.Free.imageProcessing
+          ?.imageEditing || FEATURE_USAGE_LIMITS.Free.imageEditing
       }`,
       icon: Image,
     },
     {
       label: "Images Generated",
-      value: `${currentUsage.textToImage || 0}/${
+      value: `${currentUsage.imageGeneration || 0}/${
         FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS]
-          ?.textToImage || FEATURE_USAGE_LIMITS.Free.textToImage
+          ?.imageGeneration || FEATURE_USAGE_LIMITS.Free.imageGeneration
       }`,
       icon: Wand2,
     },
@@ -86,7 +86,7 @@ export function Dashboard() {
       title: "Generate Images",
       description: "Create images from text descriptions",
       icon: Wand2,
-      href: "/text-to-image",
+      href: "/image-generator",
       color: "bg-emerald-500",
       requiresStandardOrPro: false,
     },
