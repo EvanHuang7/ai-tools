@@ -6,7 +6,7 @@ import { Dashboard } from "@/pages/dashboard";
 import { ImageEditor } from "@/pages/image-editor";
 import { VideoGenerator } from "@/pages/video-generator";
 import { AudioChat } from "@/pages/audio-chat";
-import { TextToImage } from "@/pages/text-to-image";
+import { ImageGenerator } from "@/pages/image-generator";
 import { Pricing } from "@/pages/pricing";
 
 function App() {
@@ -32,10 +32,10 @@ function App() {
           }
         />
         <Route
-          path="/text-to-image"
+          path="/image-generator"
           element={
             <AuthProtectedRoute>
-              <TextToImage />
+              <ImageGenerator />
             </AuthProtectedRoute>
           }
         />
