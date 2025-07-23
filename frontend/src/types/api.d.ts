@@ -1,3 +1,14 @@
+// Audio chat
+export interface AudioTranscriptMessage {
+  role: "user" | "system" | "assistant";
+  content: string;
+}
+
+export interface StartAudioResponse {
+  passUsageCheck: boolean;
+  message: string;
+}
+
 export interface CreateAudioRequest {
   topic: string;
   transcript: AudioTranscriptMessage[];
@@ -23,11 +34,7 @@ export interface AudioItem {
 
 export type ListAudiosResponse = AudioItem[];
 
-export interface StartAudioResponse {
-  passUsageCheck: boolean;
-  message: string;
-}
-
+// Remove image bg
 export interface RemoveBgRequest {
   image: File;
 }
@@ -49,13 +56,7 @@ export interface RemovedBgImage {
 
 export type ListRemovedBgImagesResponse = RemovedBgImage[];
 
-export interface GetAppUsageResponse {
-  removeBgImageFeatureUsage: number;
-  imageFeatureUsage: number;
-  audioFeatureUsage: number;
-  videoFeatureUsage: number;
-}
-
+// Generate image
 export interface GenerateImageRequest {
   prompt: string;
 }
@@ -80,6 +81,7 @@ export interface Image {
 
 export type ListImagesResponse = Image[];
 
+// Generate video
 export interface GenerateVideoRequest {
   prompt: string;
   image: File;
@@ -109,7 +111,10 @@ export interface Video {
 
 export type ListVideosResponse = Video[];
 
-export interface AudioTranscriptMessage {
-  role: "user" | "system" | "assistant";
-  content: string;
+// App usage
+export interface GetAppUsageResponse {
+  removeBgImageFeatureUsage: number;
+  imageFeatureUsage: number;
+  audioFeatureUsage: number;
+  videoFeatureUsage: number;
 }
