@@ -370,8 +370,8 @@ export function ImageEditor() {
                             <Progress value={progress} className="h-3" />
                             <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
                               <Clock className="w-3 h-3 inline mr-1" />
-                              Image processing typically takes around 30
-                              seconds. Please wait...
+                              Image editing typically takes around 30 seconds.
+                              Please wait...
                             </div>
                           </div>
                         )}
@@ -428,7 +428,7 @@ export function ImageEditor() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Sparkles className="h-5 w-5" />
-                      <CardTitle>Processed Result</CardTitle>
+                      <CardTitle>Edited Result</CardTitle>
                     </div>
                     {processedImage && (
                       <Button
@@ -452,7 +452,7 @@ export function ImageEditor() {
                     )}
                   </div>
                   <CardDescription>
-                    Your AI-processed image will appear here
+                    Your AI-edited image will appear here
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -524,7 +524,7 @@ export function ImageEditor() {
                     <div className="text-center py-12">
                       <ImageIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                       <p className="text-muted-foreground mb-2">
-                        No processed image yet
+                        No edited image yet
                       </p>
                       <p className="text-sm text-muted-foreground">
                         Upload an image and click "Remove Background" to get
@@ -537,13 +537,13 @@ export function ImageEditor() {
             </div>
 
             {/* Features */}
-            {/* Image Processing History Section */}
+            {/* Image Editing History Section */}
             <div className="mt-8">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <ImageIcon className="h-5 w-5" />
-                    Image Processing History
+                    Image Editing History
                   </CardTitle>
                   <CardDescription>
                     Your previous background removal results
@@ -559,10 +559,10 @@ export function ImageEditor() {
                     <div className="text-center py-8">
                       <ImageIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                       <p className="text-muted-foreground mb-2">
-                        No processed images yet
+                        No edited images yet
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Process your first image to see it here
+                        Edit your first image to see it here
                       </p>
                     </div>
                   ) : (
@@ -571,7 +571,7 @@ export function ImageEditor() {
                         <TableHeader>
                           <TableRow>
                             <TableHead>Original</TableHead>
-                            <TableHead>Processed</TableHead>
+                            <TableHead>Edited</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead className="text-center">
                               Action
@@ -635,7 +635,7 @@ export function ImageEditor() {
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
                     <ImageIcon className="h-5 w-5" />
-                    Processed Image
+                    Edited Image
                   </DialogTitle>
                   <DialogDescription>
                     Background removal result
@@ -656,7 +656,7 @@ export function ImageEditor() {
                         </div>
                         <div>
                           <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-medium">Processed Result</h4>
+                            <h4 className="font-medium">Edited Result</h4>
                             <Button
                               onClick={toggleGrid}
                               variant="outline"
