@@ -1,8 +1,13 @@
 import type { AxiosInstance } from "axios";
-import type { RemoveBgResponse } from "@/types/api";
+import type {
+  RemoveBgRequest,
+  RemoveBgResponse,
+  ListRemovedBgImagesResponse,
+  GetAppUsageResponse,
+} from "@/types/api";
 
 export const removeBackground = async (
-  data: { image: File },
+  data: RemoveBgRequest,
   axios: AxiosInstance
 ): Promise<RemoveBgResponse> => {
   const formData = new FormData();
@@ -16,12 +21,14 @@ export const removeBackground = async (
 
 export const listRemovedBgImages = async (
   axios: AxiosInstance
-): Promise<RemoveBgResponse["image"][]> => {
+): Promise<ListRemovedBgImagesResponse> => {
   const response = await axios.get("/api/python/list-removed-bg-images");
   return response.data;
 };
 
-export const getAppUsage = async (axios: AxiosInstance) => {
+export const getAppUsage = async (
+  axios: AxiosInstance
+): Promise<GetAppUsageResponse> => {
   const response = await axios.get("/api/python/get-app-usage");
   return response.data;
 };
