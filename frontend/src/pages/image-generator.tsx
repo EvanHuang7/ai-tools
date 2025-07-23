@@ -51,7 +51,7 @@ import {
 import { formatDate } from "@/lib/utils";
 import { IMAGE_GENERATOR_PROGRESS_STAGES } from "@/constants";
 
-export function TextToImage() {
+export function ImageGenerator() {
   // Image info
   const [prompt, setPrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -189,7 +189,10 @@ export function TextToImage() {
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Input Section */}
               <div className="lg:col-span-2 space-y-6">
-                <UsageGuard feature="textToImage" action="generate this image">
+                <UsageGuard
+                  feature="imageGeneration"
+                  action="generate this image"
+                >
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
