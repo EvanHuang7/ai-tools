@@ -10,20 +10,20 @@ import {
 // App features usage limits for different subscription plans
 export const FEATURE_USAGE_LIMITS = {
   Free: {
-    imageProcessing: 5, // Image editor operations per month
-    textToImage: 2, // Text-to-image generations per month
+    imageEditing: 5, // Image editor operations per month
+    imageGeneration: 2, // Image generator operations per month
     audioChat: 3, // Audio chat sessions per month (each session = 10 minutes max)
     videoGeneration: 0, // Video generations per month
   },
   Standard: {
-    imageProcessing: 10,
-    textToImage: 3,
+    imageEditing: 10,
+    imageGeneration: 3,
     audioChat: 5,
     videoGeneration: 1,
   },
   Pro: {
-    imageProcessing: 20,
-    textToImage: 5,
+    imageEditing: 20,
+    imageGeneration: 5,
     audioChat: 10,
     videoGeneration: 2,
   },
@@ -31,13 +31,13 @@ export const FEATURE_USAGE_LIMITS = {
 
 // Feature descriptions for UI
 export const USAGE_GUARD_FEATURE_DESCRIPTIONS = {
-  imageProcessing: {
-    name: "Image Processing",
+  imageEditing: {
+    name: "Image Editing",
     description: "Background removal, enhancement, and editing operations",
     icon: "Image",
   },
-  textToImage: {
-    name: "Text to Image",
+  imageGeneration: {
+    name: "Image Generation",
     description: "AI-powered image generation from text prompts",
     icon: "Wand2",
   },
@@ -89,7 +89,7 @@ export const VIDEO_GENERATOR_PROGRESS_STAGES = [
 export const SIDE_BAR_NAVIGATION = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Image Editor", href: "/image-editor", icon: Image },
-  { name: "Text to Image", href: "/text-to-image", icon: Wand2 },
+  { name: "Image Generator", href: "/image-generator", icon: Wand2 },
   { name: "Audio Chat", href: "/audio-chat", icon: Mic },
   { name: "Video Generator", href: "/video-generator", icon: Video },
   { name: "Pricing", href: "/pricing", icon: DollarSign },
@@ -111,10 +111,10 @@ export const HOME_PAGE_FEATURES = [
   },
   {
     icon: Wand2,
-    title: "Text to Image",
-    description: "Generate stunning images from text descriptions using AI",
+    title: "Image Generator",
+    description: "Generate stunning images from text prompts using AI",
     features: [
-      "Text to Image",
+      "Text to Image Generation",
       "Multiple Styles",
       "High Resolution",
       "Custom Prompts",
