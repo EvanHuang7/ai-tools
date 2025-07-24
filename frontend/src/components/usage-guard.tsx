@@ -1,4 +1,4 @@
-import { useGetAppUsage } from "@/api/imageRemoveBg/imageRmBg.queries";
+import { useGetAppUsage } from "@/api";
 import { useUserPlan } from "@/contexts/UserPlanContext";
 import {
   Card,
