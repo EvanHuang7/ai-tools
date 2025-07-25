@@ -401,7 +401,7 @@ export function ImageEditor() {
                               <p className="text-red-700">
                                 {removeBackgroundMutation.error instanceof Error
                                   ? removeBackgroundMutation.error.message
-                                  : "An error occurred while processing your image"}
+                                  : "An error occurred while editing your image"}
                               </p>
                             </div>
                           </div>
