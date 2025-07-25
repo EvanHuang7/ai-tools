@@ -16,7 +16,7 @@ import (
 	"go-backend/utils"
 )
 
-type generateImageRequestBody struct {
+type generateImageRequest struct {
 	Prompt string `json:"prompt" binding:"required"`
 }
 
@@ -68,7 +68,7 @@ func GenerateImage(c *gin.Context) {
 
 	// Step 2: Generate image with Imagekit and download it
 	// Get api request body and check the Imagekit credentials
-	var req generateImageRequestBody
+	var req generateImageRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing or invalid prompt"})
 		return
@@ -199,7 +199,6 @@ func GenerateImage(c *gin.Context) {
 // List all generated images for logged in user
 func ListImages(c *gin.Context) {
 	// Get Clerk userId from Gin context
-	// TODO: make sure it works when calling this API from front-end
 	userIdRaw, exists := c.Get("userId")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})

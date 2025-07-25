@@ -212,7 +212,6 @@ func GenerateVeo2Video(c *gin.Context) {
 // List all generated videos for logged in user
 func ListVideos(c *gin.Context) {
 	// Get Clerk userId from Gin context
-	// TODO: make sure it works when calling this API from front-end
 	userIdRaw, exists := c.Get("userId")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
