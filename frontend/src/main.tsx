@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ClerkProvider } from "@clerk/clerk-react";
-import { UserPlanProvider } from "./contexts/UserPlanContext.tsx";
+import { UserPlanProvider } from "./contexts/user-plan-context.tsx";
 import App from "./App.tsx";
 import "./index.css";
 import queryClient from "./lib/queryClient.ts";

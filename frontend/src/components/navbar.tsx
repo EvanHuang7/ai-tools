@@ -5,7 +5,7 @@ import {
   UserButton,
   useAuth,
 } from "@clerk/clerk-react";
-import { useUserPlan } from "@/contexts/UserPlanContext";
+import { useUserPlan } from "@/contexts/user-plan-context";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {

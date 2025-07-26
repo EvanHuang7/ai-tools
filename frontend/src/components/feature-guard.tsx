@@ -1,4 +1,4 @@
-import { useUserPlan } from "@/contexts/UserPlanContext";
+import { useUserPlan } from "@/contexts/user-plan-context";
 import {
   Card,
   CardContent,
