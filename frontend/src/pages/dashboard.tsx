@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/navbar";
 import { Sidebar } from "@/components/sidebar";
 import { useGetAppUsage } from "@/api";
-import { useUserPlan } from "@/contexts/user-plan-context";
+import { useUserPlan } from "@/components/user-plan-context";
 import {
   Card,
   CardContent,
