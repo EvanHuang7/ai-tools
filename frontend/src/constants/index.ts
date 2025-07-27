@@ -170,3 +170,39 @@ export const APP_USER_REVIEWS = [
     rating: 5,
   },
 ];
+
+// Dashboard page app quick actions
+export const QUICK_ACTIONS = [
+  {
+    title: "Edit Images",
+    description: "Remove backgrounds, enhance quality",
+    icon: Image,
+    href: "/image-editor",
+    color: "bg-blue-500",
+    requiresStandardOrPro: false,
+  },
+  {
+    title: "Generate Images",
+    description: "Create images from text descriptions",
+    icon: Wand2,
+    href: "/image-generator",
+    color: "bg-emerald-500",
+    requiresStandardOrPro: false,
+  },
+  {
+    title: "Voice Chat",
+    description: "Talk with AI assistant",
+    icon: Mic,
+    href: "/audio-chat",
+    color: "bg-green-500",
+    requiresStandardOrPro: false,
+  },
+  {
+    title: "Generate Videos",
+    description: "Create videos from your images",
+    icon: Video,
+    href: "/video-generator",
+    color: "bg-purple-500",
+    requiresStandardOrPro: true,
+  },
+];

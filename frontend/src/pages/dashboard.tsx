@@ -22,7 +22,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { FEATURE_USAGE_LIMITS } from "@/constants";
+import { FEATURE_USAGE_LIMITS, QUICK_ACTIONS } from "@/constants";
 
 export function Dashboard() {
   const { userPlan, isLoading: isPlanLoading } = useUserPlan();
@@ -70,41 +70,6 @@ export function Dashboard() {
           ?.audioChat || FEATURE_USAGE_LIMITS.Free.audioChat
       }`,
       icon: Mic,
-    },
-  ];
-
-  const quickActions = [
-    {
-      title: "Edit Images",
-      description: "Remove backgrounds, enhance quality",
-      icon: Image,
-      href: "/image-editor",
-      color: "bg-blue-500",
-      requiresStandardOrPro: false,
-    },
-    {
-      title: "Generate Images",
-      description: "Create images from text descriptions",
-      icon: Wand2,
-      href: "/image-generator",
-      color: "bg-emerald-500",
-      requiresStandardOrPro: false,
-    },
-    {
-      title: "Voice Chat",
-      description: "Talk with AI assistant",
-      icon: Mic,
-      href: "/audio-chat",
-      color: "bg-green-500",
-      requiresStandardOrPro: false,
-    },
-    {
-      title: "Generate Videos",
-      description: "Create videos from your images",
-      icon: Video,
-      href: "/video-generator",
-      color: "bg-purple-500",
-      requiresStandardOrPro: true,
     },
   ];
 
@@ -163,7 +128,7 @@ export function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {quickActions.map((action, index) => (
+                    {QUICK_ACTIONS.map((action, index) => (
                       <div key={index} className="relative">
                         {action.requiresStandardOrPro && userPlan === "Free" ? (
                           <FeatureGuard
