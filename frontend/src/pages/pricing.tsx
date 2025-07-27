@@ -5,30 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Zap } from "lucide-react";
 import { ClerkPricingTable } from "@/components/clerk-pricing-table";
 import { toast } from "sonner";
+import { FAQS } from "@/constants";
 
 export function Pricing() {
-  const faqs = [
-    {
-      question: "How do user plans and usage limits work?",
-      answer:
-        "Our app uses tiered user plans (Free, Standard, and Pro), each with its own limits for different features. Higher-tier plans unlock increased usage and access to advanced tools. You can upgrade at any time based on your needs.",
-    },
-    {
-      question: "Can I change my plan anytime?",
-      answer:
-        "Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.",
-    },
-    {
-      question: "Do you offer refunds?",
-      answer:
-        "We offer a 30-day money-back guarantee for all paid plans. Contact our support team for assistance.",
-    },
-    {
-      question: "Is there a free trial for paid plans?",
-      answer: "No, we currently do not offer a free trial for paid plans.",
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -60,7 +39,7 @@ export function Pricing() {
             Frequently Asked Questions
           </h2>
           <div className="space-y-6">
-            {faqs.map((faq, index) => (
+            {FAQS.map((faq, index) => (
               <Card key={index}>
                 <CardHeader>
                   <CardTitle className="text-lg">{faq.question}</CardTitle>

@@ -171,7 +171,7 @@ export const APP_USER_REVIEWS = [
   },
 ];
 
-// Dashboard page app quick actions
+// Dashboard page quick actions
 export const QUICK_ACTIONS = [
   {
     title: "Edit Images",
@@ -204,5 +204,28 @@ export const QUICK_ACTIONS = [
     href: "/video-generator",
     color: "bg-purple-500",
     requiresStandardOrPro: true,
+  },
+];
+
+// Pricing page faqs
+export const FAQS = [
+  {
+    question: "How do user plans and usage limits work?",
+    answer:
+      "Our app uses tiered user plans (Free, Standard, and Pro), each with its own limits for different features. Higher-tier plans unlock increased usage and access to advanced tools. You can upgrade at any time based on your needs.",
+  },
+  {
+    question: "Can I change my plan anytime?",
+    answer:
+      "Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.",
+  },
+  {
+    question: "Do you offer refunds?",
+    answer:
+      "We offer a 30-day money-back guarantee for all paid plans. Contact our support team for assistance.",
+  },
+  {
+    question: "Is there a free trial for paid plans?",
+    answer: "No, we currently do not offer a free trial for paid plans.",
   },
 ];
