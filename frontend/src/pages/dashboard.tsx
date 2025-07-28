@@ -84,7 +84,7 @@ export function Dashboard() {
             <div className="mb-8">
               <h1 className="text-3xl font-bold mb-2">Welcome back!</h1>
               <p className="text-muted-foreground">
-                Here's feature usages with your AI tools this month.
+                Here's how you've used your AI tools this month.
               </p>
             </div>
 
