@@ -61,18 +61,18 @@ export function Navbar() {
                 Image Generator
               </Link>
               <Link
-                to="/video-generator"
-                className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
-              >
-                <Video className="h-4 w-4" />
-                Video Generator
-              </Link>
-              <Link
                 to="/audio-chat"
                 className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
               >
                 <Mic className="h-4 w-4" />
                 Audio Chat
+              </Link>
+              <Link
+                to="/video-generator"
+                className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
+              >
+                <Video className="h-4 w-4" />
+                Video Generator
               </Link>
               <Link
                 to="/pricing"
