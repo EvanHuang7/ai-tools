@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import {
-  useRemoveBackground,
+  useCreateRemovedBgImage,
   useListRemovedBgImages,
 } from "@/api/imageRemoveBg/imageRmBg.queries";
 import {
@@ -62,7 +62,7 @@ export function ImageEditor() {
   const [currentStage, setCurrentStage] = useState("");
 
   // API hook
-  const removeBackgroundMutation = useRemoveBackground();
+  const removeBackgroundMutation = useCreateRemovedBgImage();
   const { data: imageHistory, isLoading: isLoadingHistory } =
     useListRemovedBgImages();
 

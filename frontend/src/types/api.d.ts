@@ -35,11 +35,11 @@ export interface AudioItem {
 export type ListAudiosResponse = AudioItem[];
 
 // Remove image bg
-export interface RemoveBgRequest {
+export interface CreateRemovedBgImageRequest {
   image: File;
 }
 
-export interface RemoveBgResponse {
+export interface CreateRemovedBgImageResponse {
   success: boolean;
   image: {
     id: string;

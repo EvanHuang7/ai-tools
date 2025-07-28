@@ -1,16 +1,17 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { RemoveBgRequest } from "@/types/api";
+import { CreateRemovedBgImageRequest } from "@/types/api";
 
-import { removeBackground, listRemovedBgImages } from "./imageRmBg.api";
+import { createRemovedBgImage, listRemovedBgImages } from "./imageRmBg.api";
 import { useAuthedAxios } from "../client";
 
 // Mutation hook to remove background from an image
-export const useRemoveBackground = () => {
+export const useCreateRemovedBgImage = () => {
   const axios = useAuthedAxios();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: RemoveBgRequest) => removeBackground(data, axios),
+    mutationFn: (data: CreateRemovedBgImageRequest) =>
+      createRemovedBgImage(data, axios),
     onSuccess: () => {
       // Invalidate 'removedBgImages' and 'appUsage' queries so it refetches fresh data
       queryClient.invalidateQueries({ queryKey: ["removedBgImages"] });

@@ -1,15 +1,14 @@
 import type { AxiosInstance } from "axios";
 import type {
-  RemoveBgRequest,
-  RemoveBgResponse,
+  CreateRemovedBgImageRequest,
+  CreateRemovedBgImageResponse,
   ListRemovedBgImagesResponse,
-  GetAppUsageResponse,
 } from "@/types/api";
 
-export const removeBackground = async (
-  data: RemoveBgRequest,
+export const createRemovedBgImage = async (
+  data: CreateRemovedBgImageRequest,
   axios: AxiosInstance
-): Promise<RemoveBgResponse> => {
+): Promise<CreateRemovedBgImageResponse> => {
   const formData = new FormData();
   formData.append("image", data.image);
 
