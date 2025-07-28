@@ -73,7 +73,7 @@ export function ImageGenerator() {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 1;
+  const itemsPerPage = 5;
 
   // Pagination calculations
   const totalItems = imageHistory?.length || 0;
@@ -505,22 +505,96 @@ export function ImageGenerator() {
                             </Button>
 
                             <div className="flex items-center gap-1">
-                              {Array.from(
-                                { length: totalPages },
-                                (_, i) => i + 1
-                              ).map((page) => (
-                                <Button
-                                  key={page}
-                                  variant={
-                                    currentPage === page ? "default" : "outline"
-                                  }
-                                  size="sm"
-                                  onClick={() => goToPage(page)}
-                                  className="w-8 h-8 p-0"
-                                >
-                                  {page}
-                                </Button>
-                              ))}
+                              {totalPages <= 3 ? (
+                                // Show all pages if 3 or fewer
+                                Array.from(
+                                  { length: totalPages },
+                                  (_, i) => i + 1
+                                ).map((page) => (
+                                  <Button
+                                    key={page}
+                                    variant={
+                                      currentPage === page
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    size="sm"
+                                    onClick={() => goToPage(page)}
+                                    className="w-8 h-8 p-0"
+                                  >
+                                    {page}
+                                  </Button>
+                                ))
+                              ) : (
+                                // Always show exactly 3 elements for more than 3 pages
+                                <>
+                                  {currentPage === 1 ? (
+                                    // Page 1 of n: "1 ... n"
+                                    <>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(1)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        1
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => goToPage(totalPages)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {totalPages}
+                                      </Button>
+                                    </>
+                                  ) : currentPage === totalPages ? (
+                                    // Page n of n: "1 ... n"
+                                    <>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => goToPage(1)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        1
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(totalPages)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {totalPages}
+                                      </Button>
+                                    </>
+                                  ) : (
+                                    // Middle page: "... n ..."
+                                    <>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(currentPage)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {currentPage}
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                    </>
+                                  )}
+                                </>
+                              )}
                             </div>
 
                             <Button
