@@ -26,6 +26,8 @@ import {
   Calendar,
   Trash2,
   AlertCircle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import { UsageGuard } from "@/components/usage-guard";
@@ -68,6 +70,17 @@ export function ImageGenerator() {
   // Modal state for viewing images
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 1;
+
+  // Pagination calculations
+  const totalItems = imageHistory?.length || 0;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = imageHistory?.slice(startIndex, endIndex) || [];
 
   // Generate image API call
   const handleGenerateImage = async () => {
@@ -168,6 +181,25 @@ export function ImageGenerator() {
   const handleViewImage = (image: any) => {
     setSelectedImage(image);
     setIsModalOpen(true);
+  };
+
+  // Pagination handlers
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   return (
@@ -380,7 +412,7 @@ export function ImageGenerator() {
                     Image Generation History
                   </CardTitle>
                   <CardDescription>
-                    Your previous AI-generated images
+                    Your previous AI-generated images ({totalItems} total)
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -389,7 +421,7 @@ export function ImageGenerator() {
                       <Loader2 className="w-6 h-6 animate-spin" />
                       <span className="ml-2">Loading history...</span>
                     </div>
-                  ) : !imageHistory || imageHistory.length === 0 ? (
+                  ) : !imageHistory || totalItems === 0 ? (
                     <div className="text-center py-8">
                       <ImageIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                       <p className="text-muted-foreground mb-2">
@@ -400,54 +432,110 @@ export function ImageGenerator() {
                       </p>
                     </div>
                   ) : (
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Preview</TableHead>
-                            <TableHead>Prompt</TableHead>
-                            <TableHead>Created</TableHead>
-                            <TableHead className="text-center">
-                              Action
-                            </TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {imageHistory.map((image: any) => (
-                            <TableRow key={image.id}>
-                              <TableCell>
-                                <img
-                                  src={image.ImageURL}
-                                  alt="Generated"
-                                  className="w-16 h-16 rounded object-cover"
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <div className="max-w-[300px] truncate">
-                                  {image.Prompt}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                  <Calendar className="w-3 h-3" />
-                                  {formatDate(image.CreatedAt)}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-center">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleViewImage(image)}
-                                  className="flex items-center gap-1"
-                                >
-                                  <Eye className="w-3 h-3" />
-                                  View
-                                </Button>
-                              </TableCell>
+                    <div className="space-y-4">
+                      <div className="rounded-md border">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Preview</TableHead>
+                              <TableHead>Prompt</TableHead>
+                              <TableHead>Created</TableHead>
+                              <TableHead className="text-center">
+                                Action
+                              </TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                          </TableHeader>
+                          <TableBody>
+                            {currentItems.map((image: any) => (
+                              <TableRow key={image.id}>
+                                <TableCell>
+                                  <img
+                                    src={image.ImageURL}
+                                    alt="Generated"
+                                    className="w-16 h-16 rounded object-cover"
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <div className="max-w-[300px] truncate">
+                                    {image.Prompt}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                    <Calendar className="w-3 h-3" />
+                                    {formatDate(image.CreatedAt)}
+                                  </div>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleViewImage(image)}
+                                    className="flex items-center gap-1"
+                                  >
+                                    <Eye className="w-3 h-3" />
+                                    View
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      {/* Pagination Controls */}
+                      {totalPages > 1 && (
+                        <div className="flex items-center justify-between">
+                          <div className="hidden md:flex text-sm text-muted-foreground">
+                            Showing {startIndex + 1} to{" "}
+                            {Math.min(endIndex, totalItems)} of {totalItems}{" "}
+                            images
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={goToPreviousPage}
+                              disabled={currentPage === 1}
+                              className="flex items-center gap-1"
+                            >
+                              <ChevronLeft className="w-4 h-4" />
+                              <span className="hidden sm:flex ">Previous</span>
+                            </Button>
+
+                            <div className="flex items-center gap-1">
+                              {Array.from(
+                                { length: totalPages },
+                                (_, i) => i + 1
+                              ).map((page) => (
+                                <Button
+                                  key={page}
+                                  variant={
+                                    currentPage === page ? "default" : "outline"
+                                  }
+                                  size="sm"
+                                  onClick={() => goToPage(page)}
+                                  className="w-8 h-8 p-0"
+                                >
+                                  {page}
+                                </Button>
+                              ))}
+                            </div>
+
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={goToNextPage}
+                              disabled={currentPage === totalPages}
+                              className="flex items-center gap-1"
+                            >
+                              <span className="hidden sm:flex ">Next</span>
+                              <ChevronRight className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>
