@@ -300,7 +300,7 @@ export function AudioChat() {
                 Have natural voice conversations with AI. Choose your topic,
                 select a voice style, and start chatting!{" "}
                 <span className="font-bold text-amber-700">
-                  Each session is limited to 3 minutes.
+                  Each chat session is limited to 3 minutes.
                 </span>
               </p>
             </div>
