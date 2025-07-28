@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { generateImage, listImages } from "./image.api";
 
 import type { GenerateImageRequest } from "@/types/api";
@@ -6,8 +6,15 @@ import { useAuthedAxios } from "../client";
 
 export const useGenerateImage = () => {
   const axios = useAuthedAxios();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (data: GenerateImageRequest) => generateImage(data, axios),
+    onSuccess: () => {
+      // Invalidate 'images' and 'appUsage' queries so it refetches fresh data
+      queryClient.invalidateQueries({ queryKey: ["images"] });
+      queryClient.invalidateQueries({ queryKey: ["appUsage"] });
+    },
   });
 };
 

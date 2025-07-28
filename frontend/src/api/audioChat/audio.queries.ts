@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { startAudio, createAudio, listAudios } from "./audio.api";
 
 import type { CreateAudioRequest } from "@/types/api";
@@ -15,8 +15,15 @@ export const useStartAudio = () => {
 
 export const useCreateAudio = () => {
   const axios = useAuthedAxios();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (data: CreateAudioRequest) => createAudio(data, axios),
+    onSuccess: () => {
+      // Invalidate 'audios' and 'appUsage' queries so it refetches fresh data
+      queryClient.invalidateQueries({ queryKey: ["audios"] });
+      queryClient.invalidateQueries({ queryKey: ["appUsage"] });
+    },
   });
 };
 
