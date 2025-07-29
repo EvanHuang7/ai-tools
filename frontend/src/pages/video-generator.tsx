@@ -332,7 +332,7 @@ export function VideoGenerator() {
                         <Label htmlFor="prompt">Prompt *</Label>
                         <Textarea
                           id="prompt"
-                          placeholder="Describe the animation or movement you want to see... (e.g., 'gentle camera zoom in', 'leaves swaying in the wind', 'water flowing')"
+                          placeholder="Describe the video you want to create... (e.g., 'A futuristic city skyline at night with flying cars and neon lights')"
                           value={prompt}
                           onChange={(e) => setPrompt(e.target.value)}
                           className="mt-2"
