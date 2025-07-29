@@ -336,8 +336,9 @@ export function AudioChat() {
               </p>
             </div>
 
+            {/* Input + Live Transcript Sections */}
             <div className="grid lg:grid-cols-3 gap-8">
-              {/* Conversation Setup Card */}
+              {/* Input Section */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -505,7 +506,7 @@ export function AudioChat() {
                 </CardContent>
               </Card>
 
-              {/* Live Transcript Card */}
+              {/* Live Transcript Section */}
               <div className="lg:col-span-2">
                 <Card className="h-[700px] flex flex-col">
                   <CardHeader>
@@ -880,7 +881,8 @@ export function AudioChat() {
                 </div>
               </DialogContent>
             </Dialog>
-            {/* Features */}
+
+            {/* Footer Section */}
             <div className="mt-12 grid md:grid-cols-4 gap-6">
               <Card className="text-center p-6">
                 <Mic className="w-8 h-8 text-primary mx-auto mb-4" />

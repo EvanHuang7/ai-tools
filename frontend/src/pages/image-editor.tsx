@@ -307,6 +307,7 @@ export function ImageEditor() {
               </p>
             </div>
 
+            {/* Upload + Result Section */}
             <div className="grid lg:grid-cols-2 gap-8">
               {/* Upload Section */}
               <Card>
@@ -572,7 +573,6 @@ export function ImageEditor() {
               </Card>
             </div>
 
-            {/* Features */}
             {/* Image Editing History Section */}
             <div className="mt-8">
               <Card>
@@ -892,6 +892,7 @@ export function ImageEditor() {
               </DialogContent>
             </Dialog>
 
+            {/* Footer Section */}
             <div className="mt-12 grid md:grid-cols-3 gap-6">
               <Card className="text-center p-6">
                 <Scissors className="w-8 h-8 text-primary mx-auto mb-4" />

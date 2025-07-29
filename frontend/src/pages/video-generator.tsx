@@ -248,6 +248,7 @@ export function VideoGenerator() {
               </p>
             </div>
 
+            {/* Input + Result Sections */}
             <div className="grid lg:grid-cols-2 gap-8">
               {/* Input Section */}
               <div className="space-y-6">
@@ -516,7 +517,6 @@ export function VideoGenerator() {
               </Card>
             </div>
 
-            {/* Features */}
             {/* Video Generation History Section */}
             <div className="mt-8">
               <Card>
@@ -841,6 +841,7 @@ export function VideoGenerator() {
               </DialogContent>
             </Dialog>
 
+            {/* Footer Section */}
             <div className="mt-12 grid md:grid-cols-4 gap-6">
               <Card className="text-center p-6">
                 <Wand2 className="w-8 h-8 text-primary mx-auto mb-4" />

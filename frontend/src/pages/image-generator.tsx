@@ -218,6 +218,7 @@ export function ImageGenerator() {
               </p>
             </div>
 
+            {/* Input + Result Sections */}
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Input Section */}
               <div className="lg:col-span-2 space-y-6">
@@ -402,7 +403,6 @@ export function ImageGenerator() {
               </div>
             </div>
 
-            {/* Features */}
             {/* Image Generation History Section */}
             <div className="mt-8">
               <Card>
@@ -695,6 +695,7 @@ export function ImageGenerator() {
               </DialogContent>
             </Dialog>
 
+            {/* Footer Section */}
             <div className="mt-12 grid md:grid-cols-4 gap-6">
               <Card className="text-center p-6">
                 <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
