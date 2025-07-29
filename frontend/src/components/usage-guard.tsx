@@ -63,7 +63,7 @@ export function UsageGuard({ children, feature, action }: UsageGuardProps) {
           <Lock className="w-6 h-6 text-muted-foreground" />
         </div>
         <CardTitle className="flex items-center justify-center gap-2">
-          <Zap className="w-5 h-5 text-amber-500" />
+          <Zap className="w-5 h-5 text-amber-500 flex-shrink-0" />
           Usage Limit Reached
         </CardTitle>
         <CardDescription>
