@@ -118,9 +118,26 @@ export function Dashboard() {
             )}
 
             <div className="grid grid-cols-1 gap-8">
-              {/* TODO: use "isPlanLoading" check if display the card or display loading state */}
               {/* Quick Actions Section */}
-              <div>
+              {isPlanLoading ? (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Quick Actions</CardTitle>
+                    <CardDescription>
+                      Jump into your favorite AI tools
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {[...Array(4)].map((_, index) => (
+                      <Card key={index} className="h-full">
+                        <CardContent className="p-4 h-full flex flex-col min-h-[180px] items-center justify-center">
+                          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </CardContent>
+                </Card>
+              ) : (
                 <Card>
                   <CardHeader>
                     <CardTitle>Quick Actions</CardTitle>
@@ -204,7 +221,7 @@ export function Dashboard() {
                     ))}
                   </CardContent>
                 </Card>
-              </div>
+              )}
             </div>
           </div>
         </div>
