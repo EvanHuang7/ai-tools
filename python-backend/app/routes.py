@@ -96,7 +96,8 @@ def remove_background():
             "image": {
                 "id": str(created_image.id),
                 "inputImageUrl": original_url,
-                "resultImageUrl": result_image_url
+                "resultImageUrl": result_image_url,
+                "createdAt": str(created_image.createdAt)
             }
         }), 200
     except Exception as e:
@@ -109,7 +110,7 @@ def list_removed_bg_images():
     try:
         images = Image.objects(userId=g.user_id)
 
-        return jsonify([{"id": str(img.id), "inputImageUrl": img.inputImageUrl, "resultImageUrl": img.resultImageUrl} for img in images]), 200
+        return jsonify([{"id": str(img.id), "inputImageUrl": img.inputImageUrl, "resultImageUrl": img.resultImageUrl, "createdAt": img.createdAt} for img in images]), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     

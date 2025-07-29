@@ -45,6 +45,7 @@ export interface CreateRemovedBgImageResponse {
     id: string;
     inputImageUrl: string;
     resultImageUrl: string;
+    createdAt: string;
   };
 }
 
@@ -52,6 +53,7 @@ export interface RemovedBgImage {
   id: string;
   inputImageUrl: string;
   resultImageUrl: string;
+  createdAt: string;
 }
 
 export type ListRemovedBgImagesResponse = RemovedBgImage[];
