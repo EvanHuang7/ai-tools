@@ -16,6 +16,7 @@ import {
   Video,
   Mic,
   DollarSign,
+  Loader2,
 } from "lucide-react";
 
 export function Navbar() {
@@ -89,10 +90,10 @@ export function Navbar() {
         <div className="flex items-center space-x-4">
           {isSignedIn ? (
             <>
-              {!isLoading && (
-                <Badge variant="secondary" className="hidden sm:flex">
-                  {userPlan} plan
-                </Badge>
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Badge variant="secondary">{userPlan} plan</Badge>
               )}
               <UserButton afterSignOutUrl="/" />
             </>
