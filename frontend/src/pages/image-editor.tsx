@@ -308,11 +308,11 @@ export function ImageEditor() {
             </div>
 
             {/* Input + Result Section */}
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid lg:grid-cols-2 gap-8 lg:items-stretch">
               {/* Input Section */}
-              <div className="space-y-6">
+              <div className="space-y-6 flex flex-col">
                 <UsageGuard feature="imageEditing" action="process this image">
-                  <Card>
+                  <Card className="flex-1">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <Upload className="h-5 w-5 flex-shrink-0" />
@@ -458,7 +458,7 @@ export function ImageEditor() {
               </div>
 
               {/* Result Section */}
-              <Card>
+              <Card className="flex flex-col">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -490,9 +490,9 @@ export function ImageEditor() {
                     Your AI-edited image will appear here
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex-1 flex flex-col">
                   {processedImage ? (
-                    <div className="space-y-6">
+                    <div className="space-y-6 flex-1 flex flex-col">
                       <div className="relative">
                         <img
                           src={processedImage}
@@ -521,7 +521,7 @@ export function ImageEditor() {
                         )}
                       </div>
 
-                      <div className="space-y-3">
+                      <div className="space-y-3 mt-auto">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <Button
                             onClick={downloadImage}
@@ -558,7 +558,7 @@ export function ImageEditor() {
                       </div>
                     </div>
                   ) : (
-                    <div className="text-center py-12">
+                    <div className="text-center py-12 flex-1 flex flex-col justify-center">
                       <ImageIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                       <p className="text-muted-foreground mb-2">
                         No edited image yet
