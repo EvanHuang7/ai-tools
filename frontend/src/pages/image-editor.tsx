@@ -28,6 +28,7 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
+  Calendar,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -50,6 +51,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { IMAGE_EDITOR_PROGRESS_STAGES } from "@/constants";
+import { formatDate } from "@/lib/utils";
 
 export function ImageEditor() {
   // Used to diplay the image in <img>
@@ -608,7 +610,7 @@ export function ImageEditor() {
                             <TableRow>
                               <TableHead>Original</TableHead>
                               <TableHead>Edited</TableHead>
-                              <TableHead>Status</TableHead>
+                              <TableHead>Created</TableHead>
                               <TableHead>Action</TableHead>
                             </TableRow>
                           </TableHeader>
@@ -634,13 +636,10 @@ export function ImageEditor() {
                                   />
                                 </TableCell>
                                 <TableCell>
-                                  <Badge
-                                    variant="secondary"
-                                    className="bg-green-500/10 text-green-600 border-green-500/20"
-                                  >
-                                    <Scissors className="w-3 h-3 mr-1 flex-shrink-0" />
-                                    Background Removed
-                                  </Badge>
+                                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                    <Calendar className="w-3 h-3 flex-shrink-0" />
+                                    {formatDate(image.createdAt)}
+                                  </div>
                                 </TableCell>
                                 <TableCell>
                                   <Button
