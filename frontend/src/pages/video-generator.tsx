@@ -26,6 +26,7 @@ import {
   AlertCircle,
   Calendar,
   Eye,
+  Copy,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -196,6 +197,11 @@ export function VideoGenerator() {
       console.error("Error downloading video:", error);
       toast.error("Failed to download video");
     }
+  };
+
+  const copyPrompt = (promptText: string) => {
+    navigator.clipboard.writeText(promptText);
+    toast.success("Prompt copied to clipboard!");
   };
 
   const clearAll = () => {
@@ -820,19 +826,11 @@ export function VideoGenerator() {
                         </Button>
                         <Button
                           variant="outline"
-                          onClick={() => {
-                            const video = document.querySelector(
-                              "video"
-                            ) as HTMLVideoElement;
-                            if (video) {
-                              video.currentTime = 0;
-                              video.play();
-                            }
-                          }}
+                          onClick={() => copyPrompt(selectedVideo.Prompt)}
                           className="flex-1"
                         >
-                          <Play className="w-4 h-4 mr-2" />
-                          Replay
+                          <Copy className="w-4 h-4 mr-2" />
+                          Copy Prompt
                         </Button>
                       </div>
                     </>
