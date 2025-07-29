@@ -90,7 +90,7 @@ export function Dashboard() {
 
             {/* Stats Section */}
             {isLoadingUsage || isPlanLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 min-h-[110px]">
                 {[...Array(4)].map((_, index) => (
                   <Card key={index}>
                     <CardContent className="flex items-center justify-center py-8">
@@ -100,7 +100,7 @@ export function Dashboard() {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 min-h-[110px]">
                 {stats.map((stat, index) => (
                   <Card key={index}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -117,7 +117,7 @@ export function Dashboard() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 gap-8">
+            <div className="grid grid-cols-1 gap-8 min-h-[355px]">
               {/* Quick Actions Section */}
               {isPlanLoading ? (
                 <Card>
@@ -127,7 +127,7 @@ export function Dashboard() {
                       Jump into your favorite AI tools
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-3">
                     {[...Array(4)].map((_, index) => (
                       <Card key={index} className="h-full">
                         <CardContent className="p-4 h-full flex flex-col min-h-[180px] items-center justify-center">
@@ -145,7 +145,7 @@ export function Dashboard() {
                       Jump into your favorite AI tools
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-3">
                     {QUICK_ACTIONS.map((action, index) => (
                       <div key={index} className="relative">
                         {action.requiresStandardOrPro && userPlan === "Free" ? (
