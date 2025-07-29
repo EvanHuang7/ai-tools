@@ -800,7 +800,7 @@ export function ImageEditor() {
                     <ImageIcon className="h-5 w-5" />
                     Edited Image
                   </DialogTitle>
-                  <DialogDescription>
+                  <DialogDescription className="hidden sm:flex">
                     Background removal result
                   </DialogDescription>
                 </DialogHeader>
@@ -808,7 +808,7 @@ export function ImageEditor() {
                 <div className="flex-1 overflow-y-auto space-y-4">
                   {selectedImage && (
                     <>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <h4 className="font-medium mb-2">Original Image</h4>
                           <img
@@ -860,7 +860,7 @@ export function ImageEditor() {
                         </div>
                       </div>
 
-                      <div className="flex gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <Button
                           onClick={() => {
                             const link = document.createElement("a");
