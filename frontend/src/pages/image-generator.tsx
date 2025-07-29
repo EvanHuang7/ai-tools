@@ -219,9 +219,9 @@ export function ImageGenerator() {
             </div>
 
             {/* Input + Result Sections */}
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="grid lg:grid-cols-2 gap-8">
               {/* Input Section */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="space-y-6">
                 <UsageGuard
                   feature="imageGeneration"
                   action="generate this image"
@@ -320,87 +320,85 @@ export function ImageGenerator() {
               </div>
 
               {/* Result Section */}
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <ImageIcon className="h-5 w-5 flex-shrink-0" />
-                      Generated Image
-                    </CardTitle>
-                    <CardDescription>Your AI-created artwork</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {generatedImage ? (
-                      <div className="space-y-4">
-                        <div className="relative group">
-                          <img
-                            src={generatedImage}
-                            alt="Generated artwork"
-                            className="w-full rounded-lg object-cover shadow-lg"
-                          />
-                          <Badge className="absolute top-2 right-2 bg-green-500 text-white">
-                            <Sparkles className="w-3 h-3 mr-1" />
-                            AI Generated
-                          </Badge>
-                        </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ImageIcon className="h-5 w-5 flex-shrink-0" />
+                    Generated Image
+                  </CardTitle>
+                  <CardDescription>Your AI-created artwork</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {generatedImage ? (
+                    <div className="space-y-4">
+                      <div className="relative group">
+                        <img
+                          src={generatedImage}
+                          alt="Generated artwork"
+                          className="w-full rounded-lg object-cover shadow-lg"
+                        />
+                        <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                          <Sparkles className="w-3 h-3 mr-1" />
+                          AI Generated
+                        </Badge>
+                      </div>
 
-                        <div className="space-y-3">
-                          <Button onClick={downloadImage} className="w-full">
-                            <Download className="w-4 h-4 mr-2" />
-                            Download Image
+                      <div className="space-y-3">
+                        <Button onClick={downloadImage} className="w-full">
+                          <Download className="w-4 h-4 mr-2" />
+                          Download Image
+                        </Button>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => copyPrompt(prompt)}
+                          >
+                            <Copy className="w-3 h-3 mr-1" />
+                            Copy Prompt
                           </Button>
-
-                          <div className="grid grid-cols-2 gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => copyPrompt(prompt)}
-                            >
-                              <Copy className="w-3 h-3 mr-1" />
-                              Copy Prompt
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() =>
-                                window.open(generatedImage, "_blank")
-                              }
-                            >
-                              <Eye className="w-3 h-3 mr-1" />
-                              Full View
-                            </Button>
-                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              window.open(generatedImage, "_blank")
+                            }
+                          >
+                            <Eye className="w-3 h-3 mr-1" />
+                            Full View
+                          </Button>
                         </div>
+                      </div>
 
-                        <Card>
-                          <CardContent className="p-4">
-                            <h4 className="font-medium mb-2">
-                              Generation Details
-                            </h4>
-                            <div className="mt-3 pt-3 border-t">
-                              <span className="text-muted-foreground text-sm">
-                                Prompt:
-                              </span>
-                              <p className="text-sm mt-1 italic">"{prompt}"</p>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    ) : (
-                      <div className="text-center py-12">
-                        <ImageIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                        <p className="text-muted-foreground mb-2">
-                          No image generated yet
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          Enter a prompt and click "Generate Image" to create
-                          your artwork
-                        </p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
+                      <Card>
+                        <CardContent className="p-4">
+                          <h4 className="font-medium mb-2">
+                            Generation Details
+                          </h4>
+                          <div className="mt-3 pt-3 border-t">
+                            <span className="text-muted-foreground text-sm">
+                              Prompt:
+                            </span>
+                            <p className="text-sm mt-1 italic">"{prompt}"</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <ImageIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-2">
+                        No image generated yet
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Enter a prompt and click "Generate Image" to create your
+                        artwork
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             {/* Image Generation History Section */}

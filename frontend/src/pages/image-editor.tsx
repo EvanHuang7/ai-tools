@@ -307,9 +307,9 @@ export function ImageEditor() {
               </p>
             </div>
 
-            {/* Upload + Result Section */}
+            {/* Input + Result Section */}
             <div className="grid lg:grid-cols-2 gap-8">
-              {/* Upload Section */}
+              {/* Input Section */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">

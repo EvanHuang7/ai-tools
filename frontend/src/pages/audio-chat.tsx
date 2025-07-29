@@ -337,7 +337,7 @@ export function AudioChat() {
             </div>
 
             {/* Input + Live Transcript Sections */}
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="grid lg:grid-cols-2 gap-8">
               {/* Input Section */}
               <Card>
                 <CardHeader>
@@ -507,83 +507,81 @@ export function AudioChat() {
               </Card>
 
               {/* Live Transcript Section */}
-              <div className="lg:col-span-2">
-                <Card className="h-[700px] flex flex-col">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <MessageCircle className="h-5 w-5 flex-shrink-0" />
-                        <CardTitle>Live Transcript</CardTitle>
-                      </div>
-                      {groupedMessages.length > 0 && (
-                        <Badge variant="secondary">
-                          {groupedMessages.length} Messages
-                        </Badge>
-                      )}
+              <Card className="h-[700px] flex flex-col">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <MessageCircle className="h-5 w-5 flex-shrink-0" />
+                      <CardTitle>Live Transcript</CardTitle>
                     </div>
-                    <CardDescription>
-                      Real-time conversation transcript
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-1 flex flex-col">
-                    <div className="flex-1 overflow-y-auto space-y-4 mb-4 max-h-[500px]">
-                      {groupedMessages.length === 0 ? (
-                        <div className="flex items-center justify-center h-full">
-                          <div className="text-center">
-                            <MessageCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                            <p className="text-muted-foreground mb-2">
-                              No conversation yet
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {!topic.trim()
-                                ? "Enter a topic and start your conversation"
-                                : "Click 'Start Conversation' to begin"}
-                            </p>
-                          </div>
+                    {groupedMessages.length > 0 && (
+                      <Badge variant="secondary">
+                        {groupedMessages.length} Messages
+                      </Badge>
+                    )}
+                  </div>
+                  <CardDescription>
+                    Real-time conversation transcript
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col">
+                  <div className="flex-1 overflow-y-auto space-y-4 mb-4 max-h-[500px]">
+                    {groupedMessages.length === 0 ? (
+                      <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                          <MessageCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                          <p className="text-muted-foreground mb-2">
+                            No conversation yet
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {!topic.trim()
+                              ? "Enter a topic and start your conversation"
+                              : "Click 'Start Conversation' to begin"}
+                          </p>
                         </div>
-                      ) : (
-                        <>
-                          {groupedMessages.map((message, idx) => (
+                      </div>
+                    ) : (
+                      <>
+                        {groupedMessages.map((message, idx) => (
+                          <div
+                            key={idx}
+                            className={`flex ${
+                              message.role === "user"
+                                ? "justify-end"
+                                : "justify-start"
+                            }`}
+                          >
                             <div
-                              key={idx}
-                              className={`flex ${
+                              className={`max-w-[80%] px-4 py-3 rounded-2xl ${
                                 message.role === "user"
-                                  ? "justify-end"
-                                  : "justify-start"
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-muted"
                               }`}
                             >
-                              <div
-                                className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                                  message.role === "user"
-                                    ? "bg-primary text-primary-foreground"
-                                    : "bg-muted"
-                                }`}
-                              >
-                                <div className="flex items-center gap-2 mb-2">
-                                  {message.role === "user" ? (
-                                    <User className="w-4 h-4" />
-                                  ) : (
-                                    <Bot className="w-4 h-4" />
-                                  )}
-                                  <span className="text-xs font-medium">
-                                    {message.role === "user"
-                                      ? "You"
-                                      : "AI Assistant"}
-                                  </span>
-                                </div>
-                                <p className="text-sm leading-relaxed">
-                                  {message.content}
-                                </p>
+                              <div className="flex items-center gap-2 mb-2">
+                                {message.role === "user" ? (
+                                  <User className="w-4 h-4" />
+                                ) : (
+                                  <Bot className="w-4 h-4" />
+                                )}
+                                <span className="text-xs font-medium">
+                                  {message.role === "user"
+                                    ? "You"
+                                    : "AI Assistant"}
+                                </span>
                               </div>
+                              <p className="text-sm leading-relaxed">
+                                {message.content}
+                              </p>
                             </div>
-                          ))}
-                          <div ref={transcriptEndRef} />
-                        </>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+                          </div>
+                        ))}
+                        <div ref={transcriptEndRef} />
+                      </>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Audio Chat History Section */}
