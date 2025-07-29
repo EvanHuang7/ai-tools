@@ -310,7 +310,7 @@ export function ImageEditor() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Upload className="h-5 w-5" />
+                    <Upload className="h-5 w-5 flex-shrink-0" />
                     Upload Image
                   </CardTitle>
                   <CardDescription>
@@ -459,7 +459,7 @@ export function ImageEditor() {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Sparkles className="h-5 w-5" />
+                      <Sparkles className="h-5 w-5 flex-shrink-0" />
                       <CardTitle>Edited Result</CardTitle>
                     </div>
                     {processedImage && (
@@ -576,7 +576,7 @@ export function ImageEditor() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <ImageIcon className="h-5 w-5" />
+                    <ImageIcon className="h-5 w-5 flex-shrink-0" />
                     Image Editing History
                   </CardTitle>
                   <CardDescription>

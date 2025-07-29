@@ -34,7 +34,7 @@ export function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <Badge variant="secondary" className="mb-6">
-              <Sparkles className="h-3 w-3 mr-1" />
+              <Sparkles className="h-3 w-3 mr-1 flex-shrink-0" />
               Powered by Advanced AI
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
@@ -69,15 +69,15 @@ export function HomePage() {
             </div>
             <div className="flex items-center justify-center gap-8 mt-12 text-sm text-slate-500">
               <div className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
+                <Users className="h-4 w-4 flex-shrink-0" />
                 <span>50K+ Users</span>
               </div>
               <div className="flex items-center gap-2">
-                <Image className="h-4 w-4" />
+                <Image className="h-4 w-4 flex-shrink-0" />
                 <span>2M+ Images Processed</span>
               </div>
               <div className="flex items-center gap-2">
-                <Video className="h-4 w-4" />
+                <Video className="h-4 w-4 flex-shrink-0" />
                 <span>100K+ Videos Created</span>
               </div>
             </div>

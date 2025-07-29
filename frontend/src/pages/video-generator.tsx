@@ -258,7 +258,7 @@ export function VideoGenerator() {
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
-                        <Upload className="h-5 w-5" />
+                        <Upload className="h-5 w-5 flex-shrink-0" />
                         Upload Image
                       </CardTitle>
                       <CardDescription>
@@ -320,7 +320,7 @@ export function VideoGenerator() {
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
-                        <Wand2 className="h-5 w-5" />
+                        <Wand2 className="h-5 w-5 flex-shrink-0" />
                         Video Settings
                       </CardTitle>
                       <CardDescription>
@@ -411,7 +411,7 @@ export function VideoGenerator() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Video className="h-5 w-5" />
+                    <Video className="h-5 w-5 flex-shrink-0" />
                     Generated Video
                   </CardTitle>
                   <CardDescription>
@@ -522,7 +522,7 @@ export function VideoGenerator() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Video className="h-5 w-5" />
+                    <Video className="h-5 w-5 flex-shrink-0" />
                     Video Generation History
                   </CardTitle>
                   <CardDescription>

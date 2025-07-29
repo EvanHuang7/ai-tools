@@ -228,7 +228,7 @@ export function ImageGenerator() {
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
-                        <Wand2 className="h-5 w-5" />
+                        <Wand2 className="h-5 w-5 flex-shrink-0" />
                         Create Your Image
                       </CardTitle>
                       <CardDescription>
@@ -323,7 +323,7 @@ export function ImageGenerator() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <ImageIcon className="h-5 w-5" />
+                      <ImageIcon className="h-5 w-5 flex-shrink-0" />
                       Generated Image
                     </CardTitle>
                     <CardDescription>Your AI-created artwork</CardDescription>
@@ -408,7 +408,7 @@ export function ImageGenerator() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <ImageIcon className="h-5 w-5" />
+                    <ImageIcon className="h-5 w-5 flex-shrink-0" />
                     Image Generation History
                   </CardTitle>
                   <CardDescription>

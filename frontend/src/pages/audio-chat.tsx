@@ -343,7 +343,7 @@ export function AudioChat() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Settings className="h-5 w-5" />
+                    <Settings className="h-5 w-5 flex-shrink-0" />
                     Conversation Setup
                   </CardTitle>
                   <CardDescription>
@@ -499,7 +499,7 @@ export function AudioChat() {
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <MessageCircle className="h-5 w-5" />
+                        <MessageCircle className="h-5 w-5 flex-shrink-0" />
                         <CardTitle>Live Transcript</CardTitle>
                       </div>
                       {groupedMessages.length > 0 && (
@@ -578,7 +578,7 @@ export function AudioChat() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <MessageCircle className="h-5 w-5" />
+                    <MessageCircle className="h-5 w-5 flex-shrink-0" />
                     Audio Chat History
                   </CardTitle>
                   <CardDescription>
@@ -799,7 +799,7 @@ export function AudioChat() {
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2">
                     <MessageCircle className="h-5 w-5" />
-                    Chat History: {selectedAudio?.topic}
+                    Topic: {selectedAudio?.topic}
                   </DialogTitle>
                   <DialogDescription className="flex items-center gap-4">
                     <span className="flex items-center gap-1">
