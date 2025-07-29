@@ -62,7 +62,13 @@ export function HomePage() {
                 </Link>
               )}
               <Link to="/pricing">
-                <Button variant="outline" size="lg" className="text-lg px-8">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className={`text-lg px-8 ${
+                    isSignedIn ? "min-w-[232px]" : "min-w-[250px]"
+                  }`}
+                >
                   View Pricing
                 </Button>
               </Link>

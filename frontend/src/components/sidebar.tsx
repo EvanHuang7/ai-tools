@@ -40,7 +40,7 @@ export function Sidebar() {
       )}
     >
       {/* Toggle Button */}
-      <div className="flex items-center justify-end p-2 border-b border-border">
+      <div className="hidden sm:flex items-center justify-end p-2 border-b border-border">
         <Button
           variant="ghost"
           size="sm"
