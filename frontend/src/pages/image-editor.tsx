@@ -26,6 +26,8 @@ import {
   EyeOff,
   AlertCircle,
   Clock,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -57,7 +59,7 @@ export function ImageEditor() {
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [showGrid, setShowGrid] = useState(true);
 
-  // Progress tracking
+  // Image editing status
   const [progress, setProgress] = useState(0);
   const [currentStage, setCurrentStage] = useState("");
 
@@ -69,6 +71,17 @@ export function ImageEditor() {
   // Modal state for viewing images
   const [selectedImage, setSelectedImage] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  // Pagination calculations
+  const totalItems = imageHistory?.length || 0;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = imageHistory?.slice(startIndex, endIndex) || [];
 
   // Reads the file from disk and returns a base64 data URL when recieving a file
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -253,6 +266,25 @@ export function ImageEditor() {
   const handleViewImage = (image: any) => {
     setSelectedImage(image);
     setIsModalOpen(true);
+  };
+
+  // Pagination handlers
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   const gridPattern = `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`;
@@ -546,7 +578,8 @@ export function ImageEditor() {
                     Image Editing History
                   </CardTitle>
                   <CardDescription>
-                    Your previous background removal results
+                    Your previous background removal results ({totalItems}{" "}
+                    total)
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -566,63 +599,193 @@ export function ImageEditor() {
                       </p>
                     </div>
                   ) : (
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Original</TableHead>
-                            <TableHead>Edited</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead className="text-center">
-                              Action
-                            </TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {imageHistory.map((image: any) => (
-                            <TableRow key={image.id}>
-                              <TableCell>
-                                <img
-                                  src={image.inputImageUrl}
-                                  alt="Original"
-                                  className="w-16 h-16 rounded object-cover"
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <img
-                                  src={image.resultImageUrl}
-                                  alt="Processed"
-                                  className="w-16 h-16 rounded object-cover"
-                                  style={{
-                                    backgroundColor: "transparent",
-                                    backgroundImage: gridPattern,
-                                  }}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <Badge
-                                  variant="secondary"
-                                  className="bg-green-500/10 text-green-600 border-green-500/20"
-                                >
-                                  <Scissors className="w-3 h-3 mr-1" />
-                                  Background Removed
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="text-center">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleViewImage(image)}
-                                  className="flex items-center gap-1"
-                                >
-                                  <Eye className="w-3 h-3" />
-                                  View
-                                </Button>
-                              </TableCell>
+                    <div className="space-y-4">
+                      <div className="rounded-md border">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Original</TableHead>
+                              <TableHead>Edited</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead className="text-center">
+                                Action
+                              </TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                          </TableHeader>
+                          <TableBody>
+                            {currentItems.map((image: any) => (
+                              <TableRow key={image.id}>
+                                <TableCell>
+                                  <img
+                                    src={image.inputImageUrl}
+                                    alt="Original"
+                                    className="w-16 h-16 rounded object-cover"
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <img
+                                    src={image.resultImageUrl}
+                                    alt="Processed"
+                                    className="w-16 h-16 rounded object-cover"
+                                    style={{
+                                      backgroundColor: "transparent",
+                                      backgroundImage: gridPattern,
+                                    }}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Badge
+                                    variant="secondary"
+                                    className="bg-green-500/10 text-green-600 border-green-500/20"
+                                  >
+                                    <Scissors className="w-3 h-3 mr-1" />
+                                    Background Removed
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleViewImage(image)}
+                                    className="flex items-center gap-1"
+                                  >
+                                    <Eye className="w-3 h-3" />
+                                    View
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      {/* Pagination Controls */}
+                      {totalPages > 1 && (
+                        <div className="flex items-center justify-between">
+                          <div className="hidden md:flex text-sm text-muted-foreground">
+                            Showing {startIndex + 1} to{" "}
+                            {Math.min(endIndex, totalItems)} of {totalItems}{" "}
+                            videos
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={goToPreviousPage}
+                              disabled={currentPage === 1}
+                              className="flex items-center gap-1"
+                            >
+                              <ChevronLeft className="w-4 h-4" />
+                              <span className="hidden sm:flex ">Previous</span>
+                            </Button>
+
+                            <div className="flex items-center gap-1">
+                              {totalPages <= 3 ? (
+                                // Show all pages if 3 or fewer
+                                Array.from(
+                                  { length: totalPages },
+                                  (_, i) => i + 1
+                                ).map((page) => (
+                                  <Button
+                                    key={page}
+                                    variant={
+                                      currentPage === page
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    size="sm"
+                                    onClick={() => goToPage(page)}
+                                    className="w-8 h-8 p-0"
+                                  >
+                                    {page}
+                                  </Button>
+                                ))
+                              ) : (
+                                // Always show exactly 3 elements for more than 3 pages
+                                <>
+                                  {currentPage === 1 ? (
+                                    // Page 1 of n: "1 ... n"
+                                    <>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(1)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        1
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => goToPage(totalPages)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {totalPages}
+                                      </Button>
+                                    </>
+                                  ) : currentPage === totalPages ? (
+                                    // Page n of n: "1 ... n"
+                                    <>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => goToPage(1)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        1
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(totalPages)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {totalPages}
+                                      </Button>
+                                    </>
+                                  ) : (
+                                    // Middle page: "... n ..."
+                                    <>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(currentPage)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {currentPage}
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                    </>
+                                  )}
+                                </>
+                              )}
+                            </div>
+
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={goToNextPage}
+                              disabled={currentPage === totalPages}
+                              className="flex items-center gap-1"
+                            >
+                              <span className="hidden sm:flex ">Next</span>
+                              <ChevronRight className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>
