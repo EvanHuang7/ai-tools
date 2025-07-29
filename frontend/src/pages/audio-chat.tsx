@@ -634,7 +634,7 @@ export function AudioChat() {
                             {currentItems.map((audio: any) => (
                               <TableRow key={audio.id}>
                                 <TableCell className="font-medium">
-                                  <div className="max-w-[200px] truncate">
+                                  <div className="w-[150px] truncate">
                                     {audio.topic}
                                   </div>
                                 </TableCell>
