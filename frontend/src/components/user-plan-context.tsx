@@ -14,12 +14,15 @@ export function UserPlanProvider({ children }: UserPlanProviderProps) {
 
   const refreshUserPlan = async () => {
     setIsLoading(true);
-    try {
-      if (!billing || !billing.getSubscriptions) {
-        console.warn("Billing is not available");
-        return;
-      }
 
+    // Move this logic section out of try block, so that
+    // isLoading won't be set to false when billing is not available.
+    if (!billing || !billing.getSubscriptions) {
+      console.warn("Billing is not available");
+      return;
+    }
+
+    try {
       const userSubscriptions = await billing.getSubscriptions({
         initialPage: 1,
         pageSize: 10,
