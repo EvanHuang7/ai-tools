@@ -16,7 +16,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Table,
@@ -49,6 +48,8 @@ import {
   Eye,
   Calendar,
   Hash,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import { configureAssistant, formatDate } from "@/lib/utils";
@@ -73,17 +74,29 @@ export function AudioChat() {
   const [conversationStyle, setConversationStyle] = useState("friendly");
   const [selectedVoice, setSelectedVoice] = useState("sarah");
 
-  // Modal state
-  const [selectedAudio, setSelectedAudio] = useState<any>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  // Refs
-  const callTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const transcriptEndRef = useRef<HTMLDivElement>(null);
-
   // API hooks
   const startAudioMutation = useStartAudio();
   const createAudioMutation = useCreateAudio();
   const { data: audioHistory, isLoading: isLoadingHistory } = useListAudios();
+
+  // Modal state
+  const [selectedAudio, setSelectedAudio] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  // Pagination calculations
+  const totalItems = audioHistory?.length || 0;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = audioHistory?.slice(startIndex, endIndex) || [];
+
+  // Refs
+  const callTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const transcriptEndRef = useRef<HTMLDivElement>(null);
 
   // Group messages by consecutive same-role
   const groupedMessages = useMemo(() => {
@@ -286,6 +299,26 @@ export function AudioChat() {
     setSelectedAudio(audio);
     setIsModalOpen(true);
   };
+
+  // Pagination handlers
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -549,7 +582,8 @@ export function AudioChat() {
                     Audio Chat History
                   </CardTitle>
                   <CardDescription>
-                    Your previous voice conversations with AI
+                    Your previous voice conversations with AI ({totalItems}{" "}
+                    total)
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -569,60 +603,190 @@ export function AudioChat() {
                       </p>
                     </div>
                   ) : (
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Topic</TableHead>
-                            <TableHead className="text-center">
-                              Messages
-                            </TableHead>
-                            <TableHead>Created</TableHead>
-                            <TableHead className="text-center">
-                              Action
-                            </TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {audioHistory.map((audio: any) => (
-                            <TableRow key={audio.id}>
-                              <TableCell className="font-medium">
-                                <div className="max-w-[200px] truncate">
-                                  {audio.topic}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-center">
-                                <Badge
-                                  variant="secondary"
-                                  className="flex items-center gap-1 w-fit mx-auto"
-                                >
-                                  <Hash className="w-3 h-3" />
-                                  {Array.isArray(audio.transcript)
-                                    ? audio.transcript.length
-                                    : 0}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                  <Calendar className="w-3 h-3" />
-                                  {formatDate(audio.createdAt)}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-center">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleViewHistory(audio)}
-                                  className="flex items-center gap-1"
-                                >
-                                  <Eye className="w-3 h-3" />
-                                  View
-                                </Button>
-                              </TableCell>
+                    <div className="space-y-4">
+                      <div className="rounded-md border">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Topic</TableHead>
+                              <TableHead className="text-center">
+                                Messages
+                              </TableHead>
+                              <TableHead>Created</TableHead>
+                              <TableHead className="text-center">
+                                Action
+                              </TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                          </TableHeader>
+                          <TableBody>
+                            {currentItems.map((audio: any) => (
+                              <TableRow key={audio.id}>
+                                <TableCell className="font-medium">
+                                  <div className="max-w-[200px] truncate">
+                                    {audio.topic}
+                                  </div>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                  <Badge
+                                    variant="secondary"
+                                    className="flex items-center gap-1 w-fit mx-auto"
+                                  >
+                                    <Hash className="w-3 h-3" />
+                                    {Array.isArray(audio.transcript)
+                                      ? audio.transcript.length
+                                      : 0}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                    <Calendar className="w-3 h-3" />
+                                    {formatDate(audio.createdAt)}
+                                  </div>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleViewHistory(audio)}
+                                    className="flex items-center gap-1"
+                                  >
+                                    <Eye className="w-3 h-3" />
+                                    View
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      {/* Pagination Controls */}
+                      {totalPages > 1 && (
+                        <div className="flex items-center justify-between">
+                          <div className="hidden md:flex text-sm text-muted-foreground">
+                            Showing {startIndex + 1} to{" "}
+                            {Math.min(endIndex, totalItems)} of {totalItems}{" "}
+                            videos
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={goToPreviousPage}
+                              disabled={currentPage === 1}
+                              className="flex items-center gap-1"
+                            >
+                              <ChevronLeft className="w-4 h-4" />
+                              <span className="hidden sm:flex ">Previous</span>
+                            </Button>
+
+                            <div className="flex items-center gap-1">
+                              {totalPages <= 3 ? (
+                                // Show all pages if 3 or fewer
+                                Array.from(
+                                  { length: totalPages },
+                                  (_, i) => i + 1
+                                ).map((page) => (
+                                  <Button
+                                    key={page}
+                                    variant={
+                                      currentPage === page
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    size="sm"
+                                    onClick={() => goToPage(page)}
+                                    className="w-8 h-8 p-0"
+                                  >
+                                    {page}
+                                  </Button>
+                                ))
+                              ) : (
+                                // Always show exactly 3 elements for more than 3 pages
+                                <>
+                                  {currentPage === 1 ? (
+                                    // Page 1 of n: "1 ... n"
+                                    <>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(1)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        1
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => goToPage(totalPages)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {totalPages}
+                                      </Button>
+                                    </>
+                                  ) : currentPage === totalPages ? (
+                                    // Page n of n: "1 ... n"
+                                    <>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => goToPage(1)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        1
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(totalPages)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {totalPages}
+                                      </Button>
+                                    </>
+                                  ) : (
+                                    // Middle page: "... n ..."
+                                    <>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(currentPage)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {currentPage}
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                    </>
+                                  )}
+                                </>
+                              )}
+                            </div>
+
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={goToNextPage}
+                              disabled={currentPage === totalPages}
+                              className="flex items-center gap-1"
+                            >
+                              <span className="hidden sm:flex ">Next</span>
+                              <ChevronRight className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>
