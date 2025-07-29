@@ -612,7 +612,7 @@ export function ImageGenerator() {
               </Card>
             </div>
 
-            {/* Image View Modal */}
+            {/* View Generated Image Modal */}
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
                 <DialogHeader>

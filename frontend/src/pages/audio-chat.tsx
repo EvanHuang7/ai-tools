@@ -808,7 +808,7 @@ export function AudioChat() {
               </Card>
             </div>
 
-            {/* Chat History Modal */}
+            {/* View Chat History Modal */}
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
                 <DialogHeader>
