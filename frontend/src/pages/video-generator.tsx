@@ -26,6 +26,8 @@ import {
   AlertCircle,
   Calendar,
   Eye,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -69,6 +71,17 @@ export function VideoGenerator() {
   // Modal state for viewing videos
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  // Pagination calculations
+  const totalItems = videoHistory?.length || 0;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = videoHistory?.slice(startIndex, endIndex) || [];
 
   // Reads the file from disk and returns a base64 data URL when recieving a file
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -198,6 +211,25 @@ export function VideoGenerator() {
   const handleViewVideo = (video: any) => {
     setSelectedVideo(video);
     setIsModalOpen(true);
+  };
+
+  // Pagination handlers
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   return (
@@ -494,7 +526,7 @@ export function VideoGenerator() {
                     Video Generation History
                   </CardTitle>
                   <CardDescription>
-                    Your previous AI-generated videos
+                    Your previous AI-generated videos ({totalItems} total)
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -514,61 +546,191 @@ export function VideoGenerator() {
                       </p>
                     </div>
                   ) : (
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Preview</TableHead>
-                            <TableHead>Prompt</TableHead>
-                            <TableHead>Duration</TableHead>
-                            <TableHead>Created</TableHead>
-                            <TableHead className="text-center">
-                              Action
-                            </TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {videoHistory.map((video: any) => (
-                            <TableRow key={video.id}>
-                              <TableCell>
-                                <video
-                                  src={video.VideoURL}
-                                  className="w-16 h-16 rounded object-cover"
-                                  muted
-                                  poster={video.ImageURL}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                <div className="max-w-[300px] truncate">
-                                  {video.Prompt}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="secondary">
-                                  {video.VideoDuration}s
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                  <Calendar className="w-3 h-3" />
-                                  {formatDate(video.CreatedAt)}
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-center">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleViewVideo(video)}
-                                  className="flex items-center gap-1"
-                                >
-                                  <Eye className="w-3 h-3" />
-                                  View
-                                </Button>
-                              </TableCell>
+                    <div className="space-y-4">
+                      <div className="rounded-md border">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Preview</TableHead>
+                              <TableHead>Prompt</TableHead>
+                              <TableHead>Duration</TableHead>
+                              <TableHead>Created</TableHead>
+                              <TableHead className="text-center">
+                                Action
+                              </TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                          </TableHeader>
+                          <TableBody>
+                            {currentItems.map((video: any) => (
+                              <TableRow key={video.id}>
+                                <TableCell>
+                                  <video
+                                    src={video.VideoURL}
+                                    className="w-16 h-16 rounded object-cover"
+                                    muted
+                                    poster={video.ImageURL}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <div className="max-w-[300px] truncate">
+                                    {video.Prompt}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant="secondary">
+                                    {video.VideoDuration}s
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                    <Calendar className="w-3 h-3" />
+                                    {formatDate(video.CreatedAt)}
+                                  </div>
+                                </TableCell>
+                                <TableCell className="text-center">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleViewVideo(video)}
+                                    className="flex items-center gap-1"
+                                  >
+                                    <Eye className="w-3 h-3" />
+                                    View
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      {/* Pagination Controls */}
+                      {totalPages > 1 && (
+                        <div className="flex items-center justify-between">
+                          <div className="hidden md:flex text-sm text-muted-foreground">
+                            Showing {startIndex + 1} to{" "}
+                            {Math.min(endIndex, totalItems)} of {totalItems}{" "}
+                            videos
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={goToPreviousPage}
+                              disabled={currentPage === 1}
+                              className="flex items-center gap-1"
+                            >
+                              <ChevronLeft className="w-4 h-4" />
+                              <span className="hidden sm:flex ">Previous</span>
+                            </Button>
+
+                            <div className="flex items-center gap-1">
+                              {totalPages <= 3 ? (
+                                // Show all pages if 3 or fewer
+                                Array.from(
+                                  { length: totalPages },
+                                  (_, i) => i + 1
+                                ).map((page) => (
+                                  <Button
+                                    key={page}
+                                    variant={
+                                      currentPage === page
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    size="sm"
+                                    onClick={() => goToPage(page)}
+                                    className="w-8 h-8 p-0"
+                                  >
+                                    {page}
+                                  </Button>
+                                ))
+                              ) : (
+                                // Always show exactly 3 elements for more than 3 pages
+                                <>
+                                  {currentPage === 1 ? (
+                                    // Page 1 of n: "1 ... n"
+                                    <>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(1)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        1
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => goToPage(totalPages)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {totalPages}
+                                      </Button>
+                                    </>
+                                  ) : currentPage === totalPages ? (
+                                    // Page n of n: "1 ... n"
+                                    <>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => goToPage(1)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        1
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(totalPages)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {totalPages}
+                                      </Button>
+                                    </>
+                                  ) : (
+                                    // Middle page: "... n ..."
+                                    <>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => goToPage(currentPage)}
+                                        className="w-8 h-8 p-0"
+                                      >
+                                        {currentPage}
+                                      </Button>
+                                      <span className="px-2 text-muted-foreground">
+                                        ...
+                                      </span>
+                                    </>
+                                  )}
+                                </>
+                              )}
+                            </div>
+
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={goToNextPage}
+                              disabled={currentPage === totalPages}
+                              className="flex items-center gap-1"
+                            >
+                              <span className="hidden sm:flex ">Next</span>
+                              <ChevronRight className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </CardContent>
