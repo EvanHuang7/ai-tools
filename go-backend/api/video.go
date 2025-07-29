@@ -221,7 +221,7 @@ func ListVideos(c *gin.Context) {
 
 	// Get all existing generated videos for this user
 	var videos []db.Video
-	err := db.DB.Where("user_id = ?", clerkUserId).Find(&videos).Error
+	err := db.DB.Where("user_id = ?", clerkUserId).Order("created_at DESC").Find(&videos).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -10,7 +10,7 @@ import {
   standardUserAudioFeatureMonthlyLimit,
   proUserAudioFeatureMonthlyLimit,
 } from "../utils/constants.js";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 export const startAudio = async (req, res) => {
   try {
@@ -107,7 +107,8 @@ export const listAudios = async (req, res) => {
     const allAudios = await postgreDbClient
       .select()
       .from(audios)
-      .where(eq(audios.userId, userId));
+      .where(eq(audios.userId, userId))
+      .orderBy(desc(audios.createdAt));
 
     return res.status(200).json(allAudios);
   } catch (error) {

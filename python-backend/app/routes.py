@@ -108,7 +108,8 @@ def remove_background():
 @clerk_auth_required
 def list_removed_bg_images():
     try:
-        images = Image.objects(userId=g.user_id)
+        # Order by createdAt descending (newest first)
+        images = Image.objects(userId=g.user_id).order_by('-createdAt')
 
         return jsonify([{"id": str(img.id), "inputImageUrl": img.inputImageUrl, "resultImageUrl": img.resultImageUrl, "createdAt": img.createdAt} for img in images]), 200
     except Exception as e:

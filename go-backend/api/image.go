@@ -208,7 +208,7 @@ func ListImages(c *gin.Context) {
 
 	// Get all existing generated image for this user
 	var images []db.Image
-	err := db.DB.Where("user_id = ?", clerkUserId).Find(&images).Error
+	err := db.DB.Where("user_id = ?", clerkUserId).Order("created_at DESC").Find(&images).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
