@@ -50,6 +50,7 @@ import {
   Hash,
   ChevronLeft,
   ChevronRight,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { configureAssistant, formatDate } from "@/lib/utils";
@@ -331,10 +332,7 @@ export function AudioChat() {
               <h1 className="text-3xl font-bold mb-2">AI Voice Chat</h1>
               <p className="text-muted-foreground">
                 Have natural voice conversations with AI. Choose your topic,
-                select a voice style, and start chatting!{" "}
-                <span className="font-bold text-amber-700">
-                  Each chat session is limited to 3 minutes.
-                </span>
+                select a voice style, and start chatting!
               </p>
             </div>
 
@@ -419,6 +417,20 @@ export function AudioChat() {
                           ))}
                         </SelectContent>
                       </Select>
+                    </div>
+
+                    {/* Chat Session Time Info */}
+                    <div className="flex items-start gap-3 p-4 bg-yellow-50 border border-yellow-200 rounded-xl shadow-sm">
+                      <AlertCircle className="w-5 h-5 text-yellow-600 mt-1 flex-shrink-0" />
+                      <div className="text-sm leading-relaxed">
+                        <p className="text-yellow-900 font-semibold">
+                          Chat Session Limit
+                        </p>
+                        <p className="text-yellow-800">
+                          Each chat session is limited to{" "}
+                          <span className="font-medium">3 minutes</span>.
+                        </p>
+                      </div>
                     </div>
 
                     {/* Call Controls */}
