@@ -472,12 +472,12 @@ export function ImageEditor() {
                         {showGrid ? (
                           <>
                             <EyeOff className="h-4 w-4" />
-                            Hide Grid
+                            <span className="hidden sm:flex">Hide Grid</span>
                           </>
                         ) : (
                           <>
                             <Eye className="h-4 w-4" />
-                            Show Grid
+                            <span className="hidden sm:flex">Show Grid</span>
                           </>
                         )}
                       </Button>
@@ -511,13 +511,15 @@ export function ImageEditor() {
                             className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm"
                           >
                             <Grid3X3 className="w-3 h-3 mr-1" />
-                            Transparency Grid
+                            <span className="hidden md:flex">
+                              Transparency Grid
+                            </span>
                           </Badge>
                         )}
                       </div>
 
                       <div className="space-y-3">
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <Button
                             onClick={downloadImage}
                             className="bg-blue-600 hover:bg-blue-700"
