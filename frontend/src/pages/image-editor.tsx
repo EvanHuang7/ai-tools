@@ -322,7 +322,7 @@ export function ImageEditor() {
                         Drag and drop your image or click to browse (Max 10MB)
                       </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-6">
                       <div
                         {...getRootProps()}
                         className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors

@@ -266,7 +266,7 @@ export function VideoGenerator() {
                         Start with your source image (Max 10MB)
                       </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-6">
                       <div
                         {...getRootProps()}
                         className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
