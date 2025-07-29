@@ -809,7 +809,9 @@ export function ImageEditor() {
                     <>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <h4 className="font-medium mb-2">Original Image</h4>
+                          <h4 className="font-medium mb-2 min-h-[36px]">
+                            Original Image
+                          </h4>
                           <img
                             src={selectedImage.inputImageUrl}
                             alt="Original"
@@ -817,7 +819,7 @@ export function ImageEditor() {
                           />
                         </div>
                         <div>
-                          <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center justify-between mb-2 min-h-[36px]">
                             <h4 className="font-medium">Edited Result</h4>
                             <Button
                               onClick={toggleGrid}
