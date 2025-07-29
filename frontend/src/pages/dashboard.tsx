@@ -88,7 +88,7 @@ export function Dashboard() {
               </p>
             </div>
 
-            {/* Stats Grid */}
+            {/* Stats Section */}
             {isLoadingUsage || isPlanLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {[...Array(4)].map((_, index) => (
@@ -104,10 +104,10 @@ export function Dashboard() {
                 {stats.map((stat, index) => (
                   <Card key={index}>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
+                      <CardTitle className="text-sm font-medium truncate">
                         {stat.label}
                       </CardTitle>
-                      <stat.icon className="h-4 w-4 text-muted-foreground" />
+                      <stat.icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold">{stat.value}</div>
@@ -118,7 +118,8 @@ export function Dashboard() {
             )}
 
             <div className="grid grid-cols-1 gap-8">
-              {/* Quick Actions */}
+              {/* TODO: use "isPlanLoading" check if display the card or display loading state */}
+              {/* Quick Actions Section */}
               <div>
                 <Card>
                   <CardHeader>
@@ -167,7 +168,7 @@ export function Dashboard() {
                               <CardContent className="p-4 h-full flex flex-col min-h-[180px]">
                                 <div className="flex items-center justify-between mb-4">
                                   <div
-                                    className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
+                                    className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0`}
                                   >
                                     <action.icon className="h-6 w-6 text-white" />
                                   </div>
@@ -176,7 +177,7 @@ export function Dashboard() {
                                       variant="secondary"
                                       className="text-amber-600"
                                     >
-                                      <Crown className="w-3 h-3 mr-1" />
+                                      <Crown className="w-3 h-3 mr-1 flex lg:hidden" />
                                       Standard+
                                     </Badge>
                                   )}
