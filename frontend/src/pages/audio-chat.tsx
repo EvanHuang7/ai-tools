@@ -513,7 +513,7 @@ export function AudioChat() {
               </div>
 
               {/* Live Transcript Section */}
-              <Card className="h-[700px] flex flex-col">
+              <Card className="flex flex-col">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
