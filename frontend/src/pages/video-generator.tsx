@@ -555,9 +555,7 @@ export function VideoGenerator() {
                               <TableHead>Prompt</TableHead>
                               <TableHead>Duration</TableHead>
                               <TableHead>Created</TableHead>
-                              <TableHead className="text-center">
-                                Action
-                              </TableHead>
+                              <TableHead>Action</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -583,11 +581,11 @@ export function VideoGenerator() {
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                    <Calendar className="w-3 h-3" />
+                                    <Calendar className="w-3 h-3 flex-shrink-0" />
                                     {formatDate(video.CreatedAt)}
                                   </div>
                                 </TableCell>
-                                <TableCell className="text-center">
+                                <TableCell>
                                   <Button
                                     variant="outline"
                                     size="sm"

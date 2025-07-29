@@ -609,9 +609,7 @@ export function ImageEditor() {
                               <TableHead>Original</TableHead>
                               <TableHead>Edited</TableHead>
                               <TableHead>Status</TableHead>
-                              <TableHead className="text-center">
-                                Action
-                              </TableHead>
+                              <TableHead>Action</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -640,11 +638,11 @@ export function ImageEditor() {
                                     variant="secondary"
                                     className="bg-green-500/10 text-green-600 border-green-500/20"
                                   >
-                                    <Scissors className="w-3 h-3 mr-1" />
+                                    <Scissors className="w-3 h-3 mr-1 flex-shrink-0" />
                                     Background Removed
                                   </Badge>
                                 </TableCell>
-                                <TableCell className="text-center">
+                                <TableCell>
                                   <Button
                                     variant="outline"
                                     size="sm"

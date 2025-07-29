@@ -440,9 +440,7 @@ export function ImageGenerator() {
                               <TableHead>Preview</TableHead>
                               <TableHead>Prompt</TableHead>
                               <TableHead>Created</TableHead>
-                              <TableHead className="text-center">
-                                Action
-                              </TableHead>
+                              <TableHead>Action</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -462,11 +460,11 @@ export function ImageGenerator() {
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                    <Calendar className="w-3 h-3" />
+                                    <Calendar className="w-3 h-3 flex-shrink-0" />
                                     {formatDate(image.CreatedAt)}
                                   </div>
                                 </TableCell>
-                                <TableCell className="text-center">
+                                <TableCell>
                                   <Button
                                     variant="outline"
                                     size="sm"
