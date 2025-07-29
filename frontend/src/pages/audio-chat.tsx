@@ -339,172 +339,178 @@ export function AudioChat() {
             {/* Input + Live Transcript Sections */}
             <div className="grid lg:grid-cols-2 gap-8">
               {/* Input Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Settings className="h-5 w-5 flex-shrink-0" />
-                    Conversation Setup
-                  </CardTitle>
-                  <CardDescription>
-                    Configure your AI chat experience
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <UsageGuard
-                    feature="audioChat"
-                    action="start this conversation"
-                  >
-                    {/* Topic Input */}
-                    <div>
-                      <Label htmlFor="topic">Conversation Topic *</Label>
-                      <Textarea
-                        id="topic"
-                        placeholder="What would you like to talk about? (e.g., 'space exploration', 'cooking tips', 'business strategy')"
-                        value={topic}
-                        onChange={(e) => setTopic(e.target.value)}
-                        className="mt-2"
-                        rows={3}
-                        disabled={isConnected || isConnecting}
-                      />
-                    </div>
-
-                    {/* Conversation Style */}
-                    <div>
-                      <Label>Conversation Style</Label>
-                      <Select
-                        value={conversationStyle}
-                        onValueChange={setConversationStyle}
-                        disabled={isConnected || isConnecting}
-                      >
-                        <SelectTrigger className="mt-2">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {styleOptions.map((style) => (
-                            <SelectItem key={style.id} value={style.id}>
-                              <div>
-                                <div className="font-medium">{style.name}</div>
-                                <div className="text-xs text-muted-foreground">
-                                  {style.description}
-                                </div>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Voice Selection */}
-                    <div>
-                      <Label>AI Voice</Label>
-                      <Select
-                        value={selectedVoice}
-                        onValueChange={setSelectedVoice}
-                        disabled={isConnected || isConnecting}
-                      >
-                        <SelectTrigger className="mt-2">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {voiceOptions.map((voice) => (
-                            <SelectItem key={voice.id} value={voice.id}>
-                              <div>
-                                <div className="font-medium">{voice.name}</div>
-                                <div className="text-xs text-muted-foreground">
-                                  {voice.description}
-                                </div>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Chat Session Time Info */}
-                    <div className="flex items-start gap-3 p-4 bg-yellow-50 border border-yellow-200 rounded-xl shadow-sm">
-                      <AlertCircle className="w-5 h-5 text-yellow-600 mt-1 flex-shrink-0" />
-                      <div className="text-sm leading-relaxed">
-                        <p className="text-yellow-900 font-semibold">
-                          Chat Session Limit
-                        </p>
-                        <p className="text-yellow-800">
-                          Each chat session is limited to{" "}
-                          <span className="font-medium">3 minutes</span>.
-                        </p>
+              <div className="space-y-6">
+                <UsageGuard
+                  feature="audioChat"
+                  action="start this conversation"
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Settings className="h-5 w-5 flex-shrink-0" />
+                        Conversation Setup
+                      </CardTitle>
+                      <CardDescription>
+                        Configure your AI chat experience
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      {/* Topic Input */}
+                      <div>
+                        <Label htmlFor="topic">Conversation Topic *</Label>
+                        <Textarea
+                          id="topic"
+                          placeholder="What would you like to talk about? (e.g., 'space exploration', 'cooking tips', 'business strategy')"
+                          value={topic}
+                          onChange={(e) => setTopic(e.target.value)}
+                          className="mt-2"
+                          rows={3}
+                          disabled={isConnected || isConnecting}
+                        />
                       </div>
-                    </div>
 
-                    {/* Call Controls */}
-                    <div className="space-y-3 pt-4">
-                      {!isConnected ? (
-                        <Button
-                          onClick={startConversation}
-                          disabled={isConnecting || !topic.trim()}
-                          className="w-full bg-green-600 hover:bg-green-700"
+                      {/* Conversation Style */}
+                      <div>
+                        <Label>Conversation Style</Label>
+                        <Select
+                          value={conversationStyle}
+                          onValueChange={setConversationStyle}
+                          disabled={isConnected || isConnecting}
                         >
-                          {isConnecting ? (
-                            <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                              Connecting...
-                            </>
-                          ) : (
-                            <>
-                              <Phone className="w-4 h-4 mr-2" />
-                              Start Conversation
-                            </>
-                          )}
-                        </Button>
-                      ) : (
-                        <div className="space-y-3">
+                          <SelectTrigger className="mt-2">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {styleOptions.map((style) => (
+                              <SelectItem key={style.id} value={style.id}>
+                                <div>
+                                  <div className="font-medium">
+                                    {style.name}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {style.description}
+                                  </div>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Voice Selection */}
+                      <div>
+                        <Label>AI Voice</Label>
+                        <Select
+                          value={selectedVoice}
+                          onValueChange={setSelectedVoice}
+                          disabled={isConnected || isConnecting}
+                        >
+                          <SelectTrigger className="mt-2">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {voiceOptions.map((voice) => (
+                              <SelectItem key={voice.id} value={voice.id}>
+                                <div>
+                                  <div className="font-medium">
+                                    {voice.name}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {voice.description}
+                                  </div>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Chat Session Time Info */}
+                      <div className="flex items-start gap-3 p-4 bg-yellow-50 border border-yellow-200 rounded-xl shadow-sm">
+                        <AlertCircle className="w-5 h-5 text-yellow-600 mt-1 flex-shrink-0" />
+                        <div className="text-sm leading-relaxed">
+                          <p className="text-yellow-900 font-semibold">
+                            Chat Session Limit
+                          </p>
+                          <p className="text-yellow-800">
+                            Each chat session is limited to{" "}
+                            <span className="font-medium">3 minutes</span>.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Call Controls */}
+                      <div className="space-y-3 pt-4">
+                        {!isConnected ? (
                           <Button
-                            onClick={endConversation}
-                            className="w-full bg-red-600 hover:bg-red-700"
+                            onClick={startConversation}
+                            disabled={isConnecting || !topic.trim()}
+                            className="w-full bg-green-600 hover:bg-green-700"
                           >
-                            <PhoneOff className="w-4 h-4 mr-2" />
-                            End Conversation
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Call Status */}
-                    {isConnected && (
-                      <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span className="text-green-800 font-medium">
-                              Connected
-                            </span>
-                          </div>
-                          <Badge
-                            variant="outline"
-                            className="text-green-700 border-green-300"
-                          >
-                            {formatDuration(callDuration)}
-                          </Badge>
-                        </div>
-
-                        <div className="flex items-center gap-4 text-sm text-green-700">
-                          <div className="flex items-center gap-1">
-                            {isAiSpeaking ? (
+                            {isConnecting ? (
                               <>
-                                <Volume2 className="w-3 h-3" />
-                                <span>AI Speaking...</span>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Connecting...
                               </>
                             ) : (
                               <>
-                                <Mic className="w-3 h-3" />
-                                <span>Listening...</span>
+                                <Phone className="w-4 h-4 mr-2" />
+                                Start Conversation
                               </>
                             )}
+                          </Button>
+                        ) : (
+                          <div className="space-y-3">
+                            <Button
+                              onClick={endConversation}
+                              className="w-full bg-red-600 hover:bg-red-700"
+                            >
+                              <PhoneOff className="w-4 h-4 mr-2" />
+                              End Conversation
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Call Status */}
+                      {isConnected && (
+                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                              <span className="text-green-800 font-medium">
+                                Connected
+                              </span>
+                            </div>
+                            <Badge
+                              variant="outline"
+                              className="text-green-700 border-green-300"
+                            >
+                              {formatDuration(callDuration)}
+                            </Badge>
+                          </div>
+
+                          <div className="flex items-center gap-4 text-sm text-green-700">
+                            <div className="flex items-center gap-1">
+                              {isAiSpeaking ? (
+                                <>
+                                  <Volume2 className="w-3 h-3" />
+                                  <span>AI Speaking...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Mic className="w-3 h-3" />
+                                  <span>Listening...</span>
+                                </>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-                  </UsageGuard>
-                </CardContent>
-              </Card>
+                      )}
+                    </CardContent>
+                  </Card>
+                </UsageGuard>
+              </div>
 
               {/* Live Transcript Section */}
               <Card className="h-[700px] flex flex-col">

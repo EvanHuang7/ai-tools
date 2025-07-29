@@ -310,152 +310,152 @@ export function ImageEditor() {
             {/* Input + Result Section */}
             <div className="grid lg:grid-cols-2 gap-8">
               {/* Input Section */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Upload className="h-5 w-5 flex-shrink-0" />
-                    Upload Image
-                  </CardTitle>
-                  <CardDescription>
-                    Drag and drop your image or click to browse (Max 10MB)
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <UsageGuard
-                    feature="imageEditing"
-                    action="process this image"
-                  >
-                    <div
-                      {...getRootProps()}
-                      className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
+              <div className="space-y-6">
+                <UsageGuard feature="imageEditing" action="process this image">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Upload className="h-5 w-5 flex-shrink-0" />
+                        Upload Image
+                      </CardTitle>
+                      <CardDescription>
+                        Drag and drop your image or click to browse (Max 10MB)
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div
+                        {...getRootProps()}
+                        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
                         ${
                           isDragActive
                             ? "border-primary bg-primary/5"
                             : "border-border hover:border-primary/50"
                         }`}
-                    >
-                      <input {...getInputProps()} />
-                      {uploadedImage ? (
-                        <div className="space-y-4">
-                          <img
-                            src={uploadedImage}
-                            alt="Uploaded"
-                            className="max-w-full max-h-64 mx-auto rounded-lg object-contain"
-                          />
-                          <div className="flex items-center justify-center gap-2">
-                            <Badge
-                              variant="secondary"
-                              className="bg-green-500/10 text-green-600 border-green-500/20"
-                            >
-                              Image Ready
-                            </Badge>
-                            <Badge variant="outline">
-                              {uploadedFile &&
-                                `${(uploadedFile.size / 1024 / 1024).toFixed(
-                                  1
-                                )}MB`}
-                            </Badge>
+                      >
+                        <input {...getInputProps()} />
+                        {uploadedImage ? (
+                          <div className="space-y-4">
+                            <img
+                              src={uploadedImage}
+                              alt="Uploaded"
+                              className="max-w-full max-h-64 mx-auto rounded-lg object-contain"
+                            />
+                            <div className="flex items-center justify-center gap-2">
+                              <Badge
+                                variant="secondary"
+                                className="bg-green-500/10 text-green-600 border-green-500/20"
+                              >
+                                Image Ready
+                              </Badge>
+                              <Badge variant="outline">
+                                {uploadedFile &&
+                                  `${(uploadedFile.size / 1024 / 1024).toFixed(
+                                    1
+                                  )}MB`}
+                              </Badge>
+                            </div>
                           </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          <Upload className="w-12 h-12 text-muted-foreground mx-auto" />
-                          <div>
-                            <p className="font-medium mb-2">
-                              {isDragActive
-                                ? "Drop your image here"
-                                : "Click to upload or drag and drop"}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              Supports JPG, PNG, WebP (Max 10MB)
-                            </p>
+                        ) : (
+                          <div className="space-y-4">
+                            <Upload className="w-12 h-12 text-muted-foreground mx-auto" />
+                            <div>
+                              <p className="font-medium mb-2">
+                                {isDragActive
+                                  ? "Drop your image here"
+                                  : "Click to upload or drag and drop"}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Supports JPG, PNG, WebP (Max 10MB)
+                              </p>
+                            </div>
                           </div>
+                        )}
+                      </div>
+
+                      {uploadedImage && (
+                        <div className="mt-6 space-y-4">
+                          <Button
+                            onClick={handleProcessImage}
+                            disabled={removeBackgroundMutation.isPending}
+                            className="w-full"
+                          >
+                            {removeBackgroundMutation.isPending ? (
+                              <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Processing...
+                              </>
+                            ) : (
+                              <>
+                                <Scissors className="w-4 h-4 mr-2" />
+                                Remove Background
+                              </>
+                            )}
+                          </Button>
+
+                          {removeBackgroundMutation.isPending && (
+                            <div className="space-y-3">
+                              <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">
+                                  {currentStage}
+                                </span>
+                                <span>{progress}%</span>
+                              </div>
+                              <Progress value={progress} className="h-3" />
+                              <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
+                                <Clock className="w-3 h-3 inline mr-1" />
+                                Image editing typically takes around 30 seconds.
+                                Please wait...
+                              </div>
+                            </div>
+                          )}
+
+                          {!removeBackgroundMutation.isPending && (
+                            <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                              <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                              <div className="text-sm">
+                                <p className="text-amber-800 font-medium">
+                                  Processing Time
+                                </p>
+                                <p className="text-amber-700">
+                                  Background removal takes around 30 seconds.
+                                  Please be patient!
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {removeBackgroundMutation.isError && (
+                            <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                              <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                              <div className="text-sm">
+                                <p className="text-red-800 font-medium">
+                                  Processing Failed
+                                </p>
+                                <p className="text-red-700">
+                                  {removeBackgroundMutation.error instanceof
+                                  Error
+                                    ? removeBackgroundMutation.error.message
+                                    : "An error occurred while editing your image"}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          <Button
+                            onClick={clearImages}
+                            variant="outline"
+                            className="w-full"
+                            disabled={removeBackgroundMutation.isPending}
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Clear Images
+                          </Button>
                         </div>
                       )}
-                    </div>
-
-                    {uploadedImage && (
-                      <div className="mt-6 space-y-4">
-                        <Button
-                          onClick={handleProcessImage}
-                          disabled={removeBackgroundMutation.isPending}
-                          className="w-full"
-                        >
-                          {removeBackgroundMutation.isPending ? (
-                            <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                              Processing...
-                            </>
-                          ) : (
-                            <>
-                              <Scissors className="w-4 h-4 mr-2" />
-                              Remove Background
-                            </>
-                          )}
-                        </Button>
-
-                        {removeBackgroundMutation.isPending && (
-                          <div className="space-y-3">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">
-                                {currentStage}
-                              </span>
-                              <span>{progress}%</span>
-                            </div>
-                            <Progress value={progress} className="h-3" />
-                            <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
-                              <Clock className="w-3 h-3 inline mr-1" />
-                              Image editing typically takes around 30 seconds.
-                              Please wait...
-                            </div>
-                          </div>
-                        )}
-
-                        {!removeBackgroundMutation.isPending && (
-                          <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                            <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                            <div className="text-sm">
-                              <p className="text-amber-800 font-medium">
-                                Processing Time
-                              </p>
-                              <p className="text-amber-700">
-                                Background removal takes around 30 seconds.
-                                Please be patient!
-                              </p>
-                            </div>
-                          </div>
-                        )}
-
-                        {removeBackgroundMutation.isError && (
-                          <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
-                            <div className="text-sm">
-                              <p className="text-red-800 font-medium">
-                                Processing Failed
-                              </p>
-                              <p className="text-red-700">
-                                {removeBackgroundMutation.error instanceof Error
-                                  ? removeBackgroundMutation.error.message
-                                  : "An error occurred while editing your image"}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-
-                        <Button
-                          onClick={clearImages}
-                          variant="outline"
-                          className="w-full"
-                          disabled={removeBackgroundMutation.isPending}
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Clear Images
-                        </Button>
-                      </div>
-                    )}
-                  </UsageGuard>
-                </CardContent>
-              </Card>
+                    </CardContent>
+                  </Card>
+                </UsageGuard>
+              </div>
 
               {/* Result Section */}
               <Card>

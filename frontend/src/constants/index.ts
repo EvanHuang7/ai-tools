@@ -43,7 +43,7 @@ export const USAGE_GUARD_FEATURE_DESCRIPTIONS = {
   },
   audioChat: {
     name: "Audio Chat",
-    description: "Voice conversations with AI assistant (10 min sessions)",
+    description: "Voice conversations with AI assistant",
     icon: "Mic",
   },
   videoGeneration: {
