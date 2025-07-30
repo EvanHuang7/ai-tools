@@ -115,9 +115,9 @@ export function HomePage() {
               Transform Your Creative Workflow with AI
             </h1>
             <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-              Professional AI-powered tools for image editing, video generation,
-              and intelligent conversation. Create stunning content in seconds,
-              not hours.
+              Professional AI-powered tools for image editing, image and video
+              generation, and intelligent conversation. Create stunning content
+              in seconds — not hours.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {isSignedIn ? (
@@ -150,15 +150,15 @@ export function HomePage() {
             <div className="flex items-center justify-center gap-8 mt-12 text-sm text-slate-500">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 flex-shrink-0" />
-                <span>50K+ Users</span>
+                <span>5K+ Users</span>
               </div>
               <div className="flex items-center gap-2">
                 <Image className="h-4 w-4 flex-shrink-0" />
-                <span>2M+ Images Processed</span>
+                <span>10k+ Images Generated & Edited</span>
               </div>
               <div className="flex items-center gap-2">
                 <Video className="h-4 w-4 flex-shrink-0" />
-                <span>100K+ Videos Created</span>
+                <span>2K+ Videos Generated</span>
               </div>
             </div>
           </div>
