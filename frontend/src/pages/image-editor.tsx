@@ -905,11 +905,13 @@ export function ImageEditor() {
                           <h4 className="font-medium mb-2 min-h-[36px]">
                             Original Image
                           </h4>
-                          <img
-                            src={selectedImage.inputImageUrl}
-                            alt="Original"
-                            className="w-full rounded-lg object-contain"
-                          />
+                          <div className="bg-white rounded-lg overflow-hidden">
+                            <img
+                              src={selectedImage.inputImageUrl}
+                              alt="Original"
+                              className="w-full rounded-lg object-contain"
+                            />
+                          </div>
                         </div>
                         <div>
                           <div className="flex items-center justify-between mb-2 min-h-[36px]">
@@ -933,7 +935,7 @@ export function ImageEditor() {
                               )}
                             </Button>
                           </div>
-                          <div className="relative">
+                          <div className="relative bg-white rounded-lg overflow-hidden">
                             <img
                               src={selectedImage.resultImageUrl}
                               alt="Processed"

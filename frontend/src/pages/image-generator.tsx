@@ -665,7 +665,7 @@ export function ImageGenerator() {
                 <div className="flex-1 overflow-y-auto space-y-4">
                   {selectedImage && (
                     <>
-                      <div className="relative">
+                      <div className="relative bg-white rounded-lg overflow-hidden">
                         <img
                           src={selectedImage.ImageURL}
                           alt="Generated artwork"
