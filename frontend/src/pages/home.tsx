@@ -365,11 +365,7 @@ export function HomePage() {
                             )}
                           </Button>
                         </div>
-                        <div
-                          className={`relative rounded-lg overflow-hidden flex items-center justify-center ${
-                            showGrid ? "bg-transparent" : "bg-gray-100"
-                          }`}
-                        >
+                        <div className="bg-white relative rounded-lg overflow-hidden flex items-center justify-center">
                           <img
                             src={selectedFeature.example.editedImageUrl}
                             alt="Background Removed"
