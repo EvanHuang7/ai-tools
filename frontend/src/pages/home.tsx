@@ -33,6 +33,7 @@ import {
   Grid3X3,
   EyeOff,
   Download,
+  ExternalLink,
   Copy,
 } from "lucide-react";
 import { HOME_PAGE_FEATURES, APP_USER_REVIEWS } from "@/constants";
@@ -359,7 +360,7 @@ export function HomePage() {
                           link.click();
                           document.body.removeChild(link);
                         }}
-                        className="flex-1 bg-blue-600 hover:bg-blue-700"
+                        className="flex-1"
                       >
                         <Download className="w-4 h-4 mr-2" />
                         Download Original
@@ -374,9 +375,9 @@ export function HomePage() {
                           link.click();
                           document.body.removeChild(link);
                         }}
-                        className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                        className="flex-1 bg-blue-600 hover:bg-blue-700"
                       >
-                        <Sparkles className="w-4 h-4 mr-2" />
+                        <Download className="w-4 h-4 mr-2" />
                         Download Edited
                       </Button>
                     </div>
@@ -418,7 +419,7 @@ export function HomePage() {
                           link.click();
                           document.body.removeChild(link);
                         }}
-                        className="flex-1"
+                        className="flex-1 bg-blue-600 hover:bg-blue-700"
                       >
                         <Download className="w-4 h-4 mr-2" />
                         Download Image
@@ -508,7 +509,7 @@ export function HomePage() {
                         }}
                         className="bg-green-600 hover:bg-green-700"
                       >
-                        <Download className="w-4 h-4 mr-2" />
+                        <ExternalLink className="w-4 h-4 mr-2" />
                         Download Video
                       </Button>
                       <Button
