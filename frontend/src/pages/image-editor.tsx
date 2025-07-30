@@ -171,6 +171,7 @@ export function ImageEditor() {
     }
   };
 
+  // Download the image from "Edited Result" section
   const downloadImage = async () => {
     if (!processedImage) return;
 
@@ -194,6 +195,7 @@ export function ImageEditor() {
     }
   };
 
+  // Download the HQ image from "Edited Result" section
   const downloadHighQualityImage = async () => {
     if (!processedImage) return;
 
@@ -234,6 +236,95 @@ export function ImageEditor() {
           link.download = `high-quality-${
             uploadedFile?.name?.replace(/\.[^/.]+$/, "") || "image"
           }.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+
+          toast.success("High quality PNG downloaded!");
+        },
+        "image/png",
+        1.0
+      );
+    } catch (error) {
+      console.error("Error downloading high quality image:", error);
+      toast.error("Failed to download high quality image");
+    }
+  };
+
+  // Download the selected image from history record
+  const downloadSelectedImage = async (image: {
+    id: string;
+    resultImageUrl: string;
+  }) => {
+    if (!image?.resultImageUrl) return;
+
+    try {
+      const response = await fetch(image.resultImageUrl, {
+        mode: "cors",
+      });
+      const blob = await response.blob();
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `processed-${image.id}.png`;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success("Image downloaded!");
+    } catch (error) {
+      console.error("Error downloading image:", error);
+      toast.error("Failed to download image");
+    }
+  };
+
+  // Download the HQ selected image from history record
+  const downloadHighQualitySelectedImage = async (image: {
+    id: string;
+    resultImageUrl: string;
+  }) => {
+    if (!image?.resultImageUrl) return;
+
+    try {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = image.resultImageUrl;
+      });
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      if (!ctx) {
+        throw new Error("Could not get canvas context");
+      }
+
+      const scaleFactor = 2;
+      canvas.width = img.naturalWidth * scaleFactor;
+      canvas.height = img.naturalHeight * scaleFactor;
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            throw new Error("Could not create image blob");
+          }
+
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `high-quality-${image.id}.png`;
+
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -864,26 +955,18 @@ export function ImageEditor() {
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* Download selected image from history record */}
                         <Button
-                          onClick={() => {
-                            const link = document.createElement("a");
-                            link.href = selectedImage.resultImageUrl;
-                            link.download = `processed-${selectedImage.id}.png`;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                            toast.success("Image downloaded!");
-                          }}
+                          onClick={() => downloadSelectedImage(selectedImage)}
                           className="flex-1 bg-blue-600 hover:bg-blue-700"
                         >
                           <Download className="w-4 h-4 mr-2" />
                           Download Standard PNG
                         </Button>
                         <Button
-                          onClick={() => {
-                            // High quality download logic here
-                            toast.success("High quality PNG downloaded!");
-                          }}
+                          onClick={() =>
+                            downloadHighQualitySelectedImage(selectedImage)
+                          }
                           className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
                         >
                           <Sparkles className="w-4 h-4 mr-2" />
