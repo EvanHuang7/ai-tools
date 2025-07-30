@@ -559,7 +559,7 @@ export function HomePage() {
                       </CardContent>
                     </Card>
                     <div className="space-y-4 max-h-96 overflow-y-auto">
-                      <h4 className="font-medium">Sample Conversation</h4>
+                      <h4 className="font-medium">Conversation Transcript</h4>
                       {selectedFeature.example.transcript.map(
                         (message: any, idx: number) => (
                           <div

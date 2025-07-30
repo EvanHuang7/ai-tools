@@ -112,7 +112,7 @@ export function ImageEditor() {
       "image/*": [".jpeg", ".jpg", ".png", ".webp"],
     },
     maxFiles: 1,
-    maxSize: 10 * 1024 * 1024, // 10MB limit
+    maxSize: 2 * 1024 * 1024, // 2MB limit
   });
 
   // Call remove image bg API
@@ -126,7 +126,7 @@ export function ImageEditor() {
     setProgress(0);
     setCurrentStage("Preparing...");
 
-    // Progress simulation for the 30-second processing
+    // Progress simulation for the 20-second processing
     let stageIndex = 0;
     const progressInterval = setInterval(() => {
       if (stageIndex < IMAGE_EDITOR_PROGRESS_STAGES.length) {
@@ -135,7 +135,7 @@ export function ImageEditor() {
         setCurrentStage(currentProgressStage.stage);
         stageIndex++;
       }
-    }, 4500); // Update every 4.5 seconds (27 seconds total for 6 stages)
+    }, 3000); // Update every 3 seconds (18 seconds total for 6 stages)
 
     try {
       const result = await removeBackgroundMutation.mutateAsync({
@@ -410,7 +410,7 @@ export function ImageEditor() {
                         Upload Image
                       </CardTitle>
                       <CardDescription>
-                        Drag and drop your image or click to browse (Max 10MB)
+                        Drag and drop your image or click to browse (Max 2MB)
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
@@ -456,7 +456,7 @@ export function ImageEditor() {
                                   : "Click to upload or drag and drop"}
                               </p>
                               <p className="text-sm text-muted-foreground">
-                                Supports JPG, PNG, WebP (Max 10MB)
+                                Supports JPG, PNG, WebP (Max 2MB)
                               </p>
                             </div>
                           </div>
@@ -474,7 +474,7 @@ export function ImageEditor() {
                                   Processing Time
                                 </p>
                                 <p className="text-amber-700">
-                                  Background removal takes around 30 seconds.
+                                  Background removal takes around 20 seconds.
                                   Please be patient!
                                 </p>
                               </div>
@@ -521,7 +521,7 @@ export function ImageEditor() {
                               <Progress value={progress} className="h-3" />
                               <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
                                 <Clock className="w-3 h-3 inline mr-1" />
-                                Image editing typically takes around 30 seconds.
+                                Image editing typically takes around 20 seconds.
                                 Please wait...
                               </div>
                             </div>
