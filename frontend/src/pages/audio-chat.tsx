@@ -887,7 +887,7 @@ export function AudioChat() {
             </Dialog>
 
             {/* Footer Section */}
-            <div className="mt-12 grid md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-12 gap-6">
               <Card className="text-center p-6">
                 <Mic className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Natural Speech</h3>

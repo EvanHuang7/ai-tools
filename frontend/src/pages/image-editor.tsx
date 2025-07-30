@@ -982,7 +982,7 @@ export function ImageEditor() {
             </Dialog>
 
             {/* Footer Section */}
-            <div className="mt-12 grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-12 gap-6">
               <Card className="text-center p-6">
                 <Scissors className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">
@@ -1004,6 +1004,13 @@ export function ImageEditor() {
                 <h3 className="text-lg font-semibold mb-2">Preview Control</h3>
                 <p className="text-muted-foreground text-sm">
                   Toggle transparency grid to see your image clearly
+                </p>
+              </Card>
+              <Card className="text-center p-6">
+                <Download className="w-8 h-8 text-primary mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Easy Download</h3>
+                <p className="text-muted-foreground text-sm">
+                  Download your creations instantly
                 </p>
               </Card>
             </div>

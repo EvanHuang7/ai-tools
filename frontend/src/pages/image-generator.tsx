@@ -720,7 +720,7 @@ export function ImageGenerator() {
             </Dialog>
 
             {/* Footer Section */}
-            <div className="mt-12 grid md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-12 gap-6">
               <Card className="text-center p-6">
                 <Sparkles className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">AI-Powered</h3>
@@ -732,7 +732,7 @@ export function ImageGenerator() {
                 <Palette className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Multiple Styles</h3>
                 <p className="text-muted-foreground text-sm">
-                  Choose from realistic to artistic styles
+                  Generate stunning images in different styles
                 </p>
               </Card>
               <Card className="text-center p-6">

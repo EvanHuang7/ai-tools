@@ -850,12 +850,19 @@ export function VideoGenerator() {
             </Dialog>
 
             {/* Footer Section */}
-            <div className="mt-12 grid md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-12 gap-6">
               <Card className="text-center p-6">
                 <Wand2 className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">AI Animation</h3>
                 <p className="text-muted-foreground text-sm">
                   Create smooth animations from still images
+                </p>
+              </Card>
+              <Card className="text-center p-6">
+                <Video className="w-8 h-8 text-primary mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">HD Video Output</h3>
+                <p className="text-muted-foreground text-sm">
+                  Export high-quality MP4 videos
                 </p>
               </Card>
               <Card className="text-center p-6">
@@ -865,13 +872,6 @@ export function VideoGenerator() {
                 </h3>
                 <p className="text-muted-foreground text-sm">
                   40-50 second processing for premium results
-                </p>
-              </Card>
-              <Card className="text-center p-6">
-                <Video className="w-8 h-8 text-primary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">HD Video Output</h3>
-                <p className="text-muted-foreground text-sm">
-                  Export high-quality MP4 videos
                 </p>
               </Card>
               <Card className="text-center p-6">
