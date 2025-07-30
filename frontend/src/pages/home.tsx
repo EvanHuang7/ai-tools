@@ -378,6 +378,7 @@ export function HomePage() {
                             }}
                           />
                           <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                            <Sparkles className="w-3 h-3 mr-1" />
                             Background Removed
                           </Badge>
                           {showGrid && (
@@ -494,7 +495,8 @@ export function HomePage() {
                             Your browser does not support the video tag.
                           </video>
                           <Badge className="absolute top-2 right-2 bg-green-500 text-white">
-                            Generated
+                            <Sparkles className="w-3 h-3 mr-1" />
+                            AI Generated
                           </Badge>
                         </div>
                       </div>
