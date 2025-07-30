@@ -142,6 +142,7 @@ export function ImageGenerator() {
     }
   };
 
+  // Download the image from "Generated Image" section
   const downloadImage = async () => {
     if (!generatedImage) return;
 
@@ -153,6 +154,36 @@ export function ImageGenerator() {
       const link = document.createElement("a");
       link.href = url;
       link.download = `ai-generated-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("Image downloaded!");
+    } catch (error) {
+      console.error("Error downloading image:", error);
+      toast.error("Failed to download image");
+    }
+  };
+
+  // Download the selected image from history record
+  const downloadSelectedImage = async (selectedImage: {
+    ImageURL: string;
+    ID: string;
+  }) => {
+    if (!selectedImage) return;
+
+    try {
+      const response = await fetch(selectedImage.ImageURL, { mode: "cors" });
+      if (!response.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `ai-generated-${selectedImage.ID}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -665,17 +696,9 @@ export function ImageGenerator() {
                       </Card>
 
                       <div className="flex gap-3">
+                        {/* Download selected image from history record */}
                         <Button
-                          onClick={() => {
-                            const link = document.createElement("a");
-                            link.href = selectedImage.ImageURL;
-                            link.download = `ai-generated-${selectedImage.ID}.png`;
-                            link.target = "_blank";
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                            toast.success("Image download started!");
-                          }}
+                          onClick={() => downloadSelectedImage(selectedImage)}
                           className="flex-1 bg-blue-600 hover:bg-blue-700"
                         >
                           <Download className="w-4 h-4 mr-2" />
