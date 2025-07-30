@@ -92,6 +92,11 @@ export function HomePage() {
     );
   };
 
+  const copyPrompt = (promptText: string) => {
+    navigator.clipboard.writeText(promptText);
+    toast.success("Prompt copied to clipboard!");
+  };
+
   const gridPattern = `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`;
 
   return (
@@ -449,11 +454,9 @@ export function HomePage() {
                       </Button>
                       <Button
                         variant="outline"
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            selectedFeature.example.prompt
-                          );
-                        }}
+                        onClick={() =>
+                          copyPrompt(selectedFeature.example.prompt)
+                        }
                         className="flex-1"
                       >
                         <Copy className="w-4 h-4 mr-2" />
@@ -529,11 +532,9 @@ export function HomePage() {
                       </Button>
                       <Button
                         variant="outline"
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            selectedFeature.example.prompt
-                          );
-                        }}
+                        onClick={() =>
+                          copyPrompt(selectedFeature.example.prompt)
+                        }
                       >
                         <Copy className="w-4 h-4 mr-2" />
                         Copy Prompt
