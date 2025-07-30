@@ -27,6 +27,7 @@ import {
   Calendar,
   Eye,
   Copy,
+  Trash2,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -389,6 +390,7 @@ export function VideoGenerator() {
                           className="w-full"
                           disabled={isGenerating}
                         >
+                          <Trash2 className="w-4 h-4 mr-2" />
                           Clear All
                         </Button>
                       </div>

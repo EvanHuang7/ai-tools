@@ -374,6 +374,22 @@ export function ImageEditor() {
 
                       {uploadedImage && (
                         <div className="mt-6 space-y-4">
+                          {/* Editing Time Warning */}
+                          {!removeBackgroundMutation.isPending && (
+                            <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                              <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                              <div className="text-sm">
+                                <p className="text-amber-800 font-medium">
+                                  Processing Time
+                                </p>
+                                <p className="text-amber-700">
+                                  Background removal takes around 30 seconds.
+                                  Please be patient!
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
                           <Button
                             onClick={handleProcessImage}
                             disabled={removeBackgroundMutation.isPending}
@@ -392,6 +408,17 @@ export function ImageEditor() {
                             )}
                           </Button>
 
+                          <Button
+                            onClick={clearImages}
+                            variant="outline"
+                            className="w-full"
+                            disabled={removeBackgroundMutation.isPending}
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Clear Images
+                          </Button>
+
+                          {/* Editing Time Pending info */}
                           {removeBackgroundMutation.isPending && (
                             <div className="space-y-3">
                               <div className="flex justify-between text-sm">
@@ -405,21 +432,6 @@ export function ImageEditor() {
                                 <Clock className="w-3 h-3 inline mr-1" />
                                 Image editing typically takes around 30 seconds.
                                 Please wait...
-                              </div>
-                            </div>
-                          )}
-
-                          {!removeBackgroundMutation.isPending && (
-                            <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                              <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                              <div className="text-sm">
-                                <p className="text-amber-800 font-medium">
-                                  Processing Time
-                                </p>
-                                <p className="text-amber-700">
-                                  Background removal takes around 30 seconds.
-                                  Please be patient!
-                                </p>
                               </div>
                             </div>
                           )}
@@ -440,16 +452,6 @@ export function ImageEditor() {
                               </div>
                             </div>
                           )}
-
-                          <Button
-                            onClick={clearImages}
-                            variant="outline"
-                            className="w-full"
-                            disabled={removeBackgroundMutation.isPending}
-                          >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            Clear Images
-                          </Button>
                         </div>
                       )}
                     </CardContent>
