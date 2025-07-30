@@ -61,7 +61,7 @@ export function Pricing() {
           <Button
             variant="outline"
             onClick={() => {
-              toast.info("Contact support at support@aitoolsstudio.com");
+              toast.info("Contact support at noreplyrobotcs@gmail.com");
             }}
           >
             Contact Support
