@@ -335,11 +335,13 @@ export function HomePage() {
                         <h4 className="font-medium mb-2 min-h-[36px]">
                           Original Image
                         </h4>
-                        <img
-                          src={selectedFeature.example.originalImageUrl}
-                          alt="Original"
-                          className="w-full rounded-lg object-contain"
-                        />
+                        <div className="bg-white rounded-lg overflow-hidden flex items-center justify-center">
+                          <img
+                            src={selectedFeature.example.originalImageUrl}
+                            alt="Original"
+                            className="w-full rounded-lg object-contain"
+                          />
+                        </div>
                       </div>
                       <div>
                         <div className="flex items-center justify-between mb-2 min-h-[36px]">
@@ -363,7 +365,11 @@ export function HomePage() {
                             )}
                           </Button>
                         </div>
-                        <div className="relative">
+                        <div
+                          className={`relative rounded-lg overflow-hidden flex items-center justify-center ${
+                            showGrid ? "bg-transparent" : "bg-gray-100"
+                          }`}
+                        >
                           <img
                             src={selectedFeature.example.editedImageUrl}
                             alt="Background Removed"
@@ -421,7 +427,7 @@ export function HomePage() {
                 {/* Image Generator Example */}
                 {selectedFeature.title === "Image Generator" && (
                   <div className="space-y-4">
-                    <div className="relative">
+                    <div className="relative bg-white rounded-lg overflow-hidden flex items-center justify-center">
                       <img
                         src={selectedFeature.example.imageUrl}
                         alt="Generated artwork"
