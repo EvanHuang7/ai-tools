@@ -272,7 +272,7 @@ export function ImageGenerator() {
                         <Button
                           onClick={handleGenerateImage}
                           disabled={isGenerating || !prompt.trim()}
-                          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                          className="w-full "
                         >
                           {isGenerating ? (
                             <>
@@ -344,7 +344,10 @@ export function ImageGenerator() {
                       </div>
 
                       <div className="space-y-3">
-                        <Button onClick={downloadImage} className="w-full">
+                        <Button
+                          onClick={downloadImage}
+                          className="w-full bg-blue-600 hover:bg-blue-700"
+                        >
                           <Download className="w-4 h-4 mr-2" />
                           Download Image
                         </Button>
@@ -673,7 +676,7 @@ export function ImageGenerator() {
                             document.body.removeChild(link);
                             toast.success("Image download started!");
                           }}
-                          className="flex-1"
+                          className="flex-1 bg-blue-600 hover:bg-blue-700"
                         >
                           <Download className="w-4 h-4 mr-2" />
                           Download Image

@@ -445,7 +445,7 @@ export function AudioChat() {
                           <Button
                             onClick={startConversation}
                             disabled={isConnecting || !topic.trim()}
-                            className="w-full bg-green-600 hover:bg-green-700"
+                            className="w-full"
                           >
                             {isConnecting ? (
                               <>
