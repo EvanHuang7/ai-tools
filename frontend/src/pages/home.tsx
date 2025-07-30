@@ -548,10 +548,12 @@ export function HomePage() {
                   <div className="space-y-4">
                     <Card>
                       <CardContent className="p-4">
-                        <h4 className="font-medium mb-2">Conversation Topic</h4>
-                        <p className="text-sm italic bg-muted p-3 rounded">
-                          "{selectedFeature.example.topic}"
-                        </p>
+                        <div className="flex items-baseline gap-2">
+                          <h4 className="font-medium">Conversation Topic:</h4>
+                          <span className="italic">
+                            {selectedFeature.example.topic}
+                          </span>
+                        </div>
                       </CardContent>
                     </Card>
                     <div className="space-y-4 max-h-96 overflow-y-auto">
