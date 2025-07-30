@@ -210,9 +210,7 @@ export function VideoGenerator() {
     if (!selectedVideo?.VideoURL) return;
 
     window.open(selectedVideo.VideoURL, "_blank");
-    toast.success(
-      "Video opened in a new tab. Click the download button or right-click to save."
-    );
+    toast.success("Video opened in a new tab. Right-click to save.");
   };
 
   const copyPrompt = (promptText: string) => {

@@ -36,6 +36,7 @@ import {
   ExternalLink,
   Copy,
 } from "lucide-react";
+import { toast } from "sonner";
 import { HOME_PAGE_FEATURES, APP_USER_REVIEWS } from "@/constants";
 
 export function HomePage() {
@@ -53,6 +54,42 @@ export function HomePage() {
 
   const toggleGrid = () => {
     setShowGrid(!showGrid);
+  };
+
+  const downloadExampleImage = async (exampleImageUrl: string) => {
+    if (!exampleImageUrl) return;
+
+    try {
+      const response = await fetch(exampleImageUrl, { mode: "cors" });
+      if (!response.ok) {
+        throw new Error("Failed to fetch example image");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      link.download = `example-image-${timestamp}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success("Example image downloaded!");
+    } catch (error) {
+      console.error("Error downloading example image:", error);
+      toast.error("Failed to download example image");
+    }
+  };
+
+  const openExampleItemInNewTab = (url: string) => {
+    if (!url) return;
+
+    window.open(url, "_blank");
+    toast.success(
+      "Example image or video opened in a new tab. Right-click to save."
+    );
   };
 
   const gridPattern = `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`;
@@ -351,30 +388,22 @@ export function HomePage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <Button
-                        onClick={() => {
-                          const link = document.createElement("a");
-                          link.href = selectedFeature.example.originalImageUrl;
-                          link.download = "original-image.jpg";
-                          link.target = "_blank";
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                        }}
+                        onClick={() =>
+                          downloadExampleImage(
+                            selectedFeature.example.originalImageUrl
+                          )
+                        }
                         className="flex-1"
                       >
                         <Download className="w-4 h-4 mr-2" />
                         Download Original
                       </Button>
                       <Button
-                        onClick={() => {
-                          const link = document.createElement("a");
-                          link.href = selectedFeature.example.editedImageUrl;
-                          link.download = "background-removed.png";
-                          link.target = "_blank";
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                        }}
+                        onClick={() =>
+                          downloadExampleImage(
+                            selectedFeature.example.editedImageUrl
+                          )
+                        }
                         className="flex-1 bg-blue-600 hover:bg-blue-700"
                       >
                         <Download className="w-4 h-4 mr-2" />
@@ -410,15 +439,9 @@ export function HomePage() {
 
                     <div className="flex gap-3">
                       <Button
-                        onClick={() => {
-                          const link = document.createElement("a");
-                          link.href = selectedFeature.example.imageUrl;
-                          link.download = "ai-generated-image.jpg";
-                          link.target = "_blank";
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                        }}
+                        onClick={() =>
+                          downloadExampleImage(selectedFeature.example.imageUrl)
+                        }
                         className="flex-1 bg-blue-600 hover:bg-blue-700"
                       >
                         <Download className="w-4 h-4 mr-2" />
@@ -483,30 +506,22 @@ export function HomePage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <Button
-                        onClick={() => {
-                          const link = document.createElement("a");
-                          link.href = selectedFeature.example.imageUrl;
-                          link.download = "source-image.jpg";
-                          link.target = "_blank";
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                        }}
+                        onClick={() =>
+                          openExampleItemInNewTab(
+                            selectedFeature.example.imageUrl
+                          )
+                        }
                         className="bg-blue-600 hover:bg-blue-700"
                       >
-                        <Download className="w-4 h-4 mr-2" />
+                        <ExternalLink className="w-4 h-4 mr-2" />
                         Download Image
                       </Button>
                       <Button
-                        onClick={() => {
-                          const link = document.createElement("a");
-                          link.href = selectedFeature.example.videoURL;
-                          link.download = "generated-video.mp4";
-                          link.target = "_blank";
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                        }}
+                        onClick={() =>
+                          openExampleItemInNewTab(
+                            selectedFeature.example.videoURL
+                          )
+                        }
                         className="bg-green-600 hover:bg-green-700"
                       >
                         <ExternalLink className="w-4 h-4 mr-2" />
