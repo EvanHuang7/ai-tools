@@ -29,6 +29,7 @@ import {
   Eye,
   Copy,
   Trash2,
+  Sparkles,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -114,7 +115,7 @@ export function VideoGenerator() {
       "image/*": [".jpeg", ".jpg", ".png", ".webp"],
     },
     maxFiles: 1,
-    maxSize: 10 * 1024 * 1024, // 10MB limit
+    maxSize: 2 * 1024 * 1024, // 2MB limit
   });
 
   // Generate Video API call
@@ -283,7 +284,7 @@ export function VideoGenerator() {
                         Upload Image
                       </CardTitle>
                       <CardDescription>
-                        Start with your source image (Max 10MB)
+                        Start with your source image (Max 2MB)
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
@@ -329,7 +330,7 @@ export function VideoGenerator() {
                                   : "Click to upload or drag and drop"}
                               </p>
                               <p className="text-sm text-muted-foreground">
-                                JPG, PNG, WebP (Max 10MB)
+                                JPG, PNG, WebP (Max 2MB)
                               </p>
                             </div>
                           </div>
@@ -453,7 +454,8 @@ export function VideoGenerator() {
                           Your browser does not support the video tag.
                         </video>
                         <Badge className="absolute top-2 right-2 bg-green-500 text-white">
-                          Generated
+                          <Sparkles className="w-3 h-3 mr-1" />
+                          AI Generated
                         </Badge>
                       </div>
 
@@ -789,7 +791,8 @@ export function VideoGenerator() {
                           Your browser does not support the video tag.
                         </video>
                         <Badge className="absolute top-2 right-2 bg-green-500 text-white">
-                          Generated
+                          <Sparkles className="w-3 h-3 mr-1" />
+                          AI Generated
                         </Badge>
                       </div>
 
