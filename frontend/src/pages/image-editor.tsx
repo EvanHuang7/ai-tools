@@ -599,6 +599,7 @@ export function ImageEditor() {
                           }}
                         />
                         <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                          <Sparkles className="w-3 h-3 mr-1" />
                           Background Removed
                         </Badge>
                         {showGrid && (
@@ -950,6 +951,7 @@ export function ImageEditor() {
                               }}
                             />
                             <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                              <Sparkles className="w-3 h-3 mr-1" />
                               Background Removed
                             </Badge>
                           </div>
