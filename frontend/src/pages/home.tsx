@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { Navbar } from "@/components/navbar";
@@ -11,6 +12,13 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   ArrowRight,
   Image,
   Video,
@@ -19,11 +27,34 @@ import {
   Users,
   Check,
   Star,
+  Eye,
+  User,
+  Bot,
+  Grid3X3,
+  EyeOff,
+  Download,
+  Copy,
 } from "lucide-react";
 import { HOME_PAGE_FEATURES, APP_USER_REVIEWS } from "@/constants";
 
 export function HomePage() {
   const { isLoaded, isSignedIn } = useAuth();
+
+  // Modal state for viewing examples
+  const [selectedFeature, setSelectedFeature] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showGrid, setShowGrid] = useState(true);
+
+  const handleViewExample = (feature: any) => {
+    setSelectedFeature(feature);
+    setIsModalOpen(true);
+  };
+
+  const toggleGrid = () => {
+    setShowGrid(!showGrid);
+  };
+
+  const gridPattern = `url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cdefs%3e%3cpattern id='smallGrid' width='8' height='8' patternUnits='userSpaceOnUse'%3e%3cpath d='M 8 0 L 0 0 0 8' fill='none' stroke='gray' stroke-width='0.5'/%3e%3c/pattern%3e%3cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3e%3crect width='80' height='80' fill='url(%23smallGrid)'/%3e%3cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='gray' stroke-width='1'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23grid)' /%3e%3c/svg%3e")`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -110,7 +141,7 @@ export function HomePage() {
                 key={index}
                 className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-white/80 backdrop-blur-sm"
               >
-                <CardHeader>
+                <CardHeader className="flex-1">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 group-hover:from-blue-600 group-hover:to-indigo-700 transition-colors">
                       <feature.icon className="h-6 w-6 text-white" />
@@ -126,22 +157,33 @@ export function HomePage() {
                   <CardTitle className="text-xl text-slate-900">
                     {feature.title}
                   </CardTitle>
-                  <CardDescription className="text-base text-slate-600">
+                  <CardDescription className="text-base text-slate-600 h-[50px] md:h-[80px]">
                     {feature.description}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex flex-col">
                   <ul className="space-y-2">
                     {feature.features.map((item, idx) => (
                       <li
                         key={idx}
-                        className="flex items-center gap-2 text-sm text-slate-600"
+                        className="flex items-center gap-2 text-sm truncate text-slate-600"
                       >
-                        <Check className="h-4 w-4 text-green-600" />
+                        <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
                         {item}
                       </li>
                     ))}
                   </ul>
+                  <div className="mt-4 pt-4 border-t">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleViewExample(feature)}
+                      className="w-full flex items-center gap-2"
+                    >
+                      <Eye className="h-4 w-4" />
+                      View Example
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -221,6 +263,326 @@ export function HomePage() {
           )}
         </div>
       </section>
+
+      {/* View Example Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {selectedFeature && (
+                <>
+                  <selectedFeature.icon className="h-5 w-5" />
+                  {selectedFeature.title} - Example
+                </>
+              )}
+            </DialogTitle>
+            <DialogDescription>
+              See how this AI feature works in practice
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex-1 overflow-y-auto space-y-4">
+            {selectedFeature && (
+              <>
+                {/* AI Image Editor Example */}
+                {selectedFeature.title === "AI Image Editor" && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="font-medium mb-2 min-h-[36px]">
+                          Original Image
+                        </h4>
+                        <img
+                          src={selectedFeature.example.originalImageUrl}
+                          alt="Original"
+                          className="w-full rounded-lg object-contain"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center justify-between mb-2 min-h-[36px]">
+                          <h4 className="font-medium">Background Removed</h4>
+                          <Button
+                            onClick={toggleGrid}
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-1"
+                          >
+                            {showGrid ? (
+                              <>
+                                <EyeOff className="h-3 w-3" />
+                                Hide Grid
+                              </>
+                            ) : (
+                              <>
+                                <Eye className="h-3 w-3" />
+                                Show Grid
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                        <div className="relative">
+                          <img
+                            src={selectedFeature.example.editedImageUrl}
+                            alt="Background Removed"
+                            className="w-full rounded-lg object-contain"
+                            style={{
+                              backgroundColor: showGrid
+                                ? "transparent"
+                                : "#f3f4f6",
+                              backgroundImage: showGrid ? gridPattern : "none",
+                            }}
+                          />
+                          <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                            Background Removed
+                          </Badge>
+                          {showGrid && (
+                            <Badge
+                              variant="outline"
+                              className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm"
+                            >
+                              <Grid3X3 className="w-3 h-3 mr-1" />
+                              Transparency Grid
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <Button
+                        onClick={() => {
+                          const link = document.createElement("a");
+                          link.href = selectedFeature.example.originalImageUrl;
+                          link.download = "original-image.jpg";
+                          link.target = "_blank";
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700"
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Download Original
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          const link = document.createElement("a");
+                          link.href = selectedFeature.example.editedImageUrl;
+                          link.download = "background-removed.png";
+                          link.target = "_blank";
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                      >
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Download Edited
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Image Generator Example */}
+                {selectedFeature.title === "Image Generator" && (
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <img
+                        src={selectedFeature.example.imageUrl}
+                        alt="Generated artwork"
+                        className="w-full rounded-lg object-contain max-h-96"
+                      />
+                      <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                        <Sparkles className="w-3 h-3 mr-1" />
+                        AI Generated
+                      </Badge>
+                    </div>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <h4 className="font-medium mb-2">Generation Prompt</h4>
+                        <p className="text-sm italic bg-muted p-3 rounded">
+                          "{selectedFeature.example.prompt}"
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <div className="flex gap-3">
+                      <Button
+                        onClick={() => {
+                          const link = document.createElement("a");
+                          link.href = selectedFeature.example.imageUrl;
+                          link.download = "ai-generated-image.jpg";
+                          link.target = "_blank";
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        className="flex-1"
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Download Image
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            selectedFeature.example.prompt
+                          );
+                        }}
+                        className="flex-1"
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy Prompt
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Video Generator Example */}
+                {selectedFeature.title === "Video Generator" && (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="font-medium mb-2">Source Image</h4>
+                        <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center">
+                          <img
+                            src={selectedFeature.example.imageUrl}
+                            alt="Source"
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <h4 className="font-medium mb-2">Generated Video</h4>
+                        <div className="relative bg-black rounded-lg overflow-hidden">
+                          <video
+                            src={selectedFeature.example.videoURL}
+                            controls
+                            className="w-full aspect-video"
+                            poster={selectedFeature.example.imageUrl}
+                          >
+                            Your browser does not support the video tag.
+                          </video>
+                          <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                            Generated
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Card>
+                      <CardContent className="p-4">
+                        <h4 className="font-medium mb-2">Generation Prompt</h4>
+                        <p className="text-sm italic bg-muted p-3 rounded">
+                          "{selectedFeature.example.prompt}"
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <Button
+                        onClick={() => {
+                          const link = document.createElement("a");
+                          link.href = selectedFeature.example.imageUrl;
+                          link.download = "source-image.jpg";
+                          link.target = "_blank";
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        className="bg-blue-600 hover:bg-blue-700"
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Download Image
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          const link = document.createElement("a");
+                          link.href = selectedFeature.example.videoURL;
+                          link.download = "generated-video.mp4";
+                          link.target = "_blank";
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Download Video
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            selectedFeature.example.prompt
+                          );
+                        }}
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy Prompt
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* AI Voice Chat Example */}
+                {selectedFeature.title === "AI Voice Chat" && (
+                  <div className="space-y-4">
+                    <Card>
+                      <CardContent className="p-4">
+                        <h4 className="font-medium mb-2">Conversation Topic</h4>
+                        <p className="text-sm italic bg-muted p-3 rounded">
+                          "{selectedFeature.example.topic}"
+                        </p>
+                      </CardContent>
+                    </Card>
+                    <div className="space-y-4 max-h-96 overflow-y-auto">
+                      <h4 className="font-medium">Sample Conversation</h4>
+                      {selectedFeature.example.transcript.map(
+                        (message: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className={`flex ${
+                              message.role === "user"
+                                ? "justify-end"
+                                : "justify-start"
+                            }`}
+                          >
+                            <div
+                              className={`max-w-[80%] px-4 py-3 rounded-2xl ${
+                                message.role === "user"
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-muted"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 mb-2">
+                                {message.role === "user" ? (
+                                  <User className="w-4 h-4" />
+                                ) : (
+                                  <Bot className="w-4 h-4" />
+                                )}
+                                <span className="text-xs font-medium">
+                                  {message.role === "user"
+                                    ? "You"
+                                    : "AI Assistant"}
+                                </span>
+                              </div>
+                              <p className="text-sm leading-relaxed">
+                                {message.content}
+                              </p>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <footer className="border-t border-slate-200 py-12 bg-white/80 backdrop-blur-sm">

@@ -29,7 +29,7 @@ export const FEATURE_USAGE_LIMITS = {
   },
 } as const;
 
-// Feature descriptions for UI
+// Usage Guard component feature descriptions
 export const USAGE_GUARD_FEATURE_DESCRIPTIONS = {
   imageEditing: {
     name: "Image Editing",
@@ -101,13 +101,19 @@ export const HOME_PAGE_FEATURES = [
     icon: Image,
     title: "AI Image Editor",
     description:
-      "Remove backgrounds, enhance quality, and transform images with advanced AI",
+      "Remove backgrounds, enhance quality, and transform images with AI",
     features: [
       "Background Removal",
       "Image Enhancement",
       "Object Removal",
       "Style Transfer",
     ],
+    example: {
+      originalImageUrl:
+        "https://ik.imagekit.io/9irwmbrzl/yellow-cat_5y836bu0O.jpg",
+      editedImageUrl:
+        "https://ik.imagekit.io/9irwmbrzl/bg_removed_yellow-cat_QpiyCrlcv.jpg",
+    },
   },
   {
     icon: Wand2,
@@ -119,6 +125,11 @@ export const HOME_PAGE_FEATURES = [
       "High Resolution",
       "Custom Prompts",
     ],
+    example: {
+      prompt: "Generate a fancy chevrolet corvette car image",
+      imageUrl:
+        "https://ik.imagekit.io/fmxhbshza/generated_20250711_062433_GVJSwqLyM.jpg",
+    },
   },
   {
     icon: Video,
@@ -131,6 +142,14 @@ export const HOME_PAGE_FEATURES = [
       "Multiple Styles",
       "HD Export",
     ],
+    example: {
+      prompt:
+        "Use the food delivery pig in the uploaded image to create a video of the pig riding a motorcycle very fast on the road, but eventually being overtaken by a Lamborghini",
+      imageUrl:
+        "https://storage.googleapis.com/ai-tools-gcs-bucket/images/evan-driver-profile_20250701_195241.jpg",
+      videoURL:
+        "https://storage.googleapis.com/ai-tools-gcs-bucket/videos/evan-driver-profile_20250701_195325_generated_video.mp4",
+    },
   },
   {
     icon: Mic,
@@ -143,6 +162,71 @@ export const HOME_PAGE_FEATURES = [
       "Real-time Chat",
       "Multiple Voices",
     ],
+    example: {
+      topic: "how to sleep well",
+      transcript: [
+        {
+          role: "assistant",
+          content:
+            "Hello. Let's start the session. Today, we'll be talking about how to sleep well.",
+        },
+        { role: "user", content: "Sure. Let's talk about that." },
+        {
+          role: "assistant",
+          content:
+            "Great. So tell me, do you usually feel well rested when you wake up, or is sleep something you struggle with?",
+        },
+        {
+          role: "user",
+          content: "I feel like sometime it's hard to sleep into at night.",
+        },
+        {
+          role: "assistant",
+          content:
+            "I hear you. That can be really frustrating. Do you find it hard to fall asleep because your mind is racing? Racing or is it more about not feeling tired enough?",
+        },
+        {
+          role: "user",
+          content:
+            "Maybe not a few tired enough. So I always thinking about something else.",
+        },
+        {
+          role: "assistant",
+          content:
+            "That's really common. Sometimes your brain just doesn't wanna shut off. Have you ever tried relaxing techniques before bed like deep breathing or maybe journaling to get those thoughts out?",
+        },
+        {
+          role: "user",
+          content: "Yeah. I try try to relax my mind, but doesn't work.",
+        },
+        {
+          role: "assistant",
+          content:
+            "That's tough when it doesn't work. Have you checked if your environment might be making it harder to relax? Like is your room dark and quiet enough or maybe distractions like screens could be affecting you?",
+        },
+        {
+          role: "user",
+          content: "So you mean turn off the light or something else?",
+        },
+        {
+          role: "assistant",
+          content:
+            "Exactly. Keeping your room dark helps your brain know it's time to sleep, Also, limiting screen time before bed can make a big difference. Screens can mess with the sleep hormones. Ever tried putting your phone away an hour before bed?",
+        },
+        { role: "user", content: "Mhmm. It's good idea. Facts." },
+        {
+          role: "assistant",
+          content:
+            "Yeah. It can work wonders. You might also try creating a bedtime routine. Something calming like reading or stretching to signal to your body it's time to wind down. Are you someone who likes routines?",
+        },
+        { role: "user", content: "I'm good. Thanks." },
+        {
+          role: "assistant",
+          content:
+            "You're welcome. If you ever want more tips or just a chat, let me know. Sleep well.",
+        },
+      ],
+    },
   },
 ];
 
