@@ -19,6 +19,7 @@ import {
   Upload,
   Play,
   Download,
+  ExternalLink,
   Video,
   Wand2,
   Clock,
@@ -180,6 +181,7 @@ export function VideoGenerator() {
     }
   };
 
+  // Download the image from "Generated Video" section
   const downloadVideo = async () => {
     if (!generatedVideo) return;
 
@@ -193,11 +195,24 @@ export function VideoGenerator() {
       link.click();
       document.body.removeChild(link);
 
-      toast.success("Video download started!");
+      toast.success("Video downloaded!");
     } catch (error) {
       console.error("Error downloading video:", error);
       toast.error("Failed to download video");
     }
+  };
+
+  // Open selected video from history record in a new tab to download
+  const openSelectedVideoInNewTab = (selectedVideo: {
+    VideoURL: string;
+    ID: number;
+  }) => {
+    if (!selectedVideo?.VideoURL) return;
+
+    window.open(selectedVideo.VideoURL, "_blank");
+    toast.success(
+      "Video opened in a new tab. Click the download button or right-click to save."
+    );
   };
 
   const copyPrompt = (promptText: string) => {
@@ -446,6 +461,7 @@ export function VideoGenerator() {
 
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
+                          {/* TODO: Test 2 buttons and make sure them work */}
                           <Button
                             onClick={downloadVideo}
                             className="bg-green-600 hover:bg-green-700"
@@ -810,21 +826,15 @@ export function VideoGenerator() {
                       </Card>
 
                       <div className="flex gap-3">
+                        {/* Open selected video from history record in a new tab to download */}
                         <Button
-                          onClick={() => {
-                            const link = document.createElement("a");
-                            link.href = selectedVideo.VideoURL;
-                            link.download = `generated-video-${selectedVideo.ID}.mp4`;
-                            link.target = "_blank";
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                            toast.success("Video download started!");
-                          }}
+                          onClick={() =>
+                            openSelectedVideoInNewTab(selectedVideo)
+                          }
                           className="flex-1 bg-green-600 hover:bg-green-700"
                         >
-                          <Download className="w-4 h-4 mr-2" />
-                          Download MP4
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Download Video
                         </Button>
                         <Button
                           variant="outline"
