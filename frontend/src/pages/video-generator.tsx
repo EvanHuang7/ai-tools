@@ -135,7 +135,7 @@ export function VideoGenerator() {
     setGeneratedVideo(null);
 
     try {
-      // Simulate progress updates during the 40-50 second generation
+      // Simulate progress updates during the 60 second generation
       let stageIndex = 0;
       const progressInterval = setInterval(() => {
         if (stageIndex < VIDEO_GENERATOR_PROGRESS_STAGES.length) {
@@ -145,7 +145,7 @@ export function VideoGenerator() {
           setCurrentStage(currentProgressStage.stage);
           stageIndex++;
         }
-      }, 6000); // Update every 6 seconds (48 seconds total for 8 stages)
+      }, 7000); // Update every 7 seconds (56 seconds total for 8 stages)
 
       // Call the API using the hook
       const response = await generateVideoMutation.mutateAsync({
@@ -371,7 +371,7 @@ export function VideoGenerator() {
                             Processing Time
                           </p>
                           <p className="text-amber-700">
-                            Video generation takes 40-50 seconds. Please be
+                            Video generation takes around 60 seconds. Please be
                             patient!
                           </p>
                         </div>
@@ -420,8 +420,8 @@ export function VideoGenerator() {
                           <Progress value={progress} className="h-3" />
                           <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
                             <Clock className="w-3 h-3 inline mr-1" />
-                            This process typically takes 40-50 seconds. Please
-                            keep this tab open.
+                            This process typically takes around 60 seconds.
+                            Please keep this tab open.
                           </div>
                         </div>
                       )}
@@ -876,7 +876,7 @@ export function VideoGenerator() {
                   Professional Quality
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  40-50 second processing for premium results
+                  60 seconds processing for premium results
                 </p>
               </Card>
               <Card className="text-center p-6">
