@@ -126,7 +126,7 @@ export const HOME_PAGE_FEATURES = [
       "Custom Prompts",
     ],
     example: {
-      prompt: "Generate a fancy chevrolet corvette car image",
+      prompt: "Generate a fancy red Chevrolet C7 Corvette car image",
       imageUrl:
         "https://ik.imagekit.io/fmxhbshza/generated_20250711_062433_GVJSwqLyM.jpg",
     },
@@ -144,11 +144,11 @@ export const HOME_PAGE_FEATURES = [
     ],
     example: {
       prompt:
-        "Use the food delivery pig in the uploaded image to create a video of the pig riding a motorcycle very fast on the road, but eventually being overtaken by a Lamborghini",
+        "Create a video of a Samoyed running towards a Golden Retriever in the park, and they play with the tennis ball on the ground.",
       imageUrl:
-        "https://storage.googleapis.com/ai-tools-gcs-bucket/images/evan-driver-profile_20250701_195241.jpg",
+        "https://storage.googleapis.com/ai-tools-gcs-bucket/images/dog-in-park_20250730_200108.jpg",
       videoURL:
-        "https://storage.googleapis.com/ai-tools-gcs-bucket/videos/evan-driver-profile_20250701_195325_generated_video.mp4",
+        "https://storage.googleapis.com/ai-tools-gcs-bucket/videos/dog-in-park_20250730_200108_generated_video.mp4",
     },
   },
   {
