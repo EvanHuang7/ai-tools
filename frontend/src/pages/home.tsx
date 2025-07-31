@@ -35,6 +35,7 @@ import {
   Download,
   ExternalLink,
   Copy,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { HOME_PAGE_FEATURES, APP_USER_REVIEWS } from "@/constants";
@@ -120,38 +121,44 @@ export function HomePage() {
               in seconds — not hours.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {isSignedIn ? (
-                <Link to="/dashboard">
-                  <Button
-                    size="lg"
-                    className="text-lg px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
-                  >
-                    Go to Dashboard
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
+              {!isLoaded ? (
+                <Loader2 className="w-8 h-8 animate-spin" />
               ) : (
-                <SignInButton mode="modal">
-                  <Button
-                    size="lg"
-                    className="text-lg px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
-                  >
-                    Start Creating Free
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </SignInButton>
+                <>
+                  {isSignedIn ? (
+                    <Link to="/dashboard">
+                      <Button
+                        size="lg"
+                        className="text-lg px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+                      >
+                        Go to Dashboard
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </Button>
+                    </Link>
+                  ) : (
+                    <SignInButton mode="modal">
+                      <Button
+                        size="lg"
+                        className="text-lg px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+                      >
+                        Start Creating Free
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </Button>
+                    </SignInButton>
+                  )}
+                  <Link to="/pricing">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className={`text-lg px-8 ${
+                        isSignedIn ? "min-w-[232px]" : "min-w-[250px]"
+                      }`}
+                    >
+                      View Pricing
+                    </Button>
+                  </Link>
+                </>
               )}
-              <Link to="/pricing">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className={`text-lg px-8 ${
-                    isSignedIn ? "min-w-[232px]" : "min-w-[250px]"
-                  }`}
-                >
-                  View Pricing
-                </Button>
-              </Link>
             </div>
             <div className="flex items-center justify-center gap-8 mt-12 text-sm text-slate-500">
               <div className="flex items-center gap-2">
