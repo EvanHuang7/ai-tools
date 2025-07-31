@@ -12,8 +12,8 @@ const queryClient = new QueryClient({
       gcTime: 1000 * 60 * 30, // 30 minutes in memory (renamed from cacheTime)
     },
     mutations: {
-      // Retry only once on failure (e.g., for saving user input)
-      retry: 1,
+      // Don't retry the api call to aviod generating same video or image twice
+      retry: 0,
     },
   },
 });
