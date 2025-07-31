@@ -465,21 +465,19 @@ export function ImageEditor() {
 
                       {uploadedImage && (
                         <div className="mt-6 space-y-4">
-                          {/* Editing Time Warning */}
-                          {!removeBackgroundMutation.isPending && (
-                            <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                              <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                              <div className="text-sm">
-                                <p className="text-amber-800 font-medium">
-                                  Processing Time
-                                </p>
-                                <p className="text-amber-700">
-                                  Background removal takes around 20 seconds.
-                                  Please be patient!
-                                </p>
-                              </div>
+                          {/* Editing Time Warning Banner */}
+                          <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                            <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                            <div className="text-sm">
+                              <p className="text-amber-800 font-medium">
+                                Processing Time
+                              </p>
+                              <p className="text-amber-700">
+                                Background removal takes around 20 seconds.
+                                Please be patient!
+                              </p>
                             </div>
-                          )}
+                          </div>
 
                           <Button
                             onClick={handleProcessImage}
