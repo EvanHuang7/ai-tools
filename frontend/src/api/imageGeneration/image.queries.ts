@@ -2,7 +2,7 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { generateImage, listImages } from "./image.api";
 
 import type { GenerateImageRequest } from "@/types/api";
-import { useAuthedAxios } from "../client";
+import { useAuthedAxios } from "../axiosClient";
 
 export const useGenerateImage = () => {
   const axios = useAuthedAxios();

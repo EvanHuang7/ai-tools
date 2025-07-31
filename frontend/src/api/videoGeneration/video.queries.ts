@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { generateVideo, listVideos } from "./video.api";
 import type { GenerateVideoRequest } from "@/types/api";
-import { useAuthedAxios } from "../client";
+import { useAuthedAxios } from "../axiosClient";
 
 // Mutation to generate a video
 export const useGenerateVideo = () => {

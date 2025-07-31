@@ -2,7 +2,7 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { startAudio, createAudio, listAudios } from "./audio.api";
 
 import type { CreateAudioRequest } from "@/types/api";
-import { useAuthedAxios } from "../client";
+import { useAuthedAxios } from "../axiosClient";
 
 // NOTE: This hook should be mutation instead of query bc
 // it is triggered by a button or await.

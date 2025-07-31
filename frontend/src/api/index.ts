@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AxiosInstance } from "axios";
 import type { GetAppUsageResponse } from "@/types/api";
-import { useAuthedAxios } from "./client";
+import { useAuthedAxios } from "./axiosClient";
 
 export const getAppUsage = async (
   axios: AxiosInstance
