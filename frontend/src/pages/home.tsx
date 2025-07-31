@@ -103,7 +103,7 @@ export function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <Navbar />
 
-      {/* Hero Section */}
+      {/* Top first Section */}
       <section className="relative py-20 lg:py-32">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
@@ -122,14 +122,20 @@ export function HomePage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {isSignedIn ? (
                 <Link to="/dashboard">
-                  <Button size="lg" className="text-lg px-8">
+                  <Button
+                    size="lg"
+                    className="text-lg px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+                  >
                     Go to Dashboard
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
               ) : (
                 <Link to="/dashboard">
-                  <Button size="lg" className="text-lg px-8">
+                  <Button
+                    size="lg"
+                    className="text-lg px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+                  >
                     Start Creating Free
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
@@ -637,10 +643,10 @@ export function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 shadow-md">
                 <Sparkles className="h-4 w-4 text-white" />
               </div>
-              <span className="text-xl font-bold text-slate-900">
+              <span className="text-xl font-bold bg-gradient-to-r from-purple-500 to-pink-600 bg-clip-text text-transparent">
                 AI Tools Studio
               </span>
             </div>
