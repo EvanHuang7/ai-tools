@@ -2,7 +2,7 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { CreateRemovedBgImageRequest } from "@/types/api";
 
 import { createRemovedBgImage, listRemovedBgImages } from "./imageRmBg.api";
-import { useAuthedAxios } from "../axiosClient";
+import { useAuthedAxios } from "@/lib/axiosClient";
 
 // Mutation hook to remove background from an image
 export const useCreateRemovedBgImage = () => {
