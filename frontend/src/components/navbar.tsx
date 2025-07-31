@@ -86,15 +86,13 @@ export function Navbar() {
           )}
         </nav>
 
-        {/* Right section, App Icon */}
+        {/* Right section, Buttons */}
         <div className="flex items-center space-x-4">
-          {isSignedIn ? (
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : isSignedIn ? (
             <>
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Badge variant="secondary">{userPlan} plan</Badge>
-              )}
+              <Badge variant="secondary">{userPlan} plan</Badge>
               <UserButton afterSignOutUrl="/" />
             </>
           ) : (
