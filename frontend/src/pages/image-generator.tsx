@@ -26,6 +26,7 @@ import {
   Calendar,
   Trash2,
   AlertCircle,
+  ExternalLink,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -95,7 +96,7 @@ export function ImageGenerator() {
     setGeneratedImage(null);
 
     try {
-      // Progress simulation for the 40-second generation
+      // Progress simulation for the 30-second generation
       let stageIndex = 0;
       const progressInterval = setInterval(() => {
         if (stageIndex < IMAGE_GENERATOR_PROGRESS_STAGES.length) {
@@ -105,7 +106,7 @@ export function ImageGenerator() {
           setCurrentStage(currentProgressStage.stage);
           stageIndex++;
         }
-      }, 6000); // Update every 6 seconds (36 seconds total for 6 stages)
+      }, 5000); // Update every 5 seconds (30 seconds total for 6 stages)
 
       // Call the API using the hook
       const response = await generateImageMutation.mutateAsync({
@@ -293,7 +294,7 @@ export function ImageGenerator() {
                             Processing Time
                           </p>
                           <p className="text-amber-700">
-                            Image generation takes up to 40 seconds. Please be
+                            Image generation takes around 30 seconds. Please be
                             patient!
                           </p>
                         </div>
@@ -340,7 +341,7 @@ export function ImageGenerator() {
                           <Progress value={progress} className="h-3" />
                           <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
                             <Clock className="w-3 h-3 inline mr-1" />
-                            Generation typically takes 30-40 seconds. Please
+                            Generation typically takes around 30 seconds. Please
                             wait...
                           </div>
                         </div>
@@ -389,7 +390,7 @@ export function ImageGenerator() {
                             size="sm"
                             onClick={() => copyPrompt(prompt)}
                           >
-                            <Copy className="w-3 h-3 mr-1" />
+                            <Copy className="w-3 h-3 mr-1 flex-shrink-0 hidden sm:flex" />
                             Copy Prompt
                           </Button>
                           <Button
@@ -399,7 +400,7 @@ export function ImageGenerator() {
                               window.open(generatedImage, "_blank")
                             }
                           >
-                            <Eye className="w-3 h-3 mr-1" />
+                            <ExternalLink className="w-3 h-3 mr-1 flex-shrink-0 hidden sm:flex" />
                             Full View
                           </Button>
                         </div>
@@ -741,7 +742,7 @@ export function ImageGenerator() {
                   Quality Generation
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  High-quality images in 30-40 seconds
+                  High-quality images in 30 seconds
                 </p>
               </Card>
               <Card className="text-center p-6">
