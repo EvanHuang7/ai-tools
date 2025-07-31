@@ -104,6 +104,29 @@ export function VideoGenerator() {
     }
   }, []);
 
+  const onDropRejected = useCallback((fileRejections: any[]) => {
+    if (fileRejections.length === 0) return;
+    const rejection = fileRejections[0];
+    const { errors, file } = rejection;
+
+    const tooLarge = errors.find((e: any) => e.code === "file-too-large");
+    if (tooLarge) {
+      toast.error(
+        `"${file.name}" is too large. Please upload an image under 2MB.`
+      );
+      return;
+    }
+
+    const invalidType = errors.find((e: any) => e.code === "file-invalid-type");
+    if (invalidType) {
+      toast.error(`"${file.name}" is not a supported image type.`);
+      return;
+    }
+
+    // fallback
+    toast.error("Failed to upload image.");
+  }, []);
+
   // "useDropzone" is a hook that handles drag-and-drop file uploads.
   // "getRootProps" gives props to spread onto the outer dropzone container (e.g., div).
   // "getInputProps" gives props for a hidden <input type="file" />.
@@ -111,6 +134,7 @@ export function VideoGenerator() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     // "onDrop" runs when the user drops a file onto the drop area or selects one via file picker.
     onDrop,
+    onDropRejected,
     accept: {
       "image/*": [".jpeg", ".jpg", ".png", ".webp"],
     },
