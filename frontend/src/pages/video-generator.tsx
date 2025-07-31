@@ -363,7 +363,7 @@ export function VideoGenerator() {
                         />
                       </div>
 
-                      {/* Generation Time Warning */}
+                      {/* Generation Time Warning Banner */}
                       <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
                         <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
                         <div className="text-sm">
@@ -409,6 +409,7 @@ export function VideoGenerator() {
                         </Button>
                       </div>
 
+                      {/* Generating Video Progress and Clock Info */}
                       {isGenerating && (
                         <div className="space-y-3">
                           <div className="flex justify-between text-sm">
@@ -420,8 +421,8 @@ export function VideoGenerator() {
                           <Progress value={progress} className="h-3" />
                           <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
                             <Clock className="w-3 h-3 inline mr-1" />
-                            This process typically takes around 60 seconds.
-                            Please keep this tab open.
+                            Generation in progress — usually completes in about
+                            60 seconds. Please wait...
                           </div>
                         </div>
                       )}

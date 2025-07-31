@@ -507,7 +507,7 @@ export function ImageEditor() {
                             Clear Images
                           </Button>
 
-                          {/* Editing Time Pending info */}
+                          {/* Editing Image Progress and Clock Info */}
                           {removeBackgroundMutation.isPending && (
                             <div className="space-y-3">
                               <div className="flex justify-between text-sm">
@@ -519,8 +519,8 @@ export function ImageEditor() {
                               <Progress value={progress} className="h-3" />
                               <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
                                 <Clock className="w-3 h-3 inline mr-1" />
-                                Image editing typically takes around 20 seconds.
-                                Please wait...
+                                Editing in progress — usually completes in about
+                                20 seconds. Please wait...
                               </div>
                             </div>
                           )}
