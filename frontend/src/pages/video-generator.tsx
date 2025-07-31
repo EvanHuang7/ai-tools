@@ -167,13 +167,13 @@ export function VideoGenerator() {
       } else {
         throw new Error("Invalid response from server - no video URL received");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating video:", error);
       setProgress(0);
       setCurrentStage("");
 
-      if (error instanceof Error) {
-        toast.error(`Failed to generate video: ${error.message}`);
+      if (error) {
+        toast.error(`Failed to generate video: ${error.response.data.error}`);
       } else {
         toast.error("Failed to generate video. Please try again.");
       }
@@ -461,13 +461,15 @@ export function VideoGenerator() {
 
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
-                          {/* TODO: Test 2 buttons and make sure them work */}
                           <Button
                             onClick={downloadVideo}
                             className="bg-green-600 hover:bg-green-700"
                           >
-                            <Download className="w-4 h-4 mr-2" />
-                            Download MP4
+                            <ExternalLink className="w-4 h-4 mr-2 flex-shrink-0" />
+                            <span>
+                              Download{" "}
+                              <span className="hidden sm:inline">Video</span>
+                            </span>
                           </Button>
                           <Button
                             variant="outline"
@@ -481,7 +483,7 @@ export function VideoGenerator() {
                               }
                             }}
                           >
-                            <Play className="w-4 h-4 mr-2" />
+                            <Play className="w-4 h-4 mr-2 flex-shrink-0" />
                             Replay
                           </Button>
                         </div>
@@ -498,9 +500,9 @@ export function VideoGenerator() {
                               </div>
                               <div>
                                 <span className="text-muted-foreground">
-                                  Style:
+                                  Audio:
                                 </span>
-                                <span className="ml-2 capitalize">default</span>
+                                <span className="ml-2 capitalize">No</span>
                               </div>
                               <div>
                                 <span className="text-muted-foreground">

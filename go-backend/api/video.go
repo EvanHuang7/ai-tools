@@ -157,7 +157,7 @@ func GenerateVeo2Video(c *gin.Context) {
 
 	// If no video generated, return error
 	if len(op.Response.GeneratedVideos) == 0 {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "no video generated", "detail": "Gemini returned an empty video list"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "no video generated, please try different prompt!", "detail": "Gemini returned an empty video list, please try different prompt!"})
 		return
 	}
 
