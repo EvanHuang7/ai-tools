@@ -110,9 +110,9 @@ export const HOME_PAGE_FEATURES = [
     ],
     example: {
       originalImageUrl:
-        "https://ik.imagekit.io/9irwmbrzl/yellow-cat_5y836bu0O.jpg",
+        "https://ik.imagekit.io/9irwmbrzl/ai-generated-3_TvnO858Py.png",
       editedImageUrl:
-        "https://ik.imagekit.io/9irwmbrzl/bg_removed_yellow-cat_QpiyCrlcv.jpg",
+        "https://ik.imagekit.io/9irwmbrzl/bg_removed_ai-generated-3_CBaH8yOxp.png",
     },
   },
   {
