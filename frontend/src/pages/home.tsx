@@ -260,28 +260,43 @@ export function HomePage() {
             {APP_USER_REVIEWS.map((testimonial, index) => (
               <Card
                 key={index}
-                className="text-center bg-white/80 backdrop-blur-sm"
+                className="group text-center bg-white/90 backdrop-blur-sm hover:bg-white hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 border-2 hover:border-yellow-200 relative overflow-hidden"
               >
+                {/* Animated background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/30 via-orange-50/20 to-amber-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                {/* Floating sparkle effect */}
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-700 group-hover:animate-pulse">
+                  <Sparkles className="h-4 w-4 text-yellow-400" />
+                </div>
+
                 <CardHeader>
-                  <div className="flex justify-center mb-4">
+                  <div className="flex justify-center mb-4 relative z-10">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <Star
                         key={i}
-                        className="h-5 w-5 fill-yellow-400 text-yellow-400"
+                        className="h-5 w-5 fill-yellow-400 text-yellow-400 group-hover:scale-110 transition-transform duration-300"
+                        style={{
+                          transitionDelay: `${i * 50}ms`,
+                          animation: `pulse 2s infinite ${i * 0.2}s`,
+                        }}
                       />
                     ))}
                   </div>
-                  <CardDescription className="text-base italic text-slate-700">
+                  <CardDescription className="text-base italic text-slate-700 group-hover:text-slate-800 transition-colors duration-300 relative z-10 leading-relaxed">
                     "{testimonial.content}"
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="font-semibold text-slate-900">
+                <CardContent className="relative z-10">
+                  <div className="font-semibold text-slate-900 group-hover:text-slate-950 transition-colors duration-300">
                     {testimonial.name}
                   </div>
-                  <div className="text-sm text-slate-500">
+                  <div className="text-sm text-slate-500 group-hover:text-slate-600 transition-colors duration-300">
                     {testimonial.role}
                   </div>
+
+                  {/* Animated bottom accent */}
+                  <div className="mt-4 h-1 w-0 group-hover:w-full bg-gradient-to-r from-yellow-400 to-orange-400 transition-all duration-500 rounded-full mx-auto" />
                 </CardContent>
               </Card>
             ))}
