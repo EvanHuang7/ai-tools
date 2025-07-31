@@ -28,10 +28,10 @@ export function Navbar() {
       <div className="container flex h-16 pl-4 items-center justify-between">
         {/* Left section, App Icon */}
         <Link to="/" className="flex items-center space-x-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-600">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 shadow-md">
             <Sparkles className="h-4 w-4 text-white" />
           </div>
-          <span className="text-xl font-bold hidden xl:inline">
+          <span className="text-xl font-bold bg-gradient-to-r from-purple-500 to-pink-600 bg-clip-text text-transparent hidden xl:inline">
             AI Tools Studio
           </span>
         </Link>
@@ -105,7 +105,9 @@ export function Navbar() {
                 </Button>
               </SignInButton>
               <SignUpButton mode="modal">
-                <Button size="sm">Get Started</Button>
+                <Button variant="ghost" size="sm">
+                  Get Started
+                </Button>
               </SignUpButton>
             </>
           )}
