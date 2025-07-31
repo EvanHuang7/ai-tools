@@ -605,12 +605,10 @@ export function ImageEditor() {
                         {showGrid && (
                           <Badge
                             variant="outline"
-                            className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm"
+                            className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm hidden md:flex"
                           >
                             <Grid3X3 className="w-3 h-3 mr-1" />
-                            <span className="hidden md:flex">
-                              Transparency Grid
-                            </span>
+                            Transparency Grid
                           </Badge>
                         )}
                       </div>
