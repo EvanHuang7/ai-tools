@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, SignInButton } from "@clerk/clerk-react";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
@@ -131,7 +131,7 @@ export function HomePage() {
                   </Button>
                 </Link>
               ) : (
-                <Link to="/dashboard">
+                <SignInButton mode="modal">
                   <Button
                     size="lg"
                     className="text-lg px-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
@@ -139,7 +139,7 @@ export function HomePage() {
                     Start Creating Free
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
-                </Link>
+                </SignInButton>
               )}
               <Link to="/pricing">
                 <Button
@@ -328,12 +328,12 @@ export function HomePage() {
               </Button>
             </Link>
           ) : (
-            <Link to="/dashboard">
+            <SignInButton mode="modal">
               <Button size="lg" variant="secondary" className="text-lg px-8">
                 Start Creating Free
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </Link>
+            </SignInButton>
           )}
         </div>
       </section>
