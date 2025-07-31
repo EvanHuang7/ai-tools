@@ -179,57 +179,67 @@ export function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {HOME_PAGE_FEATURES.map((feature, index) => (
-              <Card
-                key={index}
-                className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-white/80 backdrop-blur-sm"
-              >
-                <CardHeader className="flex-1">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 group-hover:from-blue-600 group-hover:to-indigo-700 transition-colors">
-                      <feature.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="bg-blue-50 text-blue-700 border-blue-200"
-                    >
-                      <Zap className="h-3 w-3 mr-1" />
-                      AI Powered
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-xl text-slate-900">
-                    {feature.title}
-                  </CardTitle>
-                  <CardDescription className="text-base text-slate-600 h-[50px] md:h-[80px]">
-                    {feature.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col">
-                  <ul className="space-y-2">
-                    {feature.features.map((item, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center gap-2 text-sm truncate text-slate-600"
+            {HOME_PAGE_FEATURES.map((feature, index) => {
+              return (
+                <Card
+                  key={index}
+                  className="group hover:shadow-2xl hover:scale-[1.02] transition-all duration-500 border-2 hover:border-primary/30 bg-white/90 backdrop-blur-sm relative overflow-hidden"
+                >
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 to-indigo-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <CardHeader className="flex-1 relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="relative">
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 group-hover:from-blue-600 group-hover:to-indigo-700 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                          <feature.icon className="h-6 w-6 text-white" />
+                        </div>
+                        {/* Subtle glow effect */}
+                        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-30 blur-md transition-opacity duration-500" />
+                      </div>
+                      <Badge
+                        variant="secondary"
+                        className="bg-blue-50 text-blue-700 border-blue-200 group-hover:bg-blue-100 transition-colors"
                       >
-                        <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-4 pt-4 border-t">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleViewExample(feature)}
-                      className="w-full flex items-center gap-2"
-                    >
-                      <Eye className="h-4 w-4" />
-                      View Example
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                        <Zap className="h-3 w-3 mr-1" />
+                        AI Powered
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-xl text-slate-900 group-hover:text-blue-900 transition-colors">
+                      {feature.title}
+                    </CardTitle>
+                    <CardDescription className="text-base text-slate-600 h-[50px] md:h-[80px] group-hover:text-slate-700 transition-colors">
+                      {feature.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex flex-col relative z-10">
+                    <ul className="space-y-3">
+                      {feature.features.map((item, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-center gap-3 text-sm text-slate-600 group-hover:text-slate-700 transition-colors"
+                        >
+                          <div className="flex-shrink-0">
+                            <Check className="h-4 w-4 text-green-600 group-hover:text-green-700 transition-colors" />
+                          </div>
+                          <span className="leading-relaxed">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-6 pt-4 border-t border-slate-100">
+                      <Button
+                        onClick={() => handleViewExample(feature)}
+                        className={`w-full bg-gradient-to-r ${feature.buttonGradient} hover:shadow-lg hover:shadow-blue-200 transition-all duration-300 group-hover:scale-105 text-white border-0`}
+                        size="sm"
+                      >
+                        <feature.buttonIcon className="h-4 w-4 mr-2" />
+                        {feature.buttonText}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>

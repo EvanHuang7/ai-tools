@@ -5,6 +5,9 @@ import {
   Video,
   Mic,
   DollarSign,
+  Sparkles,
+  Play,
+  MessageCircle,
 } from "lucide-react";
 
 // App features usage limits for different subscription plans
@@ -108,6 +111,9 @@ export const HOME_PAGE_FEATURES = [
       "Object Removal",
       "Style Transfer",
     ],
+    buttonGradient: "from-purple-500 to-pink-600",
+    buttonText: "See Editing Magic",
+    buttonIcon: Wand2,
     example: {
       originalImageUrl:
         "https://ik.imagekit.io/9irwmbrzl/ai-generated-3_TvnO858Py.png",
@@ -120,11 +126,14 @@ export const HOME_PAGE_FEATURES = [
     title: "Image Generator",
     description: "Generate stunning images from text prompts using AI",
     features: [
-      "Text to Image Generation",
+      "Text to Image",
       "Multiple Styles",
       "High Resolution",
       "Custom Prompts",
     ],
+    buttonGradient: "from-blue-500 to-cyan-600",
+    buttonText: "View AI Artwork",
+    buttonIcon: Sparkles,
     example: {
       prompt: "Generate a fancy red Chevrolet C7 Corvette car image",
       imageUrl:
@@ -142,6 +151,9 @@ export const HOME_PAGE_FEATURES = [
       "Multiple Styles",
       "HD Export",
     ],
+    buttonGradient: "from-green-500 to-emerald-600",
+    buttonText: "Watch AI Video",
+    buttonIcon: Play,
     example: {
       prompt:
         "Create a video of a Samoyed running towards a Golden Retriever in the park, and they play with the tennis ball on the ground.",
@@ -162,6 +174,9 @@ export const HOME_PAGE_FEATURES = [
       "Real-time Chat",
       "Multiple Voices",
     ],
+    buttonGradient: "from-orange-500 to-red-600",
+    buttonText: "See Conversation",
+    buttonIcon: MessageCircle,
     example: {
       topic: "how to sleep well",
       transcript: [
