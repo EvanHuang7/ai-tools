@@ -253,12 +253,12 @@ export function ImageGenerator() {
             {/* Input + Result Sections */}
             <div className="grid lg:grid-cols-2 gap-8">
               {/* Input Section */}
-              <div className="space-y-6">
+              <div className="space-y-6 flex flex-col">
                 <UsageGuard
                   feature="imageGeneration"
                   action="generate this image"
                 >
-                  <Card>
+                  <Card className="h-full flex flex-col">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <Wand2 className="h-5 w-5 flex-shrink-0" />
@@ -268,39 +268,41 @@ export function ImageGenerator() {
                         Describe the image you want to generate
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div>
-                        <Label htmlFor="prompt">Image Description *</Label>
-                        <Textarea
-                          id="prompt"
-                          placeholder="Describe the image you want to create... (e.g., 'A serene mountain lake at sunset with golden reflections')"
-                          value={prompt}
-                          onChange={(e) => setPrompt(e.target.value)}
-                          className="mt-2 min-h-[120px]"
-                          disabled={isGenerating}
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Be descriptive and specific for better results.
-                          Include details about style, mood, colors, and
-                          composition.
-                        </p>
-                      </div>
+                    <CardContent className="space-y-6 flex-1 flex flex-col">
+                      <div className="space-y-6">
+                        <div>
+                          <Label htmlFor="prompt">Image Description *</Label>
+                          <Textarea
+                            id="prompt"
+                            placeholder="Describe the image you want to create... (e.g., 'A serene mountain lake at sunset with golden reflections')"
+                            value={prompt}
+                            onChange={(e) => setPrompt(e.target.value)}
+                            className="mt-2 min-h-[120px]"
+                            disabled={isGenerating}
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Be descriptive and specific for better results.
+                            Include details about style, mood, colors, and
+                            composition.
+                          </p>
+                        </div>
 
-                      {/* Generation Time Warning Banner */}
-                      <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                        <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                        <div className="text-sm">
-                          <p className="text-amber-800 font-medium">
-                            Processing Time
-                          </p>
-                          <p className="text-amber-700">
-                            Image generation takes around 30 seconds. Please be
-                            patient!
-                          </p>
+                        {/* Generation Time Warning Banner */}
+                        <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                          <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                          <div className="text-sm">
+                            <p className="text-amber-800 font-medium">
+                              Processing Time
+                            </p>
+                            <p className="text-amber-700">
+                              Image generation takes around 30 seconds. Please
+                              be patient!
+                            </p>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="space-y-3">
+                      <div className="space-y-3 mt-auto">
                         <Button
                           onClick={handleGenerateImage}
                           disabled={isGenerating || !prompt.trim()}
@@ -353,7 +355,7 @@ export function ImageGenerator() {
               </div>
 
               {/* Result Section */}
-              <Card>
+              <Card className="h-full flex flex-col">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <ImageIcon className="h-5 w-5 flex-shrink-0" />
@@ -361,7 +363,7 @@ export function ImageGenerator() {
                   </CardTitle>
                   <CardDescription>Your AI-created artwork</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex-1 flex flex-col">
                   {generatedImage ? (
                     <div className="space-y-4">
                       <div className="relative group">
@@ -422,7 +424,7 @@ export function ImageGenerator() {
                       </Card>
                     </div>
                   ) : (
-                    <div className="text-center py-12">
+                    <div className="text-center py-12 flex-1 flex flex-col justify-center">
                       <ImageIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                       <p className="text-muted-foreground mb-2">
                         No image generated yet
