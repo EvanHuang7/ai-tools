@@ -7,7 +7,7 @@ export const useAuthedAxios = () => {
   const instance = axios.create({
     // It will use the current web page host to make the api calls if
     // not specifying the api base url
-    timeout: 30000,
+    timeout: 90000, // The API call timeout time is set to 90s
   });
 
   instance.interceptors.request.use(async (config: any) => {
