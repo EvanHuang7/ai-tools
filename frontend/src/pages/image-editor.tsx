@@ -21,7 +21,6 @@ import {
   Scissors,
   Sparkles,
   Loader2,
-  Grid3X3,
   Eye,
   EyeOff,
   AlertCircle,
@@ -600,15 +599,6 @@ export function ImageEditor() {
                           <Sparkles className="w-3 h-3 mr-1" />
                           Background Removed
                         </Badge>
-                        {showGrid && (
-                          <Badge
-                            variant="outline"
-                            className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm hidden md:flex"
-                          >
-                            <Grid3X3 className="w-3 h-3 mr-1" />
-                            Transparency Grid
-                          </Badge>
-                        )}
                       </div>
 
                       <div className="space-y-3 mt-auto">
