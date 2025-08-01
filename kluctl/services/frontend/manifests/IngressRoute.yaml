@@ -12,7 +12,7 @@ spec:
       # host if you set a DNS record for the ExternalIP and your own domain
 
       # match: PathPrefix(`/`)
-      match: Host(`{{ sharedVars.hostName }}`)
+      match: Host(`{{ sharedVars.hostName }}`) && PathPrefix(`/`)
       services:
         - kind: Service
           name: frontend
