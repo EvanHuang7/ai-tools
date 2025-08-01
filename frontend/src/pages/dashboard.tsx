@@ -56,20 +56,20 @@ export function Dashboard() {
       icon: Wand2,
     },
     {
-      label: "Videos Generated",
-      value: `${currentUsage.videoGeneration || 0}/${
-        FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS]
-          ?.videoGeneration || FEATURE_USAGE_LIMITS.Free.videoGeneration
-      }`,
-      icon: Video,
-    },
-    {
       label: "Audio Chats",
       value: `${currentUsage.audioChat || 0}/${
         FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS]
           ?.audioChat || FEATURE_USAGE_LIMITS.Free.audioChat
       }`,
       icon: Mic,
+    },
+    {
+      label: "Videos Generated",
+      value: `${currentUsage.videoGeneration || 0}/${
+        FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS]
+          ?.videoGeneration || FEATURE_USAGE_LIMITS.Free.videoGeneration
+      }`,
+      icon: Video,
     },
   ];
 
