@@ -1,8 +1,8 @@
 <div align="center">
-  <h3 align="center">🌟 AI Tools</h3>
+  <h3 align="center">🌟 AI Tools Studio</h3>
   <p align="center">
-    🚀 <a href="#" target="_blank"><b>Live App</b></a> &nbsp;|&nbsp;
-    📂 <a href="#" target="_blank"><b>Source Code</b></a>
+    🚀 <a href="https://aitools-evanhuang.duckdns.org/" target="_blank"><b>Live App</b></a> &nbsp;|&nbsp;
+    📂 <a href="https://github.com/EvanHuang7/ai-tools" target="_blank"><b>Source Code</b></a>
   </p>
 </div>
 
@@ -30,7 +30,7 @@
 
 ## <a name="introduction">📋 Introduction</a>
 
-🛠️ **AI Tools** is a **Microservices** (full-stack) application
+🛠️ **AI Tools Studio** is a **Microservices** (full-stack) application
 
 ## <a name="tech-stack">🛠️ Tech Stack</a>
 
