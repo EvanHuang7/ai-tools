@@ -56,7 +56,7 @@ export function Dashboard() {
       icon: Wand2,
     },
     {
-      label: "Audio Chats",
+      label: "Voice Chats",
       value: `${currentUsage.audioChat || 0}/${
         FEATURE_USAGE_LIMITS[userPlan as keyof typeof FEATURE_USAGE_LIMITS]
           ?.audioChat || FEATURE_USAGE_LIMITS.Free.audioChat

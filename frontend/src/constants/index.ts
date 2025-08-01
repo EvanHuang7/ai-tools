@@ -15,7 +15,7 @@ export const FEATURE_USAGE_LIMITS = {
   Free: {
     imageEditing: 5, // Image editor operations per month
     imageGeneration: 2, // Image generator operations per month
-    audioChat: 3, // Audio chat sessions per month (each session = 10 minutes max)
+    audioChat: 3, // Audio or Voice chat sessions per month (each session = 10 minutes max)
     videoGeneration: 0, // Video generations per month
   },
   Standard: {
@@ -45,7 +45,7 @@ export const USAGE_GUARD_FEATURE_DESCRIPTIONS = {
     icon: "Wand2",
   },
   audioChat: {
-    name: "Audio Chat",
+    name: "Voice Chat",
     description: "Voice conversations with AI assistant",
     icon: "Mic",
   },
@@ -93,7 +93,7 @@ export const SIDE_BAR_NAVIGATION = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Image Editor", href: "/image-editor", icon: Image },
   { name: "Image Generator", href: "/image-generator", icon: Wand2 },
-  { name: "Audio Chat", href: "/audio-chat", icon: Mic },
+  { name: "Voice Chat", href: "/audio-chat", icon: Mic },
   { name: "Video Generator", href: "/video-generator", icon: Video },
   { name: "Pricing", href: "/pricing", icon: DollarSign },
 ];
