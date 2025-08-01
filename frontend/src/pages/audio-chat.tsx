@@ -225,7 +225,7 @@ export function AudioChat() {
 
       // If user has ran out of audio usage, STOP starting conversation
       if (!usageResponse.passUsageCheck) {
-        toast.error("You've reached your monthly audio chat limit");
+        toast.error("You've reached your monthly voice chat limit");
         return;
       }
 
@@ -590,13 +590,13 @@ export function AudioChat() {
               </Card>
             </div>
 
-            {/* Audio Chat History Section */}
+            {/* Voice Chat History Section */}
             <div className="mt-8">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <MessageCircle className="h-5 w-5 flex-shrink-0" />
-                    Audio Chat History
+                    Voice Chat History
                   </CardTitle>
                   <CardDescription>
                     Your previous voice conversations with AI ({totalItems}{" "}
@@ -613,7 +613,7 @@ export function AudioChat() {
                     <div className="text-center py-8">
                       <MessageCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                       <p className="text-muted-foreground mb-2">
-                        No audio history yet
+                        No voice history yet
                       </p>
                       <p className="text-sm text-muted-foreground">
                         Start your first conversation to see it here

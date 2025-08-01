@@ -1,4 +1,4 @@
-// Audio chat
+// Audio or Voice chat
 export interface AudioTranscriptMessage {
   role: "user" | "system" | "assistant";
   content: string;
