@@ -66,7 +66,7 @@ export function Navbar() {
                 className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-2"
               >
                 <Mic className="h-4 w-4" />
-                Audio Chat
+                Voice Chat
               </Link>
               <Link
                 to="/video-generator"
