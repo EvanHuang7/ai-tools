@@ -30,7 +30,15 @@
 
 ## <a name="introduction">📋 Introduction</a>
 
-🛠️ **AI Tools Studio** is a **Microservices** (full-stack) application
+**🛠️ AI Tools Studio** is a **full-stack microservices application** seamlessly integrated with **Google Cloud Platform (GCP)**.  
+It empowers users to **create stunning content in seconds** using a suite of AI-powered tools, including:
+
+- 🎨 **Image Editing** – Enhance, modify, and transform images effortlessly.
+- 🖼️ **AI Image Generation** – Generate unique, high-quality visuals from text prompts.
+- 🎬 **Video Generation** – Turn your ideas into dynamic video content.
+- 💬 **Intelligent Conversations** – Engage with AI for creative assistance or interactive chat.
+
+Whether you are a content creator, designer, or developer, **AI Tools Studio** helps you **bring ideas to life faster than ever**.
 
 ## <a name="tech-stack">🛠️ Tech Stack</a>
 
