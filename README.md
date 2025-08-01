@@ -51,6 +51,7 @@
   - **Go, Gin**,
   - **Neon PostgreSql DB, GORM**
   - **Gemini AI Veo2, Imagekit.io**
+  - **Google Cloud Storage**
 
 - **📡 Python Backend Service**:
 
@@ -60,17 +61,17 @@
 
 - **☁️ Deployment and CI&CD Techs**
 
-  - Docker & Docker Hub for building and storing container images
-  - Deploy app in GKE via Kubernate cluster
+  - **Docker & Docker Hub** for building and storing container images
+  - Deploy app in **GKE via Kubernate cluster**
     - Cloudflare for DNS hosting and SSL/TLS encryption
     - Traefik for load balancer and traffic distribution
     - GCP Secret Manager for sensative Secrets Management
     - GCP IAM for GCP services authentication
-  - Deploy app in GCE VM via Docker Compose or Docker Swarm
+  - Deploy app in **GCE VM via Docker Compose or Docker Swarm**
     - DuckDNS for DNS hosting
     - Nginx and Certbox for SSL/TLS encryption
     - Nginx for traffic distribution
-  - GitHub Action Workflow for **Continuous Integration**
+  - **GitHub Actions** Workflow for **Continuous Integration**
   - **Continuous Deployment**
     - KluCtl for GKE Kubernate cluster
     - WatchTower for GCE VM
