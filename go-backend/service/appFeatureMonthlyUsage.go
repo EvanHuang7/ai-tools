@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"time"
 
 	"gorm.io/gorm"
 
@@ -12,7 +11,7 @@ import (
 
 // Get user image feature monthly usage
 func GetImageFeatureMonthlyUsage(userID string) (int, error) {
-	monthStart := utils.GetCurrentYearAndMonthStart(time.Now())
+	monthStart := utils.GetCurrentYearAndMonthStart()
 
 	// Check current usage record
 	var usageRecord db.AppFeatureMonthlyUsage
@@ -32,7 +31,7 @@ func GetImageFeatureMonthlyUsage(userID string) (int, error) {
 
 // Increase user image feature monthly usage or create a record if no exist
 func IncrementImageFeatureMonthlyUsage(userID string, count int) error {
-	monthStart := utils.GetCurrentYearAndMonthStart(time.Now())
+	monthStart := utils.GetCurrentYearAndMonthStart()
 
 	// Check current usage record
 	var usageRecord db.AppFeatureMonthlyUsage
@@ -59,7 +58,7 @@ func IncrementImageFeatureMonthlyUsage(userID string, count int) error {
 
 // Get user video feature monthly usage
 func GetVideoFeatureMonthlyUsage(userID string) (int, error) {
-	monthStart := utils.GetCurrentYearAndMonthStart(time.Now())
+	monthStart := utils.GetCurrentYearAndMonthStart()
 
 	// Check current usage record
 	var usageRecord db.AppFeatureMonthlyUsage
@@ -79,7 +78,7 @@ func GetVideoFeatureMonthlyUsage(userID string) (int, error) {
 
 // Increase user video feature monthly usage or create a record if no exist
 func IncrementVideoFeatureMonthlyUsage(userID string, count int) error {
-	monthStart := utils.GetCurrentYearAndMonthStart(time.Now())
+	monthStart := utils.GetCurrentYearAndMonthStart()
 
 	// Check current usage record
 	var usageRecord db.AppFeatureMonthlyUsage
