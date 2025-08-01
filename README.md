@@ -948,8 +948,6 @@ The case of NO Nginx in VM:
 
 ## <a name="deploy-app-in-gke">☁️ GKE (GCP): Deploy App as K8s Cluster</a>
 
-🚨🚨🚨 TODO: deploy a postgre database service via Helm chart in K8s cluster for learning purpose
-
 Follow these steps to deploy app in GKE:
 
 1. Switch to proejct isolated environment first
@@ -1327,8 +1325,6 @@ We will use `GitHub actions` for Continuous Integrataion and `Kluctl GitOps` for
 📌 Note: The concept of `GitOps` is to have a **controller** running in K8s cluster. The controller is able to **automatically pull updates from Git**, which can be triggered via a webhook. This keep those updates in sync with the deployed state of cluster.
 
 🚨 Important: The **Set up different app environment (🛠️Staging and 🚀Prod)** section is required to be finished first before starting this section.
-
-TODO: Consider adding lint build and test build steps into the GitHub workflow.
 
 1. Add necessary secrets to you GitHub repo, which allow GitHub workflow to use
 
