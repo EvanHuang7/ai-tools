@@ -7,7 +7,7 @@ on:
   push:
     # Code change within specified "paths" is pushed to main branch
 
-    # ⚠️ Warning: Disable CI workflow for app development
+    # ⚠️ Warning: Comment out this code block to disable CI workflow for app development
     # branches:
     #   - "main"
 
