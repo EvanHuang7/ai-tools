@@ -109,6 +109,7 @@
 
 TODO: Come back to finish "Screenshots" part 
 - **📸 Screenshots**: [Miro Link](#)
+
   ![🖼️ Architecture Diagram Screenshot Preview, GKE K8S cluster case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GKE-K8S-cluster.png)
   ![🖼️ Architecture Diagram Screenshot Preview, GCE VM with Docker Swarm case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GCE-VM-with%20Docker-Swarm.png)
   ![🖼️ Screenshots Preview](#)
@@ -125,6 +126,9 @@ Make sure you have the following installed on your machine:
 - Go
 - Node.js and npm(Node Package Manager)
 - Python3 and pip(Python Package Manager)
+- [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) for `gcloud CLI`
+- [Docker Desktop](https://docs.docker.com/get-started/get-docker/)
+- [Devbox](https://www.jetify.com/docs/devbox/installing_devbox/)
 
 ### <a name="clone-repo">⭐ Cloning the Repository</a>
 
