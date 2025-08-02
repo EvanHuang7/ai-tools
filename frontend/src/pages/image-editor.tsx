@@ -149,7 +149,7 @@ export function ImageEditor() {
     setProgress(0);
     setCurrentStage("Preparing...");
 
-    // Progress simulation for the 20-second processing
+    // Progress simulation for the 10 seconds processing
     let stageIndex = 0;
     const progressInterval = setInterval(() => {
       if (stageIndex < IMAGE_EDITOR_PROGRESS_STAGES.length) {
@@ -158,7 +158,7 @@ export function ImageEditor() {
         setCurrentStage(currentProgressStage.stage);
         stageIndex++;
       }
-    }, 3000); // Update every 3 seconds (18 seconds total for 6 stages)
+    }, 2000); // Update every 2 seconds (12 seconds total for 6 stages)
 
     try {
       const result = await removeBackgroundMutation.mutateAsync({
@@ -496,7 +496,7 @@ export function ImageEditor() {
                                 Processing Time
                               </p>
                               <p className="text-amber-700">
-                                Background removal takes around 20 seconds.
+                                Background removal takes around 10 seconds.
                                 Please be patient!
                               </p>
                             </div>
@@ -543,7 +543,7 @@ export function ImageEditor() {
                               <div className="text-xs text-muted-foreground text-center bg-muted/30 rounded p-2">
                                 <Clock className="w-3 h-3 inline mr-1" />
                                 Editing in progress — usually completes in about
-                                20 seconds. Please wait...
+                                10 seconds. Please wait...
                               </div>
                             </div>
                           )}
