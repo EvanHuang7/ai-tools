@@ -138,33 +138,67 @@ git clone https://github.com/EvanHuang7/ai-tools.git
 
 ### <a name="install-packages">⭐ Packages Installation</a>
 
-Install the services dependencies:
+- Open 1st terminal in project and install devbox packages by running:
 
-- Front and node-backend:
+  - 📌 Note: It may take a bit long to install all devbox packages if you run this cli first time.
 
-  ```bash
-  cd frontend
-  npm install
-  cd ..
-  cd ai-tools/node-backend
-  npm install
-  ```
+```bash
+devbox install
+```
 
-- go-backend:
+- In 1st terminal, runs clis to
+  - get into devbox isolated environment
+  - install frontend service packages
 
-  ```bash
-  cd ai-tools/go-backend
-  go mod tidy
-  ```
+```bash
+devbox shell
 
-- python-backend:
+cd frontend
 
-  ```bash
-  cd ai-tools/python-backend
-  python3 -m venv venv
-  source venv/bin/activate
-  pip install -r requirements.txt
-  ```
+npm install
+```
+
+- Open a new 2nd terminal and runs clis to 
+  - get into devbox isolated environment
+  - install node-backend service packages:
+
+```bash
+devbox shell
+
+cd node-backend
+
+npm install
+```
+
+- Open a new 3rd terminal and runs clis to 
+  - get into devbox isolated environment
+  - install go-backend service packages:
+
+```bash
+devbox shell
+
+cd go-backend
+
+go mod tidy
+```
+
+- Open a new 4th terminal and runs clis to 
+  - get into devbox isolated environment
+  - create a new virtual env in **Project Root folder** (a new `.venv` folder created)
+  - activate python virtual env
+  - install python-backend service packages in python virtual env:
+
+```bash
+devbox shell
+
+python3 -m venv .venv
+
+source .venv/bin/activate
+
+pip install -r ./python-backend/requirements.txt
+
+cd python-backend
+```
 
 ### <a name="create-mongodb-cluster">⭐ Create a Cluster in MongoDB</a>
 
