@@ -127,9 +127,9 @@ Make sure you have the following installed on your machine:
 - Go
 - Node.js and npm(Node Package Manager)
 - Python3 and pip(Python Package Manager)
-- [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) for `gcloud CLI`
-- [Docker Desktop](https://docs.docker.com/get-started/get-docker/)
+- [Google Cloud SDK](https://cloud.google.com/sdk/docs/install) for `gcloud CLI` - Required for App Deployment in GKE K8S cluster
 - [Devbox](https://www.jetify.com/docs/devbox/installing_devbox/)
+- [Docker Desktop](https://docs.docker.com/get-started/get-docker/) - Required for App Development
 
 ### <a name="clone-repo">⭐ Clone the Repository</a>
 
@@ -137,7 +137,7 @@ Make sure you have the following installed on your machine:
 git clone https://github.com/EvanHuang7/ai-tools.git
 ```
 
-### <a name="set-up-gcloud-cli">⭐ Set up gcloud CLI</a>
+### <a name="set-up-gcloud-cli">⭐ Set up gcloud CLI (Required for App Deployment in GKE K8S cluster)</a>
 
 You have **2 options** to make **gcloud CLI** work for this project. **1st option** is to install `google-cloud-sdk` and `gke-gcloud-auth-plugin` in the home directory of your host or machine. **2nd option** is to update the `devbox.json` file in project folder.
 
@@ -172,45 +172,45 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
   - 📌 Note: It may take a bit long to install all devbox packages if you run this cli first time.
 
-```bash
-devbox install
-```
+  ```bash
+  devbox install
+  ```
 
 - In 1st terminal, runs clis to
   - get into devbox isolated environment
   - install frontend service packages
 
-```bash
-devbox shell
+  ```bash
+  devbox shell
 
-cd frontend
+  cd frontend
 
-npm install
-```
+  npm install
+  ```
 
 - Open a new 2nd terminal and runs clis to 
   - get into devbox isolated environment
   - install node-backend service packages:
 
-```bash
-devbox shell
+  ```bash
+  devbox shell
 
-cd node-backend
+  cd node-backend
 
-npm install
-```
+  npm install
+  ```
 
 - Open a new 3rd terminal and runs clis to 
   - get into devbox isolated environment
   - install go-backend service packages:
 
-```bash
-devbox shell
+  ```bash
+  devbox shell
 
-cd go-backend
+  cd go-backend
 
-go mod tidy
-```
+  go mod tidy
+  ```
 
 - Open a new 4th terminal and runs clis to 
   - get into devbox isolated environment
@@ -218,17 +218,17 @@ go mod tidy
   - activate python virtual env
   - install python-backend service packages in python virtual env:
 
-```bash
-devbox shell
+  ```bash
+  devbox shell
 
-python3 -m venv .venv
+  python3 -m venv .venv
 
-source .venv/bin/activate
+  source .venv/bin/activate
 
-pip install -r ./python-backend/requirements.txt
+  pip install -r ./python-backend/requirements.txt
 
-cd python-backend
-```
+  cd python-backend
+  ```
 
 ### <a name="create-mongodb-cluster">⭐ Create a Cluster in MongoDB</a>
 
