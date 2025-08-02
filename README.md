@@ -109,7 +109,8 @@
 
 TODO: Come back to finish "Screenshots" part 
 - **📸 Screenshots**: [Miro Link](#)
-  ![🖼️ Architecture Diagram Screenshots Preview](#)
+  ![🖼️ Architecture Diagram Screenshot Preview, GKE K8S cluster case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GKE-K8S-cluster.png)
+  ![🖼️ Architecture Diagram Screenshot Preview, GCE VM with Docker Swarm case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GCE-VM-with%20Docker-Swarm.png)
   ![🖼️ Screenshots Preview](#)
 
 ## <a name="installation-start-project">📦 Installation and ⚙️ Start Project</a>
