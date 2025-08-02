@@ -44,9 +44,9 @@ Whether you are a content creator, designer, or developer, **AI Tools Studio** h
 - **🖥️ Frontend Service**:
 
   - **React.js, TypeScript**,
-  - **Clerk** for Authentication
-  - **Clerk Bill** for Payment
-  - **Vapi**
+  - **Clerk and Clerk Bill** for Authentication and Payment
+  - **Tanstack React Query** for API management
+  - **Shadcn & Tailwind CSS** for UI
 
 - **📡 Node Backend Service**:
 
@@ -57,39 +57,38 @@ Whether you are a content creator, designer, or developer, **AI Tools Studio** h
 
   - **Go, Gin**,
   - **Neon PostgreSql DB, GORM**
-  - **Gemini AI Veo2, Imagekit.io**
-  - **Google Cloud Storage**
 
 - **📡 Python Backend Service**:
 
-  - **Python, Django**,
+  - **Python, Flask**,
   - **MongoDB, Upstash Redis, MongoEngine**
-  - **Imagekit.io**
 
-- **☁️ Deployment and CI&CD Techs**
+- **☁️ Google Cloud Platform (GCP)**
+  - **Google Kubernetes Engine (GKE)** for deploying app in K8S cluster case
+  - **Google Compute Engine (GCE)** for deploying app in VM with **Docker Compose or Docker Swarm** cases
+  - **Google Cloud Storage (GCS)** for file storage
+  - **GCP Cloud Pub/Sub** (Go -> Node.js)
+  - **GCP IAM** for authorization to GCP services used by app
+  - **GCP Secret Manager** for sensative Secrets Management
 
+- **🤖 AI & Other Tools and Techs**:
+  - **Vapi AI** for voice assistant
+  - **Google Gemini AI Veo2** for video generation
+  - **Imagekit.io** for image generation and editing
+  - **gRPC** (Python -> GO)
+  - **RabbitMQ of CloudAMQP** (Node.js -> Python)
+  - **Kafka of RedPanda Cloud** (Node.js -> Python)
   - **Docker & Docker Hub** for building and storing container images
-  - Deploy app in **GKE via Kubernate cluster**
-    - Cloudflare for DNS hosting and SSL/TLS encryption
-    - Traefik for load balancer and traffic distribution
-    - GCP Secret Manager for sensative Secrets Management
-    - GCP IAM for GCP services authentication
-  - Deploy app in **GCE VM via Docker Compose or Docker Swarm**
-    - DuckDNS for DNS hosting
-    - Nginx and Certbox for SSL/TLS encryption
-    - Nginx for traffic distribution
-  - **GitHub Actions** Workflow for **Continuous Integration**
-  - **Continuous Deployment**
-    - KluCtl for GKE Kubernate cluster
-    - WatchTower for GCE VM
-
-- **⚙️ Other Tools & Techs**:
-  - Services communication
-    - **HTTP** (frontend -> backends commnunication)
-    - **gRPC** (Python backend -> Go backend commnunication)
-    - Message broker via **GCP Pub/Sub** (Go backend -> Nodejs backend commnunication)
-    - Message broker via **RabbitMQ** in CloudAMQP (Nodejs backend -> Python backend commnunication)
-    - Event Streaming via **Kafka** in RedPanda Cloud (Nodejs backend -> Python backend commnunication)
+  - **GitHub Actions Workflow** for **Continuous Integration (CI)**
+  - GKE K8S cluster case:
+    - **KluCtl GitOps** for **Continuous Deployment (CD)**
+    - **Cloudflare** for DNS hosting and SSL/TLS encryption
+    - **Traefik** for load balancer and incoming traffic distribution
+  - GCE VM with Docker Compose or Docker Swarm cases:
+    - **WatchTower** for **Continuous Deployment (CD)**
+    - **DuckDNS** for DNS hosting
+    - **Nginx and Certbox** for SSL/TLS encryption
+    - **Nginx** for incoming traffic distribution
 
 ## <a name="features">🚀 Features</a>
 
