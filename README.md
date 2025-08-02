@@ -30,9 +30,7 @@
 
 ## <a name="introduction">📋 Introduction</a>
 
-**🛠️ AI Tools Studio** is a **full-stack microservices application** seamlessly integrated with **Google Cloud Platform (GCP)**. It empowers users to **create stunning content in seconds** using a suite of AI-powered tools, including **🎨 Image Editing, 🖼️ AI Image Generation, 🎬 Video Generation and 💬 Intelligent Conversations**.
-
-Whether you are a content creator, designer, or developer, **AI Tools Studio** helps you **bring ideas to life faster than ever**.
+**🛠️ AI Tools Studio** is a **full-stack microservices application** seamlessly integrated with **Google Cloud Platform (GCP)**. It empowers users to **create stunning content in seconds** using a suite of AI-powered tools, including **🎨 Image Editing, 🖼️ AI Image Generation, 🎬 Video Generation and 💬 Intelligent Conversations**. Whether you are a content creator, designer, or developer, **AI Tools Studio** helps you **bring ideas to life faster than ever**.
 
 ## <a name="tech-stack">🛠️ Tech Stack</a>
 
@@ -65,7 +63,7 @@ Whether you are a content creator, designer, or developer, **AI Tools Studio** h
 - **🤖 AI & Other Tools and Techs**:
   - **Vapi AI** for voice assistant
   - **Google Gemini AI Veo2** for video generation
-  - **Imagekit.io** for image generation and editing
+  - **Imagekit.io AI** for image generation and editing
   - **gRPC** (Python -> GO)
   - **RabbitMQ of CloudAMQP** (Node.js -> Python)
   - **Kafka of RedPanda Cloud** (Node.js -> Python)
@@ -83,18 +81,25 @@ Whether you are a content creator, designer, or developer, **AI Tools Studio** h
 
 ## <a name="features">🚀 Features</a>
 
-**🔐 Authentication**: Secure Sign Up and Sign In using email and password, handled by **Clerk**.
+**🔐 Authentication** – Secure sign-up and sign-in with a Google account or with email and password, powered by **Clerk**. 
 
-- 🎨 **Image Editing**: Enhance, modify, and transform images effortlessly.
-- 🖼️ **AI Image Generation**: Generate unique, high-quality visuals from text prompts.
-- 🎬 **Video Generation**: Turn your ideas into dynamic video content.
-- 💬 **Intelligent Conversations**: Engage with AI for creative assistance or interactive chat.
+**🎨 Image Editing** – Effortlessly remove backgrounds, enhance image quality, and apply stunning AI-powered transformations using **ImageKit.io AI**.  
 
-**Payment**: ..... by **Clerk Billing**.
+**🖼️ Image Generation** – Create unique, high-quality visuals from text prompts with **ImageKit.io AI**.  
 
-**🎨 Modern UI/UX**: Clean, intuitive interface designed for clarity and ease of use.
+**🎬 Video Generation** – Transform your ideas into dynamic video content using **Google Gemini AI Veo2**.  
 
-**📱 Responsive Design**: Seamlessly adapts to any screen size or device.
+**💬 AI Voice Chat** – Have natural, real-time voice conversations with AI via **Vapi AI**.  
+
+**📂 History Records Download** – View and download all stored images, videos, and chat histories from databases including **MongoDB**, **Supabase**, and **Neon**.  
+
+**📊 App Usage Monitoring** – Track monthly usage of all app features directly from the dashboard. Data is aggregated from all backend services — **image editing (Python)**, **image & video generation (Go)**, and **AI voice chat (Node.js)** — via **gRPC**, **GCP Cloud Pub/Sub**, and **RabbitMQ**.  
+
+**💳 Payment & Subscriptions** – Subscribe to different plans and complete payments seamlessly via **Clerk Billing**.  
+
+**✨ Modern UI/UX** – A clean, intuitive interface designed for clarity and ease of use.  
+
+**📱 Responsive Design** – Optimized for any screen size or device for a consistent experience everywhere.
 
 ## <a name="diagram-screenshots">🧩 Diagrams and 📸 Screenshots</a>
 
