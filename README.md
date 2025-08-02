@@ -172,6 +172,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
   - 📌 Note: It may take a bit long to install all devbox packages if you run this cli first time.
 
+
   ```bash
   devbox install
   ```
@@ -179,6 +180,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 - In 1st terminal, runs clis to
   - get into devbox isolated environment
   - install frontend service packages
+
 
   ```bash
   devbox shell
@@ -192,6 +194,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   - get into devbox isolated environment
   - install node-backend service packages:
 
+
   ```bash
   devbox shell
 
@@ -203,6 +206,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 - Open a new 3rd terminal and runs clis to 
   - get into devbox isolated environment
   - install go-backend service packages:
+
 
   ```bash
   devbox shell
@@ -217,6 +221,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   - create a new virtual env in **Project Root folder** (a new `.venv` folder created)
   - activate python virtual env
   - install python-backend service packages in python virtual env:
+
 
   ```bash
   devbox shell
