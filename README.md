@@ -243,11 +243,29 @@ Create a free cluster by selecting a `free plan` and `Drivers` connection method
 
 ### <a name="create-postgre-db-in-supabase">⭐ Create a PostgreSql DB in Supabase</a>
 
+Create a PostgreSql database in Supabase
+
+- Go to **dashboard** page in your Supabase account
+- Click **New Project** button
+- Choose an **organization** (or create one)
+- Enter a **project name**
+- Enter a **database password**
+- Select a **region**
+- Click **Create new project** button to create a database
+
+Note down **Supabase Database Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step.
+
+- Go to the page of project just created
+- Click **Connect** button on the top of page
+- Copy the database url string in **Transaction pooler** section
+- Replace `[YOUR-PASSWORD]` placeholder in database url to your project database password
+- Note down the updated **Supabase Database Url string**
+
 ### <a name="create-postgre-db-in-neon">⭐ Create a PostgreSql DB in Neon</a>
 
 ### <a name="create-redis-in-upstash">⭐ Create a Redis DB in Upstash</a>
 
-1. Create a Redis database in Upstash
+Create a Redis database in Upstash
 
 - Go to **dashboard** page in your Upstash account
 - Click **Create Database** button
@@ -258,7 +276,7 @@ Create a free cluster by selecting a `free plan` and `Drivers` connection method
 - Select **Free Plan**
 - Click **Next** button to create database
 
-2. Note down **Redis Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step.
+Note down **Redis Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 - Go to the page of database just created
 - Hover on the **Endpoint** field to view the copy buttons
