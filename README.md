@@ -42,24 +42,20 @@ Whether you are a content creator, designer, or developer, **AI Tools Studio** h
 ## <a name="tech-stack">🛠️ Tech Stack</a>
 
 - **🖥️ Frontend Service**:
-
   - **React.js, TypeScript**,
-  - **Clerk and Clerk Bill** for Authentication and Payment
+  - **Clerk and Clerk Billing** for Authentication and Payment
   - **Tanstack React Query** for API management
   - **Shadcn & Tailwind CSS** for UI
 
 - **📡 Node Backend Service**:
-
   - **Node.js, Express.js, JavaScript**,
   - **Supabase PostgreSql DB, Drizzle ORM**
 
 - **📡 Go Backend Service**:
-
   - **Go, Gin**,
   - **Neon PostgreSql DB, GORM**
 
 - **📡 Python Backend Service**:
-
   - **Python, Flask**,
   - **MongoDB, Upstash Redis, MongoEngine**
 
@@ -87,7 +83,7 @@ Whether you are a content creator, designer, or developer, **AI Tools Studio** h
   - GCE VM with Docker Compose or Docker Swarm cases:
     - **WatchTower** for **Continuous Deployment (CD)**
     - **DuckDNS** for DNS hosting
-    - **Nginx and Certbox** for SSL/TLS encryption
+    - **Certbox** for SSL/TLS encryption
     - **Nginx** for incoming traffic distribution
 
 ## <a name="features">🚀 Features</a>
