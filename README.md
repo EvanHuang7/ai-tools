@@ -172,7 +172,6 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
   - 📌 Note: It may take a bit long to install all devbox packages if you run this cli first time.
 
-
   ```bash
   devbox install
   ```
@@ -180,7 +179,6 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 - In 1st terminal, runs clis to
   - get into devbox isolated environment
   - install frontend service packages
-
 
   ```bash
   devbox shell
@@ -192,8 +190,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
 - Open a new 2nd terminal and runs clis to 
   - get into devbox isolated environment
-  - install node-backend service packages:
-
+  - install node-backend service packages
 
   ```bash
   devbox shell
@@ -205,8 +202,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
 - Open a new 3rd terminal and runs clis to 
   - get into devbox isolated environment
-  - install go-backend service packages:
-
+  - install go-backend service packages
 
   ```bash
   devbox shell
@@ -220,8 +216,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   - get into devbox isolated environment
   - create a new virtual env in **Project Root folder** (a new `.venv` folder created)
   - activate python virtual env
-  - install python-backend service packages in python virtual env:
-
+  - install python-backend service packages in python virtual env
 
   ```bash
   devbox shell
@@ -237,9 +232,9 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
 ### <a name="create-mongodb-cluster">⭐ Create a Cluster in MongoDB</a>
 
-Create a cluster by selecting a free plan and `Drivers` connection method under a project in MongoDB, and note down your cluster **connection string**—you'll need them later in the **Set Up Environment Variables step**. (Feel free to follow any MongoDB setup tutorial on YouTube to complete this step.)
+Create a free cluster by selecting a `free plan` and `Drivers` connection method under a project in MongoDB. Then, note down your cluster **connection string** — you'll need it later in the **⭐ Set Up Environment Variables** step. (Feel free to follow any MongoDB setup tutorial on YouTube to complete this step.)
 
-⚠️ **Note**: Make sure your MongoDB proejct has public access
+⚠️ **Warning**: Make sure set up public access for your MongoDB proejct
 
 - Go to **SECURITY > Network Access** tab
 - Click **ADD IP ADDRESS** button
@@ -336,9 +331,9 @@ ls ~/Downloads/ai-tools-gsa-local-key.json
 GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 ```
 
-### <a name="set-up-redpanda-cloud">⭐ Set up Redpanda Cloud (Optional)</a>
+### <a name="set-up-redpanda-cloud">⭐ Set up Redpanda Cloud (Deprecated)</a>
 
-⚠️ Note: This step is optional because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between node service and python service.
+⚠️ Note: This step is deprecated because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between Node.js service and Python service.
 
 - Create a **Redpanda Cloud** account with a free default cluster created
 
