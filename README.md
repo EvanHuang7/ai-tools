@@ -14,7 +14,8 @@
 4. 🧩 [Diagram and Screenshots](#diagram-screenshots)
 5. ⚙️ [Installation and Start Project](#installation-start-project)
    - ⭐ [Prerequisites](#prerequisites)
-   - ⭐ [Cloning the Repository](#clone-repo)
+   - ⭐ [Set up Google Cloud SDK for gcloud CLI](#set-up-gcloud-sdk)
+   - ⭐ [Clone the Repository](#clone-repo)
    - ⭐ [Packages Installation](#install-packages)
    - ⭐ [Create a Cluster in MongoDB](#create-mongodb-cluster)
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
@@ -130,7 +131,11 @@ Make sure you have the following installed on your machine:
 - [Docker Desktop](https://docs.docker.com/get-started/get-docker/)
 - [Devbox](https://www.jetify.com/docs/devbox/installing_devbox/)
 
-### <a name="clone-repo">⭐ Cloning the Repository</a>
+### <a name="set-up-gcloud-sdk">⭐ Set up Google Cloud SDK for gcloud CLI</a>
+
+
+
+### <a name="clone-repo">⭐ Clone the Repository</a>
 
 ```bash
 git clone https://github.com/EvanHuang7/ai-tools.git
@@ -1001,6 +1006,7 @@ Follow these steps to deploy app in GKE:
 devbox shell
 ```
 
+TODO (gcloud CLI): move necessary info to set up Google Cloud SDK section 
 2. Set up `gcloud CLI` of **Google Cloud SDK** and create VPC and subnet
 
 - Authenticate and configure the gcloud CLI
