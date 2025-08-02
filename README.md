@@ -14,8 +14,8 @@
 4. 🧩 [Diagram and Screenshots](#diagram-screenshots)
 5. ⚙️ [Installation and Start Project](#installation-start-project)
    - ⭐ [Prerequisites](#prerequisites)
-   - ⭐ [Set up gcloud CLI](#set-up-gcloud-cli)
    - ⭐ [Clone the Repository](#clone-repo)
+   - ⭐ [Set up gcloud CLI](#set-up-gcloud-cli)
    - ⭐ [Packages Installation](#install-packages)
    - ⭐ [Create a Cluster in MongoDB](#create-mongodb-cluster)
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
@@ -131,40 +131,40 @@ Make sure you have the following installed on your machine:
 - [Docker Desktop](https://docs.docker.com/get-started/get-docker/)
 - [Devbox](https://www.jetify.com/docs/devbox/installing_devbox/)
 
-### <a name="set-up-gcloud-cli">⭐ Set up gcloud CLI</a>
-
-You have 2 options to make **gcloud CLI** work for this project. 1st option is to install `google-cloud-sdk` and `gke-gcloud-auth-plugin` in the home directory of your host or machine. 2nd option is to update the `devbox.json` file in project folder.
-
-🚨 Important Error: If you don't finish 1 of options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App as K8s Cluster** section.
-
-💡 Reason of Error: The `google-cloud-sdk@latest` installed in Devbox (via `devbox.json` packages) does not include the `gke-gcloud-auth-plugin` binary by default. It's a minimal version.
-
-1st Option (👍 Recommended):
-
-- Follow `https://cloud.google.com/sdk/docs/install` to install **Google Cloud SDK** in your **host**.
-- Install `gke-gcloud-auth-plugin` in your host by running
-
-```bash
-gcloud components install gke-gcloud-auth-plugin
-```
-
-- Verify the `gke-gcloud-auth-plugin` is installed and make sure your `kubectl` config uses this plugin
-
-```bash
-which gke-gcloud-auth-plugin
-
-kubectl config view --raw
-```
-
-2nd Option (👉 Quick, but not recommended):
-
-- Change the `google-cloud-sdk@latest` package to `path:gcloud#google-cloud-sdk` in the `devbox.json` file of project folder, which would change the devbox to use the `google-cloud-sdk` from the project `gcloud` folder that include `gke-gcloud-auth-plugin`.
-
 ### <a name="clone-repo">⭐ Clone the Repository</a>
 
 ```bash
 git clone https://github.com/EvanHuang7/ai-tools.git
 ```
+
+### <a name="set-up-gcloud-cli">⭐ Set up gcloud CLI</a>
+
+You have **2 options** to make **gcloud CLI** work for this project. **1st option** is to install `google-cloud-sdk` and `gke-gcloud-auth-plugin` in the home directory of your host or machine. **2nd option** is to update the `devbox.json` file in project folder.
+
+**🚨 Important Error**: If you don't finish 1 of options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App as K8s Cluster** section.
+
+**💡 Reason of Error**: The `google-cloud-sdk@latest` installed in Devbox (via `devbox.json` packages) does not include the `gke-gcloud-auth-plugin` binary by default. It's a minimal version.
+
+**1st Option (👍 Recommended)**:
+
+- Follow `https://cloud.google.com/sdk/docs/install` to install **Google Cloud SDK** in your **host**.
+- Install `gke-gcloud-auth-plugin` in your host by running
+
+  ```bash
+  gcloud components install gke-gcloud-auth-plugin
+  ```
+
+- Verify the `gke-gcloud-auth-plugin` is installed and make sure your `kubectl` config uses this plugin
+
+  ```bash
+  which gke-gcloud-auth-plugin
+
+  kubectl config view --raw
+  ```
+
+**2nd Option (👉 Quick, but not recommended)**:
+
+- Change the `google-cloud-sdk@latest` package to `path:gcloud#google-cloud-sdk` in the `devbox.json` file of project folder, which would change the devbox to use the `google-cloud-sdk` from the project `gcloud` folder that include `gke-gcloud-auth-plugin`.
 
 ### <a name="install-packages">⭐ Packages Installation</a>
 
