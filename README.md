@@ -30,12 +30,7 @@
 
 ## <a name="introduction">📋 Introduction</a>
 
-**🛠️ AI Tools Studio** is a **full-stack microservices application** seamlessly integrated with **Google Cloud Platform (GCP)**. It empowers users to **create stunning content in seconds** using a suite of AI-powered tools, including:
-
-- 🎨 **Image Editing** – Enhance, modify, and transform images effortlessly.
-- 🖼️ **AI Image Generation** – Generate unique, high-quality visuals from text prompts.
-- 🎬 **Video Generation** – Turn your ideas into dynamic video content.
-- 💬 **Intelligent Conversations** – Engage with AI for creative assistance or interactive chat.
+**🛠️ AI Tools Studio** is a **full-stack microservices application** seamlessly integrated with **Google Cloud Platform (GCP)**. It empowers users to **create stunning content in seconds** using a suite of AI-powered tools, including 🎨 **Image Editing**, 🖼️ **AI Image Generation**, 🎬 **Video Generation** and 💬 **Intelligent Conversations**.
 
 Whether you are a content creator, designer, or developer, **AI Tools Studio** helps you **bring ideas to life faster than ever**.
 
@@ -88,17 +83,26 @@ Whether you are a content creator, designer, or developer, **AI Tools Studio** h
 
 ## <a name="features">🚀 Features</a>
 
-**🔐 Authentication**: Secure sign-up and sign-in with email and password, handled by **xx**.
+**🔐 Authentication**: Secure Sign Up and Sign In using email and password, handled by **Clerk**.
+
+- 🎨 **Image Editing**: Enhance, modify, and transform images effortlessly.
+- 🖼️ **AI Image Generation**: Generate unique, high-quality visuals from text prompts.
+- 🎬 **Video Generation**: Turn your ideas into dynamic video content.
+- 💬 **Intelligent Conversations**: Engage with AI for creative assistance or interactive chat.
+
+**Payment**: ..... by **Clerk Billing**.
 
 **🎨 Modern UI/UX**: Clean, intuitive interface designed for clarity and ease of use.
 
 **📱 Responsive Design**: Seamlessly adapts to any screen size or device.
 
-## <a name="diagram-screenshots">🧩 Diagram and 📸 Screenshots</a>
+## <a name="diagram-screenshots">🧩 Diagrams and 📸 Screenshots</a>
 
+- **🧩 Architecture Diagram**: [drawSQL Diagram Link](#)
 - **🧩 Database Tables Diagram**: [drawSQL Diagram Link](#)
+TODO: Come back to finish "Screenshots" part 
 - **📸 Screenshots**: [Miro Link](#)
-
+  ![🖼️ Architecture Diagram Screenshots Preview](#)
   ![🖼️ Screenshots Preview](#)
 
 ## <a name="installation-start-project">📦 Installation and ⚙️ Start Project</a>
