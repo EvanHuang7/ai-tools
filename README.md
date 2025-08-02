@@ -19,11 +19,11 @@
    - ⭐ [Create a Cluster in MongoDB](#create-mongodb-cluster)
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
    - ⭐ [Running the Project](#running-project)
-6. ☁️ [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
-7. ☁️ [GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳](#deploy-app-in-gce-with-docker-swarm)
-8. ☁️ [GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
-9. 🔁 [GKE (GCP): Deploy app with auto CI & CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
-10. 🔁 [GCE(GCP) VM:Set up CI & CD for Docker apps](#set-up-ci-cd-for-docker)
+6. ☁️🐳 [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
+7. ☁️🐳🐳 [GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳](#deploy-app-in-gce-with-docker-swarm)
+8. ☁️☸️ [GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
+9. 🔁☸️ [GKE (GCP): Deploy app with auto CI & CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
+10. 🔁🐳 [GCE(GCP) VM:Set up CI & CD for Docker apps](#set-up-ci-cd-for-docker)
 11. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
 12. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
 13. 👨‍💼 [About the Author](#about-the-author)
@@ -69,11 +69,11 @@
   - **Kafka of RedPanda Cloud** (Node.js -> Python)
   - **Docker & Docker Hub** for building and storing container images
   - **GitHub Actions Workflow** for **Continuous Integration (CI)**
-  - GKE K8S cluster case:
+  - ☸️ GKE K8S cluster case:
     - **KluCtl GitOps** for **Continuous Deployment (CD)**
     - **Cloudflare** for DNS hosting and SSL/TLS encryption
     - **Traefik** for load balancer and incoming traffic distribution
-  - GCE VM with Docker Compose or Docker Swarm cases:
+  - 🐳 GCE VM with Docker Compose or Docker Swarm cases:
     - **WatchTower** for **Continuous Deployment (CD)**
     - **DuckDNS** for DNS hosting
     - **Certbox** for SSL/TLS encryption
@@ -103,8 +103,10 @@
 
 ## <a name="diagram-screenshots">🧩 Diagrams and 📸 Screenshots</a>
 
-- **🛠️ Architecture Diagram**: [drawSQL Diagram Link](#)
+- **🛠️ Architecture Diagram for ☸️ GKE K8S cluster case**: [Lucidchart Diagram Link](#)
+- **🛠️ Architecture Diagram for 🐳 GCE VM with Docker Swarm case**: [Lucidchart Diagram Link](https://lucid.app/lucidchart/efc15287-24d3-4033-96e3-6fa14c29b91e/edit?viewport_loc=-2379%2C-774%2C5425%2C2618%2C0_0&invitationId=inv_15990ffa-2a86-4063-9d67-055a522f95dc)
 - **🧩 Database Tables Diagram**: [drawSQL Diagram Link](https://drawsql.app/teams/evans-projects/diagrams/ai-tools-studio-app)
+
 TODO: Come back to finish "Screenshots" part 
 - **📸 Screenshots**: [Miro Link](#)
   ![🖼️ Architecture Diagram Screenshots Preview](#)
