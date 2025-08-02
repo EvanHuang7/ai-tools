@@ -241,11 +241,28 @@ Create a free cluster by selecting a `free plan` and `Drivers` connection method
 - Click **ALLOW ACCESS FROM ANYWHERE** button
 - Click **Confirm** button
 
-### <a name="create-redis-in-upstash">⭐ Create a Redis DB in Upstash</a>
-
 ### <a name="create-postgre-db-in-supabase">⭐ Create a PostgreSql DB in Supabase</a>
 
 ### <a name="create-postgre-db-in-neon">⭐ Create a PostgreSql DB in Neon</a>
+
+### <a name="create-redis-in-upstash">⭐ Create a Redis DB in Upstash</a>
+
+1. Create a Redis database in Upstash
+
+- Go to **dashboard** page in your Upstash account
+- Click **Create Database** button
+- Enter a **name** for database
+- Select a **primary region** (eg. `us-east-1`)
+- Enable **Eviction**
+- Click **Next** button
+- Select **Free Plan**
+- Click **Next** button to create database
+
+2. Note down **Redis Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step.
+
+- Go to the page of database just created
+- Hover on the **Endpoint** field to view the copy buttons
+- Click **TCP** copy button to note down **Redis Url string**
 
 ### <a name="set-up-gcp-services-access">⭐ Set up GCP services access for app</a>
 
