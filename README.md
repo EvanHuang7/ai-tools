@@ -103,8 +103,8 @@
 
 ## <a name="diagram-screenshots">🧩 Diagrams and 📸 Screenshots</a>
 
-- **🧩 Architecture Diagram**: [drawSQL Diagram Link](#)
-- **🧩 Database Tables Diagram**: [drawSQL Diagram Link](#)
+- **🛠️ Architecture Diagram**: [drawSQL Diagram Link](#)
+- **🧩 Database Tables Diagram**: [drawSQL Diagram Link](https://drawsql.app/teams/evans-projects/diagrams/ai-tools-studio-app)
 TODO: Come back to finish "Screenshots" part 
 - **📸 Screenshots**: [Miro Link](#)
   ![🖼️ Architecture Diagram Screenshots Preview](#)
