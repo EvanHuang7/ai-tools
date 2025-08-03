@@ -28,7 +28,7 @@
    - ⭐ [Set up VAPI](#set-up-vapi)
    - ⭐ [Set up Clerk & Clerk Billing](#set-up-clerk)
    - ⭐ [Set up RabbitMQ in CloudAMQP](#set-up-rabbitmq)
-   - ⭐ [](#)
+   - ⭐ [Set up Kafka in Redpanda Cloud (DEPRECATED)](#set-up-kafka)
    - ⭐ [](#)
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
    - ⭐ [Running the Project](#running-project)
@@ -492,25 +492,23 @@ Set up **payment in Clerk Billing**
 
 - Note down the `AMQP URL` (eg. `amqps://user:pass@host.rmq.cloudamqp.com/vhost`) as `RABBITMQ_URL` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
 
-### <a name="set-up-redpanda-cloud">⭐ Set up Redpanda Cloud (Deprecated)</a>
+### <a name="set-up-kafka">⭐ Set up Kafka in Redpanda Cloud (DEPRECATED)</a>
 
-⚠️ Note: This step is deprecated because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between Node.js service and Python service.
+**⚠️⚠️ DEPRECATED Note ⚠️⚠️**: This step is DEPRECATED because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between **Node.js service and Python service**.
 
 - Create a **Redpanda Cloud** account with a free default cluster created
 
 - Click **Kafka API** button in Cluster Overview page
 
-- Copy the value of `Bootstrap server URL`
+- Note down the value of `Bootstrap server URL` as `KAFKA_BOOTSTRAP_SERVER` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 - Click **Manage credentials** button and create a user with userName (eg. `ai-tools-redpanda-user`) and password
 
-- Copy the values of `userName` and `password`
+- Note down the value of `password` as `KAFKA_SASL_USER_PASSWORD` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 - Select **ACLs** tab and click the new created user (eg. `ai-tools-redpanda-user`)
 
 - Click **Allow all operations** and **Save** buttons
-
-
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
