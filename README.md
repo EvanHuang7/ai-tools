@@ -22,7 +22,7 @@
    - ⭐ [Create a PostgreSql DB in Neon](#create-postgre-db-in-neon)
    - ⭐ [Create a Redis DB in Upstash](#create-redis-in-upstash)
    - ⭐ [Set up GCP Pub/Sub & Google Cloud Storage](#set-up-gcp-pubsub-and-gcs)
-   - ⭐ [](#)
+   - ⭐ [Get Google Gemini API Key](#get-google-gemini-api-key)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [](#)
@@ -335,30 +335,32 @@ Create **Google Cloud Storage bucket** and add **public Read access** to this bu
 - Enter `allUsers` for **New principals** field and select `Storage Object Viewer` for **Role** field
 - Click **Save** button
 
-### <a name="get-gemini-api-key">⭐ Get Gemini API Key</a>
+### <a name="get-google-gemini-api-key">⭐ Get Google Gemini API Key</a>
 
-2. Get `GOOGLE_API_KEY` env value
+Get Gemini API Key (`GOOGLE_API_KEY` env) for Video Generation feature.
 
-🚨 Important: To use `veo-2.0-generate-001` AI model to generate a AI video with this API key, you need enable Billing for the `GOOGLE_API_KEY` of GCP project.
+**🚨 Important Note**: To use `veo-2.0-generate-001` AI model to generate a AI video with this API key, you must enable Billing for the `GOOGLE_API_KEY` in your GCP project. Also, the video generation via Veo2 costs around 💸💸 **0.35-0.50$ per second**💸💸
 
-- If you are using **GCP new user first 3 months 300$ credit**, you are already has Billing enabled for the default GCP project
+👉 If you are using **GCP new user first 3 months 300$ credit**, you are already has Billing enabled for the default GCP project
 
-  - Go to **APIs & Services** in GCP
-  - Click **Library** tab in side bar and search `gemini api`
-  - Enable `gemini api` access for all of 3 search results
-  - Click **Credentials** tab in side bar
-  - Click **"Create Credentials" button > "API key" button**
-  - You can copy the generated result as `GOOGLE_API_KEY`.
+- Go to **APIs & Services** in GCP
+- Click **Library** tab in side bar and search `gemini api`
+- Enable `gemini api` access for all of 3 search results
+- Click **Credentials** tab in side bar
+- Click **"Create Credentials" button > "API key" button**
+- Go to the page of API key just generated
+- Select `IP addresses` for **Application restrictions**
+- Add your `GKE Cluster Load Balancer external public IP`, `GKE Cluster worker nodes external public IPs`, `GCP VM external public IP` and `local machine IP` to **IP address restrictions**
+- Click **Save** button
+- Note down the generated **API key** as `GOOGLE_API_KEY` — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
-- If you don't have this new user free credit anymore, you have to go to **Google AI Studio**, enable the Billing for **Gemini API** GCP project and generate a `GOOGLE_API_KEY` in **Google AI Studio**.
-
-🚨🚨 Important: The video generation via Veo2 costs around 💸💸 **0.35-0.50$ per second**💸💸, so make sure specify the **IP address restrictions** of this ** API Key restrictions** to only allow your `GKE Cluster external public IP` and `GCP VM public IP` to access it.
+👉 If you **don't have GCP new user free credit anymore**, you have to go to **Google AI Studio**, enable the Billing for **Gemini API** GCP project and generate a `GOOGLE_API_KEY` in **Google AI Studio**.
 
 ### <a name="set-up-gcp-services-authorization">⭐ Set up GCP services authorization for app (Required for Running App locally or GKE K8S Cluster App Deployment or GCE VM App Deployment)</a>
 
 Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization for app.
 
-**🚨 Important Note**: This **⭐ Set up GCP services authorization for app** subsection is required to be finished after deploying app into GKE K8S Cluster or into GCE VM with Docker in all app deployment sections.
+**🚨 Important Note**: This **⭐ Set up GCP services authorization for app** subsection is required to be finished **after** deploying app into GKE K8S Cluster or into GCE VM with Docker in all app deployment sections.
 
 👉 Authentication for running app in GKE Cluster (Finish it after deploying app in GKE cluster)
 
