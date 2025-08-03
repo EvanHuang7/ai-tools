@@ -631,9 +631,9 @@ Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 
 ### <a name="set-up-gce-vm">⭐ Set up GCE VM</a>
 
-➡️ Go to **GCP Compute Engine service**
+**1 -** Go to **GCP Compute Engine service**
 
-➡️ **Create a free** `e2-micro` **VM** in GCE
+**2 - Create a free** `e2-micro` **VM** in GCE
 - Click **Create instance** button in overview page
 - Click **Enable Compute Engine API** button
 - Go back to **Compute Engine > VM instances**
@@ -666,7 +666,7 @@ Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 
 - Click **Create** button
 
-➡️ **Reserved a free static externalIP** with same region of VM's region and **attach it to VM**
+**3 - Reserved a free static externalIP** with same region of VM's region and **attach it to VM**
 
 - Open a anther broswer tab and go to **VPC networks > IP addresses** in GCP
 - Click **Reserve external static IP address** button
@@ -686,7 +686,7 @@ TODO: test it
 
 > The CLI to **update user permissions for accessing Docker** must be run for the user connected VM to access Docker whenever the **VM reboots and Docker auto-restarts**.
 
-➡️ **Install required dependencies in VM**
+**1 - Install required dependencies in VM**
 
 - Go to **Google Compute Engine > VM instances**
 - Select the VM instancee just created
@@ -709,7 +709,7 @@ TODO: test it
   docker ps
   ```
 
-➡️ **Deploy app** by running app containers with `docker-compose.yaml` file
+**2 - Deploy app** by running app containers with `docker-compose.yaml` file
 
 - Create a folder
 
@@ -772,7 +772,7 @@ TODO: test it
 
 TODO: Test it
 
-➡️ Set up **Docker engine and app containers to auto-restart** if **VM reboots**
+**3 -** Set up **Docker engine and app containers to auto-restart** if **VM reboots**
 
 - Set the **Docker daemon restart automatically at VM reboots**.
   - 1st CLI is to **turn on the existing systemd service file** of `Docker`, so that `Docker` auto-restart when VM or system reboots. (systemd service file of `Docker` is created when installing `Docker`, but it is not enabled automatically.)
