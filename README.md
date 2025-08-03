@@ -18,6 +18,10 @@
    - ⭐ [Set up gcloud CLI](#set-up-gcloud-cli)
    - ⭐ [Packages Installation](#install-packages)
    - ⭐ [Create a Cluster and DB in MongoDB](#create-mongodb-cluster)
+   - ⭐ [Create a PostgreSql DB in Supabase](#create-postgre-db-in-supabase)
+   - ⭐ [Create a PostgreSql DB in Neon](#create-postgre-db-in-neon)
+   - ⭐ [Create a Redis DB in Upstash](#create-redis-in-upstash)
+   -
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
    - ⭐ [Running the Project](#running-project)
 6. ☁️🐳 [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
@@ -270,7 +274,22 @@ Note down **Supabase Database Url string** — you'll need it later in the **⭐
 
 Create a PostgreSql database in Neon
 
-- 
+- Go to **dashboard** page in your Neon account
+- Click **New Project** button
+- Enter a **project name**
+- Select a **PostgreSQL version** (default is fine)
+- Select `AWS` for **Cloud service provider**
+- Select a **region**
+- Click **Create project** button to create a database
+
+Note down **Neon Database Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step.
+
+- Go to the page of project just created
+- Click **Dashboard tab** in the left side bar
+- Click **Connect** button on the top right of page
+- Copy the **Connection string**
+- Remove the ending `&channel_binding=require` string in the **Connection string** (Optional step)
+- Note down the updated **Connection string** as **Neon Database Url string**
 
 ### <a name="create-redis-in-upstash">⭐ Create a Redis DB in Upstash</a>
 
