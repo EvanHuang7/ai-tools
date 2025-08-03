@@ -17,7 +17,7 @@
    - ⭐ [Clone the Repository](#clone-repo)
    - ⭐ [Set up gcloud CLI](#set-up-gcloud-cli)
    - ⭐ [Packages Installation](#install-packages)
-   - ⭐ [Create a Cluster in MongoDB](#create-mongodb-cluster)
+   - ⭐ [Create a Cluster and DB in MongoDB](#create-mongodb-cluster)
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
    - ⭐ [Running the Project](#running-project)
 6. ☁️🐳 [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
@@ -230,9 +230,11 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   cd python-backend
   ```
 
-### <a name="create-mongodb-cluster">⭐ Create a Cluster in MongoDB</a>
+### <a name="create-mongodb-cluster">⭐ Create a Cluster and DB in MongoDB</a>
 
-Create a free cluster by selecting a `free plan` and `Drivers` connection method under a project in MongoDB. Then, note down your cluster **connection string** — you'll need it later in the **⭐ Set Up Environment Variables** step. (Feel free to follow any MongoDB setup tutorial on YouTube to complete this step.)
+1. Create a free cluster by selecting a `free plan` and `Drivers` connection method under a project in MongoDB.
+2. Copy your cluster **connection string**, and add a database name string (eg. `ai_tools_db`) before `?retryWrites` string in the connection string.
+3. Note down the updated cluster **connection string** as **MongoDB Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step. (Feel free to follow any MongoDB setup tutorial on YouTube to complete this step.)
 
 ⚠️ **Warning**: Make sure set up public access for your MongoDB proejct
 
