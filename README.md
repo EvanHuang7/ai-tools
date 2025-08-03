@@ -34,7 +34,7 @@
 6. ☁️🐳 [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
   - ⭐ [Set up GCE VM](#set-up-gce-vm)
   - ⭐ [Deploy app in GCE VM](#deploy-app-gce-vm)
-  - ⭐ [](#)
+  - ⭐ [Set up Domain & HTTPS](#set-up-domain-and-https)
   - ⭐ [](#)
   - ⭐ [](#)
 7. ☁️🐳🐳 [GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳](#deploy-app-in-gce-with-docker-swarm)
@@ -681,6 +681,7 @@ Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 ### <a name="deploy-app-gce-vm">⭐ Deploy app in GCE VM</a>
 
 TODO: test it
+
 **🚨 Important Note**:
 
 > The CLI to **update user permissions for accessing Docker** must be run for the user connected VM to access Docker whenever the **VM reboots and Docker auto-restarts**.
@@ -795,13 +796,19 @@ TODO: Test it
   docker ps
   ```
 
-### <a name="deploy-domain-and-https">⭐ Set up domain & https</a>
+### <a name="set-up-domain-and-https">⭐ Set up Domain & HTTPS</a>
 
-7. Set up a Domain
+➡️ **Set up a Domain Name** for your web app
 
-Get a free subdomain in **Duck DNS** and bind it to your VM static external IP address
+Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP address**
 
-🚨 Important: if you own a custom domain, you can easily bind your domain with VM static external IP address with a free SSL certificate by using `Cloudflare`, so that we don't need set up SSL certificate by your own and don't need to keep running `Nginx` (use defualt `80` port for `HTTP`, `443` port for `HTTPS`) in VM to serve your web app over HTTPS using that SSL certificate, which allow you to use `- 80:8080` as the `ports` of `frontend` in `docker-compose.yml` file because you don't need `Nginx` to proxy incoming request traffic to `frontend` container anymore.
+**🚨 Important Note**: 
+
+> **if you own a custom domain**, you can easily bind your domain with VM static external IP address with a free SSL certificate by using `Cloudflare`. 
+>
+> Then, you **don't need set up SSL certificate by your own** in later step and don't need to keep running `Nginx` (use defualt `80` port for `HTTP`, `443` port for `HTTPS`) in VM to serve your web app over HTTPS using that SSL certificate. 
+>
+> This allow you to use `- 80:8080` as the `ports` of `frontend` in `docker-compose.yml` file because you don't need `Nginx` to proxy incoming request traffic to `frontend` container anymore.
 
 - Go to Duck DNS page (`https://www.duckdns.org/`)
 - Enter your desired **sub domain** name (eg. `appName-yourName`) in **domains** section
@@ -810,148 +817,192 @@ Get a free subdomain in **Duck DNS** and bind it to your VM static external IP a
 - Click **update ip** button
 - Now, you can access the app with your subdomain (eg. `http://appName-yourName.duckdns.org/`)
 
-8. Get a free SSL certificate for domain
+➡️ **Get a free SSL/TSL certificate (HTTPS) via Nginx and Certbot for domain name**
 
 - Connect to VM in GCP console
 - Stop all running app containers
 
-```
-docker compose -f docker-compose.yml down
-```
+  ```bash
+  docker compose -f docker-compose.yml down
+  ```
 
 - Intall `Snap` and `nginx` packages
 
-```
-sudo apt update
-sudo apt install snapd -y
-sudo snap install core
-sudo snap refresh core
-sudo apt install nginx
-```
+  ```bash
+  sudo apt update
+
+  sudo apt install snapd -y
+
+  sudo snap install core
+
+  sudo snap refresh core
+
+  sudo apt install nginx
+  ```
 
 - Install `Certbot` via `Snap`
 
-```
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-```
+  ```bash
+  sudo snap install --classic certbot
 
-- Run `Certbot` with `Nginx` to get a SSL certificate
-  - ⚠️ Note: If running into port `80` is used issue, make sure you reserve port `80` for `nginx` by killing all existing processes listening to port `80`. Also, make sure the `ports` of `frontend` to be `- 8080:8080` in `docker-compose.yml` file
-  - This cli would do
-    - Certbot obtains and installs the SSL certificate via Let's Encrypt
+  sudo ln -s /snap/bin/certbot /usr/bin/certbot
+  ```
+
+- Run `Certbot` with `Nginx` to get a **SSL certificate**
+
+  - This CLI would do:
+    - **Certbot obtains and installs the SSL certificate via Let's Encrypt**
     - It **configures your Nginx to use the certificate**
-    - The cert is saved on disk (usually in /etc/letsencrypt/)
+    - The **cert is saved on disk** (usually in /etc/letsencrypt/)
 
-```
-sudo certbot --nginx -d appName-yourName.duckdns.org
-```
+  > ⚠️ Note: If you get **port `80` is used error**, make sure you reserve port `80` for `nginx` by killing all existing processes listening to port `80`. Also, make sure the `ports` of `frontend` is set to `- 8080:8080` in `docker-compose.yml` file.
 
-- Update `Nginx config` to proxy to `8080` port of `frontend` by running first command line to open `Nginx config` file frist. Then try to find the specific `server block` containing the existing script. After that, replace the `location /` block (inside this `server block` only) with updated script. Finally, save the updated config file.
+  ```bash
+  sudo certbot --nginx -d appName-yourName.duckdns.org
+  ```
 
-```
-sudo nano /etc/nginx/sites-available/default
-```
+➡️ **Set up Nginx in VM for incoming traffic routing**
 
-Existing `Nginx config` server block
+Update `Nginx config` to proxy the incoming traffic to `8080` port of VM ( `8080` port of `frontend` container) by:
 
-```
-server {
-    listen 443 ssl;
-    listen [::]:443 ssl ipv6only=on;
-    server_name aitools-evanhuang.duckdns.org;
+- First, run the CLI to open `Nginx config` file
 
-    ssl_certificate /etc/letsencrypt/live/aitools-evanhuang.duckdns.org/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/aitools-evanhuang.duckdns.org/privkey.pem;
-    include /etc/letsencrypt/options-ssl-nginx.conf;
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+  ```bash
+  sudo nano /etc/nginx/sites-available/default
+  ```
 
-    location / {
-        try_files $uri $uri/ =404;
-    }
-}
-```
+- Secondly, try to find the specific `server block` containing the **existing script**. The **existing** `Nginx config` server block:
 
-Updated script for locaton / block
+  ```bash
+  server {
+      listen 443 ssl;
+      listen [::]:443 ssl ipv6only=on;
+      server_name aitools-evanhuang.duckdns.org;
 
-```
-location / {
-    proxy_pass http://localhost:8080;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection 'upgrade';
-    proxy_set_header Host $host;
-    proxy_cache_bypass $http_upgrade;
-}
-```
+      ssl_certificate /etc/letsencrypt/live/aitools-evanhuang.duckdns.org/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/aitools-evanhuang.duckdns.org/privkey.pem;
+      include /etc/letsencrypt/options-ssl-nginx.conf;
+      ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
-- Reload Nginx again after updating and saving `config` file.
+      location / {
+          try_files $uri $uri/ =404;
+      }
+  }
+  ```
 
-```
-sudo nginx -t
-sudo systemctl reload nginx
-```
+- Thirdly, **replace** the existing `location /` block (inside this `server block` only) with **updated script** and **save the updated Nginx config file**. The **updated script** for `locaton / block`:
 
-⚠️ Note: If you run into this error, `nginx.service is not active, cannot reload`
+  ```bash
+  location / {
+      proxy_pass http://localhost:8080;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection 'upgrade';
+      proxy_set_header Host $host;
+      proxy_cache_bypass $http_upgrade;
+  }
+  ```
 
-- you can start `nginx` and check status. If the status is `Active: active (running)`, you are good to skip the rest of warning steps
+- **Reload Nginx** again after updating and saving `Nginx config` file.
 
-```
+  ```bash
+  sudo nginx -t
+
+  sudo systemctl reload nginx
+  ```
+
+➡️ **Potential errors when reloading Nginx**
+
+**🚨 Important Error 1**: 
+
+If you **get this error**, `nginx.service is not active, cannot reload`, when you **reload Nginx**.
+
+**✅ Solution of Error 1**: 
+
+You can start `nginx` and check status. If the status is `Active: active (running)`, you are good to skip the steps of **Important Error 2** because you may not encounter it.
+
+```bash
 sudo systemctl start nginx
+
 sudo systemctl status nginx
 ```
 
-- If you run into a new error like `Job for nginx.service failed because the control process exited with error code` when startting `nginx`, that means there are other running processes listening to ports `80 or 443`.
+**🚨 Important Error 2**:
+
+If you run into **a new error**, `Job for nginx.service failed because the control process exited with error code`, when starting `nginx` in the **✅ Solution of Error 1**. This means there are other running processes listening to ports `80 or 443`.
+
+**✅ Solution of Error 2**: 
 
 - Try to find out those running processes first by running
 
-  ```
+  ```bash
   sudo apt install lsof
+
   sudo lsof -i :80 -sTCP:LISTEN
+
   sudo lsof -i :443 -sTCP:LISTEN
   ```
 
-- If all those process are `Nginx`, just go to next step. Else (they are not `Nginx`), running `sudo kill -9 <PID>` cli to kill them manually
-- After all running process of ports `80 or 443` is only `Nginx`, we can running `sudo systemctl status nginx` cli to check `Nginx status`. If it is `Active: failed` status, try to kill all Nginx processes, restart it and check status again by running clis below. The status should be `Active: active (running)` now.
+- If any of those process aren't `Nginx`, run the CLI to kill them manually.
 
+  ```bash
+  sudo kill -9 <PID>
   ```
-  sudo pkill nginx
-  sudo systemctl start nginx
+
+- After all running process of ports `80 or 443` is only `Nginx`, we can:
+  - Run **1st CLI** to check `Nginx status`
+  - If `Nginx status` is `Active: failed` status, try to **kill all Nginx processes** by running **2nd CLI**
+  - Run **3rd CLI** to restart `Nginx`
+  - Run **1st CLI** to check `Nginx status` again
+  - The `Nginx status` should be `Active: active (running)` now
+
+  ```bash
   sudo systemctl status nginx
+
+  sudo pkill nginx
+
+  sudo systemctl start nginx
   ```
 
-- Test if SSL certificate auto-renew is handled or not
+➡️ **Check auto-renew of SSL certificate and deploy app again**
 
-```
-sudo certbot renew --dry-run
-```
+- **Test if SSL certificate auto-renew is handled or not**
 
-- Restart all app containers again
+  ```bash
+  sudo certbot renew --dry-run
+  ```
 
-```
-docker compose -f docker-compose.yml up -d
-```
+- **Restart all app containers again**
 
-- Now, Your domain has a free SSL certificate, and you can access your app via `https` (eg. `https://appName-yourName.duckdns.org`)
+  ```bash
+  docker compose -f docker-compose.yml up -d
+  ```
+
+- Now, **Your domain has a free SSL certificate**, and you can access your app via `https` (eg. `https://appName-yourName.duckdns.org`)
 
 TODO: Test it
 
-- 🚨 Important: We need to set up `Nginx` in VM will auto-restart if **VM or system reboots**
-  - 1st cli is to turn on the existing systemd service file of `Nginx`, so that `Nginx` auto-restart when VM or system reboots. (systemd service file of `Nginx` is created when installing `Nginx`, but it is not enabled automatically.)
-  - 2nd cli is to verify the `Nginx` systemd service is active or not.
+➡️ Set up **Nginx in VM to auto-restart** if **VM or system reboots**
 
-```
-sudo systemctl enable nginx
-systemctl is-enabled nginx
-```
+- Set the **Nginx in VM restart automatically at VM reboots**.
+  - 1st CLI is to **turn on the existing systemd service file** of `Nginx`, so that `Nginx` auto-restart when VM or system reboots. (systemd service file of `Nginx` is created when installing `Nginx`, but it is not enabled automatically.)
+  - 2nd CLI is to verify the `Nginx` systemd service is active or not.
 
-- Test restart by simulating a VM reboot and check `Nginx` and `Docker containers` status after the VM boots
+  ```bash
+  sudo systemctl enable nginx
 
-```
-sudo reboot
-sudo systemctl status nginx
-docker ps
-```
+  systemctl is-enabled nginx
+  ```
+
+- **Test restart by simulating a VM reboot** and check `Nginx` and `Docker containers` status after the VM boots
+
+  ```bash
+  sudo reboot
+
+  sudo systemctl status nginx
+
+  docker ps
+  ```
 
 ## <a name="deploy-app-in-gce-with-docker-swarm">☁️ GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳</a>
 
