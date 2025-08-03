@@ -157,9 +157,9 @@ git clone https://github.com/EvanHuang7/ai-tools.git
 
 You have **2 options** to make **gcloud CLI** work for this project. **1st option** is to install `google-cloud-sdk` and `gke-gcloud-auth-plugin` in the home directory of your host or machine. **2nd option** is to update the `devbox.json` file in project folder.
 
-**🚨 Important Error**: If you don't finish 1 of options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App as K8s Cluster** section.
-
-**💡 Reason of Error**: The `google-cloud-sdk@latest` installed in Devbox (via `devbox.json` packages) does not include the `gke-gcloud-auth-plugin` binary by default. It's a minimal version.
+> **🚨 Important Error**: If you don't finish 1 of options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App as K8s Cluster** section.
+>
+> **💡 Reason of Error**: The `google-cloud-sdk@latest` installed in Devbox (via `devbox.json` packages) does not include the `gke-gcloud-auth-plugin` binary by default. It's a minimal version.
 
 **1st Option (👍 Recommended)**:
 
@@ -709,7 +709,7 @@ nano docker-compose.yml
 ```
 
 - Run all app in containers with `docker-compose.yml` by running 
-  - **📌 Note**: 2nd CLI would run containers in the background
+  > **📌 Note**: 2nd CLI would run containers in the background
 
 ```bash
 docker compose -f docker-compose.yml up
@@ -722,7 +722,8 @@ docker compose -f docker-compose.yml up -d
 - Set up **Authorization for running app in GCP VM** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
 - 🎉 Now, You can access your app with your **VM external IP address** (eg. `http://35.209.142.39/`)
-  > **📌 Note**: If you can not access it with your VM external IP, you can try to access your app in **8080 port** (eg. `http://35.209.142.39:8080`).Because the `frontend` container’s port 8080 may be exposed on the VM’s port 8080. 
+  > **📌 Note**: If you can not access it with your VM external IP, you can try to access your app in **8080 port** (eg. `http://35.209.142.39:8080`).Because the `frontend` container’s port 8080 may be exposed on the VM’s port 8080.
+  >
   > Alternatively, you can change to **expose container’s port 8080 on the VM’s default port 80** by changing the `ports` of `frontend` to be `- 80:8080` in `docker-compose.yml` file and redeploy the app containers to try again.
 
 - **📌 Useful Docker CLIs**: 
