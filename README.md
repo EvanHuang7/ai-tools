@@ -798,7 +798,7 @@ TODO: Test it
 
 ### <a name="set-up-domain-and-https">⭐ Set up Domain & HTTPS</a>
 
-1 - **Set up a Domain Name** for your web app
+**1 - Set up a Domain Name** for your web app
 
 Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP address**
 
@@ -806,7 +806,7 @@ Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP
 
 > **if you own a custom domain**, you can easily bind your domain with VM static external IP address with a free SSL certificate by using `Cloudflare`. 
 >
-> Then, you **don't need set up SSL certificate by your own** in later step and don't need to keep running `Nginx` (use defualt `80` port for `HTTP`, `443` port for `HTTPS`) in VM to serve your web app over HTTPS using that SSL certificate. 
+> Then, you **don't need set up HTTPS by your own** in later step and don't need to keep running `Nginx` (use defualt `80` port for `HTTP`, `443` port for `HTTPS`) in VM to serve your web app over HTTPS using that SSL certificate. 
 >
 > This allow you to use `- 80:8080` as the `ports` of `frontend` in `docker-compose.yml` file because you don't need `Nginx` to proxy incoming request traffic to `frontend` container anymore.
 
@@ -817,7 +817,7 @@ Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP
 - Click **update ip** button
 - Now, you can access the app with your subdomain (eg. `http://appName-yourName.duckdns.org/`)
 
-2 - **Get a free SSL/TSL certificate (HTTPS) via Nginx and Certbot for domain name**
+**2 - Get a free SSL/TSL certificate (HTTPS) via Nginx and Certbot for domain name**
 
 - Connect to VM in GCP console
 - Stop all running app containers
@@ -826,7 +826,7 @@ Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP
   docker compose -f docker-compose.yml down
   ```
 
-- Intall `Snap` and `nginx` packages
+- Install `Snap` and `nginx` packages
 
   ```bash
   sudo apt update
@@ -850,18 +850,20 @@ Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP
 
 - Run `Certbot` with `Nginx` to get a **SSL certificate**
 
+  > **🚨 Important Error**: If you get `port 80 is used` error, when running this CLI.
+  >
+  > **✅ Solution of Error**: You need to reserve port `80` for `nginx` by killing all existing processes listening to port `80`. Also, make sure the `ports` of `frontend` is set to `- 8080:8080` in `docker-compose.yml` file.
+
   - This CLI would do:
     - **Certbot obtains and installs the SSL certificate via Let's Encrypt**
     - It **configures your Nginx to use the certificate**
     - The **cert is saved on disk** (usually in /etc/letsencrypt/)
 
-  > ⚠️ Note: If you get **port `80` is used error**, make sure you reserve port `80` for `nginx` by killing all existing processes listening to port `80`. Also, make sure the `ports` of `frontend` is set to `- 8080:8080` in `docker-compose.yml` file.
-
   ```bash
   sudo certbot --nginx -d appName-yourName.duckdns.org
   ```
 
-3 - **Set up Nginx in VM for incoming traffic routing**
+**3 - Set up Nginx in VM for incoming traffic routing**
 
 Update `Nginx config` to proxy the incoming traffic to `8080` port of VM ( `8080` port of `frontend` container) by:
 
@@ -911,7 +913,7 @@ Update `Nginx config` to proxy the incoming traffic to `8080` port of VM ( `8080
   sudo systemctl reload nginx
   ```
 
-4 - **Potential errors when reloading Nginx**
+**4 - Potential errors when reloading Nginx**
 
 **🚨 Important Error 1**: 
 
@@ -929,7 +931,7 @@ sudo systemctl status nginx
 
 **🚨 Important Error 2**:
 
-If you run into **a new error**, `Job for nginx.service failed because the control process exited with error code`, when starting `nginx` in the **✅ Solution of Error 1**. This means there are other running processes listening to ports `80 or 443`.
+If you run into **a new error**, `Job for nginx.service failed because the control process exited with error code`, when starting `nginx` in **Solution of Error 1**. This means there are other running processes listening to ports `80 or 443`.
 
 **✅ Solution of Error 2**: 
 
@@ -964,7 +966,7 @@ If you run into **a new error**, `Job for nginx.service failed because the contr
   sudo systemctl start nginx
   ```
 
-5 - **Check auto-renew of SSL certificate and deploy app again**
+**5 - Check auto-renew of SSL certificate and deploy app again**
 
 - **Test if SSL certificate auto-renew is handled or not**
 
@@ -982,7 +984,7 @@ If you run into **a new error**, `Job for nginx.service failed because the contr
 
 TODO: Test it
 
-6 - Set up **Nginx in VM to auto-restart** if **VM or system reboots**
+**6 - Set up Nginx in VM to auto-restart** if **VM or system reboots**
 
 - Set the **Nginx in VM restart automatically at VM reboots**.
   - 1st CLI is to **turn on the existing systemd service file** of `Nginx`, so that `Nginx` auto-restart when VM or system reboots. (systemd service file of `Nginx` is created when installing `Nginx`, but it is not enabled automatically.)
