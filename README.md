@@ -23,7 +23,7 @@
    - ⭐ [Create a Redis DB in Upstash](#create-redis-in-upstash)
    - ⭐ [Set up GCP Pub/Sub & Google Cloud Storage](#set-up-gcp-pubsub-and-gcs)
    - ⭐ [Get Google Gemini API Key](#get-google-gemini-api-key)
-   - ⭐ [](#)
+   - ⭐ [Set up GCP services authorization for app](#set-up-gcp-services-authorization)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [](#)
@@ -243,12 +243,12 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
 ### <a name="create-mongodb-cluster">⭐ Create a Cluster and DB in MongoDB</a>
 
-Create a cluster, set up database name in MongoDB and note down **MongoDB Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step.
+Create a cluster, set up database name in MongoDB and note down **MongoDB Url string**.
 
 - Create a free cluster by selecting a `free plan` and `Drivers` connection method under a project in MongoDB
 - Copy your cluster **connection string**
 - Add a **database name string** (eg. `ai_tools_db`) before `?retryWrites` string in the cluster **connection string**. Otherwise, the database will use `test` as default db name
-- Note down the updated cluster **connection string** as **MongoDB Url string**
+- Note down the updated cluster **connection string** as `MONGODB_URL` env variable — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 ⚠️ **Warning**: Make sure set up public access for your MongoDB proejct
 
@@ -269,7 +269,7 @@ Create a PostgreSql database in Supabase
 - Select a **region**
 - Click **Create new project** button to create a database
 
-Note down **Supabase Database Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step.
+Note down **Supabase Database Url string** as `DATABASE_URL` (Supabase) env variable — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 - Go to the page of project just created
 - Click **Connect** button on the top of page
@@ -289,7 +289,7 @@ Create a PostgreSql database in Neon
 - Select a **region**
 - Click **Create project** button to create a database
 
-Note down **Neon Database Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step.
+Note down **Neon Database Url string** as `DATABASE_URL` (Neon) env variable — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 - Go to the page of project just created
 - Click **Dashboard tab** in the left side bar
@@ -311,7 +311,7 @@ Create a Redis database in Upstash
 - Select **Free Plan**
 - Click **Next** button to create database
 
-Note down **Redis Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step.
+Note down **Redis Url string** as `REDIS_URL` env variable — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 - Go to the page of database just created
 - Hover on the **Endpoint** field to view the copy buttons
@@ -352,7 +352,7 @@ Get Gemini API Key (`GOOGLE_API_KEY` env) for Video Generation feature.
 - Select `IP addresses` for **Application restrictions**
 - Add your `GKE Cluster Load Balancer external public IP`, `GKE Cluster worker nodes external public IPs`, `GCP VM external public IP` and `local machine IP` to **IP address restrictions**
 - Click **Save** button
-- Note down the generated **API key** as `GOOGLE_API_KEY` — you'll need it later in the **⭐ Set Up Environment Variables** step.
+- Note down the generated **API key** as `GOOGLE_API_KEY` env variable — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 👉 If you **don't have GCP new user free credit anymore**, you have to go to **Google AI Studio**, enable the Billing for **Gemini API** GCP project and generate a `GOOGLE_API_KEY` in **Google AI Studio**.
 
@@ -360,55 +360,60 @@ Get Gemini API Key (`GOOGLE_API_KEY` env) for Video Generation feature.
 
 Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization for app.
 
-**🚨 Important Note**: This **⭐ Set up GCP services authorization for app** subsection is required to be finished **after** deploying app into GKE K8S Cluster or into GCE VM with Docker in all app deployment sections.
+**🚨 Important Note**: This **⭐ Set up GCP services authorization for app** subsection is required to be finished **WHENEVER** deployed app into GKE K8S Cluster or into GCE VM with Docker in all app deployment sections.
 
-👉 Authentication for running app in GKE Cluster (Finish it after deploying app in GKE cluster)
+**👉 Authorization for running app in GKE Cluster** - Finish it after deploying app in GKE cluster
 
-- Create Google IAM service account (GSA) for app first, then bind and annotate default Kubernate service account (KSA) with GSA
+- Create **Google IAM service account (GSA)** for app
 
   ```bash
   task general:01-create-GSA
+  ```
 
+- **Bind and annotate default Kubernate service account (KSA) with GSA**
+  - **⚠️ Warning**: If a GSA with the correct GCP service permissions already exists — for example, after deleting a GKE K8S cluster and creating a new one — you only need to run these two CLIs.
+
+  ```bash
   task general:02-bind-KSA-with-GSA
 
   task general:03-annotate-KSA-with-GSA
   ```
 
-- Attach GCP Pub/Sub permissions to GSA
+- Attach **GCP Pub/Sub permissions** to GSA
 
-```
-task pubsubAccess:attach-pubsub-permissions-to-GSA
-```
+  ```bash
+  task pubsubAccess:attach-pubsub-permissions-to-GSA
+  ```
 
-- Attach GCP Cloud Storage admin access to GSA
+- Attach **GCP Cloud Storage admin permissions** to GSA
 
-```
-task gcsAccess:attach-gcs-permissions-to-GSA
-```
+  ```bash
+  task gcsAccess:attach-gcs-permissions-to-GSA
+  ```
 
-👉 Authentication for running app in GCP VM case
+**👉 Authorization for running app in GCP VM** - Finish it after deploying app in GCP VM
 
-- Find the GCP VM's GSA
-
+- Find the **GCP VM's GSA**
   - Go to **GCP Console** > Go to **Compute Engine > VM instances**
   - Click on your VM
   - Scroll down to **Service account** (eg. `1234567890-compute@developer.gserviceaccount.com`)
+  - Copy the **Google Service account (GSA) of GCP VM**
 
-- Update `gceVmPubsubAccess:attach-pubsub-permissions-to-GCE-VM-GSA` task cli in `Taskfile.yaml` file to use your own VM GSA
+- Update `gceVmPubsubAccess:attach-pubsub-permissions-to-GCE-VM-GSA` and `gceVmGcsAccess:attach-gcs-permissions-to-GCE-VM-GSA` task CLIs in `Taskfile.yaml` file to use your own **VM GSA**.
 
-- Attach required GCP Pub/Sub access to the GSA of GCP VM by running
+- Attach required **GCP Pub/Sub access to the GSA of GCP VM** by running
 
-```
-task gceVmPubsubAccess:attach-pubsub-permissions-to-GCE-VM-GSA
-```
+  ```bash
+  task gceVmPubsubAccess:attach-pubsub-permissions-to-GCE-VM-GSA
+  ```
 
-- Attach required GCP Cloud Storage admin access to the GSA of GCP VM by running
+- Attach required **GCP Cloud Storage admin access to the GSA of GCP VM** by running
 
-```
-task gceVmGcsAccess:attach-gcs-permissions-to-GCE-VM-GSA
-```
+  ```bash
+  task gceVmGcsAccess:attach-gcs-permissions-to-GCE-VM-GSA
+  ```
 
-- Enable `Cloud Pub/Sub` and `Storage` access of **Cloud API access scopes** in GCP VM if it is currently off.
+- Enable `Cloud Pub/Sub` and `Storage` access of **Cloud API access scopes** for GCP VM if they are currently off.
   - Stop the current running GCP VM
   - Click **Edit** button in VM info page
   - Select `Set access for each API` for **Access scopes**
@@ -416,25 +421,31 @@ task gceVmGcsAccess:attach-gcs-permissions-to-GCE-VM-GSA
   - Click **Save** button
   - Start GCP VM again
 
-👉 Authentication for running app in local machine
+**👉 Authorization for running app in local machine**
 
-- Download a service account key directly for local use **IF** you already finished the **Authentication for running app in GKE Cluster** step
+- **📌 If you DIDN'T FINISH the previous step (Authorization for running app in GKE Cluster)**, just **create a GSA with GCP Pub/Sub and GCS permissions attached**. You only need to **bind and annotate the default KSA with the GSA** when you complete that step (Authorization in GKE Cluster) later. **📌 If you ALREADY FINISHED the previous step**, you can **SKIP** this GSA creation step.
 
-```
-task general:download-gsa-key-locally
-```
+  ```bash
+  task general:01-create-GSA
+
+  task pubsubAccess:attach-pubsub-permissions-to-GSA
+
+  task gcsAccess:attach-gcs-permissions-to-GSA
+  ```
+
+- Download a google service account key file directly for local use
+
+  ```bash
+  task general:download-gsa-key-locally
+  ```
 
 - Move this key file **from you project to host Download folder** and find the absolute file path (eg. `/Users/evan/Downloads/ai-tools-gsa-local-key.json`) of your downloaded JSON credentials on macOS by running
 
-```
-ls ~/Downloads/ai-tools-gsa-local-key.json
-```
+  ```bash
+  ls ~/Downloads/ai-tools-gsa-local-key.json
+  ```
 
-- Add env varabile to `.env` files in `go-backend` and `node-backend` services.
-
-```
-GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
-```
+- Note down the absolute file path as `GOOGLE_APPLICATION_CREDENTIALS` env varabile — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 ### <a name="set-up-redpanda-cloud">⭐ Set up Redpanda Cloud (Deprecated)</a>
 
@@ -500,13 +511,13 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 
 - Copy the `privte key` and `imagekit id` of your **Imagekit.io** account.
 
-🚨 Important: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
-
 ### <a name="set-up-vapi">⭐ Set up VAPI</a>
 
 - Create a **VAPI** account.
 
 - Copy the `public Key` from the **Vapi API Keys** tab of your **VAPI account dashboard**.
+
+**⚠️ Warning**: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
