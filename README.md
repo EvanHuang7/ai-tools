@@ -490,7 +490,7 @@ Set up **payment in Clerk Billing**
 
 ### <a name="set-up-kafka">⭐ Set up Kafka in Redpanda Cloud (DEPRECATED)</a>
 
-**⚠️⚠️ DEPRECATED Note ⚠️⚠️**: This step is DEPRECATED because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between **Node.js service and Python service**.
+**⚠️⚠️ DEPRECATED NOTE ⚠️⚠️**: This step is DEPRECATED because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between **Node.js service and Python service**.
 
 - Create a **Redpanda Cloud** account with a free default cluster created
 - Click **Kafka API** button in Cluster Overview page
@@ -502,28 +502,66 @@ Set up **payment in Clerk Billing**
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
-- Create a `.env` file under **node-backend** folder of your project and add the following content:
+Create a `.env` file under **frontend** folder of your project and add the following content:
 
-  ```env
-  DATABASE_URL =
-  ```
+```env
+VITE_CLERK_PUBLISHABLE_KEY=
+VITE_VAPI_PUBLIC_KEY=
+```
 
-- Create a `.env` file under **go-backend** folder of your project and add the following content:
+Create a `.env` file under **node-backend** folder of your project and add the following content:
 
-  ```env
-  DATABASE_URL =
-  ```
+- **⚠️ Warning**: The `DATABASE_URL` of **node-backend** is from **Supabase**. Also, the `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
 
-- Create a `.env` file under **python-backend** folder of your project and add the following content:
+```env
+DATABASE_URL=
 
-  ```env
-  REDIS_URL =
-  MONGODB_URL =
-  ```
+GOOGLE_APPLICATION_CREDENTIALS=
 
-Replace the placeholder values with your actual credentials from MongoDB, ....
+CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
 
-- 📌 Note:
+RABBITMQ_URL=
+
+KAFKA_BOOTSTRAP_SERVER=
+KAFKA_SASL_USER_PASSWORD=
+```
+
+Create a `.env` file under **go-backend** folder of your project and add the following content:
+
+- **⚠️ Warning**: The `DATABASE_URL` of **go-backend** is from **Neon**.
+
+```env
+DATABASE_URL=
+
+GOOGLE_API_KEY=
+
+GOOGLE_APPLICATION_CREDENTIALS=
+
+IMAGEKIT_ID=
+IMAGEKIT_PRIVATE_KEY=
+
+CLERK_SECRET_KEY=
+```
+
+Create a `.env` file under **python-backend** folder of your project and add the following content:
+- **⚠️ Warning**: The `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
+
+```env
+REDIS_URL=
+MONGODB_URL=
+
+IMAGEKIT_PRIVATE_KEY=
+
+CLERK_SECRET_KEY=
+
+RABBITMQ_URL=
+
+KAFKA_BOOTSTRAP_SERVER=
+KAFKA_SASL_USER_PASSWORD=
+```
+
+Replace the placeholder values with the actual credentials you noted down previously.
 
 ### <a name="running-project">⭐ Running the Project</a>
 
