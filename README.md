@@ -24,8 +24,8 @@
    - ⭐ [Set up GCP Pub/Sub & Google Cloud Storage](#set-up-gcp-pubsub-and-gcs)
    - ⭐ [Get Google Gemini API Key](#get-google-gemini-api-key)
    - ⭐ [Set up GCP services authorization for app](#set-up-gcp-services-authorization)
-   - ⭐ [](#)
-   - ⭐ [](#)
+   - ⭐ [Set up Imagekit.io](#set-up-imagekit)
+   - ⭐ [Set up VAPI](#set-up-vapi)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [](#)
@@ -447,6 +447,20 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 
 - Note down the absolute file path as `GOOGLE_APPLICATION_CREDENTIALS` env varabile — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
+### <a name="set-up-imagekit">⭐ Set up Imagekit.io</a>
+
+- Create a **Imagekit.io** account.
+
+- Note down the `privte key` and `imagekit id` in your **Imagekit.io** account as `IMAGEKIT_PRIVATE_KEY` and `IMAGEKIT_ID` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
+
+### <a name="set-up-vapi">⭐ Set up VAPI</a>
+
+- Create a **VAPI** account.
+
+- Note down the `public Key` from the **Vapi API Keys** tab in your **VAPI account dashboard** as `VITE_VAPI_PUBLIC_KEY` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
+
+**⚠️ Warning**: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
+
 ### <a name="set-up-redpanda-cloud">⭐ Set up Redpanda Cloud (Deprecated)</a>
 
 ⚠️ Note: This step is deprecated because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between Node.js service and Python service.
@@ -504,20 +518,6 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 - Add more plans by following same steps again
 
 - Go to **Configure tab > Billing tab > Settings tab > Enable Billing button** after finishing adding all plans and corresponding features.
-
-### <a name="set-up-imagekit">⭐ Set up Imagekit.io</a>
-
-- Create a **Imagekit.io** account.
-
-- Copy the `privte key` and `imagekit id` of your **Imagekit.io** account.
-
-### <a name="set-up-vapi">⭐ Set up VAPI</a>
-
-- Create a **VAPI** account.
-
-- Copy the `public Key` from the **Vapi API Keys** tab of your **VAPI account dashboard**.
-
-**⚠️ Warning**: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
