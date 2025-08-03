@@ -26,7 +26,7 @@
    - ⭐ [Set up GCP services authorization for app](#set-up-gcp-services-authorization)
    - ⭐ [Set up Imagekit.io](#set-up-imagekit)
    - ⭐ [Set up VAPI](#set-up-vapi)
-   - ⭐ [](#)
+   - ⭐ [Set up Clerk & Clerk Billing](#set-up-clerk)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
@@ -461,6 +461,28 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 
 **⚠️ Warning**: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
 
+### <a name="set-up-clerk">⭐ Set up Clerk & Clerk Billing</a>
+
+Get the **Clerk auth key**
+
+- Create a project under your Clerk account
+- Go to **Configure tab > API keys tab**
+- Select `React` and Copy the `VITE_CLERK_PUBLISHABLE_KEY` value as `VITE_CLERK_PUBLISHABLE_KEY` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
+
+Set up **payment in Clerk Billing**
+
+- Go to **Subscription tab > Get started button**
+- Click **Create a plan** button to create first billing plan
+- Click the auto created `Free` plan
+- Enter `Perfect for exploring our AI tools and testing what’s possible.` text for **Description**
+- Click **Add feature** button for adding new features for current `Free` plan
+  - Enter `5 image editings per month` for **Name**
+  - Click **Create feature** button
+  - Add more features by following same steps again
+- Click **Save** button
+- Add more plans by following same steps again
+- Go to **Configure tab > Billing tab > Settings tab > Enable Billing button** after finishing adding all plans and corresponding features.
+
 ### <a name="set-up-redpanda-cloud">⭐ Set up Redpanda Cloud (Deprecated)</a>
 
 ⚠️ Note: This step is deprecated because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between Node.js service and Python service.
@@ -486,38 +508,6 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 - Create a free **RabbitMQ Little Lemur** instance
 
 - Copy the `AMQP URL` (eg. `amqps://user:pass@host.rmq.cloudamqp.com/vhost`)
-
-### <a name="set-up-clerk">⭐ Set up Clerk</a>
-
-1. Get the Clerk auth key
-
-- Create a project under your Clerk account
-
-- Go to **Configure tab > API keys tab**
-
-- Select `React` and Copy the `VITE_CLERK_PUBLISHABLE_KEY` value
-
-2. Set up payment in Clerk
-
-- Go to **Subscription tab > Get started button**
-
-- Click **Create a plan** button to create first billing plan
-
-- Click the auto created `Free` plan
-
-- Enter `Perfect for trying out our AI tools` text for **Description**
-
-- Click **Add feature** button for adding new features for current `Free` plan
-
-  - Enter `100 credits per month` for **Name**
-  - Click **Create feature** button
-  - Add more features by following same steps again
-
-- Click **Save** button
-
-- Add more plans by following same steps again
-
-- Go to **Configure tab > Billing tab > Settings tab > Enable Billing button** after finishing adding all plans and corresponding features.
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
