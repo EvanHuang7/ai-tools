@@ -29,7 +29,6 @@
    - ⭐ [Set up Clerk & Clerk Billing](#set-up-clerk)
    - ⭐ [Set up RabbitMQ in CloudAMQP](#set-up-rabbitmq)
    - ⭐ [Set up Kafka in Redpanda Cloud (DEPRECATED)](#set-up-kafka)
-   - ⭐ [](#)
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
    - ⭐ [Running the Project](#running-project)
 6. ☁️🐳 [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
@@ -188,7 +187,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   devbox install
   ```
 
-- In 1st terminal, runs clis to
+- **In 1st terminal for frontend**, runs clis to
   - get into devbox isolated environment
   - install frontend service packages
 
@@ -200,7 +199,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   npm install
   ```
 
-- Open a new 2nd terminal and runs clis to 
+- Open a new **2nd terminal for node-backend** and runs clis to 
   - get into devbox isolated environment
   - install node-backend service packages
 
@@ -212,7 +211,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   npm install
   ```
 
-- Open a new 3rd terminal and runs clis to 
+- Open a new **3rd terminal for go-backend** and runs clis to 
   - get into devbox isolated environment
   - install go-backend service packages
 
@@ -224,7 +223,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   go mod tidy
   ```
 
-- Open a new 4th terminal and runs clis to 
+- Open a new **4th terminal for python-backend** and runs clis to 
   - get into devbox isolated environment
   - create a new virtual env in **Project Root folder** (a new `.venv` folder created)
   - activate python virtual env
@@ -511,7 +510,7 @@ VITE_VAPI_PUBLIC_KEY=
 
 Create a `.env` file under **node-backend** folder of your project and add the following content:
 
-- **⚠️ Warning**: The `DATABASE_URL` of **node-backend** is from **Supabase**. Also, the `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
+- **⚠️ Warning Note**: The `DATABASE_URL` of **node-backend** is from **Supabase**. Also, the `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
 
 ```env
 DATABASE_URL=
@@ -529,7 +528,7 @@ KAFKA_SASL_USER_PASSWORD=
 
 Create a `.env` file under **go-backend** folder of your project and add the following content:
 
-- **⚠️ Warning**: The `DATABASE_URL` of **go-backend** is from **Neon**.
+- **⚠️ Warning Note**: The `DATABASE_URL` of **go-backend** is from **Neon**.
 
 ```env
 DATABASE_URL=
@@ -545,7 +544,7 @@ CLERK_SECRET_KEY=
 ```
 
 Create a `.env` file under **python-backend** folder of your project and add the following content:
-- **⚠️ Warning**: The `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
+- **⚠️ Warning Note**: The `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
 
 ```env
 REDIS_URL=
@@ -565,35 +564,30 @@ Replace the placeholder values with the actual credentials you noted down previo
 
 ### <a name="running-project">⭐ Running the Project</a>
 
-Open **four separate terminal windows** and run the following commands to start the frontend and backends services:
+After finishing **⭐ Packages Installation** step, you installed necessary packages for all services and had **4 open terminal**. Now, run the following CLIs to start the app:
 
-**Terminal 1** – Start the Frontend Service (React Vite App):
+**In 1st terminal for frontend** – Start the Frontend Service (React Vite App):
 
 ```bash
-cd ai-tools/frontend
 npm run dev
 ```
 
-**Terminal 2** – Start the Node-backend Service (Nodejs Express app):
+**In 2nd terminal for node-backend** – Start the Node-backend Service (Nodejs Express app):
 
 ```bash
-cd ai-tools/node-backend
 npm run dev
 ```
 
-**Terminal 3** – Start the Go-backend Service (Go Gin app):
+**In 3rd terminal for go-backend** – Start the Go-backend Service (Go Gin app):
 
 ```bash
-cd ai-tools/go-backend
 air
 ```
 
-**Terminal 4** – Start the Python-backend Service (Nodejs Express app):
+**In 4th terminal for python-backend** – Start the Python-backend Service (Nodejs Express app):
 
 ```bash
-cd ai-tools/python-backend
-source venv/bin/activate
-python manage.py runserver 8088
+flask run --reload --port=8088
 ```
 
 Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
