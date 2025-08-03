@@ -592,17 +592,17 @@ flask run --reload --port=8088
 
 Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
 
-## <a name="deploy-app-in-gce-with-docker-compose">☁️ GCE(GCP) VM: Deploy App with Docker Compose 🐳</a>
+## <a name="deploy-app-in-gce-with-docker-compose">☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳</a>
 
-📌 If your VM has enough CPU and Memory, it would be best to deploy this microservices project as K8s cluster using k3s or as docker containers using Docker swarm, so that we can taking advantanges of these k8s cluster orchestrator or container orchestrator. The pros to use orchestrator instead of Docker compose:
+**Docker Compose** runs containers locally without using Docker Swarm services (the orchestrator layer). Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 
-- Allow us to deploy new app version without downtime and easily roll back the version
-- Allow us to run containers in differeent hosts/nodes/VMs for better scalabity
-- Providee a way to handle sensative credentials or secrets
+**📌 Note**: If your VM has enough CPU and Memory, it would be best to deploy this microservices project as K8s cluster using k3s or as docker containers using Docker swarm, so that we can taking advantanges of these k8s cluster orchestrator or container orchestrator. The **Pros to use orchestrator instead of Docker compose**:
 
-Docker Compose deploys app as local containers without creating docker services.
+- Allow us to **deploy new app version without downtime** and **easily roll back the version**
+- Allow us to **run containers in differeent hosts/nodes/VMs** for better scalabity
+- Provide a way to **handle sensative credentials or secrets**
 
-Follow these steps to deploy app using docker-compose file in GCE:
+### <a name="set-up-gce-vm">⭐ Set up GCE VM</a>
 
 1. Go to GCP Compute Engine page
 2. Create a free `e2-micro` VM in GCE
