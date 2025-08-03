@@ -798,7 +798,7 @@ TODO: Test it
 
 ### <a name="set-up-domain-and-https">⭐ Set up Domain & HTTPS</a>
 
-➡️ **Set up a Domain Name** for your web app
+1 - **Set up a Domain Name** for your web app
 
 Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP address**
 
@@ -817,7 +817,7 @@ Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP
 - Click **update ip** button
 - Now, you can access the app with your subdomain (eg. `http://appName-yourName.duckdns.org/`)
 
-➡️ **Get a free SSL/TSL certificate (HTTPS) via Nginx and Certbot for domain name**
+2 - **Get a free SSL/TSL certificate (HTTPS) via Nginx and Certbot for domain name**
 
 - Connect to VM in GCP console
 - Stop all running app containers
@@ -861,7 +861,7 @@ Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP
   sudo certbot --nginx -d appName-yourName.duckdns.org
   ```
 
-➡️ **Set up Nginx in VM for incoming traffic routing**
+3 - **Set up Nginx in VM for incoming traffic routing**
 
 Update `Nginx config` to proxy the incoming traffic to `8080` port of VM ( `8080` port of `frontend` container) by:
 
@@ -911,7 +911,7 @@ Update `Nginx config` to proxy the incoming traffic to `8080` port of VM ( `8080
   sudo systemctl reload nginx
   ```
 
-➡️ **Potential errors when reloading Nginx**
+4 - **Potential errors when reloading Nginx**
 
 **🚨 Important Error 1**: 
 
@@ -964,7 +964,7 @@ If you run into **a new error**, `Job for nginx.service failed because the contr
   sudo systemctl start nginx
   ```
 
-➡️ **Check auto-renew of SSL certificate and deploy app again**
+5 - **Check auto-renew of SSL certificate and deploy app again**
 
 - **Test if SSL certificate auto-renew is handled or not**
 
@@ -982,7 +982,7 @@ If you run into **a new error**, `Job for nginx.service failed because the contr
 
 TODO: Test it
 
-➡️ Set up **Nginx in VM to auto-restart** if **VM or system reboots**
+6 - Set up **Nginx in VM to auto-restart** if **VM or system reboots**
 
 - Set the **Nginx in VM restart automatically at VM reboots**.
   - 1st CLI is to **turn on the existing systemd service file** of `Nginx`, so that `Nginx` auto-restart when VM or system reboots. (systemd service file of `Nginx` is created when installing `Nginx`, but it is not enabled automatically.)
