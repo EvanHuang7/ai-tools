@@ -613,50 +613,49 @@ Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 
 1. Go to **GCP Compute Engine service**
 2. **Create a free** `e2-micro` **VM** in GCE
+    - Click **Create instance** button in overview page
+    - Click **Enable Compute Engine API** button
+    - Go back to **Compute Engine > VM instances**
+    - Click **Create instance** button after **Compute Engine API** is enabled
 
-  - Click **Create instance** button in overview page
-  - Click **Enable Compute Engine API** button
-  - Go back to **Compute Engine > VM instances**
-  - Click **Create instance** button after **Compute Engine API** is enabled
+    - **Machine Config section**
+      - Enter your desired **Name** tag (eg. `appName-gce-free-vm`)
+      - Select a **free VM region and zone** (eg. `us-central1` and `us-central1-a`)
+      - Select `E2` for VM **Series** and `e2-micro` for **Machine type** below the **Machine Series** chart
+      - Click **Advanced configurations** button
+      - Make sure **vCPUs to core ratio and Visible core count** are selected to `None`
+      - Lastly, select `OS and storage` section in left side bar
 
-  - **Machine Config section**
-    - Enter your desired **Name** tag (eg. `appName-gce-free-vm`)
-    - Select a **free VM region and zone** (eg. `us-central1` and `us-central1-a`)
-    - Select `E2` for VM **Series** and `e2-micro` for **Machine type** below the **Machine Series** chart
-    - Click **Advanced configurations** button
-    - Make sure **vCPUs to core ratio and Visible core count** are selected to `None`
-    - Lastly, select `OS and storage` section in left side bar
+    - **OS and storage section**
+      - Click **Change** button
+      - Select `Debian` and `Debian 11 (bullseye)` for **OS and version**
+      - Select `Standard persistent disk` for **disk type**
+      - Keep `10 GB` for **Size** by default
+      - Click **Select** button
+      - Lastly, select `Data protection` section in left side bar
 
-  - **OS and storage section**
-    - Click **Change** button
-    - Select `Debian` and `Debian 11 (bullseye)` for **OS and version**
-    - Select `Standard persistent disk` for **disk type**
-    - Keep `10 GB` for **Size** by default
-    - Click **Select** button
-    - Lastly, select `Data protection` section in left side bar
+    - **Data protection section**
+      - Select `No backups` for **Back up your data**
+      - **Disable** all check boxs for **Continuously replicate data for disaster protection**
+      - Lastly, select `Networking` section in left side bar
 
-  - **Data protection section**
-    - Select `No backups` for **Back up your data**
-    - **Disable** all check boxs for **Continuously replicate data for disaster protection**
-    - Lastly, select `Networking` section in left side bar
+    - **Networking section**
+      - Enable `Allow HTTP traffic` and `Allow HTTPS traffic`
+      - Leave the rest of things as default
 
-  - **Networking section**
-    - Enable `Allow HTTP traffic` and `Allow HTTPS traffic`
-    - Leave the rest of things as default
-
-  - Click **Create** button
+    - Click **Create** button
 
 3. **Reserved a free static externalIP** with same region of VM's region and **attach it to VM**
 
-  - Open a anther broswer tab and go to **VPC networks > IP addresses** in GCP
-  - Click **Reserve external static IP address** button
-  - Enter your desired **Name** tag (eg. `appName-static-external-ip`)
-  - Select `Standard` for **Network Service Tier**
-  - Select `IPv4` for **IP version**
-  - Select `Regional` for **Type**
-  - Select same region as the region of your VM (eg. `us-central1`) for **Region**
-  - Select your VM (eg. `appName-gce-free-vm`) for **Attached to**
-  - Click **Reserve** button
+    - Open a anther broswer tab and go to **VPC networks > IP addresses** in GCP
+    - Click **Reserve external static IP address** button
+    - Enter your desired **Name** tag (eg. `appName-static-external-ip`)
+    - Select `Standard` for **Network Service Tier**
+    - Select `IPv4` for **IP version**
+    - Select `Regional` for **Type**
+    - Select same region as the region of your VM (eg. `us-central1`) for **Region**
+    - Select your VM (eg. `appName-gce-free-vm`) for **Attached to**
+    - Click **Reserve** button
 
 ### <a name="deploy-app-gce-vm">⭐ Deploy app in GCE VM</a>
 
