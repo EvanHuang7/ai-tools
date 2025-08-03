@@ -12,7 +12,7 @@
 2. 🛠️ [Tech Stack](#tech-stack)
 3. 🚀 [Features](#features)
 4. 🧩 [Diagram and Screenshots](#diagram-screenshots)
-5. ⚙️ [Installation and Start Project](#installation-start-project)
+5. ⚙️ [Installation & Setups and Start Project](#installation-start-project)
    - ⭐ [Prerequisites](#prerequisites)
    - ⭐ [Clone the Repository](#clone-repo)
    - ⭐ [Set up gcloud CLI](#set-up-gcloud-cli)
@@ -21,7 +21,14 @@
    - ⭐ [Create a PostgreSql DB in Supabase](#create-postgre-db-in-supabase)
    - ⭐ [Create a PostgreSql DB in Neon](#create-postgre-db-in-neon)
    - ⭐ [Create a Redis DB in Upstash](#create-redis-in-upstash)
-   -
+   - ⭐ [Set up GCP Pub/Sub & Google Cloud Storage](#set-up-gcp-pubsub-and-gcs)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
    - ⭐ [Running the Project](#running-project)
 6. ☁️🐳 [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
@@ -119,7 +126,7 @@ TODO: Come back to finish "Screenshots" part
   ![🖼️ Architecture Diagram Screenshot Preview, GCE VM with Docker Swarm case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GCE-VM-with%20Docker-Swarm.png)
   ![🖼️ Screenshots Preview](#)
 
-## <a name="installation-start-project">📦 Installation and ⚙️ Start Project</a>
+## <a name="installation-start-project">📦 Installation & Setups and ⚙️ Start Project</a>
 
 Follow these steps to set up the project locally on your machine.
 
@@ -310,27 +317,60 @@ Note down **Redis Url string** — you'll need it later in the **⭐ Set Up Envi
 - Hover on the **Endpoint** field to view the copy buttons
 - Click **TCP** copy button to note down **Redis Url string**
 
-### <a name="set-up-gcp-services-access">⭐ Set up GCP services access for app</a>
+### <a name="set-up-gcp-pubsub-and-gcs">⭐ Set up GCP Pub/Sub & Google Cloud Storage</a>
 
-🚨🚨🚨 Important: This **⭐ Set up GCP services access for app** is required to be finished for all sections about deploy app in GKE cluster.
+Create **topic and subscription** for GCP Pub/Sub by running
 
-1. Create topic and subscription by running
-
-```
+```bash
 gcloud pubsub topics create my-first-topic
 
 gcloud pubsub subscriptions create nodejs-subscription --topic=my-first-topic
 ```
 
-2. Authentication for running app in GKE Cluster
+Create **Google Cloud Storage bucket** and add **public Read access** to this bucket
+
+- Go to GCP Google Cloud Storage Service
+- Create a Google Cloud Storage bucket (eg. `ai-tools-gcs-bucket`)
+- Click **the new created bucket > "Permissions" tab > "Grant access" button**
+- Enter `allUsers` for **New principals** field and select `Storage Object Viewer` for **Role** field
+- Click **Save** button
+
+### <a name="get-gemini-api-key">⭐ Get Gemini API Key</a>
+
+2. Get `GOOGLE_API_KEY` env value
+
+🚨 Important: To use `veo-2.0-generate-001` AI model to generate a AI video with this API key, you need enable Billing for the `GOOGLE_API_KEY` of GCP project.
+
+- If you are using **GCP new user first 3 months 300$ credit**, you are already has Billing enabled for the default GCP project
+
+  - Go to **APIs & Services** in GCP
+  - Click **Library** tab in side bar and search `gemini api`
+  - Enable `gemini api` access for all of 3 search results
+  - Click **Credentials** tab in side bar
+  - Click **"Create Credentials" button > "API key" button**
+  - You can copy the generated result as `GOOGLE_API_KEY`.
+
+- If you don't have this new user free credit anymore, you have to go to **Google AI Studio**, enable the Billing for **Gemini API** GCP project and generate a `GOOGLE_API_KEY` in **Google AI Studio**.
+
+🚨🚨 Important: The video generation via Veo2 costs around 💸💸 **0.35-0.50$ per second**💸💸, so make sure specify the **IP address restrictions** of this ** API Key restrictions** to only allow your `GKE Cluster external public IP` and `GCP VM public IP` to access it.
+
+### <a name="set-up-gcp-services-authorization">⭐ Set up GCP services authorization for app (Required for Running App locally or GKE K8S Cluster App Deployment or GCE VM App Deployment)</a>
+
+Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization for app.
+
+**🚨 Important Note**: This **⭐ Set up GCP services authorization for app** subsection is required to be finished after deploying app into GKE K8S Cluster or into GCE VM with Docker in all app deployment sections.
+
+👉 Authentication for running app in GKE Cluster (Finish it after deploying app in GKE cluster)
 
 - Create Google IAM service account (GSA) for app first, then bind and annotate default Kubernate service account (KSA) with GSA
 
-```
-task general:01-create-GSA
-task general:02-bind-KSA-with-GSA
-task general:03-annotate-KSA-with-GSA
-```
+  ```bash
+  task general:01-create-GSA
+
+  task general:02-bind-KSA-with-GSA
+
+  task general:03-annotate-KSA-with-GSA
+  ```
 
 - Attach GCP Pub/Sub permissions to GSA
 
@@ -344,7 +384,7 @@ task pubsubAccess:attach-pubsub-permissions-to-GSA
 task gcsAccess:attach-gcs-permissions-to-GSA
 ```
 
-3. Authentication for running app in GCP VM case
+👉 Authentication for running app in GCP VM case
 
 - Find the GCP VM's GSA
 
@@ -374,9 +414,9 @@ task gceVmGcsAccess:attach-gcs-permissions-to-GCE-VM-GSA
   - Click **Save** button
   - Start GCP VM again
 
-4. Authentication for running app in local machine
+👉 Authentication for running app in local machine
 
-- Download a service account key for local use
+- Download a service account key directly for local use **IF** you already finished the **Authentication for running app in GKE Cluster** step
 
 ```
 task general:download-gsa-key-locally
@@ -465,37 +505,6 @@ GOOGLE_APPLICATION_CREDENTIALS=/Users/evan/Downloads/ai-tools-gsa-local-key.json
 - Create a **VAPI** account.
 
 - Copy the `public Key` from the **Vapi API Keys** tab of your **VAPI account dashboard**.
-
-### <a name="set-up-gcs-and-get-gemini-api-key">⭐ Set up Google Cloud Storage and Get Gemini API Key</a>
-
-1. Create Google Cloud Storage bucket and add public Read access to this bucket
-
-- Go to GCP Google Cloud Storage
-
-- Create a Google Cloud Storage bucket (eg. `ai-tools-gcs-bucket`)
-
-- Click **the new created bucket > "Permissions" tab > "Grant access" button**
-
-- Enter `allUsers` for **New principals** field and select `Storage Object Viewer` for **Role** field
-
-- Click **Save** button
-
-2. Get `GOOGLE_API_KEY` env value
-
-🚨 Important: To use `veo-2.0-generate-001` AI model to generate a AI video with this API key, you need enable Billing for the `GOOGLE_API_KEY` of GCP project.
-
-- If you are using **GCP new user first 3 months 300$ credit**, you are already has Billing enabled for the default GCP project
-
-  - Go to **APIs & Services** in GCP
-  - Click **Library** tab in side bar and search `gemini api`
-  - Enable `gemini api` access for all of 3 search results
-  - Click **Credentials** tab in side bar
-  - Click **"Create Credentials" button > "API key" button**
-  - You can copy the generated result as `GOOGLE_API_KEY`.
-
-- If you don't have this new user free credit anymore, you have to go to **Google AI Studio**, enable the Billing for **Gemini API** GCP project and generate a `GOOGLE_API_KEY` in **Google AI Studio**.
-
-🚨🚨 Important: The video generation via Veo2 costs around 💸💸 **0.35-0.50$ per second**💸💸, so make sure specify the **IP address restrictions** of this ** API Key restrictions** to only allow your `GKE Cluster external public IP` and `GCP VM public IP` to access it.
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
@@ -646,7 +655,7 @@ docker ps
 
 5. Deploy app by running app containers with docker-compose file (Use minimal VM CPU and memory)
 
-🚨🚨🚨 Important: The **⭐ Set up GCP services access for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
+🚨🚨🚨 Important: The **⭐ Set up GCP services authorization for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
 
 - Create a folder
 
@@ -1267,7 +1276,7 @@ task external-secrets:07-get-secret-value
   kubectl get svc
   ```
 
-🚨🚨🚨 Important: The **⭐ Set up GCP services access for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
+🚨🚨🚨 Important: The **⭐ Set up GCP services authorization for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
 
 6. View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer by running:
 
@@ -1372,7 +1381,7 @@ task kluctl:render-production
 task kluctl:deploy-production
 ```
 
-🚨🚨🚨 Important: The **⭐ Set up GCP services access for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
+🚨🚨🚨 Important: The **⭐ Set up GCP services authorization for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
 
 3. Now, you have your app configed with `Staging` and `Prod` environment specfication seperatly running in two K8s cluster.
 
@@ -1462,7 +1471,7 @@ We will use `GitHub actions` for Continuous Integrataion and `Kluctl GitOps` for
 
 - Deploy app to **Staing cluster** by deploying `Kluctl GitOps` to the fresh Staing cluster.
   - 🚨 Important: Remember to config **GCP service access** for app after deploying app in GKE Staging Cluster, and create a **DNS record** for new traefik load balancer `external IP` and `domain`.
-  - If you **already have a GSA** for this app with required GCP service access, you only need to **bind default KSA in namespace with GSA** and **annotate default KSA in namespace with GSA**. Otherwise, you need to go through all steps in **⭐ Set up GCP services access for app** section.
+  - If you **already have a GSA** for this app with required GCP service access, you only need to **bind default KSA in namespace with GSA** and **annotate default KSA in namespace with GSA**. Otherwise, you need to go through all steps in **⭐ Set up GCP services authorization for app** section.
 
   ```
   task general:02-bind-KSA-with-GSA
@@ -1511,7 +1520,7 @@ task cicd:kluctl-gitops:port-forward-webui
     - After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
     - So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
 
-🚨🚨🚨 Important: The **⭐ Set up GCP services access for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
+🚨🚨🚨 Important: The **⭐ Set up GCP services authorization for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
 
 - View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer **if you don't use a hostname** for `IngressRoutes` in `kluctl` by running:
 
