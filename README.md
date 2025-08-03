@@ -599,7 +599,7 @@ Open [http://localhost:5173/](http://localhost:5173/) in your browser to view th
 
 ## <a name="deploy-app-in-gce-with-docker-compose">☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳</a>
 
-**Docker Compose** runs containers locally without using Docker Swarm services (the orchestrator layer).
+**Docker Compose** runs containers locally without using Docker Swarm services (the orchestrator layer). Also, Docker Compose use minimal VM CPU and memory.
 
 **📌 Note**: If your VM has enough CPU and Memory, it would be best to deploy this microservices project as K8s cluster using k3s or as docker containers using Docker swarm, so that we can taking advantanges of these k8s cluster orchestrator or container orchestrator. The **Pros to use orchestrator instead of Docker compose**:
 
@@ -608,6 +608,8 @@ Open [http://localhost:5173/](http://localhost:5173/) in your browser to view th
 - Provide a way to **handle sensative credentials or secrets**
 
 Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
+
+---
 
 ### <a name="set-up-gce-vm">⭐ Set up GCE VM</a>
 
@@ -660,51 +662,56 @@ Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 
 ### <a name="deploy-app-gce-vm">⭐ Deploy app in GCE VM</a>
 
-➡️ Install required dependencies in VM
+TODO: test it
+**🚨 Important Note**: The CLI to **update user permissions for accessing Docker** must be run for the user connected VM to access Docker whenever the **VM reboots and Docker auto-restarts**.
 
-- Go back to **Compute Engine > VM instances** and the VM instancee we just created after VM is created
+➡️ **Install required dependencies in VM**
+
+- Go to **Google Compute Engine > VM instances**
+- Select the VM instancee just created
 - Click **SSH** to connect VM
-- Installs `Docker engine` by running
+- Installs **Docker engine** by running
 
-```
+```bash
 curl https://get.docker.com/ | sh
 ```
 
-- Update user permission to access Docker
+- **Update user permissions for accessing Docker**
 
-TODO: test it
-🚨🚨 Important Note: This cli is required to be ran again whenever the VM reboots and Docker restart.
-
-```
+```bash
 sudo chown $USER /var/run/docker.sock
 ```
 
-- Check Docker access
+- Verify user's Docker access
 
-```
+```bash
 docker ps
 ```
 
-➡️ Deploy app by running app containers with docker-compose file (Use minimal VM CPU and memory)
-
-🚨🚨🚨 Important: The **⭐ Set up GCP services authorization for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
+➡️ **Deploy app** by running app containers with `docker-compose.yaml` file
 
 - Create a folder
 
-```
+```bash
 mkdir dockerComposeFolder
+
 cd dockerComposeFolder
 ```
 
-- Add `docker-compose.yml` file to folder by copying the file content in local `docker-compose.yml` file, run below command line and paste content and press `control + X`, `Y`, and `Enter` keys
+- Add `docker-compose.yml` file to folder 
+  - Copy the file content in local `docker-compose.yml` file, 
+  - Run below CLI 
+  - Paste the copied file content 
+  - Press `control + X`, `Y`, and `Enter` keys in keyboard
 
-```
+```bash
 nano docker-compose.yml
 ```
 
-- Run all app in containers with `docker-compose.yml` by running (second cli would run containers in the background)
+- Run all app in containers with `docker-compose.yml` by running 
+  - **📌 Note**: 2nd CLI would run containers in the background
 
-```
+```bash
 docker compose -f docker-compose.yml up
 
 OR
@@ -712,44 +719,56 @@ OR
 docker compose -f docker-compose.yml up -d
 ```
 
-- 🎉 Now, You can access your app with your VM external IP address (eg. `http://35.209.142.39/`)
+- Set up **Authorization for running app in GCP VM** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
-  - ⚠️ Note: If you still can not access it with your VM external IP, you can try to access your app in 8080 port (eg. `http://35.209.142.39:8080`). If you still can not access it after the change, you can change the `ports` of `frontend` to be `- 80:8080` in `docker-compose.yml` file and redeploy the app containers to try again
+- 🎉 Now, You can access your app with your **VM external IP address** (eg. `http://35.209.142.39/`)
+  - **📌 Note**: If you can not access it with your VM external IP, you can try to access your app in **8080 port** (eg. `http://35.209.142.39:8080`). If you still can not access it after the change, you can **expose container’s port 8080 on the VM’s default port 80** by changing the `ports` of `frontend` to be `- 80:8080` in `docker-compose.yml` file and redeploy the app containers to try again
 
-- 📌 Useful Docker clis to, turn down the containers, list running containers, list all containers (running + stopped), list Docker images on system, check details on a specific container, check logs on a specific container
+- **📌 Useful Docker CLIs**: 
+  - turn down the containers 
+  - list running containers 
+  - list all containers (running + stopped)
+  - list Docker images on system
+  - check details on a specific container
+  - check logs on a specific container
 
-```
+```bash
 docker compose -f docker-compose.yml down
+
 docker ps
+
 docker ps -a
+
 docker images
+
 docker inspect <container_id_or_name>
+
 docker logs <container_id_or_name>
 ```
 
 TODO: Test it
 
-➡️ 🚨 Important: We need to set up Docker engine and app containers would auto-restart if **VM reboots**
+➡️ 🚨 Important: We need to set up **Docker engine and app containers would auto-restart** if **VM reboots**
 
-- Set the Docker daemon start automatically at VM reboots.
+- Set the **Docker daemon restart automatically at VM reboots**.
+  - 1st CLI is to **turn on the existing systemd service file** of `Docker`, so that `Docker` auto-restart when VM or system reboots. (systemd service file of `Docker` is created when installing `Docker`, but it is not enabled automatically.)
+  - 2nd CLI is to verify the `Docker` systemd service is active or not.
 
-  - 1st cli is to turn on the existing systemd service file of `Docker`, so that `Docker` auto-restart when VM or system reboots. (systemd service file of `Docker` is created when installing `Docker`, but it is not enabled automatically.)
-  - 2nd cli is to verify the `Docker` systemd service is active or not.
-
-```
+```bash
 sudo systemctl enable docker
+
 systemctl is-enabled docker
 ```
 
-- Also, Making sure that we are using `restart: unless-stopped` for all app contaiers in `docker-compose.yml` file, which is what we already did. This resart policy set Docker to
+- Make sure that we are using `restart: unless-stopped` for all app contaiers in `docker-compose.yml` file, which is what we already did. **This resart policy set Docker to**:
+  - **Restart the container automatically if it crashes**
+  - Also **restart it on VM reboot**
 
-  - Restart the container automatically if it crashes
-  - Also restart it on VM reboot
+- **Test restart by simulating a VM reboot** and check the container status after the VM boots
 
-- Test restart by simulating a VM reboot and check the container status after the VM boots
-
-```
+```bash
 sudo reboot
+
 docker ps
 ```
 
