@@ -32,6 +32,11 @@
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
    - ⭐ [Running the Project](#running-project)
 6. ☁️🐳 [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
+  - ⭐ [Set up GCE VM](#set-up-gce-vm)
+  - ⭐ [](#)
+  - ⭐ [](#)
+  - ⭐ [](#)
+  - ⭐ [](#)
 7. ☁️🐳🐳 [GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳](#deploy-app-in-gce-with-docker-swarm)
 8. ☁️☸️ [GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
 9. 🔁☸️ [GKE (GCP): Deploy app with auto CI & CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
@@ -594,7 +599,7 @@ Open [http://localhost:5173/](http://localhost:5173/) in your browser to view th
 
 ## <a name="deploy-app-in-gce-with-docker-compose">☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳</a>
 
-**Docker Compose** runs containers locally without using Docker Swarm services (the orchestrator layer). Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
+**Docker Compose** runs containers locally without using Docker Swarm services (the orchestrator layer).
 
 **📌 Note**: If your VM has enough CPU and Memory, it would be best to deploy this microservices project as K8s cluster using k3s or as docker containers using Docker swarm, so that we can taking advantanges of these k8s cluster orchestrator or container orchestrator. The **Pros to use orchestrator instead of Docker compose**:
 
@@ -602,57 +607,58 @@ Open [http://localhost:5173/](http://localhost:5173/) in your browser to view th
 - Allow us to **run containers in differeent hosts/nodes/VMs** for better scalabity
 - Provide a way to **handle sensative credentials or secrets**
 
+Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
+
 ### <a name="set-up-gce-vm">⭐ Set up GCE VM</a>
 
-1. Go to GCP Compute Engine page
-2. Create a free `e2-micro` VM in GCE
+1. Go to **GCP Compute Engine service**
+2. **Create a free** `e2-micro` **VM** in GCE
 
-- Click **Create instance** button in overview page
-- Click **Enable Compute Engine API** button
-- Go back to **Compute Engine > VM instances** and Click **Create instance** button after **Compute Engine API** is enabled
+  - Click **Create instance** button in overview page
+  - Click **Enable Compute Engine API** button
+  - Go back to **Compute Engine > VM instances**
+  - Click **Create instance** button after **Compute Engine API** is enabled
 
-- Machine Config section
+  - **Machine Config section**
+    - Enter your desired **Name** tag (eg. `appName-gce-free-vm`)
+    - Select a **free VM region and zone** (eg. `us-central1` and `us-central1-a`)
+    - Select `E2` for VM **Series** and `e2-micro` for **Machine type** below the **Machine Series** chart
+    - Click **Advanced configurations** button
+    - Make sure **vCPUs to core ratio and Visible core count** are selected to `None`
+    - Lastly, select `OS and storage` section in left side bar
 
-  - Enter your desired **Name** tag (eg. `appName-gce-free-vm`)
-  - Select a **free VM region and zone** (eg. `us-central1` and `us-central1-a`)
-  - Select `E2` for VM **Series** and `e2-micro` for **Machine type** below the **Machine Series** chart
-  - Click **Advanced configurations** button
-  - Make sure **vCPUs to core ratio and Visible core count** are selected to `None`
-  - Then select `OS and storage` section in left side bar
+  - **OS and storage section**
+    - Click **Change** button
+    - Select `Debian` and `Debian 11 (bullseye)` for **OS and version**
+    - Select `Standard persistent disk` for **disk type**
+    - Keep `10 GB` for **Size** by default
+    - Click **Select** button
+    - Lastly, select `Data protection` section in left side bar
 
-- OS and storage section
+  - **Data protection section**
+    - Select `No backups` for **Back up your data**
+    - **Disable** all check boxs for **Continuously replicate data for disaster protection**
+    - Lastly, select `Networking` section in left side bar
 
-  - Click **Change** button
-  - Select `Debian` and `Debian 11 (bullseye)` for **OS and version**
-  - Select `Standard persistent disk` for **disk type**
-  - Keep `10 GB` for **Size** by default
-  - Click **Select** button
-  - Then select `Data protection` section in left side bar
+  - **Networking section**
+    - Enable `Allow HTTP traffic` and `Allow HTTPS traffic`
+    - Leave the rest of things as default
 
-- Data protection section
+  - Click **Create** button
 
-  - Select `No backups` for **Back up your data**
-  - **Disable** all check boxs for **Continuously replicate data for disaster protection**
-  - Then select `Networking` section in left side bar
+3. **Reserved a free static externalIP** with same region of VM's region and **attach it to VM**
 
-- Networking section
+  - Open a anther broswer tab and go to **VPC networks > IP addresses** in GCP
+  - Click **Reserve external static IP address** button
+  - Enter your desired **Name** tag (eg. `appName-static-external-ip`)
+  - Select `Standard` for **Network Service Tier**
+  - Select `IPv4` for **IP version**
+  - Select `Regional` for **Type**
+  - Select same region as the region of your VM (eg. `us-central1`) for **Region**
+  - Select your VM (eg. `appName-gce-free-vm`) for **Attached to**
+  - Click **Reserve** button
 
-  - Enable `Allow HTTP traffic` and `Allow HTTPS traffic`
-  - Leave the rest of things as default
-
-- Click **Create** button
-
-3. Reserved a free static externalIP with same region of VM's region and attch it to VM
-
-- Open a anther broswer tab and go to **VPC networks > IP addresses** in GCP
-- Click **Reserve external static IP address** button
-- Enter your desired **Name** tag (eg. `appName-static-external-ip`)
-- Select `Standard` for **Network Service Tier**
-- Select `IPv4` for **IP version**
-- Select `Regional` for **Type**
-- Select same region as the region of your VM (eg. `us-central1`) for **Region**
-- Select your VM (eg. `appName-gce-free-vm`) for **Attached to**
-- Click **Reserve** button
+### <a name="deploy-app-gce-vm">⭐ Deploy app in GCE VM</a>
 
 4. Install required dependencies in VM
 
@@ -667,7 +673,7 @@ curl https://get.docker.com/ | sh
 - Update user permission to access Docker
 
 TODO: test it
-🚨 Important: This cli is required to be ran again whenever the VM reboots and Docker restart.
+🚨🚨 Important Note: This cli is required to be ran again whenever the VM reboots and Docker restart.
 
 ```
 sudo chown $USER /var/run/docker.sock
@@ -746,6 +752,8 @@ systemctl is-enabled docker
 sudo reboot
 docker ps
 ```
+
+### <a name="deploy-domain-and-https">⭐ Set up domain & https</a>
 
 7. Set up a Domain
 
