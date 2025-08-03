@@ -722,8 +722,8 @@ docker compose -f docker-compose.yml up -d
 - Set up **Authorization for running app in GCP VM** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
 - 🎉 Now, You can access your app with your **VM external IP address** (eg. `http://35.209.142.39/`)
-- > **📌 Note**: If you can not access it with your VM external IP, you can try to access your app in **8080 port** (eg. `http://35.209.142.39:8080`).Because the `frontend` container’s port 8080 may be exposed on the VM’s port 8080. 
-- > Alternatively, you can change to **expose container’s port 8080 on the VM’s default port 80** by changing the `ports` of `frontend` to be `- 80:8080` in `docker-compose.yml` file and redeploy the app containers to try again.
+  > **📌 Note**: If you can not access it with your VM external IP, you can try to access your app in **8080 port** (eg. `http://35.209.142.39:8080`).Because the `frontend` container’s port 8080 may be exposed on the VM’s port 8080. 
+  > Alternatively, you can change to **expose container’s port 8080 on the VM’s default port 80** by changing the `ports` of `frontend` to be `- 80:8080` in `docker-compose.yml` file and redeploy the app containers to try again.
 
 - **📌 Useful Docker CLIs**: 
   - turn down the containers 
