@@ -33,7 +33,7 @@
    - ⭐ [Running the Project](#running-project)
 6. ☁️🐳 [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
   - ⭐ [Set up GCE VM](#set-up-gce-vm)
-  - ⭐ [](#)
+  - ⭐ [Deploy app in GCE VM](#deploy-app-gce-vm)
   - ⭐ [](#)
   - ⭐ [](#)
   - ⭐ [](#)
@@ -660,7 +660,7 @@ Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 
 ### <a name="deploy-app-gce-vm">⭐ Deploy app in GCE VM</a>
 
-4. Install required dependencies in VM
+➡️ Install required dependencies in VM
 
 - Go back to **Compute Engine > VM instances** and the VM instancee we just created after VM is created
 - Click **SSH** to connect VM
@@ -685,7 +685,7 @@ sudo chown $USER /var/run/docker.sock
 docker ps
 ```
 
-5. Deploy app by running app containers with docker-compose file (Use minimal VM CPU and memory)
+➡️ Deploy app by running app containers with docker-compose file (Use minimal VM CPU and memory)
 
 🚨🚨🚨 Important: The **⭐ Set up GCP services authorization for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
 
@@ -729,7 +729,7 @@ docker logs <container_id_or_name>
 
 TODO: Test it
 
-6. 🚨 Important: We need to set up Docker engine and app containers would auto-restart if **VM reboots**
+➡️ 🚨 Important: We need to set up Docker engine and app containers would auto-restart if **VM reboots**
 
 - Set the Docker daemon start automatically at VM reboots.
 
