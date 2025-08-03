@@ -451,13 +451,11 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 ### <a name="set-up-imagekit">⭐ Set up Imagekit.io</a>
 
 - Create a **Imagekit.io** account.
-
 - Note down the `privte key` and `imagekit id` in your **Imagekit.io** account as `IMAGEKIT_PRIVATE_KEY` and `IMAGEKIT_ID` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 ### <a name="set-up-vapi">⭐ Set up VAPI</a>
 
 - Create a **VAPI** account.
-
 - Note down the `public Key` from the **Vapi API Keys** tab in your **VAPI account dashboard** as `VITE_VAPI_PUBLIC_KEY` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 **⚠️ Warning**: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
@@ -487,9 +485,7 @@ Set up **payment in Clerk Billing**
 ### <a name="set-up-rabbitmq">⭐ Set up RabbitMQ in CloudAMQP</a>
 
 - Create a **CloudAMQP RabbitMQ** account with a free default cluster created
-
 - Create a free **RabbitMQ Little Lemur** instance
-
 - Note down the `AMQP URL` (eg. `amqps://user:pass@host.rmq.cloudamqp.com/vhost`) as `RABBITMQ_URL` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
 
 ### <a name="set-up-kafka">⭐ Set up Kafka in Redpanda Cloud (DEPRECATED)</a>
@@ -497,17 +493,11 @@ Set up **payment in Clerk Billing**
 **⚠️⚠️ DEPRECATED Note ⚠️⚠️**: This step is DEPRECATED because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between **Node.js service and Python service**.
 
 - Create a **Redpanda Cloud** account with a free default cluster created
-
 - Click **Kafka API** button in Cluster Overview page
-
 - Note down the value of `Bootstrap server URL` as `KAFKA_BOOTSTRAP_SERVER` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
-
-- Click **Manage credentials** button and create a user with userName (eg. `ai-tools-redpanda-user`) and password
-
+- Click **Manage credentials** button and create a user with userName (eg. `ai-tools-redpanda-user`) and password.
 - Note down the value of `password` as `KAFKA_SASL_USER_PASSWORD` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
-
 - Select **ACLs** tab and click the new created user (eg. `ai-tools-redpanda-user`)
-
 - Click **Allow all operations** and **Save** buttons
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
