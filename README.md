@@ -232,9 +232,12 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
 ### <a name="create-mongodb-cluster">⭐ Create a Cluster and DB in MongoDB</a>
 
-1. Create a free cluster by selecting a `free plan` and `Drivers` connection method under a project in MongoDB.
-2. Copy your cluster **connection string**, and add a database name string (eg. `ai_tools_db`) before `?retryWrites` string in the connection string.
-3. Note down the updated cluster **connection string** as **MongoDB Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step. (Feel free to follow any MongoDB setup tutorial on YouTube to complete this step.)
+Create a cluster, set up database name in MongoDB and note down **MongoDB Url string** — you'll need it later in the **⭐ Set Up Environment Variables** step.
+
+- Create a free cluster by selecting a `free plan` and `Drivers` connection method under a project in MongoDB
+- Copy your cluster **connection string**
+- Add a **database name string** (eg. `ai_tools_db`) before `?retryWrites` string in the cluster **connection string**. Otherwise, the database will use `test` as default db name
+- Note down the updated cluster **connection string** as **MongoDB Url string**
 
 ⚠️ **Warning**: Make sure set up public access for your MongoDB proejct
 
@@ -264,6 +267,10 @@ Note down **Supabase Database Url string** — you'll need it later in the **⭐
 - Note down the updated **Supabase Database Url string**
 
 ### <a name="create-postgre-db-in-neon">⭐ Create a PostgreSql DB in Neon</a>
+
+Create a PostgreSql database in Neon
+
+- 
 
 ### <a name="create-redis-in-upstash">⭐ Create a Redis DB in Upstash</a>
 
