@@ -27,6 +27,7 @@
    - ⭐ [Set up Imagekit.io](#set-up-imagekit)
    - ⭐ [Set up VAPI](#set-up-vapi)
    - ⭐ [Set up Clerk & Clerk Billing](#set-up-clerk)
+   - ⭐ [Set up RabbitMQ in CloudAMQP](#set-up-rabbitmq)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
@@ -483,6 +484,14 @@ Set up **payment in Clerk Billing**
 - Add more plans by following same steps again
 - Go to **Configure tab > Billing tab > Settings tab > Enable Billing button** after finishing adding all plans and corresponding features.
 
+### <a name="set-up-rabbitmq">⭐ Set up RabbitMQ in CloudAMQP</a>
+
+- Create a **CloudAMQP RabbitMQ** account with a free default cluster created
+
+- Create a free **RabbitMQ Little Lemur** instance
+
+- Note down the `AMQP URL` (eg. `amqps://user:pass@host.rmq.cloudamqp.com/vhost`) as `RABBITMQ_URL` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
+
 ### <a name="set-up-redpanda-cloud">⭐ Set up Redpanda Cloud (Deprecated)</a>
 
 ⚠️ Note: This step is deprecated because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between Node.js service and Python service.
@@ -501,13 +510,7 @@ Set up **payment in Clerk Billing**
 
 - Click **Allow all operations** and **Save** buttons
 
-### <a name="set-up-rabbitmq">⭐ Set up CloudAMQP RabbitMQ</a>
 
-- Create a **CloudAMQP RabbitMQ** account with a free default cluster created
-
-- Create a free **RabbitMQ Little Lemur** instance
-
-- Copy the `AMQP URL` (eg. `amqps://user:pass@host.rmq.cloudamqp.com/vhost`)
 
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
