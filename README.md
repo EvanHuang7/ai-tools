@@ -159,7 +159,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
 **🚨 Important Error**:
 
-> If you don't finish 1 of options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App as K8s Cluster** section.
+> If you don't finish any of the options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App as K8s Cluster** section.
 
 **💡 Reason of Error**:
 
@@ -190,7 +190,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
 - Open 1st terminal in project and install devbox packages by running:
 
-  - 📌 Note: It may take a bit long to install all devbox packages if you run this cli first time.
+  > **📌 Note**: It may take a bit long to install all devbox packages if you run this cli first time.
 
   ```bash
   devbox install
@@ -259,7 +259,7 @@ Create a cluster, set up database name in MongoDB and note down **MongoDB Url st
 - Add a **database name string** (eg. `ai_tools_db`) before `?retryWrites` string in the cluster **connection string**. Otherwise, the database will use `test` as default db name
 - Note down the updated cluster **connection string** as `MONGODB_URL` env variable — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
-⚠️ **Warning**: Make sure set up public access for your MongoDB proejct
+Set up public access for your MongoDB proejct
 
 - Go to **SECURITY > Network Access** tab
 - Click **ADD IP ADDRESS** button
@@ -348,7 +348,9 @@ Create **Google Cloud Storage bucket** and add **public Read access** to this bu
 
 Get Gemini API Key (`GOOGLE_API_KEY` env) for Video Generation feature.
 
-**🚨 Important Note**: To use `veo-2.0-generate-001` AI model to generate a AI video with this API key, you must enable Billing for the `GOOGLE_API_KEY` in your GCP project. Also, the video generation via Veo2 costs around 💸💸 **0.35-0.50$ per second**💸💸
+**🚨 Important Note**: 
+
+> To use `veo-2.0-generate-001` AI model to generate a AI video with this API key, you must enable Billing for the `GOOGLE_API_KEY` in your GCP project. Also, the video generation via Veo2 costs around 💸💸 **0.35-0.50$ per second**💸💸
 
 👉 If you are using **GCP new user first 3 months 300$ credit**, you are already has Billing enabled for the default GCP project
 
@@ -365,11 +367,15 @@ Get Gemini API Key (`GOOGLE_API_KEY` env) for Video Generation feature.
 
 👉 If you **don't have GCP new user free credit anymore**, you have to go to **Google AI Studio**, enable the Billing for **Gemini API** GCP project and generate a `GOOGLE_API_KEY` in **Google AI Studio**.
 
-### <a name="set-up-gcp-services-authorization">⭐ Set up GCP services authorization for app (Required for Running App locally or GKE K8S Cluster App Deployment or GCE VM App Deployment)</a>
+---
+
+### <a name="set-up-gcp-services-authorization">⭐ Set up GCP services authorization for app</a>
 
 Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization for app.
 
-**🚨 Important Note**: This **⭐ Set up GCP services authorization for app** subsection is required to be finished **WHENEVER** deployed app into GKE K8S Cluster or into GCE VM with Docker in all app deployment sections.
+**🚨 Important Note**: 
+
+> This **⭐ Set up GCP services authorization for app** subsection is required to be finished **WHENEVER** deployed app into GKE K8S Cluster or into GCE VM with Docker in all app deployment sections.
 
 **👉 Authorization for running app in GKE Cluster** - Finish it after deploying app in GKE cluster
 
@@ -380,7 +386,8 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
   ```
 
 - **Bind and annotate default Kubernate service account (KSA) with GSA**
-  - **⚠️ Warning**: If a GSA with the correct GCP service permissions already exists — for example, after deleting a GKE K8S cluster and creating a new one — you only need to run these two CLIs.
+
+  > **⚠️ Warning Note**: If a GSA with the correct GCP service permissions already exists — for example, after deleting a GKE K8S cluster and creating a new one — you only need to run these two CLIs.
 
   ```bash
   task general:02-bind-KSA-with-GSA
@@ -456,6 +463,8 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 
 - Note down the absolute file path as `GOOGLE_APPLICATION_CREDENTIALS` env varabile — you'll need it later in the **⭐ Set Up Environment Variables** step.
 
+---
+
 ### <a name="set-up-imagekit">⭐ Set up Imagekit.io</a>
 
 - Create a **Imagekit.io** account.
@@ -466,7 +475,9 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 - Create a **VAPI** account.
 - Note down the `public Key` from the **Vapi API Keys** tab in your **VAPI account dashboard** as `VITE_VAPI_PUBLIC_KEY` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
 
-**⚠️ Warning**: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
+**⚠️ Warning Note**:
+
+> Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
 
 ### <a name="set-up-clerk">⭐ Set up Clerk & Clerk Billing</a>
 
@@ -498,7 +509,9 @@ Set up **payment in Clerk Billing**
 
 ### <a name="set-up-kafka">⭐ Set up Kafka in Redpanda Cloud (DEPRECATED)</a>
 
-**⚠️⚠️ DEPRECATED NOTE ⚠️⚠️**: This step is DEPRECATED because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between **Node.js service and Python service**.
+**⚠️⚠️ DEPRECATED NOTE ⚠️⚠️**: 
+
+> This step is DEPRECATED because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between **Node.js service and Python service**.
 
 - Create a **Redpanda Cloud** account with a free default cluster created
 - Click **Kafka API** button in Cluster Overview page
@@ -519,7 +532,7 @@ VITE_VAPI_PUBLIC_KEY=
 
 Create a `.env` file under **node-backend** folder of your project and add the following content:
 
-- **⚠️ Warning Note**: The `DATABASE_URL` of **node-backend** is from **Supabase**. Also, the `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
+> **⚠️ Warning Note**: The `DATABASE_URL` of **node-backend** is from **Supabase**. Also, the `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
 
 ```env
 DATABASE_URL=
@@ -537,7 +550,7 @@ KAFKA_SASL_USER_PASSWORD=
 
 Create a `.env` file under **go-backend** folder of your project and add the following content:
 
-- **⚠️ Warning Note**: The `DATABASE_URL` of **go-backend** is from **Neon**.
+> **⚠️ Warning Note**: The `DATABASE_URL` of **go-backend** is from **Neon**.
 
 ```env
 DATABASE_URL=
@@ -553,7 +566,8 @@ CLERK_SECRET_KEY=
 ```
 
 Create a `.env` file under **python-backend** folder of your project and add the following content:
-- **⚠️ Warning Note**: The `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
+
+> **⚠️ Warning Note**: The `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
 
 ```env
 REDIS_URL=
@@ -599,21 +613,21 @@ air
 flask run --reload --port=8088
 ```
 
-Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
+🎉 Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
+
+---
 
 ## <a name="deploy-app-in-gce-with-docker-compose">☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳</a>
 
 **Docker Compose** runs containers locally without using Docker Swarm services (the orchestrator layer). Also, Docker Compose use minimal VM CPU and memory.
 
-**📌 Note**: If your VM has enough CPU and Memory, it would be best to deploy this microservices project as K8s cluster using k3s or as docker containers using Docker swarm, so that we can taking advantanges of these k8s cluster orchestrator or container orchestrator. The **Pros to use orchestrator instead of Docker compose**:
+**📌 If your VM has enough CPU and Memory**, it would be best to deploy this microservices project as **K8s cluster using k3s** or as **docker containers using Docker swarm**, so that we can taking **advantanges** of these **k8s cluster orchestrator or container orchestrator**. The **Pros to use orchestrator instead of Docker compose**:
 
 - Allow us to **deploy new app version without downtime** and **easily roll back the version**
 - Allow us to **run containers in differeent hosts/nodes/VMs** for better scalabity
 - Provide a way to **handle sensative credentials or secrets**
 
 Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
-
----
 
 ### <a name="set-up-gce-vm">⭐ Set up GCE VM</a>
 
@@ -667,7 +681,9 @@ Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 ### <a name="deploy-app-gce-vm">⭐ Deploy app in GCE VM</a>
 
 TODO: test it
-> **🚨 Important Note**: The CLI to **update user permissions for accessing Docker** must be run for the user connected VM to access Docker whenever the **VM reboots and Docker auto-restarts**.
+**🚨 Important Note**:
+
+> The CLI to **update user permissions for accessing Docker** must be run for the user connected VM to access Docker whenever the **VM reboots and Docker auto-restarts**.
 
 ➡️ **Install required dependencies in VM**
 
@@ -676,31 +692,31 @@ TODO: test it
 - Click **SSH** to connect VM
 - Installs **Docker engine** by running
 
-```bash
-curl https://get.docker.com/ | sh
-```
+  ```bash
+  curl https://get.docker.com/ | sh
+  ```
 
 - **Update user permissions for accessing Docker**
 
-```bash
-sudo chown $USER /var/run/docker.sock
-```
+  ```bash
+  sudo chown $USER /var/run/docker.sock
+  ```
 
 - Verify user's Docker access
 
-```bash
-docker ps
-```
+  ```bash
+  docker ps
+  ```
 
 ➡️ **Deploy app** by running app containers with `docker-compose.yaml` file
 
 - Create a folder
 
-```bash
-mkdir dockerComposeFolder
+  ```bash
+  mkdir dockerComposeFolder
 
-cd dockerComposeFolder
-```
+  cd dockerComposeFolder
+  ```
 
 - Add `docker-compose.yml` file to folder 
   - Copy the file content in local `docker-compose.yml` file, 
@@ -708,20 +724,21 @@ cd dockerComposeFolder
   - Paste the copied file content 
   - Press `control + X`, `Y`, and `Enter` keys in keyboard
 
-```bash
-nano docker-compose.yml
-```
+  ```bash
+  nano docker-compose.yml
+  ```
 
-- Run all app in containers with `docker-compose.yml` by running 
+- Run all app in containers with `docker-compose.yml` by running:
+
   > **📌 Note**: 2nd CLI would run containers in the background
 
-```bash
-docker compose -f docker-compose.yml up
+  ```bash
+  docker compose -f docker-compose.yml up
 
-OR
+  OR
 
-docker compose -f docker-compose.yml up -d
-```
+  docker compose -f docker-compose.yml up -d
+  ```
 
 - Set up **Authorization for running app in GCP VM** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
@@ -738,33 +755,33 @@ docker compose -f docker-compose.yml up -d
   - check details on a specific container
   - check logs on a specific container
 
-```bash
-docker compose -f docker-compose.yml down
+  ```bash
+  docker compose -f docker-compose.yml down
 
-docker ps
+  docker ps
 
-docker ps -a
+  docker ps -a
 
-docker images
+  docker images
 
-docker inspect <container_id_or_name>
+  docker inspect <container_id_or_name>
 
-docker logs <container_id_or_name>
-```
+  docker logs <container_id_or_name>
+  ```
 
 TODO: Test it
 
-➡️ 🚨 Important: We need to set up **Docker engine and app containers would auto-restart** if **VM reboots**
+➡️ Set up **Docker engine and app containers to auto-restart** if **VM reboots**
 
 - Set the **Docker daemon restart automatically at VM reboots**.
   - 1st CLI is to **turn on the existing systemd service file** of `Docker`, so that `Docker` auto-restart when VM or system reboots. (systemd service file of `Docker` is created when installing `Docker`, but it is not enabled automatically.)
   - 2nd CLI is to verify the `Docker` systemd service is active or not.
 
-```bash
-sudo systemctl enable docker
+  ```bash
+  sudo systemctl enable docker
 
-systemctl is-enabled docker
-```
+  systemctl is-enabled docker
+  ```
 
 - Make sure that we are using `restart: unless-stopped` for all app contaiers in `docker-compose.yml` file, which is what we already did. **This resart policy set Docker to**:
   - **Restart the container automatically if it crashes**
@@ -772,11 +789,11 @@ systemctl is-enabled docker
 
 - **Test restart by simulating a VM reboot** and check the container status after the VM boots
 
-```bash
-sudo reboot
+  ```bash
+  sudo reboot
 
-docker ps
-```
+  docker ps
+  ```
 
 ### <a name="deploy-domain-and-https">⭐ Set up domain & https</a>
 
