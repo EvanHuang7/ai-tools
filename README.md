@@ -663,7 +663,7 @@ Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 ### <a name="deploy-app-gce-vm">⭐ Deploy app in GCE VM</a>
 
 TODO: test it
-**🚨 Important Note**: The CLI to **update user permissions for accessing Docker** must be run for the user connected VM to access Docker whenever the **VM reboots and Docker auto-restarts**.
+> **🚨 Important Note**: The CLI to **update user permissions for accessing Docker** must be run for the user connected VM to access Docker whenever the **VM reboots and Docker auto-restarts**.
 
 ➡️ **Install required dependencies in VM**
 
