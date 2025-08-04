@@ -40,13 +40,16 @@
    - ⭐ [Potential App Latency Issue in Swarm](#potential-app-latency-issue-in-swarm)
    - ⭐ [Set up Auto-restart when VM Reboots](#set-up-auto-restart)
    - ⭐ [Network Routing Explanation in GCE VM](#network-routing-explanation-in-gce-vm)
-8. ☁️☸️ [GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
+8. ☁️☸️ [GKE (GCP): Deploy App in K8s Cluster](#deploy-app-in-gke)
    - ⭐ [Create VPC, Subnet and K8s Cluster](#create-vpc-subnet-k8s-cluster)
    - ⭐ [Set up K8s Cluster](#set-up-k8s-cluster)
    - ⭐ [Deploy Apps in K8s Cluster](#deploy-apps-in-k8s-cluster)
    - ⭐ [](#)
-9. 🔁☸️ [GKE (GCP): Deploy app with auto CI & CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
-10. 🔁🐳 [GCE(GCP) VM:Set up CI & CD for Docker apps](#set-up-ci-cd-for-docker)
+
+
+8. 🏗️ [Deploy app on 🛠️Staging and 🚀Prod environments](#deploy-app-on-staging-and-pro)
+9. 🔁☸️ [GKE (GCP): Deploy App with CI&CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
+10. 🔁🐳 [GCE(GCP) VM: Set up CI&CD for App Deployment in Docker](#set-up-ci-cd-in-docker)
 11. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
 12. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
 13. 👨‍💼 [About the Author](#about-the-author)
@@ -165,7 +168,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
 **🚨 Important Error**:
 
-> **IF YOU DIDN'T FINISH** any of the options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App as K8s Cluster** section.
+> **IF YOU DIDN'T FINISH** any of the options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App in K8s Cluster** section.
 
 **💡 Reason of Error**:
 
@@ -619,7 +622,7 @@ air
 flask run --reload --port=8088
 ```
 
-🎉 Open [http://localhost:5173/](http://localhost:5173/) in your browser to view the project.
+🎉 Now, you can access your app at [http://localhost:5173/](http://localhost:5173/) in browser.
 
 ---
 
@@ -821,7 +824,7 @@ Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP
 - Click **add domain** button
 - Enter your VM static external IP address (eg. `35.209.142.39`) in **current ip** field
 - Click **update ip** button
-- Now, you can access the app with your subdomain (eg. `http://appName-yourName.duckdns.org/`)
+- You can access the app with your subdomain via only `http` (eg. `http://appName-yourName.duckdns.org/`) now
 
 **2 - Get a free SSL/TSL certificate (HTTPS) via Nginx and Certbot for domain name**
 
@@ -986,7 +989,7 @@ If you run into **a new error**, `Job for nginx.service failed because the contr
   docker compose -f docker-compose.yml up -d
   ```
 
-- Now, **Your domain has a free SSL certificate**, and you can access your app via `https` (eg. `https://appName-yourName.duckdns.org`)
+- 🎉 Now, you can access your app via `https` (eg. `https://appName-yourName.duckdns.org`) in browser after **your domain has a free SSL certificate**.
 
 TODO: Test it
 
@@ -1120,7 +1123,13 @@ The previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** sec
   docker node ls
   ```
 
+- 🎉 Now, You can access your app with your **VM external IP address** (eg. `http://35.209.142.39/`)
+
 - **🚨 Important Step**: Set up **Authorization for running app in GCP VM** by following the steps in **⭐ Set up GCP services authorization for app** subsection, **IF YOU DIDN'T FINISH** the previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section.
+
+- **🚨 Important Step**: Set up **domain and SSL/TSL certificate** by following the steps in **⭐ Set up Domain & HTTPS** subsection, **IF YOU DIDN'T FINISH** the previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section.
+
+- 🎉 Now, You can access your app via `https` (eg. `https://appName-yourName.duckdns.org`) in browser.
 
 ### <a name="potential-app-latency-issue-in-swarm">⭐ Potential App Latency Issue in Swarm</a>
 
@@ -1163,7 +1172,7 @@ You can try one or more of the solutions below to fix the issue or improve app l
   - **Redeploy app** in Docker Swarm again.
   - Now you can only access page with `http`, but the app latency would be improved. 
   - BTW, **Vapi requires `HTTPS` to start a AI Voice call**.
-  - You can make your app to be accessed with `https` by **buying a domain from some domain provider** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
+  - You can make your app to be accessed with `https` by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
 
 - **3rd Solution**: 💸 **Pay to upgrate your free VM to a higher machine type** for getting more CPU and RAM.
 
@@ -1273,7 +1282,7 @@ Below explanation is for 1 node Docker Swarm or Docker Compose?
 - Same logic for `proxy_pass http://node-backend:3000/`
 - Same logic for `proxy_pass http://python-backend:8088/`
 
-## <a name="deploy-app-in-gke">☁️☸️ GKE (GCP): Deploy App as K8s Cluster</a>
+## <a name="deploy-app-in-gke">☁️☸️ GKE (GCP): Deploy App in K8s Cluster</a>
 
 Follow these steps to deploy app in GKE:
 
@@ -1326,7 +1335,7 @@ devbox shell
   task gcp:06-create-cluster
   ```
 
-- Now, You can use `kubectl` on your **project devbox** to interact with the GKE cluster.
+- You can use `kubectl` on your **project devbox** to interact with the GKE cluster now.
   - 1st CLI is to check if GKE cluster is in Kubernetes contexts. Please make sure you **are using GKE cluster** in `kubectx` (Swith cluster by running `kubectx <custer-context-name>` CLI).
   - 2nd and 3rd CLIs are to view the current (GKE) cluster's worker nodes and system pods
 
@@ -1469,19 +1478,23 @@ TODO: add this step to all deployment step
   kubectl get svc
   ```
 
+- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** by running:
+
+  ```bash
+  kubectl get all -n traefik
+
+  OR
+
+  kubectl get svc -n traefik
+  ```
+
 - **🚨 Important Step**: Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
-**2 -** 🎉 View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** by running:
+- **🚨 Important Step**: Set up **Domain and HTTPS (SSL/TLS)** by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
 
-```bash
-kubectl get all -n traefik
+- 🎉 Now, You can access your app via `https` (eg. `https://yourDomainName`) in browser.
 
-OR
-
-kubectl get svc -n traefik
-```
-
-- **📌 Useful kubectl CLIs for debug**:
+**2 - 📌 Useful kubectl CLIs for debug**:
   - Print the logs of pod
   - Show the details of pod. You can view the liveness, Readiness and all conditions of pod
 
@@ -1512,25 +1525,31 @@ Remember to **remove the cluster** after you **finish testing or development** b
 task gcp:09-clean-up
 ```
 
-## <a name="set-up-different-app-environment">Deploy app on 🛠️Demo and 🚀Prod environment</a>
+## <a name="deploy-app-on-staging-and-pro">🏗️ Deploy app on 🛠️Staging and 🚀Prod environments</a>
 
-🚨 Important: Please make sure to update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file to your own clusters first.
+**🚨 Important Note**:
 
-⚠️ Note: The current `kluctl` folder does not include `External Secret` deployment yet, and the service deployments are all using local `Secret` resource files to generate K8s sceret. So, you should deploy `External Secret` manually first if you need to use `External Secret` in services.
+> Please make sure to update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file to your own clusters first.
+>
+> The current `kluctl` folder does not include `External Secret` deployment yet, and the service deployments are all using local `Secret` resource files to generate K8s sceret. So, you should deploy `External Secret` manually first if you need to use `External Secret` in services.
 
-1. Create a seperate new cluster for deploying app to `Staging` environment if you only have 1 cluster running for deploying `Production` environment.
+### <a name="deploy-apps-in-k8s-cluster">⭐ Deploy App on Staging environment</a>
 
-- 🚨 Important: Change the cluster name of `gcp:06-create-cluster` task cli to `ai-tools-demo` in `Taskfile.yaml` first if you alreay created a `ai-tools` cluster.
+**1 -** Create a **seperate new cluster** for deploying app to `Staging` environment **if you only have 1 cluster** running for deploying `Production` environment.
+
+**🚨 Important Note**:
+
+> Change the cluster name of `gcp:06-create-cluster` task CLI to `ai-tools-staging` in `Taskfile.yaml` first if you alreay created a `ai-tools` cluster.
 
 - Create a **Standard** GKE cluster with `e2-standard-2` machine type and 2 worker nodes (VMs) for `Staging` environment.
 
-```
-task gcp:06-create-cluster
-```
+  ```bash
+  task gcp:06-create-cluster
+  ```
 
-- Update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file to your own `Staging` and `Production` clusters.
+- Update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file of `kluctl` folder to your own `Staging` and `Production` clusters.
 
-2. Deploy app to **Staging** and **Production** environment clusters
+**2 -** Deploy app to **Staging** environment cluster
 
 - Check the yaml files after rendering with template of staging env
 
@@ -1543,6 +1562,10 @@ task kluctl:render-staging
 ```
 task kluctl:deploy-staging
 ```
+
+- **🚨 Important Step**: Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
+
+### <a name="deploy-apps-in-k8s-cluster">⭐ ???</a>
 
 - ⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error. Our app is actully running correctly now because our `IngressRoute` were all created. You can check all created `IngressRoute` by running:
 
@@ -1561,6 +1584,10 @@ kubectl get ingressroutes -A
   - After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
   - So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
 
+### <a name="deploy-apps-in-k8s-cluster">⭐ ???</a>
+
+**1 -** Deploy app to **Production** environment cluster
+
 - Check the yaml files after rendering with template of production env
 
 ```
@@ -1573,7 +1600,7 @@ task kluctl:render-production
 task kluctl:deploy-production
 ```
 
-🚨🚨🚨 Important: The **⭐ Set up GCP services authorization for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
+- **🚨 Important Step**: Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
 3. Now, you have your app configed with `Staging` and `Prod` environment specfication seperatly running in two K8s cluster.
 
@@ -1595,7 +1622,9 @@ kubectl get svc -n traefik
 
 - If you use a hostname for `IngressRoutes` in `kluctl`, you need to create a DNS record for the `EXTERNAL-IP` and your hostname first. Then, you can view the app with your hostname
 
-4. 🚨🚨🚨 Clean up to aviod cost 💸💸💸💸💸💸
+### <a name="deploy-apps-in-k8s-cluster">⭐ ???</a>
+
+**3 - 🚨🚨💸💸 Clean up to aviod cost 💸💸🚨🚨**
 
 Remember to remove the cluster after you finish testing or development because a running cluster with K8s resource charges you by running time. You can use new user credit to cover the fee for first 3 months new user, but you will need to pay after 3 months.
 
@@ -1617,7 +1646,7 @@ task kluctl:delete-staging
 task gcp:09-clean-up
 ```
 
-## <a name="deploy-app-with-ci-cd-in-cluster">🔁 GKE (GCP):Deploy app with auto CI & CD in K8s Cluster</a>
+## <a name="deploy-app-with-ci-cd-in-cluster">🔁☸️ GKE (GCP): Deploy App with CI&CD in K8s Cluster</a>
 
 We will use `GitHub actions` for Continuous Integrataion and `Kluctl GitOps` for Continuous Deployment.
 
@@ -1734,7 +1763,7 @@ kubectl get svc -n traefik
 
 📌 Note: You can **ONLY** see the `Reconciliation State` time of application is updated in kluctl web ui, **but there is NO** new pod created in K8s because K8s did not find out any changes of existing deployments, so it skip creating new pods.
 
-## <a name="set-up-ci-cd-for-docker">🔁 GCE(GCP) VM:Set up CI & CD for Docker apps</a>
+## <a name="set-up-ci-cd-in-docker">🔁🐳 GCE(GCP) VM: Set up CI&CD for App Deployment in Docker</a>
 
 - Follow the same **CI step** in **🔁 GKE (GCP):Deploy app with auto CI & CD in K8s Cluster** section.
 
