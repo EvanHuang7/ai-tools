@@ -39,7 +39,7 @@
    - ⭐ [Deploy app in GCE VM with Docker Swarm](#deploy-app-gce-vm-with-docker-swarm)
    - ⭐ [Potential App Latency Issue in Swarm](#potential-app-latency-issue-in-swarm)
    - ⭐ [Set up Auto-restart when VM Reboots](#set-up-auto-restart)
-   - ⭐ [](#)
+   - ⭐ [Network Routing Explanation in GCE VM](#network-routing-explanation-in-gce-vm)
    - ⭐ [](#)
    - ⭐ [](#)
 8. ☁️☸️ [GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
@@ -1193,14 +1193,17 @@ Set up **Docker Swarm, Docker Swarm Services (running apps inside Docker Swarm) 
 - So, We **need to recreate the secrets** if we want to **start swarm mode again after leaving swarm mode** by running `docker swarm leave --force` CLI that would **delete all stored secrets**.
 
 
+### <a name="network-routing-explanation-in-gce-vm">⭐ Network Routing Explanation in GCE VM</a>
 
 TODO: move to Docker compose section?
 
-5. App network routing explanation in 1 node Docker Swarm
+1 - App network routing explanation in 1 node Docker Swarm
 
-6. The network routing between app users internet and frontend app
+Below explanation is for 1 node Docker Swarm or Docker Compose?
 
-The case of running Nginx in VM:
+**The Network Routing Explanation between app user in browser and docker container of frontend app**
+
+**👉 The case of running `Nginx` in VM**:
 
 - Default behaviour of running `Nginx` after installation.
   - When you installed and run `Nginx` in VM, it does bind to `0.0.0.0` by default, which means it listens on all network interfaces — public and private IPs of your VM.
@@ -1235,7 +1238,7 @@ The case of running Nginx in VM:
     - Requirment: The firwall of VPC network that VM lives in allows inbound traffic on http port 80 and hppts port 443
     - Requirment: No other service conflicts on port 80 or port 443 on the VM
 
-The case of NO Nginx in VM:
+**👉 The case of `NO Nginx` in VM**:
 
 - We defined `frontend` as a service in `docker-compose.yml` and `docker-swarm.yml` files
 
@@ -1256,7 +1259,7 @@ The case of NO Nginx in VM:
     - Requirment: The firwall of VPC network that VM lives in allows inbound traffic on http port 80
     - Requirment: No other service conflicts on port 80 on the VM
 
-52. The network routing between frontend app and backend apps
+**The Network Routing Explanation between docker container of frontend app and docker containers of all backend apps**
 
 - We set `proxy_pass` in the `nginx.conf` file. `Nginx` forward frontend app's traffic to the destination we specify
   - set `proxy_pass http://go-backend:8000/`, to forward all `/api/go/` api calls to the `8000` port of `go-backend`.
