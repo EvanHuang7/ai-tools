@@ -40,9 +40,11 @@
    - ⭐ [Potential App Latency Issue in Swarm](#potential-app-latency-issue-in-swarm)
    - ⭐ [Set up Auto-restart when VM Reboots](#set-up-auto-restart)
    - ⭐ [Network Routing Explanation in GCE VM](#network-routing-explanation-in-gce-vm)
-   - ⭐ [](#)
-   - ⭐ [](#)
 8. ☁️☸️ [GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
 9. 🔁☸️ [GKE (GCP): Deploy app with auto CI & CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
 10. 🔁🐳 [GCE(GCP) VM:Set up CI & CD for Docker apps](#set-up-ci-cd-for-docker)
 11. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
@@ -1271,194 +1273,199 @@ Below explanation is for 1 node Docker Swarm or Docker Compose?
 - Same logic for `proxy_pass http://node-backend:3000/`
 - Same logic for `proxy_pass http://python-backend:8088/`
 
-## <a name="deploy-app-in-gke">☁️ GKE (GCP): Deploy App as K8s Cluster</a>
+## <a name="deploy-app-in-gke">☁️☸️ GKE (GCP): Deploy App as K8s Cluster</a>
 
 Follow these steps to deploy app in GKE:
 
-1. Switch to proejct isolated environment first
+**1 - Switch to project isolated environment first**
 
-```
+```bash
 devbox shell
 ```
  
-2. Authenticate `gcloud CLI` and create VPC and subnet
+**2 -** Authenticate `gcloud CLI` and create VPC and subnet
 
-- Authenticate and configure the gcloud CLI
+- Authenticate and configure the `gcloud CLI`
   - Select `Re-initialize the configuration` for **Pick up configuration to use** or `Create a new configuration` if you have not initailize before
   - Loggin into your google account
-  - Pick up a google cloud project you want to use
-  - Configure a default Compute Region and zone by selecting `us-central1-a`. (Note: if you select a different region and zone, you should update them in local `Taskfile.yaml` file too)
+  - Pick up a **google cloud project** you want to use
+  - Configure a **default Compute Region and zone** by selecting `us-central1-a` 
+  - **📌 Note**: if you select a different region and zone, you should update them in local `Taskfile.yaml` file too
 
-```
-task gcp:01-init-cli
-```
+  ```bash
+  task gcp:01-init-cli
+  ```
 
-- Enable all required GCP APIs
+- Enable all required **GCP APIs**
 
-```
-task gcp:02-enable-apis
-```
+  ```bash
+  task gcp:02-enable-apis
+  ```
 
-- Create a custom VPC instead of using the default VPC of the project
+- Create a **custom VPC** instead of using the default VPC of the project
 
-```
-task gcp:04-create-vpc
-```
+  ```bash
+  task gcp:04-create-vpc
+  ```
 
-- Create a subnet for `us-central1-a` region under VPC
+- Create a **subnet** for `us-central1-a` region under VPC
 
-```
-task gcp:05-create-subnet
-```
+  ```bash
+  task gcp:05-create-subnet
+  ```
 
-3. Create a GKC cluster
+**3 -** Create a **GKC cluster**
 
 - Update `GCP_PROJECT_ID` in local `Taskfile.yaml` file to be the google cloud project id you selected when setting up gcloud CLI authentication.
 
-- Create a **Standard** GKE cluster with `e2-standard-2` machine type and 2 worker nodes (VMs).
+- Create a **Standard GKE cluster** with `e2-standard-2` machine type and **2 worker nodes (VMs)**.
 
-```
-task gcp:06-create-cluster
-```
+  ```bash
+  task gcp:06-create-cluster
+  ```
 
 - Now, You can use `kubectl` on your **project devbox** to interact with the GKE cluster.
-  - 1st cli is to check if GKE cluster in Kubernetes contexts and clusters. Please make sure you **are using GKE cluster** in `kubectx` (Swith cluster by running `kubectx <custer-context-name>`).
-  - 2nd and 3rd clis are to view the current (GKE) cluster's worker nodes and system pods
+  - 1st CLI is to check if GKE cluster is in Kubernetes contexts. Please make sure you **are using GKE cluster** in `kubectx` (Swith cluster by running `kubectx <custer-context-name>` CLI).
+  - 2nd and 3rd CLIs are to view the current (GKE) cluster's worker nodes and system pods
 
-```
-kubectx
-kubectl get nodes
-kubectl get pods -A
-```
+  ```bash
+  kubectx
 
-4. Create namespace and deploy Traefik ingress controller in GKE Cluster first
+  kubectl get nodes
 
-- Create namespace, "ai-tools", for grouping app services resources
-
+  kubectl get pods -A
   ```
+
+**4 -** Create **namespace and deploy Traefik ingress controller** in GKE Cluster first
+
+- Create **namespace**, `ai-tools`, for grouping app services resources
+
+  ```bash
   task common:apply-namespace
   ```
 
-- Deploy Traefik ingress controller with Load Balancer serivce
+- Deploy **Traefik ingress controller with Load Balancer serivce**
 
-  - 📌 Note: It will provision a Load Balancer with an ExternalIP assigned by Traefik default setting, so it will cause **Load Balancer and ExternalIP fee 💸💸** if you run it in **GKE of GCP**.
+  > **🚨 Important Note**: It will provision a **Load Balancer with an ExternalIP** assigned by Traefik default setting, so it will cause **Load Balancer and ExternalIP fee 💸💸** if you run it in **GKE Cluster**.
 
-  ```
+  ```bash
   task common:deploy-traefik
   ```
 
 - Check all resources in traefik namespace
 
-  ```
+  ```bash
   kubectl get all -n traefik
   ```
 
-- Apply the Traefik middleware to strip path prefix for all incoming requests by ingress controller
+- Apply the **Traefik middleware to strip path prefix** for all incoming requests by ingress controller
 
-  ```
+  ```bash
   task common:apply-traefik-middleware
   ```
 
-5. Deploy external secrets for app services to consume
+**5 -** Deploy **external secrets** for app services to consume
 
-🚨 Important: Please change all the usages of `GCP project ID` in `external-secrets-k8s-resource-defins` folder to be your own GCP project ID before starting this step.
+**🚨 Important Note**: 
 
-📌 Note: We will only store the secrets of **python backend service** into GCP Secret Manager becaues **GCP Secret Manager only offer 6 secret version (including create and update a secret) per month**. Also, holding a serect costs **$0.06 💸💸** per active secret version per month.
+> Please change all the usages of `GCP project ID` in `external-secrets-k8s-resource-defins` folder to be your own GCP project ID before starting this step.
 
-- Go to GCP Secret Manager
+**🚨 Important Note**: 
 
+> We will only store the secrets of **python backend service** into GCP Secret Manager becaues **GCP Secret Manager only offer 6 secret version (including create and update a secret) per month**. Also, holding a serect costs **$0.06 💸💸** per active secret version per month.
+
+- Go to **GCP Secret Manager**
 - Click **CREATE SECRET** button
-
 - Enter `mongodb-url-in-gcpsm` as secret name and copy paste your mongodb url to **Secret value** textare.
-
 - Leave all the rest of things by default and click **CREATE SECRET** button.
-
 - Follow the same steps again to create `redis-url-in-gcpsm` secret in Secret Manager.
+- Install `External Secrets Operator (ESO)` via **Helm chart**, and a `K8s service account (KSA)` named `external-secrets` is created automatically in namespace as part of `External Secrets Operator (ESO)` Helm chart installation.
 
-- Install `External Secrets Operator (ESO)` via Helm chart, and a `K8s service account (KSA)` named `external-secrets` is created automatically in namespace as part of External Secrets Operator (ESO) Helm chart installation.
-
-```
-task external-secrets:01-install-external-secrets
-```
-
-- Create a `GCP IAM service account (Google Service Account/GSA)` named `external-secrets`, attach GCP Secret Manager access role to this GSA, and bind the KSA with the GSA to allow the KSA to impersonate the GSA.
-
-```
-task external-secrets:02-create-iam-service-account
-```
-
-- Add GSA annotation to K8s service account, so that a workload Identity trust relationship is enabled after finishing both binding and annotation for KSA and GSA. The workload Identity alllows the GKE workloads (eg. a pod) using the KSA to access GCP services (eg. Secret Manager).
-
-```
-task external-secrets:03-annotate-kubernetes-service-account
-```
-
-- Set External Secrets Operator to look for secrets in GCP Secret Manager by appling ClusterSecretStore configuration
-
-```
-task external-secrets:04-apply-cluster-secret-store
-```
-
-- Kick External Secrets Operator to fetch secrets from GCP Secret Manager. Then, creates K8s Secrets in sepecified namespace by appling ExternalSecret configuration.
-
-```
-task external-secrets:05-apply-external-secret
-```
-
-- View the created K8s SecretStore, ExternalSecret and Secret
-
-```
-task external-secrets:06-get-secretStore-and-externalSecret-and-secret
-```
-
-- View the secret value from the Kubernetes api
-
-```
-task external-secrets:07-get-secret-value
-```
-
-6. Deploy all app services to GKE cluster
-
-🚨🚨 Important: If you didn't build container images of app services and push them to Docker hub yet, please finish it by following the `2nd step` of **⚙️ Run App in Kind Cluster Locally** section first.
-
-🚨 Important: Please change all secret values palceholder to your own secret values in `Secret.yaml` files of thoese `k8s-resource-defins` folders these before starting this step.
-
-- Deploy go backend app
-
+  ```bash
+  task external-secrets:01-install-external-secrets
   ```
+
+- Create a `GCP IAM service account (Google Service Account/GSA)` named `external-secrets`, attach **GCP Secret Manager access role** to this GSA, and **bind the KSA with the GSA** to allow the KSA to impersonate the GSA.
+
+  ```bash
+  task external-secrets:02-create-iam-service-account
+  ```
+
+- **Add GSA annotation to K8s Service Account**, so that a **workload Identity trust relationship is enabled** after finishing **both binding and annotation for KSA and GSA**. The workload Identity alllows the GKE workloads (eg. a pod) using the KSA to access GCP services (eg. `Secret Manager`).
+
+  ```bash
+  task external-secrets:03-annotate-kubernetes-service-account
+  ```
+
+- Set `External Secrets Operator` to look for **secrets in GCP Secret Manager** by appling `ClusterSecretStore` configuration
+
+  ```bash
+  task external-secrets:04-apply-cluster-secret-store
+  ```
+
+- Kick `External Secrets Operator` to **fetch secrets from GCP Secret Manager**. Then, **creates K8s Secrets** in sepecified namespace by appling `ExternalSecret` configuration.
+
+  ```bash
+  task external-secrets:05-apply-external-secret
+  ```
+
+- View the created K8s `SecretStore`, `ExternalSecret` and `Secret`
+
+  ```bash
+  task external-secrets:06-get-secretStore-and-externalSecret-and-secret
+  ```
+
+- View the **secret value** from the **Kubernetes api**
+
+  ```bash
+  task external-secrets:07-get-secret-value
+  ```
+
+**6 -** Deploy all app services to GKE cluster
+
+**🚨 Important Note**: 
+
+> If you didn't build container images of app services and push them to Docker hub yet, please finish it by following the `2nd step` of **⚙️ Run App in Kind Cluster Locally** section first before starting this step.
+>
+> Please update all secret values palceholder to your own secret values in `Secret.yaml` files of those `k8s-resource-defins` folders before starting this step.
+
+- Deploy **go backend app**
+
+  ```bash
   task go-k8s-resource-defins:apply
   ```
 
-- Deploy node backend app
+- Deploy **node backend app**
 
-  ```
+  ```bash
   task node-k8s-resource-defins:apply
   ```
 
-- Deploy python backend app
+- Deploy **python backend app**
 
-  ```
+  ```bash
   task python-k8s-resource-defins:apply
   ```
 
-- Deploy frontend app
+- Deploy **frontend app**
 
-  ```
+  ```bash
   task frontend-k8s-resource-defins:apply
   ```
 
-- Check pod and service in ai-tools namespace after deploying all app services
+- **Check pods and services** in `ai-tools` namespace after deploying all app services
 
-  ```
+  ```bash
   kubectl get pods -n ai-tools
+
   kubectl get svc
   ```
 
-🚨🚨🚨 Important: The **⭐ Set up GCP services authorization for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
+- Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
-6. View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer by running:
+**7 -** 🎉 View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** by running:
 
-```
+```bash
 kubectl get all -n traefik
 
 OR
@@ -1466,8 +1473,7 @@ OR
 kubectl get svc -n traefik
 ```
 
-- Useful kubectl clis for debug.
-
+- **📌 Useful kubectl CLIs for debug**:
   - Print the logs of pod
   - Show the details of pod. You can view the liveness, Readiness and all conditions of pod
 
@@ -1477,7 +1483,7 @@ kubectl get svc -n traefik
   - Show all replicasets in namespace
   - Show all resources in namespace
 
-  ```
+  ```bash
   kubectl logs -n ai-tools <pod-name>
   kubectl describe pod -n ai-tools <pod-name>
 
@@ -1488,13 +1494,13 @@ kubectl get svc -n traefik
   kubectl get all -n ai-tools
   ```
 
-7. 🚨🚨🚨 Clean up to aviod cost 💸💸
+**8 - 🚨🚨💸💸 Clean up to aviod cost 💸💸🚨🚨**
 
-Remember to remove the cluster after you finish testing or development because a running cluster with K8s resource charges you by running time. You can use new user credit to cover the fee for first 3 months new user, but you will need to pay after 3 months.
+Remember to **remove the cluster** after you **finish testing or development** because a running cluster with K8s resource **charges you by running time**. You can use **new GCP user 300$ free credit to cover the fee for first 3 months if you are new GCP user**, but you will need to **💸 PAY 💸** after 3 months.
 
-Delete the GCP network, subnet, firewall rules, and cluster that we just created by running:
+**Delete the GCP network, subnet, firewall rules, and cluster** that we just created by running:
 
-```
+```bash
 task gcp:09-clean-up
 ```
 
