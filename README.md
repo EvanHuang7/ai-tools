@@ -35,9 +35,13 @@
   - ⭐ [Set up GCE VM](#set-up-gce-vm)
   - ⭐ [Deploy app in GCE VM](#deploy-app-gce-vm)
   - ⭐ [Set up Domain & HTTPS](#set-up-domain-and-https)
-  - ⭐ [](#)
-  - ⭐ [](#)
 7. ☁️🐳🐳 [GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳](#deploy-app-in-gce-with-docker-swarm)
+  - ⭐ [Deploy app in GCE VM with Docker Swarm](#deploy-app-gce-vm-with-docker-swarm)
+  - ⭐ [](#)
+  - ⭐ [](#)
+  - ⭐ [](#)
+  - ⭐ [](#)
+  - ⭐ [](#)
 8. ☁️☸️ [GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
 9. 🔁☸️ [GKE (GCP): Deploy app with auto CI & CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
 10. 🔁🐳 [GCE(GCP) VM:Set up CI & CD for Docker apps](#set-up-ci-cd-for-docker)
@@ -1008,89 +1012,113 @@ TODO: Test it
 
 ## <a name="deploy-app-in-gce-with-docker-swarm">☁️ GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳</a>
 
-Deploy app as Docker services that manage tasks (containers) via Docker Swarm (Use more VM CPU and memory than docker-compose file beucase running Docker Swarm orchestrator use around 200MB memory)
+**Deploy app as Docker services that manage tasks (containers) via Docker Swarm**.
 
-🚨🚨 Important: make sure you finish previous `Deploy App with Docker Compose in GCE VM (GCP)` step first.
+- `Docker service` is **top-level Swarm object** that manages desired state (e.g. `replicas: 3`, which image to use), scaling, and containers used by **Docker Swarm**. You don't run containers directly. You define services, and Swarm runs containers to satisfy the service.
+- In **Docker Compose**, `Docker service` **isn't a first-class object** because Docker Compose spins up containers directly without creating services.
+- You still can use `docker ps` CLI to view Docker container status in **Docker Swarm**.
+- **Docker Swarm uses more VM CPU and memory than Docker Compose** beucase running Docker Swarm orchestrator use around 200MB memory.
 
-1. Deploy app with Docker Swarm
+**🚨Important Note**: 
 
-- Connect to VM in GCP console
+> The previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section is required to be finished first before starting this section.
+
+### <a name="deploy-app-gce-vm-with-docker-swarm">⭐ Deploy app in GCE VM with Docker Swarm</a>
+
+- Connect to VM in Google Compute Engine console
 - Turn off all running containers first by running
 
-```
-docker compose -f docker-compose.yml down
-```
+  ```bash
+  docker compose -f docker-compose.yml down
+  ```
 
 - Clean up existing all images and containers first to save VM resource
 
-```
-docker rm -f $(docker ps -aq)
-docker rmi -f $(docker images -q)
-```
+  ```bash
+  docker rm -f $(docker ps -aq)
+
+  docker rmi -f $(docker images -q)
+  ```
 
 - Check Disk Usage of Docker
 
-```
-docker system df
-```
+  ```bash
+  docker system df
+  ```
 
-- Enable Docker Swarm mode in Docker
+- **Enable Docker Swarm mode** in Docker
 
-```
-docker swarm init
-```
+  ```bash
+  docker swarm init
+  ```
 
 - Create a folder
 
-```
-mkdir dockerSwarmFolder
-cd dockerSwarmFolder
-```
+  ```bash
+  mkdir dockerSwarmFolder
 
-- Add `docker-swarm.yml` file to folder by copying the file content in local `docker-swarm.yml` file, run below command line and paste content and press `control + X`, `Y`, and `Enter` keys
+  cd dockerSwarmFolder
+  ```
 
-```
-nano docker-swarm.yml
-```
+- Add `docker-swarm.yml` file to folder 
+  - Copy the file content in local `docker-swarm.yml` file
+  - Run below CLI 
+  - Paste the copied file content 
+  - Press `control + X`, `Y`, and `Enter` keys in keyboard
 
-- Create docker secrets for Docker swarm services to consume first
-  - ⚠️ Note: Remember to replace your url string to real a url string
-  - Create secrets for all env variables if there are more
-  - The raw bytes secret stored within the Swarm manager nodes will be available inside the container **as a file** at: `/run/secrets/secret-name` (eg. `/run/secrets/redis-url`)
+  ```bash
+  nano docker-swarm.yml
+  ```
 
-```
-printf 'your url' | docker secret create supabase-postgres-database-url -
+- **Create docker secrets** for **Docker swarm services to consume**
+  - Remember to replace `secret placeholder` string to real `secret string`
+  - Create secrets for **all env variables** if there are more secrets added later
+  - The **raw bytes secret** stored within the **Swarm manager nodes** will be available inside the container **as a file** at: `/run/secrets/secret-name` (eg. `/run/secrets/redis-url`)
+  - The `Kafka credentials` are **no longer required** because Kafka in Redpanda Cloud is **deprecated**
 
-printf 'your url' | docker secret create neon-postgres-database-url -
+  ```bash
+  printf 'secret placeholder' | docker secret create supabase-postgres-database-url -
 
-printf 'your url' | docker secret create redis-url -
+  printf 'secret placeholder' | docker secret create neon-postgres-database-url -
 
-printf 'your url' | docker secret create mongodb-url -
+  printf 'secret placeholder' | docker secret create google-api-key -
 
-printf 'your url' | docker secret create python-imagekit-private-key -
+  printf 'secret placeholder' | docker secret create go-imagekit-id -
 
-printf 'your url' | docker secret create clerk-secret-key -
+  printf 'secret placeholder' | docker secret create go-imagekit-private-key -
 
-etc...
-```
+  printf 'secret placeholder' | docker secret create redis-url -
 
-- Deploy stack of app containers with docker-swarm file
+  printf 'secret placeholder' | docker secret create mongodb-url -
 
-```
-docker stack deploy -c docker-swarm.yml ai-tools
-```
+  printf 'secret placeholder' | docker secret create python-imagekit-private-key -
 
-- List all Docker services status and view the nodes in the swarm
-  - `Docker service` is top-level Swarm object that manages desired state (e.g. `replicas: 3`, which image to use), scaling, and containers used by **Docker Swarm**. You don't run containers directly. You define services, and Swarm runs containers to satisfy the service.
-  - In **Docker Compose**, `Docker service` isn't a first-class object because Docker Compose spins up containers directly without creating services.
-  - You still can use `docker ps` cli to view Docker container status in **Docker Swarm**
+  printf 'secret placeholder' | docker secret create clerk-publishable-key -
 
-```
-docker service ls
-docker node ls
-```
+  printf 'secret placeholder' | docker secret create clerk-secret-key -
 
-2. App latency issue and solution after deploying app with Swarm
+  printf 'secret placeholder' | docker secret create rabbitmq-url -
+
+  printf 'secret placeholder' | docker secret create kafka-bootstrap-server -
+
+  printf 'secret placeholder' | docker secret create kafka-sasl-user-password -
+  ```
+
+- **Deploy stack of app containers** with `docker-swarm.yaml` file
+
+  ```bash
+  docker stack deploy -c docker-swarm.yml ai-tools
+  ```
+
+- **List all Docker services status and view the nodes in the swarm**
+  
+  ```bash
+  docker service ls
+
+  docker node ls
+  ```
+
+### <a name="app-latency-issue-in-swarm">⭐ App Latency Issue in Swarm</a>
 
 ⚠️ Warning: If your GCE VM is free `e2-micro` type, your app may becomes **much slower** including accessing the web page and internal api calls after deploying via Docker Swarm, comparing to running the same containers with docker-compose.
 
