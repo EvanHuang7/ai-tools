@@ -41,9 +41,9 @@
    - ⭐ [Set up Auto-restart when VM Reboots](#set-up-auto-restart)
    - ⭐ [Network Routing Explanation in GCE VM](#network-routing-explanation-in-gce-vm)
 8. ☁️☸️ [GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
-   - ⭐ [](#)
-   - ⭐ [](#)
-   - ⭐ [](#)
+   - ⭐ [Create VPC, Subnet and K8s Cluster](#create-vpc-subnet-k8s-cluster)
+   - ⭐ [Set up K8s Cluster](#set-up-k8s-cluster)
+   - ⭐ [Deploy Apps in K8s Cluster](#deploy-apps-in-k8s-cluster)
    - ⭐ [](#)
 9. 🔁☸️ [GKE (GCP): Deploy app with auto CI & CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
 10. 🔁🐳 [GCE(GCP) VM:Set up CI & CD for Docker apps](#set-up-ci-cd-for-docker)
@@ -165,7 +165,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
 
 **🚨 Important Error**:
 
-> If you don't finish any of the options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App as K8s Cluster** section.
+> **IF YOU DIDN'T FINISH** any of the options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App as K8s Cluster** section.
 
 **💡 Reason of Error**:
 
@@ -445,7 +445,7 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 
 **👉 Authorization for running app in local machine**
 
-- **📌 If you DIDN'T FINISH the previous step (Authorization for running app in GKE Cluster)**, just **create a GSA with GCP Pub/Sub and GCS permissions attached**. You only need to **bind and annotate the default KSA with the GSA** when you complete that step (Authorization in GKE Cluster) later. **📌 If you ALREADY FINISHED the previous step**, you can **SKIP** this GSA creation step.
+- **📌 IF YOU DIDN'T FINISH** the previous step **(Authorization for running app in GKE Cluster)**, just **create a GSA with GCP Pub/Sub and GCS permissions attached**. You only need to **bind and annotate the default KSA with the GSA** when you complete that step (Authorization in GKE Cluster) later. **📌 IF YOU ALREADY FINISHED** the previous step, you can **SKIP** this GSA creation step.
 
   ```bash
   task general:01-create-GSA
@@ -747,7 +747,7 @@ TODO: test it
   docker compose -f docker-compose.yml up -d
   ```
 
-- Set up **Authorization for running app in GCP VM** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
+- **🚨 Important Step**: Set up **Authorization for running app in GCP VM** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
 - 🎉 Now, You can access your app with your **VM external IP address** (eg. `http://35.209.142.39/`)
   > **📌 Note**: If you can not access it with your VM external IP, you can try to access your app in **8080 port** (eg. `http://35.209.142.39:8080`).Because the `frontend` container’s port 8080 may be exposed on the VM’s port 8080.
@@ -1021,9 +1021,9 @@ TODO: Test it
 - You still can use `docker ps` CLI to view Docker container status in **Docker Swarm**.
 - **Docker Swarm uses more VM CPU and memory than Docker Compose** beucase running Docker Swarm orchestrator use around 200MB memory.
 
-**🚨Important Note**: 
+**🚨Important Step**: 
 
-> The previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section is required to be finished first before starting this section.
+The previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section is required to be finished first before starting this section, **IF YOU DIDN'T FINISH** this previous section yet.
 
 ### <a name="deploy-app-gce-vm-with-docker-swarm">⭐ Deploy app in GCE VM with Docker Swarm</a>
 
@@ -1120,7 +1120,7 @@ TODO: Test it
   docker node ls
   ```
 
-- Set up **Authorization for running app in GCP VM** by following the steps in **⭐ Set up GCP services authorization for app** subsection, IF you **DIDN'T** finish previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section.
+- **🚨 Important Step**: Set up **Authorization for running app in GCP VM** by following the steps in **⭐ Set up GCP services authorization for app** subsection, **IF YOU DIDN'T FINISH** the previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section.
 
 ### <a name="potential-app-latency-issue-in-swarm">⭐ Potential App Latency Issue in Swarm</a>
 
@@ -1175,7 +1175,7 @@ Set up **Docker Swarm, Docker Swarm Services (running apps inside Docker Swarm) 
 
 **Docker Swarm and Docker Swarm Services (running apps inside Docker Swarm)**:
 
-- If you **DIDN'T** set **Docker Engine and Nginx** to auto-restart at VM reboots in previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section, you can set it here by running:
+- **🚨 Important Step**: Set up **Docker Engine and Nginx** to auto-restart in VM reboots, **IF YOU DIDN'T FINISH** the previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section. You can set it up here by running:
 
   ```bash
   sudo systemctl enable docker
@@ -1277,6 +1277,8 @@ Below explanation is for 1 node Docker Swarm or Docker Compose?
 
 Follow these steps to deploy app in GKE:
 
+### <a name="create-vpc-subnet-k8s-cluster">⭐ Create VPC, Subnet and K8s Cluster</a>
+
 **1 - Switch to project isolated environment first**
 
 ```bash
@@ -1314,7 +1316,7 @@ devbox shell
   task gcp:05-create-subnet
   ```
 
-**3 -** Create a **GKC cluster**
+**3 -** Create a **GKE cluster**
 
 - Update `GCP_PROJECT_ID` in local `Taskfile.yaml` file to be the google cloud project id you selected when setting up gcloud CLI authentication.
 
@@ -1336,13 +1338,17 @@ devbox shell
   kubectl get pods -A
   ```
 
-**4 -** Create **namespace and deploy Traefik ingress controller** in GKE Cluster first
+### <a name="set-up-k8s-cluster">⭐ Set up K8s Cluster</a>
+
+**1 -** Create `ai-tools` namespace
 
 - Create **namespace**, `ai-tools`, for grouping app services resources
 
   ```bash
   task common:apply-namespace
   ```
+
+**2 - Deploy Traefik** ingress controller in GKE Cluster
 
 - Deploy **Traefik ingress controller with Load Balancer serivce**
 
@@ -1364,14 +1370,12 @@ devbox shell
   task common:apply-traefik-middleware
   ```
 
-**5 -** Deploy **external secrets** for app services to consume
+**3 -** Deploy **external secrets** for app services to consume
 
 **🚨 Important Note**: 
 
 > Please change all the usages of `GCP project ID` in `external-secrets-k8s-resource-defins` folder to be your own GCP project ID before starting this step.
-
-**🚨 Important Note**: 
-
+>
 > We will only store the secrets of **python backend service** into GCP Secret Manager becaues **GCP Secret Manager only offer 6 secret version (including create and update a secret) per month**. Also, holding a serect costs **$0.06 💸💸** per active secret version per month.
 
 - Go to **GCP Secret Manager**
@@ -1421,13 +1425,17 @@ devbox shell
   task external-secrets:07-get-secret-value
   ```
 
-**6 -** Deploy all app services to GKE cluster
+### <a name="deploy-apps-in-k8s-cluster">⭐ Deploy Apps in K8s Cluster</a>
+
+**1 -** Deploy all app services to GKE cluster
 
 **🚨 Important Note**: 
 
-> If you didn't build container images of app services and push them to Docker hub yet, please finish it by following the `2nd step` of **⚙️ Run App in Kind Cluster Locally** section first before starting this step.
->
 > Please update all secret values palceholder to your own secret values in `Secret.yaml` files of those `k8s-resource-defins` folders before starting this step.
+
+TODO: add this step to all deployment step
+
+- **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & push them to Docker Hub** by following the steps in `2nd step` of **⚙️ Run App in Kind Cluster Locally** (xxx subsection), **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
 
 - Deploy **go backend app**
 
@@ -1461,9 +1469,9 @@ devbox shell
   kubectl get svc
   ```
 
-- Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
+- **🚨 Important Step**: Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
-**7 -** 🎉 View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** by running:
+**2 -** 🎉 View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** by running:
 
 ```bash
 kubectl get all -n traefik
@@ -1494,7 +1502,7 @@ kubectl get svc -n traefik
   kubectl get all -n ai-tools
   ```
 
-**8 - 🚨🚨💸💸 Clean up to aviod cost 💸💸🚨🚨**
+**3 - 🚨🚨💸💸 Clean up to aviod cost 💸💸🚨🚨**
 
 Remember to **remove the cluster** after you **finish testing or development** because a running cluster with K8s resource **charges you by running time**. You can use **new GCP user 300$ free credit to cover the fee for first 3 months if you are new GCP user**, but you will need to **💸 PAY 💸** after 3 months.
 
