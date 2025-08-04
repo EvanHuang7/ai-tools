@@ -44,12 +44,20 @@
    - ⭐ [Create VPC, Subnet and K8s Cluster](#create-vpc-subnet-k8s-cluster)
    - ⭐ [Set up K8s Cluster](#set-up-k8s-cluster)
    - ⭐ [Deploy Apps in K8s Cluster](#deploy-apps-in-k8s-cluster)
-   - ⭐ [](#)
-
-
 8. 🏗️ [Deploy app on 🛠️Staging and 🚀Prod environments](#deploy-app-on-staging-and-pro)
+   - ⭐ [Deploy App on Staging environment](#deploy-app-on-staging-env)
+   - ⭐ [Error & Solution after App Deployment](#error-solution-after-app-deployment)
+   - ⭐ [](#)
 9. 🔁☸️ [GKE (GCP): Deploy App with CI&CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
 10. 🔁🐳 [GCE(GCP) VM: Set up CI&CD for App Deployment in Docker](#set-up-ci-cd-in-docker)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
 11. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
 12. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
 13. 👨‍💼 [About the Author](#about-the-author)
@@ -1442,7 +1450,7 @@ devbox shell
 
 > Please update all secret values palceholder to your own secret values in `Secret.yaml` files of those `k8s-resource-defins` folders before starting this step.
 
-TODO: add this step to all deployment step
+TODO: add this step to all deployment step!
 
 - **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & push them to Docker Hub** by following the steps in `2nd step` of **⚙️ Run App in Kind Cluster Locally** (xxx subsection), **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
 
@@ -1533,9 +1541,9 @@ task gcp:09-clean-up
 >
 > The current `kluctl` folder does not include `External Secret` deployment yet, and the service deployments are all using local `Secret` resource files to generate K8s sceret. So, you should deploy `External Secret` manually first if you need to use `External Secret` in services.
 
-### <a name="deploy-apps-in-k8s-cluster">⭐ Deploy App on Staging environment</a>
+### <a name="deploy-app-on-staging-env">⭐ Deploy App on Staging environment</a>
 
-**1 -** Create a **seperate new cluster** for deploying app to `Staging` environment **if you only have 1 cluster** running for deploying `Production` environment.
+**1 -** Create a **seperate new cluster** for deploying app to `Staging` environment **IF YOU ONLY have 1 cluster** running for deploying `Production` environment.
 
 **🚨 Important Note**:
 
@@ -1549,40 +1557,62 @@ task gcp:09-clean-up
 
 - Update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file of `kluctl` folder to your own `Staging` and `Production` clusters.
 
-**2 -** Deploy app to **Staging** environment cluster
+**2 - Deploy app to Staging** environment cluster
 
-- Check the yaml files after rendering with template of staging env
+- Verify the **yaml files** after rendering with template of `staging` env
 
-```
-task kluctl:render-staging
-```
+  ```bash
+  task kluctl:render-staging
+  ```
 
-- Deploy all K8s resources defined in "kluctl" folder for staging env
+- **Deploy all K8s resources** defined in `kluctl` folder for `staging` env
 
-```
-task kluctl:deploy-staging
-```
+  ```bash
+  task kluctl:deploy-staging
+  ```
+
+TODO: move to next subsection
+
+- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** by running:
+
+  ```bash
+  kubectl get all -n traefik
+
+  OR
+
+  kubectl get svc -n traefik
+  ```
 
 - **🚨 Important Step**: Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
-### <a name="deploy-apps-in-k8s-cluster">⭐ ???</a>
+- **🚨 Important Step**: Set up **Domain and HTTPS (SSL/TLS)** by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
 
-- ⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error. Our app is actully running correctly now because our `IngressRoute` were all created. You can check all created `IngressRoute` by running:
+- 🎉 Now, You can access your app via `https` (eg. `https://yourDomainName`) in browser.
 
-```
+### <a name="error-solution-after-app-deployment">⭐ Error & Solution after App Deployment</a>
+
+**🚨 Important Error**:
+
+You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error. The app is actully running correctly now because the `IngressRoute` were all created. You can check all created `IngressRoute` by running:
+
+```bash
 kubectl get ingressroutes -A
 ```
 
-- 🤔 Reason: If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error.
+**💡 Reason of Error**:
 
-  - Kubernetes doesn't apply resources in dependency order unless you explicitly control it.
-  - Even if you apply the CRDs first (in the same deploy), Kubernetes may still be registering the CRD with the API server when Kluctl moves on to the `IngressRoute` manifest.
-  - So the resource fails because Kubernetes doesn’t recognize the new kind yet.
+If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error.
 
-- 🛠️ Fix: For safer option, we can still fix it easily by redeploying the app with running same cli again.
+- Kubernetes **doesn't apply resources in dependency order** unless you explicitly control it.
+- Even if you apply the **CRDs** first (in the same deploy), Kubernetes may still be registering the CRD with the API server when `Kluctl` moves on to the `IngressRoute` manifest.
+- So, the resource fails because Kubernetes doesn’t recognize the new kind yet.
 
-  - After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
-  - So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
+**✅ Solution of Error**:
+
+For safer option, you can still fix it easily by **redeploying the app with running same CLI again**.
+
+- After you redeploy the app, this **error won't show again** because the **CRDs** including `IngressRoute` **already registered** in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes `"known"` to the API server.
+- So, the 2nd deployment will **succeed without error** when applying `IngressRoute` resources in app.
 
 ### <a name="deploy-apps-in-k8s-cluster">⭐ ???</a>
 
