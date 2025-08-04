@@ -32,16 +32,16 @@
    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
    - ⭐ [Running the Project](#running-project)
 6. ☁️🐳 [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
-  - ⭐ [Set up GCE VM](#set-up-gce-vm)
-  - ⭐ [Deploy app in GCE VM](#deploy-app-gce-vm)
-  - ⭐ [Set up Domain & HTTPS](#set-up-domain-and-https)
+   - ⭐ [Set up GCE VM](#set-up-gce-vm)
+   - ⭐ [Deploy app in GCE VM](#deploy-app-gce-vm)
+   - ⭐ [Set up Domain & HTTPS](#set-up-domain-and-https)
 7. ☁️🐳🐳 [GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳](#deploy-app-in-gce-with-docker-swarm)
-  - ⭐ [Deploy app in GCE VM with Docker Swarm](#deploy-app-gce-vm-with-docker-swarm)
-  - ⭐ [](#)
-  - ⭐ [](#)
-  - ⭐ [](#)
-  - ⭐ [](#)
-  - ⭐ [](#)
+   - ⭐ [Deploy app in GCE VM with Docker Swarm](#deploy-app-gce-vm-with-docker-swarm)
+   - ⭐ [Potential App Latency Issue in Swarm](#potential-app-latency-issue-in-swarm)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
+   - ⭐ [](#)
 8. ☁️☸️ [GKE (GCP): Deploy App as K8s Cluster](#deploy-app-in-gke)
 9. 🔁☸️ [GKE (GCP): Deploy app with auto CI & CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
 10. 🔁🐳 [GCE(GCP) VM:Set up CI & CD for Docker apps](#set-up-ci-cd-for-docker)
@@ -1118,43 +1118,52 @@ TODO: Test it
   docker node ls
   ```
 
-### <a name="app-latency-issue-in-swarm">⭐ App Latency Issue in Swarm</a>
+### <a name="potential-app-latency-issue-in-swarm">⭐ Potential App Latency Issue in Swarm</a>
 
-⚠️ Warning: If your GCE VM is free `e2-micro` type, your app may becomes **much slower** including accessing the web page and internal api calls after deploying via Docker Swarm, comparing to running the same containers with docker-compose.
+**🚨 Potential Issue**:
 
-These are some reasones of extra latency introduced by Swarm architecture default by **comparing Docker Swarm and Docker Compose**:
+If your **GCE VM is free** `e2-micro` type, your app may becomes **much slower** including accessing the web page and internal api calls **after deploying via Docker Swarm**, **comparing to** running the same containers with **Docker Compose**.
 
-- **Docker Swarm** is desgined to used across **mutiple VMs**. Swarm would use the across VMs mechanism to handle the requst traffic between services even if we are running it in 1 VM.
+**💡 Reason of Issue**:
 
-  - The **Swarm Load Balancer** is automatically created when you deploy services in Docker Swarm mode. It's a built-in mechanism that uses `VIP(Virtual IP)-based load balancing` to route traffic between containers, even across nodes.
-  - Docker Swarm Creates a `virtual IP (VIP)` for every service. Swarm Load Balancer would use `VIP` and `Routing mesh` for internal routing
-  - Docker Swarm uses the `overlay network (VXLAN)` for multi-node setups, which adds packets or **network encapsulation** (`wrapped, routed, and unwrapped steps for a requst`). This encapsulation step still happens even if it is service commnunication within same VM.
-  - Above mechanism causes higher latency, more CPU and network stack usage, slower service-to-service communication even though everything is running on the 1 VM.
-  - Swarm is `cluster-first`, so it **doesn’t skip** the `routing mesh or VXLAN` just because there’s only one node — it assumes more nodes could join at any time.
+These are some reasons for the extra latency issue **introduced by the Swarm architecture** by default when **comparing Docker Swarm with Docker Compose**:
 
-- **Docker Compose** is desgined to used in **1 VM**.
-  - Docker Compose uses the `bridge network`, allow a container talk to other containers **without encapsulation** (`wrapped, routed, and unwrapped steps for a requst`) or virtual IP translation
-  - Simple local networking on the same VM.
-  - Fastest path: direct, local TCP/IP traffic.
-  - Above mechanism causes Low latency and minimal CPU/network overhead
+- **🐳 Docker Swarm 🐳** is desgined to used across **mutiple VMs**. Swarm would use the **across VMs mechanism** to **handle the requst traffic between services** even if we are running it **in 1 VM**.
+  - The **Swarm Load Balancer** and **a virtual IP (VIP) for each service** are **automatically created** when you deploy services in **Docker Swarm mode**.
+  - It's a built-in mechanism that **Swarm Load Balancer** uses `VIP(Virtual IP)-based load balancing` and `Routing mesh` for internal routing (traffic between containers, even across nodes).
+  - Docker Swarm uses the `overlay network (VXLAN)` for multi-node setups, which adds packets or **network encapsulation** (`wrapped, routed, and unwrapped steps for a requst`). This **encapsulation step still happens** even if it is **service commnunication within same VM**.
+  - Swarm is `cluster-first`, so it **doesn’t skip** the `Routing mesh or VXLAN` even if there’s only 1 node — it assumes more nodes could join at any time.
+  - Above mechanism causes **higher latency, more CPU and network stack usage, slower service-to-service communication** even if everything is running on the 1 VM.
 
-You can do the following change to fix or improve:
+- **🐳 Docker Compose** is desgined to used in **1 VM**.
+  - Docker Compose uses the `bridge network`, allow a container talk to other containers **without network encapsulation** (`wrapped, routed, and unwrapped steps for a requst`) or **VIP(Virtual IP) translation**.
+  - **Simple local networking** on the **same VM**.
+  - Fastest path: direct, local **TCP/IP traffic**.
+  - Above mechanism causes **low latency and minimal CPU/network overhead**
 
-- 1st Recommanded: Switch back to use Docker Compose to deploy app if you are ok with
+**✅ Solution of Issue**:
 
-  - Deploy new app version with a few seconds of app downtime
-  - Unable to scale up VM/node number for Swarm in future
-  - Handle sensative credentials or secrets by your own
+You can try one or more of the solutions below to fix the issue or improve app latency:
 
-- 2nd Recommanded: Stop using Nginx in VM
+- **1st Solution (👍 Recommended)**: Switch back to use **Docker Compose** to deploy app **if you are ok with these Cons**
 
-  - Stop running `Nginx` that was serving SSL and acting as a reverse proxy (proxy routing incoming traffic to frontend) in VM. Also, make sure disable the `Nginx` entirely on VM reboot.
-  - Update `frontend` service in `docker-swarm` file to directly publish on port 80 inside the swarm.
-  - Redeploy app in Docker Swarm again.
-  - Now you can only access page with `http`, but the app latency issue would be fixed.
-  - You make your app to be accessed with `https` by buying a domain from some domain provider (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, then easily creating a DNS record and setting up `SSL/TLS` to use `Flexiable encription mode` in CloudFlare.
+  - Deploy **new app version with a few seconds of app downtime**
+  - **Unable to scale up VM/node number** in future
+  - Handle **sensative credentials** or secrets by your own
 
-- Paid to upgrate your free VM to a higher machine type for getting more CPU and RAM
+- **2nd Solution (👍 Recommended)**: **Stop running** `Nginx` in VM for incoming traffic routing and SSL/TLS encryption
+
+  - **Stop running** `Nginx` that is serving SSL/TLS certificate and acting as a reverse proxy (proxy routing incoming traffic to `frontend` container) **in VM**. 
+  - **Disable** the `Nginx` to auto-restart entirely **on VM reboots**.
+  - Update `frontend` service in `docker-swarm.yaml` file to directly publish on `port 80` inside the swarm.
+  - **Redeploy app** in Docker Swarm again.
+  - Now you can only access page with `http`, but the app latency would be improved. 
+  - BTW, **Vapi requires `HTTPS` to start a AI Voice call**.
+  - You can make your app to be accessed with `https` by **buying a domain from some domain provider** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
+
+- **3rd Solution**: 💸 **Pay to upgrate your free VM to a higher machine type** for getting more CPU and RAM.
+
+### <a name="potential-app-latency-issue-in-swarm">⭐ Set up Auto-restart when VM Reboots</a>
 
 TODO: Test it
 
