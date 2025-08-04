@@ -1195,13 +1195,16 @@ Set up **Docker Swarm, Docker Swarm Services (running apps inside Docker Swarm) 
 
 ### <a name="network-routing-explanation-in-gce-vm">⭐ Network Routing Explanation in GCE VM</a>
 
-TODO: move to Docker compose section?
+TODO: move this subsection to Docker compose section?
 
 1 - App network routing explanation in 1 node Docker Swarm
 
 Below explanation is for 1 node Docker Swarm or Docker Compose?
 
 **The Network Routing Explanation between app user in browser and docker container of frontend app**
+
+- **Requirment 1**: The **firwall of VPC network** that VM lives in allows inbound traffic on `http port 80` and `hppts port 443`
+- **Requirment 2**: **No other service conflicts** on `port 80` or `port 443` on the VM
 
 **👉 The case of running `Nginx` in VM**:
 
@@ -1221,55 +1224,50 @@ Below explanation is for 1 node Docker Swarm or Docker Compose?
 - `http port 8080` in VM **->** `http port 8080` in container (`frontend` app)
   - We set the `ports` of `frontend` service to be `8080:8080` in `docker-compose.yml` and `docker-swarm.yml` files.
   - Docker publishes port with `8080:8080`, so that Docker maps VM’s `port 8080` to `frontend` service container’s port `8080`.
-  - As a result, Docker handles **forwarding** traffic from VM’s port 8080 -> `frontend` service container’s port 8080.
+  - As a result, Docker handles **forwarding traffic** from `VM’s port 8080` -> `http port 8080` in container (`frontend` app).
 
 - `http port 8080` in container (`frontend` app) **->** the running `frontend` app
-  - We set `server { listen 8080; ...}` in the `nginx.conf` file. The `Nginx` serving `frontend app` will **bind host to all interfaces** `(0.0.0.0)` or **listen to all interfaces** by default if we don't sepcify a host explicitly.
+  - We set `server { listen 8080; ...}` in the `nginx.conf` file. The `Nginx` serving `frontend app` will **bind host to all interfaces** `(0.0.0.0)` or **listen to all network interfaces** by default if we don't sepcify a host explicitly.
   - `nginx.conf` file is used as config file for the base image,`nginxinc/nginx-unprivileged:1.23-alpine-perl`, of `frontend` container image.
   - So, `frontend` app is running on port `8080` of container and listens on `0.0.0.0:8080`.
-  - That means the running `frontend` app on port `8080` is accessible from both external and localhost of container
+  - That means the running `frontend` app on port `8080` is accessible from both external sources of container and the container's localhost.
   - As a result, VM has access to the running `frontend` app inside container on this `8080` port.
-
-
-
-- 3rd step of users access `frontend` app
-  - The `frontend` service container’s port `8080` is running `frontend` app, so user can acceess the running `frontend` app now.
-  - Requirment: The firwall of VPC network that VM lives in allows inbound traffic on http port 80 and hppts port 443
-  - Requirment: No other service conflicts on port 80 or port 443 on the VM
 
 **👉 The case of `NO Nginx` in VM**:
 
-- We defined `frontend` as a service in `docker-compose.yml` and `docker-swarm.yml` files
+- App user in browser **->** `http port 80` in VM
+  - So, when app user enters VM's public external IP with `http port 80` by default (eg. `https://172.18.0.2`) in browser.
+  - The app user would access the `http port 80` in VM.
 
-  - The step of exposing `frontend` app from internal container to external of container or allowing VM to access `frontend` app in container:
-    - We set `server { listen 8080; ...}` in the `nginx.conf` file. `Nginx` will bind host to all interfaces `(0.0.0.0)` by default if we don't sepcify a host explicitly.
-    - `nginx.conf` file is used as config file for the base image,`nginxinc/nginx-unprivileged:1.23-alpine-perl`, of `frontend` container image.
-    - So, `frontend` app is running on port `8080` of container and listens on `0.0.0.0:8080`.
-    - As a result, VM has access to `frontend` app inside container.
-  - The step of VM accesses the running `frontend` app inside container
-    - We set the `ports` of `frontend` service to be `80:8080` in `docker-compose.yml` and `docker-swarm.yml` files.
-    - Docker publishes port with `80:8080`, so that Docker maps VM’s `default http port 80` to `frontend` service container’s port `8080`.
-    - As a result, Docker handles **forwarding** traffic from VM’s default port 80 → `frontend` service container’s port 8080.
-  - The step of users access `frontend` app
+- `http port 80` in VM **->** `http port 8080` in container (`frontend` app)
+  - We set the `ports` of `frontend` service to be `80:8080` in `docker-compose.yml` and `docker-swarm.yml` files.
+  - Docker publishes port with `80:8080`, so that Docker maps VM’s `default http port 80` to `frontend` service container’s port `8080`.
+  - As a result, Docker handles **forwarding traffic** from VM’s `default port 80` -> `http port 8080` in container (`frontend` app).
 
-    - In internet, all app users access VM by entering VM's public external IP with `http port 80` by default (eg. `http://172.18.0.2`).
-    - The app user's request to VM's port 80 will be forwarded by Docker to `frontend` service container’s port `8080`.
-    - The `frontend` service container’s port `8080` is running `frontend` app, so user can acceess the running `frontend` app now.
-    - Requirment: The firwall of VPC network that VM lives in allows inbound traffic on http port 80
-    - Requirment: No other service conflicts on port 80 on the VM
+- `http port 8080` in container (`frontend` app) **->** the running `frontend` app
+  - We set `server { listen 8080; ...}` in the `nginx.conf` file. The `Nginx` serving `frontend app` will **bind host to all interfaces** `(0.0.0.0)` or **listen to all network interfaces** by default if we don't sepcify a host explicitly.
+  - `nginx.conf` file is used as config file for the base image,`nginxinc/nginx-unprivileged:1.23-alpine-perl`, of `frontend` container image.
+  - So, `frontend` app is running on port `8080` of container and listens on `0.0.0.0:8080`.
+  - That means the running `frontend` app on port `8080` is accessible from both external sources of container and the container's localhost.
+  - As a result, VM has access to the running `frontend` app inside container on this `8080` port.
 
 **The Network Routing Explanation between docker container of frontend app and docker containers of all backend apps**
 
-- We set `proxy_pass` in the `nginx.conf` file. `Nginx` forward frontend app's traffic to the destination we specify
-  - set `proxy_pass http://go-backend:8000/`, to forward all `/api/go/` api calls to the `8000` port of `go-backend`.
-  - `go-backend` is **Docker service name**, and containers can communicate using the service name as the hostname in **Docker Compose** and **Docker Swarm** (Swarm extends this across multiple nodes).
+- From previous `The Network Routing Explanation between app user in browser and docker container of frontend app` subsection, we know the **api calls** from app user's browser would be forwarded to the `Nginx` serving `frontend app`.
+
+- We set `proxy_pass` in the `nginx.conf` file. The `Nginx` serving `frontend app` would **forward all incoming traffic** to the destination we specify.
+
+- We set `proxy_pass http://go-backend:8000/`, to forward all `/api/go/` api calls to the `8000` port of `go-backend` container.
+  - `go-backend` in `http://go-backend:8000/` is **Docker service name**, and containers can communicate using the service name as the hostname in **Docker Compose** and **Docker Swarm** (Swarm extends this across multiple nodes).
   - **Docker DNS** resolves Docker service name to the container's internal IP on the shared network.
   - The api call request is sent over Docker’s virtual network from `frontend` service container to `go-backend` service container.
-  - `go-backend` app running inside `go-backend` service container is listening on `0.0.0.0:8000`, so it accepts the request.
-  - Note: if `go-backend` app is not set to listen on all network interfaces, `0.0.0.0`, app will reject the request.
-  - Note: We should use `http://docker service name:port/` instead of `http://localhost:8000/` because frontend app is running on different containers from all other backend apps.
-  - Same logic for `proxy_pass http://node-backend:3000/`
-  - Same logic for `proxy_pass http://python-backend:8088/`
+
+- `go-backend` app running inside `go-backend` service container is listening on `0.0.0.0:8000` (**listening to all network interfaces**), so it accepts the incoming api call request.
+
+- **📌 Note 1**: if `go-backend` app is not set to listen on all network interfaces, `0.0.0.0`, app will reject the request.
+- **📌 Note 2**: We should use `http://docker service name:port/` instead of `http://localhost:8000/` because frontend app is running on different containers from all other backend apps.
+- Same logic for `proxy_pass http://node-backend:3000/`
+- Same logic for `proxy_pass http://python-backend:8088/`
 
 ## <a name="deploy-app-in-gke">☁️ GKE (GCP): Deploy App as K8s Cluster</a>
 
