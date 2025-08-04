@@ -47,6 +47,7 @@
 8. 🏗️ [Deploy app on 🛠️Staging and 🚀Prod environments](#deploy-app-on-staging-and-pro)
    - ⭐ [Deploy App on Staging environment](#deploy-app-on-staging-env)
    - ⭐ [Error & Solution after App Deployment](#error-solution-after-app-deployment)
+   - ⭐ [Set up GCP Authorization, Domain and HTTPS for Staging Env](#set-up-gcp-authorization-domain-https-for-staging-env)
    - ⭐ [](#)
 9. 🔁☸️ [GKE (GCP): Deploy App with CI&CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
    - ⭐ [](#)
@@ -1571,24 +1572,6 @@ task gcp:09-clean-up
   task kluctl:deploy-staging
   ```
 
-TODO: move to next subsection
-
-- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** by running:
-
-  ```bash
-  kubectl get all -n traefik
-
-  OR
-
-  kubectl get svc -n traefik
-  ```
-
-- **🚨 Important Step**: Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
-
-- **🚨 Important Step**: Set up **Domain and HTTPS (SSL/TLS)** by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
-
-- 🎉 Now, You can access your app via `https` (eg. `https://yourDomainName`) in browser.
-
 ### <a name="error-solution-after-app-deployment">⭐ Error & Solution after App Deployment</a>
 
 **🚨 Important Error**:
@@ -1614,7 +1597,25 @@ For safer option, you can still fix it easily by **redeploying the app with runn
 - After you redeploy the app, this **error won't show again** because the **CRDs** including `IngressRoute` **already registered** in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes `"known"` to the API server.
 - So, the 2nd deployment will **succeed without error** when applying `IngressRoute` resources in app.
 
-### <a name="deploy-apps-in-k8s-cluster">⭐ ???</a>
+### <a name="set-up-gcp-authorization-domain-https-for-staging-env">⭐ Set up GCP Authorization, Domain and HTTPS for Staging Env</a>
+
+- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** by running:
+
+  ```bash
+  kubectl get all -n traefik
+
+  OR
+
+  kubectl get svc -n traefik
+  ```
+
+- **🚨 Important Step**: Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
+
+- **🚨 Important Step**: Set up **Domain and HTTPS (SSL/TLS)** by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
+
+- 🎉 Now, You can access your app via `https` (eg. `https://yourDomainName`) in browser.
+
+### <a name="deploy-app-on-production-env">⭐ Deploy App on Production environment</a>
 
 **1 -** Deploy app to **Production** environment cluster
 
