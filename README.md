@@ -38,7 +38,7 @@
 7. ☁️🐳🐳 [GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳](#deploy-app-in-gce-with-docker-swarm)
    - ⭐ [Deploy app in GCE VM with Docker Swarm](#deploy-app-gce-vm-with-docker-swarm)
    - ⭐ [Potential App Latency Issue in Swarm](#potential-app-latency-issue-in-swarm)
-   - ⭐ [](#)
+   - ⭐ [Set up Auto-restart when VM Reboots](#set-up-auto-restart)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [](#)
@@ -1163,26 +1163,36 @@ You can try one or more of the solutions below to fix the issue or improve app l
 
 - **3rd Solution**: 💸 **Pay to upgrate your free VM to a higher machine type** for getting more CPU and RAM.
 
-### <a name="potential-app-latency-issue-in-swarm">⭐ Set up Auto-restart when VM Reboots</a>
+### <a name="set-up-auto-restart">⭐ Set up Auto-restart when VM Reboots</a>
 
 TODO: Test it
 
-4. 🚨 Important: Make sure Docker Swarm, the Docker Swarm Services running apps inside Docker Swarm and Docker Swarm secrets auto-restart after **VM reboots**.
+Set up **Docker Swarm, Docker Swarm Services (running apps inside Docker Swarm) and Docker Swarm secrets to auto-restart** after **VM reboots**.
 
-- Set auto-restart for Docker Swarm and Docker Swarm Services running apps inside Docker Swarm.
+**Docker Swarm and Docker Swarm Services (running apps inside Docker Swarm)**:
 
-  - If you **DIDN'T** set the Docker daemon start automatically at VM reboot in previous **Deploy App with Docker Compose in GCE VM** section, just set it here by running
-    ```
-    sudo systemctl enable docker
-    systemctl is-enabled docker
-    ```
-  - The Docker Swarm and the Docker Swarm Services running apps will auto-restart too after VM reboots because
-    - Swarm stores service definitions and desired state in the `Raft store` under `/var/lib/docker/swarm/` on disk.
-    - When Docker Engine restarts, Swarm reboots as well, and any services not currently running will be re-deployed automatically by the Swarm manager with Swarm Services.
+- If you **DIDN'T** set **Docker Engine and Nginx** to auto-restart at VM reboots in previous **previous ☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section, you can set it here by running:
 
-- Docker Swarm secrets persist even if the **Swarm manager node restarts or the VM reboots** because Swarm stores secrets in the `Raft log` that is Persisted on disk in `/var/lib/docker/swarm/`.
-  - But, the secrets used by Swarm Services would be deleted if there is only **1** manager node and **that gets destroyed**.
-  - So, We need to recreate the secrets if we want to start swarm mode again after leaving swarm mode by running `docker swarm leave --force` cli that would delete all stored secrets.
+  ```bash
+  sudo systemctl enable docker
+
+  systemctl is-enabled docker
+
+  sudo systemctl enable nginx
+
+  systemctl is-enabled nginx
+  ```
+
+- The Docker Swarm and the Docker Swarm Services (running apps inside Docker Swarm) **will auto-restart too after VM reboots because**
+  - **Swarm stores service definitions and desired state** in the `Raft store` under `/var/lib/docker/swarm/` on disk.
+  - **When Docker Engine restarts, Swarm reboots as well**. Any **Docker Swarm Services** not currently running will **be re-deployed automatically** by the **Swarm manager** with Swarm Services.
+
+**Docker Swarm secrets** persist even if the **Swarm manager node restarts or the VM reboots** because Swarm stores secrets in the `Raft log` that is Persisted on disk in `/var/lib/docker/swarm/`.
+
+- But, the **secrets** used by Swarm Services **would be deleted** if there is only **1 manager node** and **that gets destroyed**.
+- So, We **need to recreate the secrets** if we want to **start swarm mode again after leaving swarm mode** by running `docker swarm leave --force` CLI that would **delete all stored secrets**.
+
+
 
 TODO: move to Docker compose section?
 
