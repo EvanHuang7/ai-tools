@@ -1205,38 +1205,37 @@ Below explanation is for 1 node Docker Swarm or Docker Compose?
 
 **👉 The case of running `Nginx` in VM**:
 
-- Default behaviour of running `Nginx` after installation.
-  - When you installed and run `Nginx` in VM, it does bind to `0.0.0.0` by default, which means it listens on all network interfaces — public and private IPs of your VM.
+- **Default behaviour** of running `Nginx` **after installation**.
+  - When we installed and run `Nginx` in VM, it does bind to `0.0.0.0` by default, which means **it listens on all network interfaces — public and private IPs of VM**.
   - When running `Nginx`, it uses default `port 80 (HTTP)` and default `443 (HTTPS)` of VM by default.
-  - We configed our VM to get a SSL certicate in `Nginx`.
-  - Running Nginx in VM serves a SSL certicate, which allows user to access VM by `https`.
-  - So, when all app users access VM by entering VM's public external IP with `http port 80` (eg. `http://172.18.0.2`) or `https port 443` (eg. `https://172.18.0.2`) by default.
-  - The app users would access the `Nginx` app.
-- The step to use `Nginx` in VM as a proxy to forward all incoming requests of VM
+  - We configed the `running Nginx` in VM serves a `SSL/TSL` certicate, which allows user to access VM by `https`.
 
+- App user in browser **->** `https port 443` in VM
+  - So, when app user enters VM's public external IP with `https port 443` by default (eg. `https://172.18.0.2`) in browser.
+  - The app user would access the running `Nginx` in VM.
+
+- `https port 443` in VM **->** `http port 8080` in VM
   - We configed the `Nginx config` file in VM with `proxy_pass http://localhost:8080`.
+  - This config would set `Nginx` as a proxy to forward all incoming traffic (default `https 443 port`) to `http://localhost:8080` of VM.
 
-  TODO: 🚨 Test it, because looks like we only config the forwarding for `https 443 port` no `http 80 port` unless HTTP is automatically redirected to HTTPS by `Nginx` by default
+- `http port 8080` in VM **->** `http port 8080` in container (`frontend` app)
+  - We set the `ports` of `frontend` service to be `8080:8080` in `docker-compose.yml` and `docker-swarm.yml` files.
+  - Docker publishes port with `8080:8080`, so that Docker maps VM’s `port 8080` to `frontend` service container’s port `8080`.
+  - As a result, Docker handles **forwarding** traffic from VM’s port 8080 -> `frontend` service container’s port 8080.
 
-  - This config would let `Nginx` forward all of its incoming traffic (default `http 80 port` and `https 443 port`) to `http://localhost:8080` of VM.
+- `http port 8080` in container (`frontend` app) **->** the running `frontend` app
+  - We set `server { listen 8080; ...}` in the `nginx.conf` file. The `Nginx` serving `frontend app` will **bind host to all interfaces** `(0.0.0.0)` or **listen to all interfaces** by default if we don't sepcify a host explicitly.
+  - `nginx.conf` file is used as config file for the base image,`nginxinc/nginx-unprivileged:1.23-alpine-perl`, of `frontend` container image.
+  - So, `frontend` app is running on port `8080` of container and listens on `0.0.0.0:8080`.
+  - That means the running `frontend` app on port `8080` is accessible from both external and localhost of container
+  - As a result, VM has access to the running `frontend` app inside container on this `8080` port.
 
-- The step of accessing `frontend` app
-  - 1st step of exposing `frontend` app from internal container to external of container or allowing VM to access `frontend` app in container:
-    - We set `server { listen 8080; ...}` in the `nginx.conf` file. `Nginx` will bind host to all interfaces `(0.0.0.0)` by default if we don't sepcify a host explicitly.
-    - `nginx.conf` file is used as config file for the base image,`nginxinc/nginx-unprivileged:1.23-alpine-perl`, of `frontend` container image.
-    - So, `frontend` app is running on port `8080` of container and listens on `0.0.0.0:8080`.
-    - As a result, VM has access to `frontend` app inside container on this `8080` port.
-  - 2nd step of VM accesses the running `frontend` app inside container
-    - We set the `ports` of `frontend` service to be `8080:8080` in `docker-compose.yml` and `docker-swarm.yml` files.
-    - Docker publishes port with `8080:8080`, so that Docker maps VM’s `port 8080` to `frontend` service container’s port `8080`.
-    - As a result, Docker handles **forwarding** traffic from VM’s port 8080 → `frontend` service container’s port 8080.
-  - 3rd step of users access `frontend` app
-    - In internet, all app users access VM by entering VM's public external IP with `http port 80` or with `https port 443` by default (eg. `http://172.18.0.2` or `https://172.18.0.2`).
-    - The app users would access the `Nginx` app first, and `Nginx` app would forward it's incoming traffic to `http://localhost:8080` of VM.
-    - The incoming traffic of `http://localhost:8080` of VM would be forwarded by Docker to `frontend` service container’s port `8080`.
-    - The `frontend` service container’s port `8080` is running `frontend` app, so user can acceess the running `frontend` app now.
-    - Requirment: The firwall of VPC network that VM lives in allows inbound traffic on http port 80 and hppts port 443
-    - Requirment: No other service conflicts on port 80 or port 443 on the VM
+
+
+- 3rd step of users access `frontend` app
+  - The `frontend` service container’s port `8080` is running `frontend` app, so user can acceess the running `frontend` app now.
+  - Requirment: The firwall of VPC network that VM lives in allows inbound traffic on http port 80 and hppts port 443
+  - Requirment: No other service conflicts on port 80 or port 443 on the VM
 
 **👉 The case of `NO Nginx` in VM**:
 
