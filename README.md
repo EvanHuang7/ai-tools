@@ -1010,7 +1010,7 @@ TODO: Test it
   docker ps
   ```
 
-## <a name="deploy-app-in-gce-with-docker-swarm">☁️ GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳</a>
+## <a name="deploy-app-in-gce-with-docker-swarm">☁️🐳🐳 GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳</a>
 
 **Deploy app as Docker services that manage tasks (containers) via Docker Swarm**.
 
@@ -1118,6 +1118,8 @@ TODO: Test it
   docker node ls
   ```
 
+- Set up **Authorization for running app in GCP VM** by following the steps in **⭐ Set up GCP services authorization for app** subsection, IF you **DIDN'T** finish previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section.
+
 ### <a name="potential-app-latency-issue-in-swarm">⭐ Potential App Latency Issue in Swarm</a>
 
 **🚨 Potential Issue**:
@@ -1171,7 +1173,7 @@ Set up **Docker Swarm, Docker Swarm Services (running apps inside Docker Swarm) 
 
 **Docker Swarm and Docker Swarm Services (running apps inside Docker Swarm)**:
 
-- If you **DIDN'T** set **Docker Engine and Nginx** to auto-restart at VM reboots in previous **previous ☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section, you can set it here by running:
+- If you **DIDN'T** set **Docker Engine and Nginx** to auto-restart at VM reboots in previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section, you can set it here by running:
 
   ```bash
   sudo systemctl enable docker
