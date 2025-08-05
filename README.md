@@ -44,7 +44,7 @@
    - ⭐ [Create VPC, Subnet and K8s Cluster](#create-vpc-subnet-k8s-cluster)
    - ⭐ [Set up K8s Cluster](#set-up-k8s-cluster)
    - ⭐ [Deploy Apps in K8s Cluster](#deploy-apps-in-k8s-cluster)
-9. 🏗️☸️ [GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod environments](#deploy-app-on-staging-and-pro)
+9. 🏗️☸️ [GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod Environments](#deploy-app-on-staging-and-pro)
    - ⭐ [Deploy App on Staging Environment](#deploy-app-on-staging-env)
    - ⭐ [Error & Solution after App Deployment](#error-solution-after-app-deployment)
    - ⭐ [Set up GCP Authorization, Domain and HTTPS for Staging Env](#set-up-gcp-authorization-domain-https-for-staging-env)
@@ -1539,7 +1539,7 @@ Remember to **remove the cluster** after you **finish testing or development** b
 task gcp:09-clean-up
 ```
 
-## <a name="deploy-app-on-staging-and-pro">🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod environments</a>
+## <a name="deploy-app-on-staging-and-pro">🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod Environments</a>
 
 **🚨 Important Note**:
 
@@ -1708,20 +1708,31 @@ Remember to **remove ALL clusters** after you **finish testing or development** 
 
 ## <a name="deploy-app-with-ci-cd-in-cluster">🔁☸️ GKE (GCP): Deploy App with CI&CD in K8s Cluster</a>
 
-We will use `GitHub actions` for Continuous Integrataion and `Kluctl GitOps` for Continuous Deployment.
+We will use `GitHub actions` for **Continuous Integrataion (CI)** and `Kluctl GitOps` for **Continuous Deployment (CD)**.
 
-📌 Note: The concept of `GitOps` is to have a **controller** running in K8s cluster. The controller is able to **automatically pull updates from Git**, which can be triggered via a webhook. This keep those updates in sync with the deployed state of cluster.
+> **📌 Note**: The concept of `GitOps` is to have a **controller** running in K8s cluster. The controller is able to **automatically pull updates from Git**, which can be triggered via a webhook. This keep those updates in sync with the deployed state of cluster.
 
-🚨 Important: The **Set up different app environment (🛠️Staging and 🚀Prod)** section is required to be finished first before starting this section.
+**🚨Important Step**: 
 
-1. Add necessary secrets to you GitHub repo, which allow GitHub workflow to use
+The previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod Environments** section is required to be finished first before starting this section, **IF YOU DIDN'T FINISH** this previous section yet.
 
-- Go to your GitHub repository of this project
+**1 -** Add necessary **secrets** to you **GitHub repo**, which allow **GitHub workflow** to use
+
+- Go to your **GitHub repository of this project**
 - Click **Settings → Secrets and variables → Actions** button
-- Click click **New repository secret** button
+- Click **New repository secret** button
 - Add `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`, and `MY_GITHUB_ACTION_PAT` secrets.
 
-2. Verify the **Continuous Integrataion** process by updating and pushing any code change in `frontend` folder, so that you can check if the push triggers a workflow in the `Actions` tab of your GitHub repository. Also, it will create a new PR including the image tag version change for **ONLY Staging enviroment**.
+**2 -** Verify the **Continuous Integrataion** process by **updating and pushing any code change** in `frontend` folder, so that you can check if the code push action **triggers a workflow** in the `Actions` tab of your **GitHub repository**. Also, it will **create a new PR** including the image tag version change for **ONLY Staging enviroment**.
+
+**🚨 Important Note**:
+
+> You need to **uncomment out** 2 lines `main branches` code in `image-ci-docker-vm.yml` or `image-ci.yml` file first in order to trigger a **Git Action workflow for your frontend code change**
+>
+>  ```bash
+>  # branches:
+>      #   - "main"
+>  ```
 
 ⚠️ Note: The GitHub workflow would also update the new image tag for **Production environment in the new PR ONLY IF** a **new released tag** matching **0.0.0** format is **pushlised** in GitHub Repo. You can test this by trying to publish a tag in your GitHub Repo.
 
