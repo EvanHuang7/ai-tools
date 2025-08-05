@@ -1542,6 +1542,8 @@ task gcp:09-clean-up
 >
 > Please make sure to update the `hostName` in `production.yaml` and `staging.yaml` files of `config` folder of `kluctl` folder to your own host name.
 >
+> If you don't want to set up a domain name for the app, you need to remove all the usages of 👉 **Host(`{{ sharedVars.hostName }}`)** 👈 in all `IngressRoute.yaml` files of `kluctl` folder. This makes sure Load Balancer use correct `IngressRoute` to route the incoming traffic.
+>
 > The current `kluctl` folder does not include `External Secret` deployment yet, and the service deployments are all using local `Secret` resource files to generate K8s sceret. So, you should deploy `External Secret` manually first if you need to use `External Secret` in services.
 
 ### <a name="deploy-app-on-staging-env">⭐ Deploy App on Staging environment</a>
