@@ -45,10 +45,10 @@
    - ⭐ [Set up K8s Cluster](#set-up-k8s-cluster)
    - ⭐ [Deploy Apps in K8s Cluster](#deploy-apps-in-k8s-cluster)
 9. 🏗️☸️ [GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod environments](#deploy-app-on-staging-and-pro)
-   - ⭐ [Deploy App on Staging environment](#deploy-app-on-staging-env)
+   - ⭐ [Deploy App on Staging Environment](#deploy-app-on-staging-env)
    - ⭐ [Error & Solution after App Deployment](#error-solution-after-app-deployment)
    - ⭐ [Set up GCP Authorization, Domain and HTTPS for Staging Env](#set-up-gcp-authorization-domain-https-for-staging-env)
-   - ⭐ [Deploy App on Production environment](#deploy-app-on-production-env)
+   - ⭐ [Deploy App on Production Environment](#deploy-app-on-production-env)
 10. 🔁☸️ [GKE (GCP): Deploy App with CI&CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
    - ⭐ [](#)
    - ⭐ [](#)
@@ -1551,7 +1551,7 @@ task gcp:09-clean-up
 >
 > The current `kluctl` folder does not include `External Secret` deployment yet, and the service deployments are all using local `Secret` resource files to generate K8s sceret. So, you should deploy `External Secret` manually first if you need to use `External Secret` in services.
 
-### <a name="deploy-app-on-staging-env">⭐ Deploy App on Staging environment</a>
+### <a name="deploy-app-on-staging-env">⭐ Deploy App on Staging Environment</a>
 
 **1 -** Create a **seperate new cluster** for deploying app to `Staging` environment **IF YOU ONLY have 1 cluster** running for deploying `Production` environment.
 
@@ -1635,7 +1635,7 @@ For safer option, you can still fix it easily by **redeploying the app with runn
 
 - 🎉 Now, You can access your `staging` app via `https` (eg. `https://yourDomainName`) in browser.
 
-### <a name="deploy-app-on-production-env">⭐ Deploy App on Production environment</a>
+### <a name="deploy-app-on-production-env">⭐ Deploy App on Production Environment</a>
 
 **1 - Deploy app to Production** environment cluster
 
@@ -2074,9 +2074,9 @@ task tilt-up
 
 ## <a name="about-the-author">👨‍💼 About the Author</a>
 
-Hi! I'm Evan Huang — a full-stack software developer with 4+ years of experience in web applications, real-time systems, and cloud integration. I’m passionate about building scalable products with clean architecture, elegant UI/UX, and modern technologies like React, Node.js, MongoDB.
+Hi! I'm Evan Huang — a full-stack software developer with 4+ years of experience in web applications, real-time systems, and cloud integration. I’m passionate about building scalable products with clean architecture, elegant UI/UX, and modern technologies like Google Cloud Platform, React, Node.js, Go, Python.
 
-This chat app project was completed on **May 4, 2025**, and reflects my focus on full stack development, cloud infrastructure, and responsive design into real-world solutions.
+This AI tools app project was completed on **August 8, 2025**, and reflects my focus on full stack development, cloud infrastructure, and responsive design into real-world solutions.
 
 Feel free to connect with me in LinkedIn or GitHub!
 
