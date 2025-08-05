@@ -54,7 +54,7 @@
    - ⭐ [Deploy App with GitOps in Staging Cluster](#deploy-app-with-gitops-in-staging)
    - ⭐ [Error & Solution after App Deployment with GitOps in Staging Cluster](#error-solution-after-app-deployment-with-gitops)
    - ⭐ [Set up GCP Authorization, Domain and HTTPS for Staging Cluster with GitOps](#set-up-gcp-authorization-domain-https-for-staging-env-gitOps)
-   - ⭐ [](#)
+   - ⭐ [Deploy App with GitOps in Production Cluster](#deploy-app-with-gitops-in-production)
 11. 🔁🐳 [GCE(GCP) VM: Set up CI&CD for App Deployment in Docker](#set-up-ci-cd-in-docker)
    - ⭐ [](#)
    - ⭐ [](#)
@@ -1865,15 +1865,60 @@ For safer option, you can still fix it easily by clicking the **kebab menu butto
 
 ### <a name="deploy-app-with-gitops-in-production">⭐ Deploy App with GitOps in Production Cluster</a>
 
-- Switch to **production cluster** by running `kubectx <custer-context-name>` cli, and follow the same step to deploy the app to **production cluster**.
+**1 - Deploy app to Production** environment cluster
 
-- Now, the kluctl deployment will watch the Git Repo and check for **any new Git commits pushed to GitHub** and rerun the re-deployment every 5 minutes. The re-deployment would still start even if the commits change does not include the files in `kluctl` folder that is used by **kluctl deployment to render and apply resources**.
+- View all existing clusters and **Switch to `Production` cluster**
+  - 1st CLI is to view all existing created cluster
+  - 2nd CLI is to switch cluster
+  - Remember replace `<custer-context-name>` placeholder to real `Production` cluster context name
 
-- **Verifying auto-deployment for Clusters**, you can push a new commit to GitHub by editing any `frontend UI text` and check if new K8s pods created or check if there is a deployment process in kluctl web ui.
+  ```bash
+  kubectx
 
-📌 Note: You can **ONLY** see the `Reconciliation State` time of application is updated in kluctl web ui, **but there is NO** new pod created in K8s because K8s did not find out any changes of existing deployments, so it skip creating new pods.
+  kubectx <custer-context-name>
+  ```
 
-- Follow the same steps in **⭐ Error & Solution after App Deployment with GitOps in Staging Env** subsection to resolve the deployment error in **Production environment cluster**.
+- Follow the **same steps** in the previous subsections of **Staging Cluster** to deploy the app with `GitOps` into **Production cluster**.
+
+**2 - Verify CI&CD proceess** for `Staging` and `Production` Clusters
+
+  > **📌 Note**: For some cases, you can **ONLY** see the `Reconciliation State` time of application is updated in `kluctl web ui`, **but there are NO** new pods created in **K8s Cluster** because K8s **did not find out any changes of existing deployments**, so it **skip** creating new pods.
+
+- Now, the `Kluctl deployment` will **watch the Git Repo** and check for **any new Git commits pushed to GitHub** and re-run the **re-deployment every 5 minutes**. 
+- The re-deployment would still start even if the commits change does not include the files in `kluctl` folder that is used by **kluctl deployment to render and apply resources**.
+- **Verifying auto-deployment for `Staging` Cluster**: 
+  - **Push a new commit** to GitHub by editing any `frontend UI text`.
+  - Check if the code push action **triggers a workflow** in the `Actions` tab of your **GitHub repository**. 
+  - **Merge the auto-created PR** to update the new image tags for `Staging` cluster.
+  - Check if there are **new K8s pods created** in `Staging` K8s cluster or a deployment process started in `kluctl web ui`.
+- **Verifying auto-deployment for `Production` Cluster**:
+  - Publish a **new released tag** matching `0.0.0` format in **GitHub Repo**.
+  - **Merge the auto-created PR** to update the new image tags for `Staging` and `Production` clusters.
+  - Check if there are **new K8s pods created** in `Staging` and `Production` K8s clusters or a deployment process started in `kluctl web ui`.
+
+**3 - 🚨🚨💸💸 Clean up to aviod cost 💸💸🚨🚨**
+
+Remember to **remove ALL clusters** after you **finish testing or development** because the running clusters with K8s resource **charges you by running time**. You can use **new GCP user 300$ free credit to cover the fee for first 3 months if you are new GCP user**, but you will need to **💸 PAY 💸** after 3 months.
+
+- Only Delete the **entire staging cluster** by running
+
+  ```bash
+  gcloud container clusters delete ai-tools-staging --zone us-central1-a
+  ```
+
+- OR only delete the **K8s resources in staging cluster**, but still **keeping the running staging cluster** by running
+
+  ```bash
+  task kluctl:delete-staging
+  ```
+
+- Delete **everything** including the GCP network, subnet, firewall rules, and **ONLY Production cluster** by running:
+
+> **🚨 Important Note**: This task CLi **ONLY delete `ai-tools` Production cluster**, so you have to update this task CLI to include a CLI for deleting **Staging cluster**.
+
+  ```bash
+  task gcp:09-clean-up
+  ```
 
 ## <a name="set-up-ci-cd-in-docker">🔁🐳 GCE(GCP) VM: Set up CI&CD for App Deployment in Docker</a>
 
