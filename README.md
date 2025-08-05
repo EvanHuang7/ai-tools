@@ -61,7 +61,7 @@
    - ⭐ [](#)
 12. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
    - ⭐ [Build App Container Images & Upload them to Docker Hub](#build-app-container-image-and-pus)
-   - ⭐ [](#)
+   - ⭐ [Deploy App in Kind Cluster](#deploy-app-in-kind-cluster)
 13. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
 14. 👨‍💼 [About the Author](#about-the-author)
 
@@ -1908,133 +1908,150 @@ Build **container images of app services** and **upload to Docker hub**, so that
 
 ### <a name="deploy-app-in-kind-cluster">⭐ Deploy App in Kind Cluster</a>
 
-**3 -** Create a Kind cluster locally
+**1 -** Create a `Kind` cluster **locally**
 
-- Generate Kind config file based on you file absolute path and create Kind cluster that is actually Docker containers in Docker Desktop VM locally
+- Generate `kind-config.yaml` file based on you file absolute path and create `Kind` cluster that is **actually Docker containers in Docker Desktop VM locally**
 
   ```bash
   task kind:01-generate-config
+
   task kind:02-create-cluster
   ```
 
-- Check your kind cluster (This cli allows you to view and select existing created cluster)
+- Verify your kind cluster
 
   ```bash
   kubectx
   ```
 
-- Check your nodes and system pods in kind cluster
+- Verify your nodes and system pods in kind cluster
 
   ```bash
   kubectl get nodes
+
   kubectl get pods -A
   ```
 
-- Enable Load Balancer service in Local Kind Cluster by opening a **2nd devbox shell terminal** in proejct and running (Remember switch back to 1st terminal and leave 2nd terminal running in the background):
+- Enable **Load Balancer service** in **Local Kind Cluster** by opening a **2nd project terminal** in proejct and running
+
+  > Remember **switch back to 1st terminal** and **leave 2nd terminal running** in the background
 
   ```bash
   devbox shell
+
   task kind:03-run-cloud-provider-kind
   ```
 
-4. Create namespace and deploy Traefik ingress controller in Kind Cluster locally first
+**2 -** Create **namespace and deploy Traefik ingress controller** in `Kind` Cluster locally
 
-- Make sure you are currently using Kind cluster by running (Switch cluster by running `kubectx <custer-context-name>`):
+- Make sure you are currently using `Kind` cluster by running
+
+  > If `Kind` cluster is not selected in K8s cluster context, you can run `kubectx <custer-context-name>` CLI to switch K8s cluster.
 
   ```bash
   kubectx
   ```
 
-- Create namespace
+- Create **namespace**
 
   ```bash
   task common:apply-namespace
   ```
 
-- Deploy Traefik ingress controller in Local Kind cluster with Load Balancer serivce
+- Deploy **Traefik ingress controller** in Local Kind cluster with **Load Balancer serivce**
 
-  - 📌 Note: It will provision a Load Balancer with an ExternalIP assigned by Traefik default setting, so it will cause **Load Balancer and ExternalIP fee 💸💸** if you run it in **GKE of GCP**. But, it won't provision a real Load Balancer and an ExternalIP for local Kind cluster case, so you won't be charged for this case.
+  > **📌 Note**:
+  > The Load Balancer serivce is running in **2nd project terminal** now.
+  >
+  > **IF YOUR RUN IT IN GKE of GCP**, It will provision a **REAL** Load Balancer with an ExternalIP assigned by Traefik default setting. This will cause **Load Balancer and ExternalIP fee 💸💸**.
+  >
+  > However, it **won't provision** a real Load Balancer and an ExternalIP for **local Kind cluster** case, so you **won't be charged** for this case.
 
   ```
   task common:deploy-traefik
   ```
 
-- Check all resources in traefik namespace (Note: the ExternalIP of LoadBalancer will stay `pending` forever if you don't run cli, `task kind:03-run-cloud-provider-kind`, to enable ExternalIP for Load Balancer in Local Kind Cluster in a seperate terminal)
+- Verify all **resources in traefik namespace** 
+
+  > **📌 Note**: the ExternalIP of LoadBalancer will stay `pending` forever if you don't run CLI, `task kind:03-run-cloud-provider-kind`, to **run the Load Balancer in the background and enable ExternalIP** for Local Kind Cluster in **2nd project terminal**.
 
   ```bash
   kubectl get all -n traefik
   ```
 
-- Apply the Traefik middleware to strip path prefix for all incoming requests by ingress controller
+- Apply the **Traefik middleware to strip path prefix** for all incoming requests by ingress controller
 
   ```bash
   task common:apply-traefik-middleware
   ```
 
-5. Deploy all app services in Kind Cluster locally by using K8s resource definition that are using container images
+**3 - Deploy all app services in Kind Cluster locally** by using K8s resource definition that are using container images
 
-- Deploy go backend app in Local Kind cluster
+- Deploy `go backend` app in Local Kind cluster
 
   ```bash
   task go-k8s-resource-defins:apply
   ```
 
-- Deploy node backend app in Local Kind cluster
+- Deploy `node backend` app in Local Kind cluster
 
   ```bash
   task node-k8s-resource-defins:apply
   ```
 
-- Deploy python backend app in Local Kind cluster
+- Deploy `python backend` app in Local Kind cluster
 
   ```bash
   task python-k8s-resource-defins:apply
   ```
 
-- Deploy frontend app in Local Kind cluster
+- Deploy `frontend` app in Local Kind cluster
 
   ```bash
   task frontend-k8s-resource-defins:apply
   ```
 
-- Check pod and service in ai-tools namespace after deploying all app services
+- Verify pods and services in `ai-tools` namespace after deploying all app services
 
   ```bash
   kubectl get pods -n ai-tools
+
   kubectl get svc
   ```
 
-6. View the app locally with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer by running:
-
-```bash
-kubectl get all -n traefik
-
-OR
-
-kubectl get svc -n traefik
-```
-
-- Useful kubectl clis for debug
-
-  - Print the logs of pod
-  - Show the details of pod. You can view the liveness, Readiness and all conditions of pod
-
-  - Show all services in namespace
-  - Show all pods in namespace
-  - Show all deployments in namespace
-  - Show all replicasets in namespace
-  - Show all resources in namespace
+- 🎉 Now, You can access your app **LOCALLY** with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** by running:
 
   ```bash
-  kubectl logs -n ai-tools <pod-name>
-  kubectl describe pod -n ai-tools <pod-name>
+  kubectl get all -n traefik
 
-  kubectl get svc -n ai-tools
-  kubectl get pods -n ai-tools
-  kubectl get deployment -n ai-tools
-  kubectl get replicaset -n ai-tools
-  kubectl get all -n ai-tools
+  OR
+
+  kubectl get svc -n traefik
   ```
+
+- **🚨 Important Step**: Set up **Authorization for running app in local machine** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
+
+**4 - 📌 Useful kubectl CLIs for debug**:
+
+- Print the logs of pod
+- Show the details of pod. You can view the liveness, Readiness and all conditions of pod
+
+- Show all services in namespace
+- Show all pods in namespace
+- Show all deployments in namespace
+- Show all replicasets in namespace
+- Show all resources in namespace
+
+```bash
+kubectl logs -n ai-tools <pod-name>
+kubectl describe pod -n ai-tools <pod-name>
+
+kubectl get svc -n ai-tools
+kubectl get pods -n ai-tools
+kubectl get deployment -n ai-tools
+kubectl get replicaset -n ai-tools
+kubectl get all -n ai-tools
+```
 
 ## <a name="develop-app-locally">🛠️ Develop App Locally with Kind & Tilt</a>
 
