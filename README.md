@@ -2054,23 +2054,27 @@ kubectl get replicaset -n ai-tools
 kubectl get all -n ai-tools
 ```
 
-## <a name="develop-app-locally">🛠️ Develop App Locally with Kind & Tilt</a>
+## <a name="develop-app-locally-kind-tilt">🛠️ Develop App Locally with Kind & Tilt</a>
 
-Deploy apps by using Tilt to better detact file changes and auto rebuild and push imamges to enable these changes in local cluster envriomeent as quickly as possbile.
+Deploy apps by using `Tilt` to better **detact file changes and auto rebuild and push images to enable these changes in local cluster** envrioment as quickly as possbile.
 
-Use Tilt, we can develop against a k8s config that will match as close as possbile to what we are going to run in production, which will allow us to identify and debug issues that live not only at application layer but also at k8s layeer or maybe in ingress controller.
+Use `Tilt`, we can **develop against a K8s config that will match as close as possbile to what we are going to run in production**, which will allow us to **identify and debug issues** that live not only at application layer but also at **K8s layer or maybe in ingress controller**.
 
-1. Make sure all apps are running in local kind cluster by finishing previous step, ⚙️ Deploy App in Kind Cluster Locally
+**🚨Important Step**: 
 
-2. Run Tilt and access Tilt page, `http://localhost:10350/`
+The previous **⚙️ Run App in Kind Cluster Locally** section is required to be finished first before starting this section, **IF YOU DIDN'T FINISH** this previous section yet.
 
-```
+**1 -** Make sure app **is running** in local `Kind` cluster now
+
+**2 -** Run `Tilt` and access Tilt page (`http://localhost:10350/`)
+
+```bash
 task tilt-up
 ```
 
-3. Set up Sync live update by following `https://docs.tilt.dev/tutorial/5-live-update.html` and `https://docs.tilt.dev/example_go.html` (set up instrcutions for different langauages)...........................................................
+**3 -** Set up **Sync live update** for all langauages (**Go, Node.js, Python**) by following those **2 Tilt guide pages** (`https://docs.tilt.dev/tutorial/5-live-update.html` and `https://docs.tilt.dev/example_go.html`)
 
-4. Work on your code, save files and the change will auto applied
+**4 -** Work on your code, save files and the change will auto applied
 
 ## <a name="about-the-author">👨‍💼 About the Author</a>
 
