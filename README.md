@@ -1377,6 +1377,8 @@ devbox shell
   kubectl get pods -A
   ```
 
+---
+
 ### <a name="set-up-k8s-cluster">⭐ Set up K8s Cluster</a>
 
 **1 -** Create `ai-tools` namespace
@@ -1463,6 +1465,8 @@ devbox shell
   ```bash
   task external-secrets:07-get-secret-value
   ```
+
+---
 
 ### <a name="deploy-apps-in-k8s-cluster">⭐ Deploy Apps in K8s Cluster</a>
 
@@ -1552,6 +1556,8 @@ Remember to **remove the cluster** after you **finish testing or development** b
 ```bash
 task gcp:09-clean-up
 ```
+
+---
 
 ## <a name="deploy-app-on-staging-and-pro">🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod Environments</a>
 
