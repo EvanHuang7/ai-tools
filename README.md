@@ -53,7 +53,7 @@
    - ⭐ [Set up Continuous Integrataion (CI)](#set-up-ci)
    - ⭐ [Deploy App with GitOps in Staging Cluster](#deploy-app-with-gitops-in-staging)
    - ⭐ [Error & Solution after App Deployment with GitOps in Staging Cluster](#error-solution-after-app-deployment-with-gitops)
-   - ⭐ [](#)
+   - ⭐ [Set up GCP Authorization, Domain and HTTPS for Staging Cluster with GitOps](#set-up-gcp-authorization-domain-https-for-staging-env-gitOps)
    - ⭐ [](#)
 11. 🔁🐳 [GCE(GCP) VM: Set up CI&CD for App Deployment in Docker](#set-up-ci-cd-in-docker)
    - ⭐ [](#)
@@ -1620,7 +1620,7 @@ For safer option, you can still fix it easily by **redeploying the app with runn
 
 ### <a name="set-up-gcp-authorization-domain-https-for-staging-env">⭐ Set up GCP Authorization, Domain and HTTPS for Staging Env</a>
 
-- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** after resolving the app deployment error:
+- 🎉 Now, You can access your `staging` app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** after resolving the app deployment error:
 
   ```bash
   kubectl get all -n traefik
@@ -1667,7 +1667,7 @@ For safer option, you can still fix it easily by **redeploying the app with runn
 
 **2 -** Set up GCP Authorization, Domain and HTTPS for **Production environment cluster**
 
-- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** after resolving the app deployment error:
+- 🎉 Now, You can access your `production` app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** after resolving the app deployment error:
 
   ```bash
   kubectl get all -n traefik
@@ -1849,13 +1849,15 @@ For safer option, you can still fix it easily by clicking the **kebab menu butto
 
 - **🚨 Important Step**: Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
-  - If you **already have a GSA** for this app with required GCP service access, you only need to **bind default KSA in namespace with GSA** and **annotate default KSA in namespace with GSA**. Otherwise, you need to go through all steps in **⭐ Set up GCP services authorization for app** section.
-
-  ```bash
-  task general:02-bind-KSA-with-GSA
-
-  task general:03-annotate-KSA-with-GSA
-  ```
+  > **📌 Note**: IF you **already have a GSA** for this app with required GCP services access, you only need to **run these 2 CLIs** to **bind default KSA in namespace with GSA** and **annotate default KSA in namespace with GSA**. 
+  >
+  > Otherwise, you need to go through all steps in **⭐ Set up GCP services authorization for app** subsection.
+  >
+  > ```bash
+  > task general:02-bind-KSA-with-GSA
+  >
+  > task general:03-annotate-KSA-with-GSA
+  > ```
 
 - **🚨 Important Step**: Set up **Domain and HTTPS (SSL/TLS)** by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
 
