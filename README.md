@@ -1922,37 +1922,31 @@ Remember to **remove ALL clusters** after you **finish testing or development** 
 
 The **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section or **☁️🐳🐳 GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳** section is required to be finished first before starting this section, **IF YOU DIDN'T FINISH** 1 of these section yet.
 
-- Follow the same steps in **⭐ Set up Continuous Integrataion (CI)** subsection to set up **CI** for
-
+- Follow the same steps in **⭐ Set up Continuous Integrataion (CI)** subsection to set up **CI** for **GCE VM with Docker**.
 - Connect to GCP VM
+- For **CD step**, deploying `Watchtower` in GCP VM to **auto-redeploy containers when new container images are found** from **Docker Hub** by running:
+  - Check every **30 seconds**
+  - Pull any new images with `developing` tag from **Docker Hub**
+  - **Restart** the container with the **new image**
+  - **Remove** the **old** image `(--cleanup)`
 
-- For **CD step**, deploying `Watchtower` in GCP VM to auto-redeploy containers when new container images are found from Docker Hub by running
+  ```bash
+  docker run -d \
+    --name watchtower \
+    --restart unless-stopped \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    containrrr/watchtower \
+    --interval 30 \
+    --cleanup
+  ```
 
-  - Check every 30 seconds
-
-  - Pull any new images with `developing` tag from Docker Hub
-
-  - Restart the container with the new image
-
-  - Remove the old image (--cleanup)
-
-```
-docker run -d \
-  --name watchtower \
-  --restart unless-stopped \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  containrrr/watchtower \
-  --interval 30 \
-  --cleanup
-```
-
-- **Verifying auto-deployment for GCP VM**, you can push a new commit to GitHub by editing any `frontend UI text` and check auto-deployment by
+- **Verifying auto-deployment for GCP VM**, you can **push a new commit** to `GitHub` by editing any `frontend UI text` and check auto-deployment by
   - Viewing the the change in app web page
-  - Running the `docker logs -f watchtower` cli to view the `Watchtower` log for new deployments
+  - Running the `docker logs -f watchtower` CLI to view the `Watchtower` log for new deployments
 
 TODO: Test it
 
-2. 🚨 Important: Make sure thee `Watchtower` container would auto-restart After **VM reboots and Docker daemon restarts**
+Make sure thee `Watchtower` container would auto-restart After **VM reboots and Docker daemon restarts**
 
 ## <a name="run-app-in-kind">⚙️ Run App in Kind Cluster Locally</a>
 
