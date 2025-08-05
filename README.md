@@ -50,7 +50,7 @@
    - ⭐ [Set up GCP Authorization, Domain and HTTPS for Staging Env](#set-up-gcp-authorization-domain-https-for-staging-env)
    - ⭐ [Deploy App on Production Environment](#deploy-app-on-production-env)
 10. 🔁☸️ [GKE (GCP): Deploy App with CI&CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
-   - ⭐ [](#)
+   - ⭐ [Set up Continuous Integrataion (CI)](#set-up-ci)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [](#)
@@ -1716,6 +1716,8 @@ We will use `GitHub actions` for **Continuous Integrataion (CI)** and `Kluctl Gi
 
 The previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod Environments** section is required to be finished first before starting this section, **IF YOU DIDN'T FINISH** this previous section yet.
 
+### <a name="set-up-ci">⭐ Set up Continuous Integrataion (CI)</a>
+
 **1 -** Add necessary **secrets** to you **GitHub repo**, which allow **GitHub workflow** to use
 
 - Go to your **GitHub repository of this project**
@@ -1723,7 +1725,7 @@ The previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Pro
 - Click **New repository secret** button
 - Add `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`, and `MY_GITHUB_ACTION_PAT` secrets.
 
-**2 -** Verify the **Continuous Integrataion** process by **updating and pushing any code change** in `frontend` folder, so that you can check if the code push action **triggers a workflow** in the `Actions` tab of your **GitHub repository**. Also, it will **create a new PR** including the image tag version change for **ONLY Staging enviroment**.
+**2 -** Verify the **Continuous Integrataion** process
 
 **🚨 Important Note**:
 
@@ -1731,12 +1733,21 @@ The previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Pro
 >
 >  ```bash
 >  # branches:
->      #   - "main"
+>  #   - "main"
 >  ```
 
-⚠️ Note: The GitHub workflow would also update the new image tag for **Production environment in the new PR ONLY IF** a **new released tag** matching **0.0.0** format is **pushlised** in GitHub Repo. You can test this by trying to publish a tag in your GitHub Repo.
+- **Update any code** in `frontend` folder.
+- **Commit and push** the code change to remote main branch.
+- Check if the code push action **triggers a workflow** in the `Actions` tab of your **GitHub repository**. 
+- Also, it will **create a new PR** including the image tag version change for **ONLY Staging enviroment**.
 
-3. Use `Kluctl GitOps` to deploy app to Staging and Production clusters.
+**🚨 Important Note**:
+
+> The GitHub workflow would also update the `new image tag` for **Production environment in the new PR ONLY IF** a **new released tag** matching **0.0.0** format is **pushlised** in **GitHub Repo**. You can test this by trying to publish a tag in your GitHub Repo.
+
+### <a name="deploy-app-with-gitops">⭐ Deploy App with GitOps in Staging aand Pro Envs</a>
+
+**1 -** Use `Kluctl GitOps` to deploy app to Staging and Production clusters.
 
 - ⚠️ We should **delete all resources** in clusters to get two fresh Staging and Production clusters first **if we manually deployed app** into these cluster by using the task clis in `kluctl` folder.
 
