@@ -1154,6 +1154,8 @@ The previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** sec
 
 - 🎉 Now, You can access your app via `https` (eg. `https://appName-yourName.duckdns.org`) in browser.
 
+---
+
 ### <a name="potential-app-latency-issue-in-swarm">⭐ Potential App Latency Issue in Swarm</a>
 
 **🚨 Potential Issue**:
@@ -1199,6 +1201,8 @@ You can try one or more of the solutions below to fix the issue or improve app l
 
 - **3rd Solution**: 💸 **Pay to upgrate your free VM to a higher machine type** for getting more CPU and RAM.
 
+---
+
 ### <a name="set-up-auto-restart">⭐ Set up Auto-restart when VM Reboots</a>
 
 TODO: Test it
@@ -1228,6 +1232,7 @@ Set up **Docker Swarm, Docker Swarm Services (running apps inside Docker Swarm) 
 - But, the **secrets** used by Swarm Services **would be deleted** if there is only **1 manager node** and **that gets destroyed**.
 - So, We **need to recreate the secrets** if we want to **start swarm mode again after leaving swarm mode** by running `docker swarm leave --force` CLI that would **delete all stored secrets**.
 
+---
 
 ### <a name="network-routing-explanation-in-gce-vm">⭐ Network Routing Explanation in GCE VM</a>
 
@@ -1304,6 +1309,8 @@ Below explanation is for 1 node Docker Swarm or Docker Compose?
 - **📌 Note 2**: We should use `http://docker service name:port/` instead of `http://localhost:8000/` because frontend app is running on different containers from all other backend apps.
 - Same logic for `proxy_pass http://node-backend:3000/`
 - Same logic for `proxy_pass http://python-backend:8088/`
+
+---
 
 ## <a name="deploy-app-in-gke">☁️☸️ GKE (GCP): Deploy App in K8s Cluster</a>
 
