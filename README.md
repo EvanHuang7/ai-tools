@@ -56,10 +56,6 @@
    - ⭐ [Set up GCP Authorization, Domain and HTTPS for Staging Cluster with GitOps](#set-up-gcp-authorization-domain-https-for-staging-env-gitOps)
    - ⭐ [Deploy App with GitOps in Production Cluster](#deploy-app-with-gitops-in-production)
 11. 🔁🐳 [GCE(GCP) VM: Set up CI&CD for App Deployment in Docker](#set-up-ci-cd-in-docker)
-   - ⭐ [](#)
-   - ⭐ [](#)
-   - ⭐ [](#)
-   - ⭐ [](#)
 12. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
    - ⭐ [Build App Container Images & Upload them to Docker Hub](#build-app-container-image-and-pus)
    - ⭐ [Deploy App in Kind Cluster](#deploy-app-in-kind-cluster)
@@ -153,7 +149,7 @@ TODO: Come back to finish "Screenshots" part
   ![🖼️ Architecture Diagram Screenshot Preview, GCE VM with Docker Swarm case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GCE-VM-with%20Docker-Swarm.png)
   ![🖼️ Screenshots Preview](#)
 
-## <a name="installation-setups-project">Installation & Setups for Project</a>
+## <a name="installation-setups-project">⚙️ Installation & Setups for Project</a>
 
 Follow these steps to **set up** the project locally on your machine.
 
@@ -461,7 +457,7 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 
 **👉 Authorization for running app in local machine**
 
-- **📌 IF YOU DIDN'T FINISH** the previous step **(Authorization for running app in GKE Cluster)**, just **create a GSA with GCP Pub/Sub and GCS permissions attached**. You only need to **bind and annotate the default KSA with the GSA** when you complete that step (Authorization in GKE Cluster) later. **📌 IF YOU ALREADY FINISHED** the previous step, you can **SKIP** this GSA creation step.
+- **📌 IF YOU DIDN'T FINISH** the previous step **(Authorization for running app in GKE Cluster)**, just **create a GSA with GCP Pub/Sub and GCS permissions attached**. You only need to **bind and annotate the default KSA with the GSA** when you complete that **step (Authorization in GKE Cluster) later**. **📌 IF YOU ALREADY FINISHED** the previous step, you can **SKIP** this GSA creation step.
 
   ```bash
   task general:01-create-GSA
@@ -1730,7 +1726,7 @@ The previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Pro
 
 **🚨 Important Note**:
 
-> You need to **uncomment out** 2 lines `main branches` code in `image-ci-docker-vm.yml` or `image-ci.yml` file first in order to trigger a **Git Action workflow for your frontend code change**
+> You need to **uncomment out** 2 lines `main branches` code in `image-ci.yml` file (`image-ci-docker-vm.yml` file is for **GCE VM with Docker**) first in order to trigger a **Git Action workflow for your frontend code change**
 >
 >  ```bash
 >  # branches:
@@ -1922,7 +1918,11 @@ Remember to **remove ALL clusters** after you **finish testing or development** 
 
 ## <a name="set-up-ci-cd-in-docker">🔁🐳 GCE(GCP) VM: Set up CI&CD for App Deployment in Docker</a>
 
-- Follow the same **CI step** in **🔁 GKE (GCP):Deploy app with auto CI & CD in K8s Cluster** section.
+**🚨Important Step**: 
+
+The **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section or **☁️🐳🐳 GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳** section is required to be finished first before starting this section, **IF YOU DIDN'T FINISH** 1 of these section yet.
+
+- Follow the same steps in **⭐ Set up Continuous Integrataion (CI)** subsection to set up **CI** for
 
 - Connect to GCP VM
 
