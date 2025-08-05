@@ -51,7 +51,7 @@
    - ⭐ [Deploy App on Production Environment](#deploy-app-on-production-env)
 10. 🔁☸️ [GKE (GCP): Deploy App with CI&CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
    - ⭐ [Set up Continuous Integrataion (CI)](#set-up-ci)
-   - ⭐ [](#)
+   - ⭐ [Deploy App with GitOps in Staging Cluster](#deploy-app-with-gitops-in-staging)
    - ⭐ [](#)
    - ⭐ [](#)
 11. 🔁🐳 [GCE(GCP) VM: Set up CI&CD for App Deployment in Docker](#set-up-ci-cd-in-docker)
@@ -1745,64 +1745,69 @@ The previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Pro
 
 > The GitHub workflow would also update the `new image tag` for **Production environment in the new PR ONLY IF** a **new released tag** matching **0.0.0** format is **pushlised** in **GitHub Repo**. You can test this by trying to publish a tag in your GitHub Repo.
 
-### <a name="deploy-app-with-gitops">⭐ Deploy App with GitOps in Staging aand Pro Envs</a>
+### <a name="deploy-app-with-gitops-in-staging">⭐ Deploy App with GitOps in Staging Cluster</a>
 
-**1 -** Use `Kluctl GitOps` to deploy app to Staging and Production clusters.
+**1 -** Clean up K8s resources in `Staging` and `Production` clusters
 
-- ⚠️ We should **delete all resources** in clusters to get two fresh Staging and Production clusters first **if we manually deployed app** into these cluster by using the task clis in `kluctl` folder.
+We should **delete all K8s resources** in clusters to get 2 fresh `Staging` and `Production` clusters first **because we already manually deployed app** into these 2 cluster in the previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod Environments** section.
 
-  - ONLY delete the **resources in cluster**, but still **keeping the cluster** by running
+- **ONLY** delete the **K8s resources in cluster**, but still **keeping the cluster** by running
 
-  ```
+  ```bash
   task kluctl:delete-staging
   ```
 
-  ```
+  ```bash
   task kluctl:delete-production
   ```
 
-  - OR Delete the **entire cluster** and recreate a new one by running
-    - ⚠️ Make sure the cluster name is `ai-tools-staging` in `gcp:06-create-cluster` task cli
+- **OR** Delete the **entire cluster** and re-create a new one by running
 
-  ```
+  > **🚨 Important Note**: Make sure the cluster name of `gcp:06-create-cluster` task CLI is `ai-tools-staging` in `Taskfile.yaml` file of `project` folder **when creating cluster for `Staging` environment**.
+
+  ```bash
   gcloud container clusters delete ai-tools-staging --zone us-central1-a
-  ```
 
-  ```
   task gcp:06-create-cluster
   ```
 
-- Deploy app to **Staing cluster** by deploying `Kluctl GitOps` to the fresh Staing cluster.
-  - 🚨 Important: Remember to config **GCP service access** for app after deploying app in GKE Staging Cluster, and create a **DNS record** for new traefik load balancer `external IP` and `domain`.
-  - If you **already have a GSA** for this app with required GCP service access, you only need to **bind default KSA in namespace with GSA** and **annotate default KSA in namespace with GSA**. Otherwise, you need to go through all steps in **⭐ Set up GCP services authorization for app** section.
+  ```bash
+  gcloud container clusters delete ai-tools --zone us-central1-a
 
-  ```
-  task general:02-bind-KSA-with-GSA
-  task general:03-annotate-KSA-with-GSA
+  task gcp:06-create-cluster
   ```
 
-```
-task cicd:kluctl-gitops:deploy-app-with-gitops-to-staging-cluster
-```
+**2 -** Use `Kluctl GitOps` to deploy app to `Staging` cluster.
+
+- **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & upload them to Docker Hub** by following the steps in **⭐ Build App Container Images & Upload them to Docker Hub** subsection, **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
+
+- Deploy app in **Staing cluster** by deploying `Kluctl GitOps` into the **fresh `Staing` cluster**.
+
+  ```bash
+  task cicd:kluctl-gitops:deploy-app-with-gitops-to-staging-cluster
+  ```
 
 - View **all kluctl deployments** across all namespaces and all pods including **kluctl controller and kluctl webui** in `kluctl-system` namespaces,
 
-```
-kubectl get kluctldeployments.gitops.kluctl.io -A
-kubectl get pods -n kluctl-system
-```
+  ```bash
+  kubectl get kluctldeployments.gitops.kluctl.io -A
+  
+  kubectl get pods -n kluctl-system
+  ```
 
-- View random password (eg. `g9vqztq5rd7d2rxtqs29xsz7rw4vxbrl`) of kluctl webui and copy the password value manually
+- View **random password** (eg. `g9vqztq5rd7d2rxtqs29xsz7rw4vxbrl`) of `kluctl webui` and copy the password value manually
 
-```
-task cicd:kluctl-gitops:get-webui-password
-```
+  ```bash
+  task cicd:kluctl-gitops:get-webui-password
+  ```
 
-- Port forward kluctl webui to localhost 8080 port
+- **Port forward** `kluctl webui` to `localhost 8080 port`
 
-```
-task cicd:kluctl-gitops:port-forward-webui
-```
+  ```bash
+  task cicd:kluctl-gitops:port-forward-webui
+  ```
+
+### <a name="error-solution-after-app-deployment-with-gitops">⭐ Error & Solution after App Deployment with GitOps in Staging Env</a>
 
 - Go to `http://localhost:8080/` kluctl web ui page and log in with `admin` username and the random password we just copied to view deployment status.
 
@@ -1837,6 +1842,35 @@ kubectl get svc -n traefik
 
 - If you use a hostname for `IngressRoutes` in `kluctl`, you need to create a DNS record for the `EXTERNAL-IP` and your hostname first. Then, you can view the app with your hostname.
 
+
+### <a name="set-up-gcp-authorization-domain-https-for-staging-env-gitOps">⭐ Set up GCP Authorization, Domain and HTTPS for Staging Cluster with GitOps</a>
+
+- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** after resolving the app deployment error:
+
+  ```bash
+  kubectl get all -n traefik
+
+  OR
+
+  kubectl get svc -n traefik
+  ```
+
+- **🚨 Important Step**: Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
+
+  - If you **already have a GSA** for this app with required GCP service access, you only need to **bind default KSA in namespace with GSA** and **annotate default KSA in namespace with GSA**. Otherwise, you need to go through all steps in **⭐ Set up GCP services authorization for app** section.
+
+  ```bash
+  task general:02-bind-KSA-with-GSA
+
+  task general:03-annotate-KSA-with-GSA
+  ```
+
+- **🚨 Important Step**: Set up **Domain and HTTPS (SSL/TLS)** by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
+
+- 🎉 Now, You can access your `staging` app via `https` (eg. `https://yourDomainName`) in browser.
+
+### <a name="deploy-app-with-gitops-in-production">⭐ Deploy App with GitOps in Production Cluster</a>
+
 - Switch to **production cluster** by running `kubectx <custer-context-name>` cli, and follow the same step to deploy the app to **production cluster**.
 
 - Now, the kluctl deployment will watch the Git Repo and check for **any new Git commits pushed to GitHub** and rerun the re-deployment every 5 minutes. The re-deployment would still start even if the commits change does not include the files in `kluctl` folder that is used by **kluctl deployment to render and apply resources**.
@@ -1844,6 +1878,8 @@ kubectl get svc -n traefik
 - **Verifying auto-deployment for Clusters**, you can push a new commit to GitHub by editing any `frontend UI text` and check if new K8s pods created or check if there is a deployment process in kluctl web ui.
 
 📌 Note: You can **ONLY** see the `Reconciliation State` time of application is updated in kluctl web ui, **but there is NO** new pod created in K8s because K8s did not find out any changes of existing deployments, so it skip creating new pods.
+
+- Follow the same steps in **⭐ Error & Solution after App Deployment with GitOps in Staging Env** subsection to resolve the deployment error in **Production environment cluster**.
 
 ## <a name="set-up-ci-cd-in-docker">🔁🐳 GCE(GCP) VM: Set up CI&CD for App Deployment in Docker</a>
 
