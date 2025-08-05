@@ -12,7 +12,7 @@
 2. 🛠️ [Tech Stack](#tech-stack)
 3. 🚀 [Features](#features)
 4. 🧩 [Diagram and Screenshots](#diagram-screenshots)
-5. ⚙️ [Installation & Setups and Start Project](#installation-start-project)
+5. ⚙️ [Installation & Setups for Project](#installation-setups-project)
    - ⭐ [Prerequisites](#prerequisites)
    - ⭐ [Clone the Repository](#clone-repo)
    - ⭐ [Set up gcloud CLI](#set-up-gcloud-cli)
@@ -44,24 +44,26 @@
    - ⭐ [Create VPC, Subnet and K8s Cluster](#create-vpc-subnet-k8s-cluster)
    - ⭐ [Set up K8s Cluster](#set-up-k8s-cluster)
    - ⭐ [Deploy Apps in K8s Cluster](#deploy-apps-in-k8s-cluster)
-8. 🏗️ [Deploy app on 🛠️Staging and 🚀Prod environments](#deploy-app-on-staging-and-pro)
+9. 🏗️☸️ [GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod environments](#deploy-app-on-staging-and-pro)
    - ⭐ [Deploy App on Staging environment](#deploy-app-on-staging-env)
    - ⭐ [Error & Solution after App Deployment](#error-solution-after-app-deployment)
    - ⭐ [Set up GCP Authorization, Domain and HTTPS for Staging Env](#set-up-gcp-authorization-domain-https-for-staging-env)
    - ⭐ [](#)
-9. 🔁☸️ [GKE (GCP): Deploy App with CI&CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
+10. 🔁☸️ [GKE (GCP): Deploy App with CI&CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [](#)
-10. 🔁🐳 [GCE(GCP) VM: Set up CI&CD for App Deployment in Docker](#set-up-ci-cd-in-docker)
+11. 🔁🐳 [GCE(GCP) VM: Set up CI&CD for App Deployment in Docker](#set-up-ci-cd-in-docker)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [](#)
    - ⭐ [](#)
-11. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
-12. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
-13. 👨‍💼 [About the Author](#about-the-author)
+12. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
+   - ⭐ [Build App Container Images & Upload them to Docker Hub](#build-app-container-image-and-pus)
+   - ⭐ [](#)
+13. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
+14. 👨‍💼 [About the Author](#about-the-author)
 
 ## <a name="introduction">📋 Introduction</a>
 
@@ -149,9 +151,9 @@ TODO: Come back to finish "Screenshots" part
   ![🖼️ Architecture Diagram Screenshot Preview, GCE VM with Docker Swarm case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GCE-VM-with%20Docker-Swarm.png)
   ![🖼️ Screenshots Preview](#)
 
-## <a name="installation-start-project">📦 Installation & Setups and ⚙️ Start Project</a>
+## <a name="installation-setups-project">Installation & Setups for Project</a>
 
-Follow these steps to set up the project locally on your machine.
+Follow these steps to **set up** the project locally on your machine.
 
 ### <a name="prerequisites">⭐ Prerequisites</a>
 
@@ -1297,7 +1299,7 @@ Follow these steps to deploy app in GKE:
 
 ### <a name="create-vpc-subnet-k8s-cluster">⭐ Create VPC, Subnet and K8s Cluster</a>
 
-**1 - Switch to project isolated environment first**
+**1 - Switch to `devbox` project isolated environment first**
 
 ```bash
 devbox shell
@@ -1451,7 +1453,7 @@ devbox shell
 
 > Please update all secret values palceholder to your own secret values in `Secret.yaml` files of those `k8s-resource-defins` folders before starting this step.
 
-TODO: add this step to all deployment step after fixing (xxx subsection) !!
+TODO: add this step to all deployment step after fixing (xxx subsection) !!!
 
 - **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & push them to Docker Hub** by following the steps in `2nd step` of **⚙️ Run App in Kind Cluster Locally** (xxx subsection), **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
 
@@ -1534,7 +1536,7 @@ Remember to **remove the cluster** after you **finish testing or development** b
 task gcp:09-clean-up
 ```
 
-## <a name="deploy-app-on-staging-and-pro">🏗️ Deploy app on 🛠️Staging and 🚀Prod environments</a>
+## <a name="deploy-app-on-staging-and-pro">🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod environments</a>
 
 **🚨 Important Note**:
 
@@ -1854,74 +1856,81 @@ TODO: Test it
 
 ## <a name="run-app-in-kind">⚙️ Run App in Kind Cluster Locally</a>
 
-Develop app in kind cluster locally is esay way to find out any issue in k8s during development process
+**Develop app in `Kind` cluster locally** is esay way to find out any issue in K8s during development process
 
-You need Docker Desktop, devbox installed
+### <a name="build-app-container-image-and-push">⭐ Build App Container Images & Upload them to Docker Hub</a>
 
-1. Install devbox and run `devbox shell` cli in **project terminal** to create isolated enviroment for project
+Build **container images of app services** and **upload to Docker hub**, so that we can **deploy** them in `Kind` cluster that we are going to create.
 
-- 📌 Note: It may take a big long to install all packages if you run this cli to install devbox packages first time
+- Switch to `devbox` project isolated environment
 
-2. Build container images of services and push to Docker hub, so that we can deploy them into the Kind cluster that we are going to create.
+  ```bash
+  devbox shell
+  ```
 
-- Open Docker Desktop app manually
+- Open `Docker Desktop` app manually
 
-- Set up Docker buildx used to build container image for multiple architecture and Login Docker for pushing images to Docker hub by cli in your proejct devbox shell:
+- Set up **Docker buildx** used to **build container image for multiple architecture** and **Login Docker for pushing images to Docker hub** by running:
 
-```
-task bootstrap-buildx-builder
-docker login
-```
+  ```bash
+  task bootstrap-buildx-builder
+
+  docker login
+  ```
 
 - Build container images and push them to Docker hub for `go-backend` serivce
 
-```
-task go-backend:build-container-image-multi-arch
-```
+  ```bash
+  task go-backend:build-container-image-multi-arch
+  ```
 
 - Build container images and push them to Docker hub for `node-backend` serivce
 
-```
-task node-backend:build-container-image-multi-arch
-```
+  ```bash
+  task node-backend:build-container-image-multi-arch
+  ```
 
 - Build container images and push them to Docker hub for `python-backend` serivce
 
-```
-task python-backend:build-container-image-multi-arch
-```
+  ```bash
+  task python-backend:build-container-image-multi-arch
+  ```
 
 - Build container images and push them to Docker hub for `frontend` serivce
 
-```
-task frontend:build-container-image-multi-arch
-```
+  > **⚠️ Warning Note**: You should update `VITE_CLERK_PUBLISHABLE_KEY` and `VITE_VAPI_PUBLIC_KEY` environment variable values in the `build-container-image-multi-arch` task CLI of `Taskfile.yaml` file of `frontend` folder to your own secret values from **Clerk and Vapi**
 
-3. Create a Kind cluster locally
+  ```bash
+  task frontend:build-container-image-multi-arch
+  ```
+
+### <a name="deploy-app-in-kind-cluster">⭐ Deploy App in Kind Cluster</a>
+
+**3 -** Create a Kind cluster locally
 
 - Generate Kind config file based on you file absolute path and create Kind cluster that is actually Docker containers in Docker Desktop VM locally
 
-  ```
+  ```bash
   task kind:01-generate-config
   task kind:02-create-cluster
   ```
 
 - Check your kind cluster (This cli allows you to view and select existing created cluster)
 
-  ```
+  ```bash
   kubectx
   ```
 
 - Check your nodes and system pods in kind cluster
 
-  ```
+  ```bash
   kubectl get nodes
   kubectl get pods -A
   ```
 
 - Enable Load Balancer service in Local Kind Cluster by opening a **2nd devbox shell terminal** in proejct and running (Remember switch back to 1st terminal and leave 2nd terminal running in the background):
 
-  ```
+  ```bash
   devbox shell
   task kind:03-run-cloud-provider-kind
   ```
@@ -1930,13 +1939,13 @@ task frontend:build-container-image-multi-arch
 
 - Make sure you are currently using Kind cluster by running (Switch cluster by running `kubectx <custer-context-name>`):
 
-  ```
+  ```bash
   kubectx
   ```
 
 - Create namespace
 
-  ```
+  ```bash
   task common:apply-namespace
   ```
 
@@ -1950,13 +1959,13 @@ task frontend:build-container-image-multi-arch
 
 - Check all resources in traefik namespace (Note: the ExternalIP of LoadBalancer will stay `pending` forever if you don't run cli, `task kind:03-run-cloud-provider-kind`, to enable ExternalIP for Load Balancer in Local Kind Cluster in a seperate terminal)
 
-  ```
+  ```bash
   kubectl get all -n traefik
   ```
 
 - Apply the Traefik middleware to strip path prefix for all incoming requests by ingress controller
 
-  ```
+  ```bash
   task common:apply-traefik-middleware
   ```
 
@@ -1964,38 +1973,38 @@ task frontend:build-container-image-multi-arch
 
 - Deploy go backend app in Local Kind cluster
 
-  ```
+  ```bash
   task go-k8s-resource-defins:apply
   ```
 
 - Deploy node backend app in Local Kind cluster
 
-  ```
+  ```bash
   task node-k8s-resource-defins:apply
   ```
 
 - Deploy python backend app in Local Kind cluster
 
-  ```
+  ```bash
   task python-k8s-resource-defins:apply
   ```
 
 - Deploy frontend app in Local Kind cluster
 
-  ```
+  ```bash
   task frontend-k8s-resource-defins:apply
   ```
 
 - Check pod and service in ai-tools namespace after deploying all app services
 
-  ```
+  ```bash
   kubectl get pods -n ai-tools
   kubectl get svc
   ```
 
 6. View the app locally with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer by running:
 
-```
+```bash
 kubectl get all -n traefik
 
 OR
@@ -2014,7 +2023,7 @@ kubectl get svc -n traefik
   - Show all replicasets in namespace
   - Show all resources in namespace
 
-  ```
+  ```bash
   kubectl logs -n ai-tools <pod-name>
   kubectl describe pod -n ai-tools <pod-name>
 
