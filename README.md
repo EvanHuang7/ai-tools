@@ -749,7 +749,9 @@ TODO: test it
   nano docker-compose.yml
   ```
 
-- Run all app in containers with `docker-compose.yml` by running:
+- **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & upload them to Docker Hub** by following the steps in **⭐ Build App Container Images & Upload them to Docker Hub** subsection, **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
+
+- **Deploy stack of app containers** with `docker-compose.yml` by running:
 
   > **📌 Note**: 2nd CLI would run containers in the background
 
@@ -1120,6 +1122,8 @@ The previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** sec
   printf 'secret placeholder' | docker secret create kafka-sasl-user-password -
   ```
 
+- **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & upload them to Docker Hub** by following the steps in **⭐ Build App Container Images & Upload them to Docker Hub** subsection, **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
+
 - **Deploy stack of app containers** with `docker-swarm.yaml` file
 
   ```bash
@@ -1453,9 +1457,7 @@ devbox shell
 
 > Please update all secret values palceholder to your own secret values in `Secret.yaml` files of those `k8s-resource-defins` folders before starting this step.
 
-TODO: add this step to all deployment step after fixing (xxx subsection) !!!
-
-- **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & push them to Docker Hub** by following the steps in `2nd step` of **⚙️ Run App in Kind Cluster Locally** (xxx subsection), **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
+- **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & upload them to Docker Hub** by following the steps in **⭐ Build App Container Images & Upload them to Docker Hub** subsection, **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
 
 - Deploy **go backend app**
 
