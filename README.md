@@ -48,7 +48,7 @@
    - ⭐ [Deploy App on Staging environment](#deploy-app-on-staging-env)
    - ⭐ [Error & Solution after App Deployment](#error-solution-after-app-deployment)
    - ⭐ [Set up GCP Authorization, Domain and HTTPS for Staging Env](#set-up-gcp-authorization-domain-https-for-staging-env)
-   - ⭐ [](#)
+   - ⭐ [Deploy App on Production environment](#deploy-app-on-production-env)
 10. 🔁☸️ [GKE (GCP): Deploy App with CI&CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
    - ⭐ [](#)
    - ⭐ [](#)
@@ -145,6 +145,7 @@
 - **🧩 Database Tables Diagram**: [drawSQL Diagram Link](https://drawsql.app/teams/evans-projects/diagrams/ai-tools-studio-app)
 
 TODO: Come back to finish "Screenshots" part 
+
 - **📸 Screenshots**: [Miro Link](#)
 
   ![🖼️ Architecture Diagram Screenshot Preview, GKE K8S cluster case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GKE-K8S-cluster.png)
