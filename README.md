@@ -62,7 +62,7 @@
 12. ⚙️ [Run App in Kind Cluster Locally](#run-app-in-kind)
    - ⭐ [Build App Container Images & Upload them to Docker Hub](#build-app-container-image-and-pus)
    - ⭐ [Deploy App in Kind Cluster](#deploy-app-in-kind-cluster)
-13. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally)
+13. 🛠️ [Develop App Locally with Kind & Tilt](#develop-app-locally-kind-tilt)
 14. 👨‍💼 [About the Author](#about-the-author)
 
 ## <a name="introduction">📋 Introduction</a>
@@ -2078,9 +2078,9 @@ task tilt-up
 
 ## <a name="about-the-author">👨‍💼 About the Author</a>
 
-Hi! I'm Evan Huang — a full-stack software developer with 4+ years of experience in web applications, real-time systems, and cloud integration. I’m passionate about building scalable products with clean architecture, elegant UI/UX, and modern technologies like Google Cloud Platform, React, Node.js, Go, Python.
+Hi! I'm **Evan Huang — a full-stack software developer with 4+ years of experience** in web applications, real-time systems, and cloud integration. I’m passionate about building scalable products with clean architecture, elegant UI/UX, and modern technologies like **Google Cloud Platform, React, Node.js, Go, Python and different AI technologies**.
 
-This AI tools app project was completed on **August 8, 2025**, and reflects my focus on full stack development, cloud infrastructure, and responsive design into real-world solutions.
+This **AI Tools Studio app** project was completed on **August 8, 2025**, and reflects my focus on full stack development, cloud infrastructure, and responsive design into real-world solutions.
 
 Feel free to connect with me in LinkedIn or GitHub!
 
