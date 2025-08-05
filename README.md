@@ -539,6 +539,8 @@ Set up **payment in Clerk Billing**
 - Select **ACLs** tab and click the new created user (eg. `ai-tools-redpanda-user`)
 - Click **Allow all operations** and **Save** buttons
 
+---
+
 ### <a name="set-up-env-variables">⭐ Set Up Environment Variables</a>
 
 Create a `.env` file under **frontend** folder of your project and add the following content:
@@ -602,6 +604,8 @@ KAFKA_SASL_USER_PASSWORD=
 ```
 
 Replace the placeholder values with the actual credentials you noted down previously.
+
+---
 
 ### <a name="running-project">⭐ Running the Project</a>
 
@@ -695,6 +699,8 @@ Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 - Select same region as the region of your VM (eg. `us-central1`) for **Region**
 - Select your VM (eg. `appName-gce-free-vm`) for **Attached to**
 - Click **Reserve** button
+
+---
 
 ### <a name="deploy-app-gce-vm">⭐ Deploy app in GCE VM</a>
 
@@ -815,6 +821,8 @@ TODO: Test it
 
   docker ps
   ```
+
+---
 
 ### <a name="set-up-domain-and-https">⭐ Set up Domain & HTTPS</a>
 
@@ -1025,6 +1033,8 @@ TODO: Test it
 
   docker ps
   ```
+
+---
 
 ## <a name="deploy-app-in-gce-with-docker-swarm">☁️🐳🐳 GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳</a>
 
