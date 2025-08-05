@@ -52,6 +52,7 @@
 10. 🔁☸️ [GKE (GCP): Deploy App with CI&CD in K8s Cluster](#deploy-app-with-ci-cd-in-cluster)
    - ⭐ [Set up Continuous Integrataion (CI)](#set-up-ci)
    - ⭐ [Deploy App with GitOps in Staging Cluster](#deploy-app-with-gitops-in-staging)
+   - ⭐ [Error & Solution after App Deployment with GitOps in Staging Cluster](#error-solution-after-app-deployment-with-gitops)
    - ⭐ [](#)
    - ⭐ [](#)
 11. 🔁🐳 [GCE(GCP) VM: Set up CI&CD for App Deployment in Docker](#set-up-ci-cd-in-docker)
@@ -1777,7 +1778,7 @@ We should **delete all K8s resources** in clusters to get 2 fresh `Staging` and 
   task gcp:06-create-cluster
   ```
 
-**2 -** Use `Kluctl GitOps` to deploy app to `Staging` cluster.
+**2 -** Use `Kluctl GitOps` to deploy app in `Staging` cluster.
 
 - **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & upload them to Docker Hub** by following the steps in **⭐ Build App Container Images & Upload them to Docker Hub** subsection, **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
 
@@ -1807,45 +1808,36 @@ We should **delete all K8s resources** in clusters to get 2 fresh `Staging` and 
   task cicd:kluctl-gitops:port-forward-webui
   ```
 
-### <a name="error-solution-after-app-deployment-with-gitops">⭐ Error & Solution after App Deployment with GitOps in Staging Env</a>
+### <a name="error-solution-after-app-deployment-with-gitops">⭐ Error & Solution after App Deployment with GitOps in Staging Cluster</a>
 
-- Go to `http://localhost:8080/` kluctl web ui page and log in with `admin` username and the random password we just copied to view deployment status.
+Go to `kluctl web ui page` (`http://localhost:8080/`) and log in with `admin` username and the `random password` we just copied to **view deployment status**.
 
-  - ⚠️ Error/Warning: You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error. Our app is actully running correctly now because our `IngressRoute` were all created. You can check all created `IngressRoute` by running:
+**🚨 Important Error**:
 
-    ```
-    kubectl get ingressroutes -A
-    ```
+You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error. The app is actully running correctly now because the `IngressRoute` were all created. You can check all created `IngressRoute` by running:
 
-  - 🤔 Reason: If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error
-
-    - Kubernetes doesn't apply resources in dependency order unless you explicitly control it.
-    - Even if you apply the CRDs first (in the same deploy), Kubernetes may still be registering the CRD with the API server when Kluctl moves on to the `IngressRoute` manifest.
-    - So the resource fails because Kubernetes doesn’t recognize the new kind yet.
-
-  - 🛠️ Fix: For safer option, we can still fix it easily by clicking the **kebab menu button** of `ai-tools(staing)` card and clicking **🚀 Deploy** button to redeploy the app from kluctl web ui page to fix the error or warning.
-
-    - After you redeploy the app, this error won't show again because the CRDs including `IngressRoute` already registered in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes "known" to the API server.
-    - So, the 2nd deployment will succeed without error when applying `IngressRoute` resources in app.
-
-🚨🚨🚨 Important: The **⭐ Set up GCP services authorization for app** subsection is required to be finished after app deployment in order to allow app accessing GCP services
-
-- View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer **if you don't use a hostname** for `IngressRoutes` in `kluctl` by running:
-
-```
-kubectl get all -n traefik
-
-OR
-
-kubectl get svc -n traefik
+```bash
+kubectl get ingressroutes -A
 ```
 
-- If you use a hostname for `IngressRoutes` in `kluctl`, you need to create a DNS record for the `EXTERNAL-IP` and your hostname first. Then, you can view the app with your hostname.
+**💡 Reason of Error**:
 
+If `kluctl deploy` applies the **Traefik CRDs** and **app resources** (like `IngressRoute`) in the **same deploy run**, and the **CRDs take a few seconds to become available/registered in the API server**, then any resources that use those CRDs (like `IngressRoute`) might fail with this error.
+
+- Kubernetes **doesn't apply resources in dependency order** unless you explicitly control it.
+- Even if you apply the **CRDs** first (in the same deploy), Kubernetes may still be registering the CRD with the API server when `Kluctl` moves on to the `IngressRoute` manifest.
+- So, the resource fails because Kubernetes doesn’t recognize the new kind yet.
+
+**✅ Solution of Error**:
+
+For safer option, you can still fix it easily by clicking the **kebab menu button** of `ai-tools(staing)` card and clicking **🚀 Deploy** button to re-deploy the app from `kluctl web ui page` to fix the error or warning.
+
+- After you redeploy the app, this **error won't show again** because the **CRDs** including `IngressRoute` **already registered** in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes `"known"` to the API server.
+- So, the 2nd deployment will **succeed without error** when applying `IngressRoute` resources in app.
 
 ### <a name="set-up-gcp-authorization-domain-https-for-staging-env-gitOps">⭐ Set up GCP Authorization, Domain and HTTPS for Staging Cluster with GitOps</a>
 
-- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** after resolving the app deployment error:
+- 🎉 Now, You can access your `staging` app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** after resolving the app deployment error:
 
   ```bash
   kubectl get all -n traefik
