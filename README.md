@@ -1451,7 +1451,7 @@ devbox shell
 
 > Please update all secret values palceholder to your own secret values in `Secret.yaml` files of those `k8s-resource-defins` folders before starting this step.
 
-TODO: add this step to all deployment step!
+TODO: add this step to all deployment step after fixing (xxx subsection) !!
 
 - **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & push them to Docker Hub** by following the steps in `2nd step` of **⚙️ Run App in Kind Cluster Locally** (xxx subsection), **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
 
@@ -1540,6 +1540,8 @@ task gcp:09-clean-up
 
 > Please make sure to update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file to your own clusters first.
 >
+> Please make sure to update the `hostName` in `production.yaml` and `staging.yaml` files of `config` folder of `kluctl` folder to your own host name.
+>
 > The current `kluctl` folder does not include `External Secret` deployment yet, and the service deployments are all using local `Secret` resource files to generate K8s sceret. So, you should deploy `External Secret` manually first if you need to use `External Secret` in services.
 
 ### <a name="deploy-app-on-staging-env">⭐ Deploy App on Staging environment</a>
@@ -1554,6 +1556,17 @@ task gcp:09-clean-up
 
   ```bash
   task gcp:06-create-cluster
+  ```
+
+- View all existing clusters and **Switch to `Staging` cluster**
+  - 1st CLI is to view all existing created cluster
+  - 2nd CLI is to switch cluster
+  - Remember replace `<custer-context-name>` placeholder to real `Staging` cluster context name
+
+  ```bash
+  kubectx
+
+  kubectx <custer-context-name>
   ```
 
 - Update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file of `kluctl` folder to your own `Staging` and `Production` clusters.
@@ -1599,7 +1612,7 @@ For safer option, you can still fix it easily by **redeploying the app with runn
 
 ### <a name="set-up-gcp-authorization-domain-https-for-staging-env">⭐ Set up GCP Authorization, Domain and HTTPS for Staging Env</a>
 
-- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** by running:
+- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** after resolving the app deployment error:
 
   ```bash
   kubectl get all -n traefik
@@ -1613,69 +1626,78 @@ For safer option, you can still fix it easily by **redeploying the app with runn
 
 - **🚨 Important Step**: Set up **Domain and HTTPS (SSL/TLS)** by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
 
-- 🎉 Now, You can access your app via `https` (eg. `https://yourDomainName`) in browser.
+- 🎉 Now, You can access your `staging` app via `https` (eg. `https://yourDomainName`) in browser.
 
 ### <a name="deploy-app-on-production-env">⭐ Deploy App on Production environment</a>
 
-**1 -** Deploy app to **Production** environment cluster
+**1 - Deploy app to Production** environment cluster
 
-- Check the yaml files after rendering with template of production env
+- View all existing clusters and **Switch to `Production` cluster**
+  - 1st CLI is to view all existing created cluster
+  - 2nd CLI is to switch cluster
+  - Remember replace `<custer-context-name>` placeholder to real `Production` cluster context name
 
-```
-task kluctl:render-production
-```
+  ```bash
+  kubectx
 
-- Deploy all K8s resources defined in "kluctl" folder for production env
+  kubectx <custer-context-name>
+  ```
 
-```
-task kluctl:deploy-production
-```
+- Verify the **yaml files** after rendering with template of `production` env
+
+  ```bash
+  task kluctl:render-production
+  ```
+
+- **Deploy all K8s resources** defined in `"kluctl"` folder for `production` env
+
+  ```bash
+  task kluctl:deploy-production
+  ```
+
+- Follow the same steps in **⭐ Error & Solution after App Deployment** subsection to resolve the deployment error in **Production environment cluster**
+
+**2 -** Set up GCP Authorization, Domain and HTTPS for **Production environment cluster**
+
+- 🎉 Now, You can access your app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** after resolving the app deployment error:
+
+  ```bash
+  kubectl get all -n traefik
+
+  OR
+
+  kubectl get svc -n traefik
+  ```
 
 - **🚨 Important Step**: Set up **Authorization for running app in GKE Cluster** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
-3. Now, you have your app configed with `Staging` and `Prod` environment specfication seperatly running in two K8s cluster.
+- **🚨 Important Step**: Set up **Domain and HTTPS (SSL/TLS)** by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
 
-- Switch cluster to view `Staging` and `Prod` environment clusters info and status.
-
-```
-kubectx <custer-context-name>
-```
-
-- View the app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of Traefik LoadBalancer **if you don't use a hostname** for `IngressRoutes` in `kluctl` by running:
-
-```
-kubectl get all -n traefik
-
-OR
-
-kubectl get svc -n traefik
-```
-
-- If you use a hostname for `IngressRoutes` in `kluctl`, you need to create a DNS record for the `EXTERNAL-IP` and your hostname first. Then, you can view the app with your hostname
-
-### <a name="deploy-apps-in-k8s-cluster">⭐ ???</a>
+- 🎉 Now, You can access your `production` app via `https` (eg. `https://yourDomainName`) in browser.
 
 **3 - 🚨🚨💸💸 Clean up to aviod cost 💸💸🚨🚨**
 
-Remember to remove the cluster after you finish testing or development because a running cluster with K8s resource charges you by running time. You can use new user credit to cover the fee for first 3 months new user, but you will need to pay after 3 months.
+Remember to **remove ALL clusters** after you **finish testing or development** because the running clusters with K8s resource **charges you by running time**. You can use **new GCP user 300$ free credit to cover the fee for first 3 months if you are new GCP user**, but you will need to **💸 PAY 💸** after 3 months.
 
-- Only Delete the **entire demo cluster** by running
+- Only Delete the **entire staging cluster** by running
 
-```
-gcloud container clusters delete ai-tools-demo --zone us-central1-a
-```
+  ```bash
+  gcloud container clusters delete ai-tools-staging --zone us-central1-a
+  ```
 
-- OR only delete the **resources in demo cluster**, but still **keeping the demo cluster** by running
+- OR only delete the **K8s resources in staging cluster**, but still **keeping the running staging cluster** by running
 
-```
-task kluctl:delete-staging
-```
+  ```bash
+  task kluctl:delete-staging
+  ```
 
-- Delete **everything** including the GCP network, subnet, firewall rules, and **all clusters** by running:
+- Delete **everything** including the GCP network, subnet, firewall rules, and **ONLY Production cluster** by running:
 
-```
-task gcp:09-clean-up
-```
+> **🚨 Important Note**: This task CLi **ONLY delete `ai-tools` Production cluster**, so you have to update this task CLI to include a CLI for deleting **Staging cluster**.
+
+  ```bash
+  task gcp:09-clean-up
+  ```
 
 ## <a name="deploy-app-with-ci-cd-in-cluster">🔁☸️ GKE (GCP): Deploy App with CI&CD in K8s Cluster</a>
 
