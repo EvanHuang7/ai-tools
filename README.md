@@ -1612,6 +1612,8 @@ task gcp:09-clean-up
   task kluctl:deploy-staging
   ```
 
+---
+
 ### <a name="error-solution-after-app-deployment">⭐ Error & Solution after App Deployment</a>
 
 **🚨 Important Error**:
@@ -1637,6 +1639,8 @@ For safer option, you can still fix it easily by **redeploying the app with runn
 - After you redeploy the app, this **error won't show again** because the **CRDs** including `IngressRoute` **already registered** in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes `"known"` to the API server.
 - So, the 2nd deployment will **succeed without error** when applying `IngressRoute` resources in app.
 
+---
+
 ### <a name="set-up-gcp-authorization-domain-https-for-staging-env">⭐ Set up GCP Authorization, Domain and HTTPS for Staging Env</a>
 
 - 🎉 Now, You can access your `staging` app with the `EXTERNAL-IP` (eg. `http://172.18.0.2/`) of **Traefik LoadBalancer** after resolving the app deployment error:
@@ -1654,6 +1658,8 @@ For safer option, you can still fix it easily by **redeploying the app with runn
 - **🚨 Important Step**: Set up **Domain and HTTPS (SSL/TLS)** by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
 
 - 🎉 Now, You can access your `staging` app via `https` (eg. `https://yourDomainName`) in browser.
+
+---
 
 ### <a name="deploy-app-on-production-env">⭐ Deploy App on Production Environment</a>
 
@@ -1725,6 +1731,8 @@ Remember to **remove ALL clusters** after you **finish testing or development** 
   ```bash
   task gcp:09-clean-up
   ```
+
+---
 
 ## <a name="deploy-app-with-ci-cd-in-cluster">🔁☸️ GKE (GCP): Deploy App with CI&CD in K8s Cluster</a>
 
