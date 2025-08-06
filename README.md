@@ -1773,6 +1773,8 @@ The previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Pro
 
 > The GitHub workflow would also update the `new image tag` for **Production environment in the new PR ONLY IF** a **new released tag** matching **0.0.0** format is **pushlised** in **GitHub Repo**. You can test this by trying to publish a tag in your GitHub Repo.
 
+---
+
 ### <a name="deploy-app-with-gitops-in-staging">⭐ Deploy App with GitOps in Staging Cluster</a>
 
 **1 -** Clean up K8s resources in `Staging` and `Production` clusters
@@ -1835,6 +1837,8 @@ We should **delete all K8s resources** in clusters to get 2 fresh `Staging` and 
   task cicd:kluctl-gitops:port-forward-webui
   ```
 
+---
+
 ### <a name="error-solution-after-app-deployment-with-gitops">⭐ Error & Solution after App Deployment with GitOps in Staging Cluster</a>
 
 Go to `kluctl web ui page` (`http://localhost:8080/`) and log in with `admin` username and the `random password` we just copied to **view deployment status**.
@@ -1861,6 +1865,8 @@ For safer option, you can still fix it easily by clicking the **kebab menu butto
 
 - After you redeploy the app, this **error won't show again** because the **CRDs** including `IngressRoute` **already registered** in K8s API server in first deployment, and the new type CRD, `IngressRoute`, becomes `"known"` to the API server.
 - So, the 2nd deployment will **succeed without error** when applying `IngressRoute` resources in app.
+
+---
 
 ### <a name="set-up-gcp-authorization-domain-https-for-staging-env-gitOps">⭐ Set up GCP Authorization, Domain and HTTPS for Staging Cluster with GitOps</a>
 
@@ -1889,6 +1895,8 @@ For safer option, you can still fix it easily by clicking the **kebab menu butto
 - **🚨 Important Step**: Set up **Domain and HTTPS (SSL/TLS)** by **buying a domain from some domain providers** (eg. `Namecheap`, `GoDaddy`, `Squarespace`) first, and then easily **creating a DNS record** and setting up `SSL/TLS` to use `Flexiable encription mode` in **CloudFlare**.
 
 - 🎉 Now, You can access your `staging` app via `https` (eg. `https://yourDomainName`) in browser.
+
+---
 
 ### <a name="deploy-app-with-gitops-in-production">⭐ Deploy App with GitOps in Production Cluster</a>
 
@@ -1946,6 +1954,8 @@ Remember to **remove ALL clusters** after you **finish testing or development** 
   ```bash
   task gcp:09-clean-up
   ```
+
+---
 
 ## <a name="set-up-ci-cd-in-docker">🔁🐳 GCE(GCP) VM: Set up CI&CD for App Deployment in Docker</a>
 
