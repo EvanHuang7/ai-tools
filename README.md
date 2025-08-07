@@ -1097,6 +1097,7 @@ The previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** sec
   ```
 
 - **Create docker secrets** for **Docker swarm services to consume**
+  - You can choose to use **other option**, running `Task CLI` (`task create-secrets`) in `Taskfile.yaml` file of project folder, to **create docker secrets**
   - Remember to replace all **[Secret Placeholder]** strings to real `secret strings`
   - Create secrets for **all env variables** if there are more secrets added later
   - The **raw bytes secret** stored within the **Swarm manager nodes** will be available inside the container **as a file** at: `/run/secrets/secret-name` (eg. `/run/secrets/redis-url`)
