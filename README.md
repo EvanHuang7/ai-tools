@@ -1097,37 +1097,37 @@ The previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** sec
   ```
 
 - **Create docker secrets** for **Docker swarm services to consume**
-  - Remember to replace `secret placeholder` string to real `secret string`
+  - Remember to replace all **[Secret Placeholder]** strings to real `secret strings`
   - Create secrets for **all env variables** if there are more secrets added later
   - The **raw bytes secret** stored within the **Swarm manager nodes** will be available inside the container **as a file** at: `/run/secrets/secret-name` (eg. `/run/secrets/redis-url`)
   - The `Kafka credentials` are **no longer required** because Kafka in Redpanda Cloud is **deprecated**
 
   ```bash
-  printf 'secret placeholder' | docker secret create supabase-postgres-database-url -
+  printf '[Secret Placeholder]' | docker secret create supabase-postgres-database-url -
 
-  printf 'secret placeholder' | docker secret create neon-postgres-database-url -
+  printf '[Secret Placeholder]' | docker secret create neon-postgres-database-url -
 
-  printf 'secret placeholder' | docker secret create google-api-key -
+  printf '[Secret Placeholder]' | docker secret create google-api-key -
 
-  printf 'secret placeholder' | docker secret create go-imagekit-id -
+  printf '[Secret Placeholder]' | docker secret create go-imagekit-id -
 
-  printf 'secret placeholder' | docker secret create go-imagekit-private-key -
+  printf '[Secret Placeholder]' | docker secret create go-imagekit-private-key -
 
-  printf 'secret placeholder' | docker secret create redis-url -
+  printf '[Secret Placeholder]' | docker secret create redis-url -
 
-  printf 'secret placeholder' | docker secret create mongodb-url -
+  printf '[Secret Placeholder]' | docker secret create mongodb-url -
 
-  printf 'secret placeholder' | docker secret create python-imagekit-private-key -
+  printf '[Secret Placeholder]' | docker secret create python-imagekit-private-key -
 
-  printf 'secret placeholder' | docker secret create clerk-publishable-key -
+  printf '[Secret Placeholder]' | docker secret create clerk-publishable-key -
 
-  printf 'secret placeholder' | docker secret create clerk-secret-key -
+  printf '[Secret Placeholder]' | docker secret create clerk-secret-key -
 
-  printf 'secret placeholder' | docker secret create rabbitmq-url -
+  printf '[Secret Placeholder]' | docker secret create rabbitmq-url -
 
-  printf 'secret placeholder' | docker secret create kafka-bootstrap-server -
+  printf '[Secret Placeholder]' | docker secret create kafka-bootstrap-server -
 
-  printf 'secret placeholder' | docker secret create kafka-sasl-user-password -
+  printf '[Secret Placeholder]' | docker secret create kafka-sasl-user-password -
   ```
 
 - **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & upload them to Docker Hub** by following the steps in **⭐ Build App Container Images & Upload them to Docker Hub** subsection, **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
