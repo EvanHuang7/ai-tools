@@ -62,14 +62,14 @@ services:
     networks:
       - ai-tools
     init: true
-    # TODO: Remember to remove it after usage to aviod store
-    # secrets on Git
+    # TODO: Get the secrets from local ".env" file of "go-backend" folder 
+    # and paste it here before deploying app with this "docker-compose.yaml" file 
     environment:
-      - DATABASE_URL=postgresql://neondb_owner:npg_chuXl7Qo2CGv@ep-rapid-rain-a4ztbwzh-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
-      - GOOGLE_API_KEY=AIzaSyANoF0xsQ1va3C9bOhnLhjM3gQaoxuDL7s
-      - IMAGEKIT_ID=fmxhbshza
-      - IMAGEKIT_PRIVATE_KEY=private_Iou2m6If7mQpPA/BUHKG4nWe/j8=
-      - CLERK_SECRET_KEY=sk_test_OAWZMJyO5yvSoczhFvs23XJtflMVvBpLkS2Cy6qgde
+      - DATABASE_URL=
+      - CLERK_SECRET_KEY=
+      - IMAGEKIT_ID=
+      - IMAGEKIT_PRIVATE_KEY=
+      - GOOGLE_API_KEY=
     restart: unless-stopped
     healthcheck:
       # Use the custom "healthcheck.go" file to test container
