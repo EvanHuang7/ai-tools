@@ -85,16 +85,16 @@ services:
     networks:
       - ai-tools
     init: true
-    # TODO: Remember to remove it after usage to aviod store
-    # secrets on Git
+    # TODO: Get the secrets from local ".env" file of "python-backend" folder 
+    # and paste it here before deploying app with this "docker-compose.yaml" file 
     environment:
-      - REDIS_URL=rediss://default:AaXyAAIjcDFkYWFhNzEzMmE3MmU0MzkyOWQ3NTA4ZTllMmI5Mjk5ZnAxMA@enough-lobster-42482.upstash.io:6379
-      - MONGODB_URL=mongodb+srv://mrxiaohui204:eZG55LdPqpWb62yO@cluster0.bjhjsnn.mongodb.net/ai_tools_db?retryWrites=true&w=majority&appName=Cluster0
-      - IMAGEKIT_PRIVATE_KEY=private_4navyancGH3U+JHgU7oSGp+XL0A=
-      - CLERK_SECRET_KEY=sk_test_OAWZMJyO5yvSoczhFvs23XJtflMVvBpLkS2Cy6qgde
-      - KAFKA_BOOTSTRAP_SERVER=d1fgarsdfulgj4bj0b60.any.us-west-2.mpx.prd.cloud.redpanda.com:9092
-      - KAFKA_SASL_USER_PASSWORD=Ab12345678!
-      - RABBITMQ_URL=amqps://dbxonaxs:y_l5O4IVrUtyyKETGgLSDl4VQcRUm4Sw@moose.rmq.cloudamqp.com/dbxonaxs
+      - REDIS_URL=
+      - MONGODB_URL=
+      - CLERK_SECRET_KEY=
+      - IMAGEKIT_PRIVATE_KEY=
+      - RABBITMQ_URL=
+      - KAFKA_BOOTSTRAP_SERVER=
+      - KAFKA_SASL_USER_PASSWORD=
       - GRPC_HOST=go-backend
     restart: unless-stopped
     healthcheck:
