@@ -38,15 +38,15 @@ services:
     # We don't publish ports for all backend services, which only allows
     # frontend service to access all backend services
 
-    # TODO: Remember to remove it after usage to aviod store
-    # secrets on Git
+    # TODO: Get the secrets from local ".env" file of "node-backend" folder 
+    # and paste it here before deploying app with this "docker-compose.yaml" file 
     environment:
-      - DATABASE_URL=postgresql://postgres.otuiikhbcyitlgoknrii:Ab12345678!@aws-0-ca-central-1.pooler.supabase.com:6543/postgres
-      - CLERK_PUBLISHABLE_KEY=pk_test_aW5zcGlyZWQtZmF3bi0zNS5jbGVyay5hY2NvdW50cy5kZXYk
-      - CLERK_SECRET_KEY=sk_test_OAWZMJyO5yvSoczhFvs23XJtflMVvBpLkS2Cy6qgde
-      - KAFKA_BOOTSTRAP_SERVER=d1fgarsdfulgj4bj0b60.any.us-west-2.mpx.prd.cloud.redpanda.com:9092
-      - KAFKA_SASL_USER_PASSWORD=Ab12345678!
-      - RABBITMQ_URL=amqps://dbxonaxs:y_l5O4IVrUtyyKETGgLSDl4VQcRUm4Sw@moose.rmq.cloudamqp.com/dbxonaxs
+      - DATABASE_URL=
+      - CLERK_PUBLISHABLE_KEY=
+      - CLERK_SECRET_KEY=
+      - RABBITMQ_URL=
+      - KAFKA_BOOTSTRAP_SERVER=
+      - KAFKA_SASL_USER_PASSWORD=
     restart: unless-stopped
     healthcheck:
       # Use the custom "healthcheck.js" file to test container
