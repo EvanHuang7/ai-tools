@@ -25,8 +25,7 @@ tasks:
   # because Vite replaces "import.meta.env.VITE_*" in code during the build.
   # So we need to set the VITE env var as ARG in "Dockerfile", and
   # pass the values into it when running the cli to build the image.
-  # TODO: Remeber to remove after running corresponding to
-  # avoid storing it in Github
+  # TODO: Remeber to change them to your own "Clerk" and "Vapi" secret values.
   build-container-image-multi-arch:
     desc: Build multi-arch container image
     cmds:
