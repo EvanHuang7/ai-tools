@@ -130,7 +130,6 @@ tasks:
 
   # Tells External Secrets Operator to fetch secrets from GCP Secret Manager.
   # Then, creates K8s Secrets in sepecified namespace by appling ExternalSecret configuration.
-  # TODO: Considere adding for go and node backend services if cost is low
   05-apply-external-secret:
     desc: "Create ExternalSecret by applying the ExternalSecret configuration"
     cmds:
