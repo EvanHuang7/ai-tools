@@ -3,8 +3,9 @@ vars:
 
 deployments:
   - path: namespaces
-  # Make sure namespace folder files be executed before third-party folder
-  # TODO: Consider setting up external secret operator in here too
+  # Make sure namespace folder files be executed before third-party folder.
+  # You need to install "external secret operator" in "third-party" folder
+  # if you want to use external secrets.
   - barrier: true
   - include: third-party
   - barrier: true
