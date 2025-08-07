@@ -53,22 +53,25 @@ services:
     # frontend service to access all backend services
 
     init: true
+    # TODO: Remember to create all docker secrets by following the
+    # "⭐ Deploy app in GCE VM with Docker Swarm" subsection in "README.md" file
+    # before deploying app with "docker-swarm.yaml" file.
     environment:
       - DATABASE_URL_FILE=/run/secrets/supabase-postgres-database-url
       - CLERK_PUBLISHABLE_KEY_FILE=/run/secrets/clerk-publishable-key
       - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
+      - RABBITMQ_URL_FILE=/run/secrets/rabbitmq-url
       - KAFKA_BOOTSTRAP_SERVER_FILE=/run/secrets/kafka-bootstrap-server
       - KAFKA_SASL_USER_PASSWORD_FILE=/run/secrets/kafka-sasl-user-password
-      - RABBITMQ_URL_FILE=/run/secrets/rabbitmq-url
     # If running cli to create the secret, the raw bytes secret stored within the Swarm manager nodes will be available
     # inside the container as a file at: "/run/secrets/secret-name"
     secrets:
       - supabase-postgres-database-url
       - clerk-publishable-key
       - clerk-secret-key
+      - rabbitmq-url
       - kafka-bootstrap-server
       - kafka-sasl-user-password
-      - rabbitmq-url
     healthcheck:
       # Use the custom "healthcheck.js" file to test container
       # health because "curl" is not installed in node20 base image
@@ -90,16 +93,16 @@ services:
     init: true
     environment:
       - DATABASE_URL_FILE=/run/secrets/neon-postgres-database-url
-      - GOOGLE_API_KEY_FILE=/run/secrets/google-api-key
+      - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
       - IMAGEKIT_ID_FILE=/run/secrets/go-imagekit-id
       - IMAGEKIT_PRIVATE_KEY_FILE=/run/secrets/go-imagekit-private-key
-      - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
+      - GOOGLE_API_KEY_FILE=/run/secrets/google-api-key
     secrets:
       - neon-postgres-database-url
-      - google-api-key
+      - clerk-secret-key
       - go-imagekit-id
       - go-imagekit-private-key
-      - clerk-secret-key
+      - google-api-key
     healthcheck:
       # Use the custom "healthcheck.go" file to test container
       # health because "curl" is not installed in base image of ko
@@ -119,24 +122,23 @@ services:
     networks:
       - ai-tools
     init: true
-    # TODO: Fix all envs for all services in this file if need to use it latter
     environment:
       - REDIS_URL_FILE=/run/secrets/redis-url
       - MONGODB_URL_FILE=/run/secrets/mongodb-url
-      - IMAGEKIT_PRIVATE_KEY_FILE=/run/secrets/python-imagekit-private-key
       - CLERK_SECRET_KEY_FILE=/run/secrets/clerk-secret-key
+      - IMAGEKIT_PRIVATE_KEY_FILE=/run/secrets/python-imagekit-private-key
+      - RABBITMQ_URL_FILE=/run/secrets/rabbitmq-url
       - KAFKA_BOOTSTRAP_SERVER_FILE=/run/secrets/kafka-bootstrap-server
       - KAFKA_SASL_USER_PASSWORD_FILE=/run/secrets/kafka-sasl-user-password
-      - RABBITMQ_URL_FILE=/run/secrets/rabbitmq-url
       - GRPC_HOST=go-backend
     secrets:
       - redis-url
       - mongodb-url
-      - python-imagekit-private-key
       - clerk-secret-key
+      - python-imagekit-private-key
+      - rabbitmq-url
       - kafka-bootstrap-server
       - kafka-sasl-user-password
-      - rabbitmq-url
     healthcheck:
       # Use the custom "healthcheck.py" file to test container
       # health because "curl" is not installed in python3.12 base image
@@ -159,11 +161,11 @@ secrets:
   # Go service
   neon-postgres-database-url:
     external: true
-  google-api-key:
-    external: true
   go-imagekit-id:
     external: true
   go-imagekit-private-key:
+    external: true
+  google-api-key:
     external: true
   # Python service
   redis-url:
@@ -177,9 +179,9 @@ secrets:
     external: true
   clerk-secret-key:
     external: true
+  rabbitmq-url:
+    external: true
   kafka-bootstrap-server:
     external: true
   kafka-sasl-user-password:
-    external: true
-  rabbitmq-url:
     external: true
