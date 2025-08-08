@@ -1239,7 +1239,7 @@ Set up **Docker Swarm, Docker Swarm Services (running apps inside Docker Swarm) 
 
 TODO: move this subsection to Docker compose section?
 
-1 - App network routing explanation in 1 node Docker Swarm
+App network routing explanation in 1 node Docker Swarm
 
 Below explanation is for 1 node Docker Swarm or Docker Compose?
 
