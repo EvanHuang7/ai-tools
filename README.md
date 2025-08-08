@@ -704,11 +704,9 @@ Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 
 ### <a name="deploy-app-gce-vm">⭐ Deploy app in GCE VM</a>
 
-TODO: test it
-
 **🚨 Important Note**:
 
-> The CLI to **update user permissions for accessing Docker** must be run for the user connected VM to access Docker whenever the **VM reboots and Docker auto-restarts**.
+> The CLI to **update user permissions for accessing Docker** must be **run again** for the user connected VM to access Docker whenever the **VM reboots and Docker auto-restarts**.
 
 **1 - Install required dependencies in VM**
 
@@ -795,8 +793,6 @@ TODO: test it
 
   docker logs <container_id_or_name>
   ```
-
-TODO: Test it
 
 **3 -** Set up **Docker engine and app containers to auto-restart** if **VM reboots**
 
@@ -1010,8 +1006,6 @@ If you run into **a new error**, `Job for nginx.service failed because the contr
 
 - 🎉 Now, you can access your app via `https` (eg. `https://appName-yourName.duckdns.org`) in browser after **your domain has a free SSL certificate**.
 
-TODO: Test it
-
 **6 - Set up Nginx in VM to auto-restart** if **VM or system reboots**
 
 - Set the **Nginx in VM restart automatically at VM reboots**.
@@ -1205,8 +1199,6 @@ You can try one or more of the solutions below to fix the issue or improve app l
 ---
 
 ### <a name="set-up-auto-restart">⭐ Set up Auto-restart when VM Reboots</a>
-
-TODO: Test it
 
 Set up **Docker Swarm, Docker Swarm Services (running apps inside Docker Swarm) and Docker Swarm secrets to auto-restart** after **VM reboots**.
 
@@ -1986,9 +1978,7 @@ The **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section or *
   - Viewing the the change in app web page
   - Running the `docker logs -f watchtower` CLI to view the `Watchtower` log for new deployments
 
-TODO: Test it
-
-Make sure thee `Watchtower` container would auto-restart After **VM reboots and Docker daemon restarts**
+- The `Watchtower` container would **auto-restart** by itself After **VM reboots and Docker daemon restarts**
 
 ## <a name="run-app-in-kind">⚙️ Run App in Kind Cluster Locally</a>
 
