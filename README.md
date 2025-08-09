@@ -730,6 +730,10 @@ flask run --reload --port=8088
 
 **2 - Deploy app** by running app containers with `docker-compose.yaml` file
 
+**⚠️ Important Note**:
+
+> Please **add all environment variable values** in `docker-compose.yaml` file first before deploying app.
+
 - Create a folder
 
   ```bash
@@ -1458,7 +1462,7 @@ devbox shell
 
 **⚠️ Important Note**: 
 
-> Please update all secret values palceholder to your own secret values in `Secret.yaml` files of those `k8s-resource-defins` folders before starting this step.
+> Please update all `Secret-Placeholder` to your own secret values in `Secret.yaml` files of those `k8s-resource-defins` folders before deploying app.
 
 - **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & upload them to Docker Hub** by following the steps in **⭐ Build App Container Images & Upload them to Docker Hub** subsection, **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
 
@@ -1583,6 +1587,10 @@ task gcp:09-clean-up
 - Update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file of `kluctl` folder to your own `Staging` and `Production` clusters.
 
 **2 - Deploy app to Staging** environment cluster
+
+**⚠️ Important Note**: 
+
+> Please update all `Secret-Placeholder` to your own secret values in `Secret.yaml` files of `kluctl` folder before deploying app.
 
 - Verify the **yaml files** after rendering with template of `staging` env
 
@@ -1792,6 +1800,10 @@ We should **delete all K8s resources** in clusters to get 2 fresh `Staging` and 
   ```
 
 **2 -** Use `Kluctl GitOps` to deploy app in `Staging` cluster.
+
+**⚠️ Important Note**: 
+
+> Please update all `Secret-Placeholder` to your own secret values in `Secret.yaml` files of `kluctl` folder before deploying app.
 
 - **🚨 Important Step**: Set up **🐳 Docker Hub and build app container images & upload them to Docker Hub** by following the steps in **⭐ Build App Container Images & Upload them to Docker Hub** subsection, **IF YOU DIDN'T FINISH** **⚙️ Run App in Kind Cluster Locally** section.
 
