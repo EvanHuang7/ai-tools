@@ -213,7 +213,8 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   devbox install
   ```
 
-- **In 1st terminal for frontend**, runs clis to
+- **In 1st terminal for frontend**, run CLIs to
+
   - get into devbox isolated environment
   - install frontend service packages
 
@@ -225,7 +226,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   npm install
   ```
 
-- Open a new **2nd terminal for node-backend** and runs clis to 
+- Open a new **2nd terminal for node-backend** and run CLIs to 
   - get into devbox isolated environment
   - install node-backend service packages
 
@@ -237,7 +238,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   npm install
   ```
 
-- Open a new **3rd terminal for go-backend** and runs clis to 
+- Open a new **3rd terminal for go-backend** and run CLIs to 
   - get into devbox isolated environment
   - install go-backend service packages
 
@@ -249,7 +250,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   go mod tidy
   ```
 
-- Open a new **4th terminal for python-backend** and runs clis to 
+- Open a new **4th terminal for python-backend** and run CLIs to 
   - get into devbox isolated environment
   - create a new virtual env in **Project Root folder** (a new `.venv` folder created)
   - activate python virtual env
