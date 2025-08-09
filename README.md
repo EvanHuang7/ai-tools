@@ -142,14 +142,11 @@
 - **☸️ Architecture Diagram for GKE K8S cluster case**: [Lucidchart Diagram Link](https://lucid.app/lucidchart/56444643-849b-4db6-8393-2f806552c943/edit?viewport_loc=-1753%2C-523%2C4235%2C2044%2C0_0&invitationId=inv_511bf5d6-c44a-4abf-bcfb-c04c923ab683)
 - **🐳 Architecture Diagram for GCE VM with Docker Swarm case**: [Lucidchart Diagram Link](https://lucid.app/lucidchart/efc15287-24d3-4033-96e3-6fa14c29b91e/edit?viewport_loc=-2379%2C-774%2C5425%2C2618%2C0_0&invitationId=inv_15990ffa-2a86-4063-9d67-055a522f95dc)
 - **🧩 Database Tables Diagram**: [drawSQL Diagram Link](https://drawsql.app/teams/evans-projects/diagrams/ai-tools-studio-app)
-
-TODO: Come back to finish "Screenshots" part 
-
-- **📸 Screenshots**: [Miro Link](#)
+- **📸 Screenshots**: [Miro Link](https://miro.com/app/board/uXjVJV2hNxk=/?share_link_id=100486836660)
 
   ![🖼️ Architecture Diagram Screenshot Preview, GKE K8S cluster case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GKE-K8S-cluster.png)
   ![🖼️ Architecture Diagram Screenshot Preview, GCE VM with Docker Swarm case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GCE-VM-with%20Docker-Swarm.png)
-  ![🖼️ Screenshots Preview](#)
+  ![🖼️ Screenshots Preview](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/Miro-Board.png)
 
 ## <a name="installation-setups-project">⚙️ Installation & Setups for Project</a>
 
