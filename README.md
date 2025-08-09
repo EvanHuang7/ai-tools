@@ -492,9 +492,7 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 - Create a **VAPI** account.
 - Note down the `public Key` from the **Vapi API Keys** tab in your **VAPI account dashboard** as `VITE_VAPI_PUBLIC_KEY` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
 
-**⚠️ Warning Note**:
-
-> Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
+  > **⚠️ Warning Note**: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
 
 ### <a name="set-up-clerk">⭐ Set up Clerk & Clerk Billing</a>
 
@@ -1712,7 +1710,7 @@ Remember to **remove ALL clusters** after you **finish testing or development** 
 
 - Delete **everything** including the GCP network, subnet, firewall rules, and **ONLY Production cluster** by running:
 
-> **🚨 Important Note**: This task CLi **ONLY delete `ai-tools` Production cluster**, so you have to update this task CLI to include a CLI for deleting **Staging cluster**.
+  > **🚨 Important Note**: This task CLi **ONLY delete `ai-tools` Production cluster**, so you have to update this task CLI to include a CLI for deleting **Staging cluster**.
 
   ```bash
   task gcp:09-clean-up
@@ -1935,7 +1933,7 @@ Remember to **remove ALL clusters** after you **finish testing or development** 
 
 - Delete **everything** including the GCP network, subnet, firewall rules, and **ONLY Production cluster** by running:
 
-> **🚨 Important Note**: This task CLi **ONLY delete `ai-tools` Production cluster**, so you have to update this task CLI to include a CLI for deleting **Staging cluster**.
+  > **🚨 Important Note**: This task CLi **ONLY delete `ai-tools` Production cluster**, so you have to update this task CLI to include a CLI for deleting **Staging cluster**.
 
   ```bash
   task gcp:09-clean-up
