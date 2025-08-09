@@ -170,7 +170,7 @@ Make sure you have the following installed on your machine:
 git clone https://github.com/EvanHuang7/ai-tools.git
 ```
 
-### <a name="set-up-gcloud-cli">⭐ Set up gcloud CLI (Required for App Deployment in GKE K8S cluster)</a>
+### <a name="set-up-gcloud-cli">⭐ Set up gcloud CLI</a>
 
 You have **2 options** to make **gcloud CLI** work for this project. **1st option** is to install `google-cloud-sdk` and `gke-gcloud-auth-plugin` in the home directory of your host or machine. **2nd option** is to update the `devbox.json` file in project folder.
 
@@ -199,7 +199,7 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   kubectl config view --raw
   ```
 
-**2nd Option (👉 Quick, but not recommended)**:
+**2nd Option (👉 Quick, but only works for this project devbox)**:
 
 - Change the `google-cloud-sdk@latest` package to `path:gcloud#google-cloud-sdk` in the `devbox.json` file of project folder, which would change the devbox to use the `google-cloud-sdk` from the project `gcloud` folder that include `gke-gcloud-auth-plugin`.
 
