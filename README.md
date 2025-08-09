@@ -217,7 +217,6 @@ You have **2 options** to make **gcloud CLI** work for this project. **1st optio
   - get into devbox isolated environment
   - install frontend service packages
 
-
   ```bash
   devbox shell
 
