@@ -174,7 +174,7 @@ git clone https://github.com/EvanHuang7/ai-tools.git
 
 You have **2 options** to make **gcloud CLI** work for this project. **1st option** is to install `google-cloud-sdk` and `gke-gcloud-auth-plugin` in the home directory of your host or machine. **2nd option** is to update the `devbox.json` file in project folder.
 
-**🚨 Important Error**:
+**❌ Important Error**:
 
 > **IF YOU DIDN'T FINISH** any of the options, you will encounter `CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl#install_plugin` error when you use **gcloud CLI** to interact with GKE cluster in latter **☁️ GKE (GCP): Deploy App in K8s Cluster** section.
 
@@ -644,13 +644,11 @@ flask run --reload --port=8088
 
 > **📌 Note**: If you want to host your app on a **free GCP VM** (such as an `e2-micro`) with **minimal long-term costs**, I recommend using **Docker Compose 🐳** instead of **Docker Swarm 🐳🐳** or a **K8s Cluster ☸️**.
 
-**📌 If your VM has enough CPU and Memory**, it would be best to deploy this microservices project as **K8s cluster using k3s** or as **docker containers using Docker swarm**, so that we can taking **advantanges** of these **k8s cluster orchestrator or container orchestrator**. The **Pros to use orchestrator instead of Docker compose**:
+**If your VM has enough CPU and Memory**, it would be best to deploy this microservices project as **K8s cluster using k3s** or as **docker containers using Docker swarm**, so that we can taking **advantanges** of these **k8s cluster orchestrator or container orchestrator**. The **Pros to use orchestrator instead of Docker compose**:
 
 - Allow us to **deploy new app version without downtime** and **easily roll back the version**
 - Allow us to **run containers in differeent hosts/nodes/VMs** for better scalabity
 - Provide a way to **handle sensative credentials or secrets**
-
-Follow the steps to deploy app using `docker-compose.yml` file in GCE VM:
 
 ### <a name="set-up-gce-vm">⭐ Set up GCE VM</a>
 
@@ -875,7 +873,7 @@ Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP
 
 - Run `Certbot` with `Nginx` to get a **SSL certificate**
 
-  > **🚨 Important Error**: If you get `port 80 is used` error, when running this CLI.
+  > **❌ Important Error**: If you get `port 80 is used` error, when running this CLI.
   >
   > **✅ Solution of Error**: You need to reserve port `80` for `nginx` by killing all existing processes listening to port `80`. Also, make sure the `ports` of `frontend` is set to `- 8080:8080` in `docker-compose.yml` file.
 
@@ -940,7 +938,7 @@ Update `Nginx config` to proxy the incoming traffic to `8080` port of VM ( `8080
 
 **4 - Potential errors when reloading Nginx**
 
-**🚨 Important Error 1**: 
+**❌ Important Error 1**: 
 
 If you **get this error**, `nginx.service is not active, cannot reload`, when you **reload Nginx**.
 
@@ -954,7 +952,7 @@ sudo systemctl start nginx
 sudo systemctl status nginx
 ```
 
-**🚨 Important Error 2**:
+**❌ Important Error 2**:
 
 If you run into **a new error**, `Job for nginx.service failed because the control process exited with error code`, when starting `nginx` in **Solution of Error 1**. This means there are other running processes listening to ports `80 or 443`.
 
@@ -1604,7 +1602,7 @@ task gcp:09-clean-up
 
 ### <a name="error-solution-after-app-deployment">⭐ Error & Solution after App Deployment</a>
 
-**🚨 Important Error**:
+**❌ Important Error**:
 
 You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error. The app is actully running correctly now because the `IngressRoute` were all created. You can check all created `IngressRoute` by running:
 
@@ -1831,7 +1829,7 @@ We should **delete all K8s resources** in clusters to get 2 fresh `Staging` and 
 
 Go to `kluctl web ui page` (`http://localhost:8080/`) and log in with `admin` username and the `random password` we just copied to **view deployment status**.
 
-**🚨 Important Error**:
+**❌ Important Error**:
 
 You are very likely seeing this `no matches for kind "IngressRoute" in version "traefik.containo.us/v1alpha1"` error. The app is actully running correctly now because the `IngressRoute` were all created. You can check all created `IngressRoute` by running:
 
