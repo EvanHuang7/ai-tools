@@ -643,7 +643,9 @@ flask run --reload --port=8088
 
 ## <a name="deploy-app-in-gce-with-docker-compose">☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳</a>
 
-**Docker Compose** runs containers locally without using Docker Swarm services (the orchestrator layer). Also, Docker Compose use minimal VM CPU and memory.
+**Docker Compose** runs containers locally **without** using Docker Swarm services (the **orchestrator layer**) so, Docker Compose use **minimal VM CPU and memory**.
+
+> **📌 Note**: If you want to host your app on a **free GCP VM** (such as an `e2-micro`) with **minimal long-term costs**, I recommend using **Docker Compose 🐳** instead of **Docker Swarm 🐳🐳** or a **K8s Cluster ☸️**.
 
 **📌 If your VM has enough CPU and Memory**, it would be best to deploy this microservices project as **K8s cluster using k3s** or as **docker containers using Docker swarm**, so that we can taking **advantanges** of these **k8s cluster orchestrator or container orchestrator**. The **Pros to use orchestrator instead of Docker compose**:
 
