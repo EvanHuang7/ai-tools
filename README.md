@@ -365,7 +365,7 @@ Create **Google Cloud Storage bucket** and add **public Read access** to this bu
 
 Get Gemini API Key (`GOOGLE_API_KEY` env) for Video Generation feature.
 
-**🚨 Important Note**: 
+**⚠️ Important Note**: 
 
 > To use `veo-2.0-generate-001` AI model to generate a AI video with this API key, you must enable Billing for the `GOOGLE_API_KEY` in your GCP project. Also, the video generation via Veo2 costs around 💸💸 **0.35-0.50$ per second**💸💸
 
@@ -390,7 +390,7 @@ Get Gemini API Key (`GOOGLE_API_KEY` env) for Video Generation feature.
 
 Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization for app.
 
-**🚨 Important Note**: 
+**⚠️ Important Note**: 
 
 > This **⭐ Set up GCP services authorization for app** subsection is required to be finished **WHENEVER** deployed app into GKE K8S Cluster or into GCE VM with Docker in all app deployment sections.
 
@@ -404,7 +404,7 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 
 - **Bind and annotate default Kubernate service account (KSA) with GSA**
 
-  > **⚠️ Warning Note**: If a GSA with the correct GCP service permissions already exists — for example, after deleting a GKE K8S cluster and creating a new one — you only need to run these two CLIs.
+  > **⚠️ Important Note**: If a GSA with the correct GCP service permissions already exists — for example, after deleting a GKE K8S cluster and creating a new one — you only need to run these two CLIs.
 
   ```bash
   task general:02-bind-KSA-with-GSA
@@ -456,7 +456,7 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 
 **👉 Authorization for running app in local machine**
 
-- **📌 IF YOU DIDN'T FINISH** the previous step **(Authorization for running app in GKE Cluster)**, just **create a GSA with GCP Pub/Sub and GCS permissions attached**. You only need to **bind and annotate the default KSA with the GSA** when you complete that **step (Authorization in GKE Cluster) later**. **📌 IF YOU ALREADY FINISHED** the previous step, you can **SKIP** this GSA creation step.
+- **IF YOU DIDN'T FINISH** the previous step **(Authorization for running app in GKE Cluster)**, just **create a GSA with GCP Pub/Sub and GCS permissions attached**. You only need to **bind and annotate the default KSA with the GSA** when you complete that **step (Authorization in GKE Cluster) later**. **IF YOU ALREADY FINISHED** the previous step, you can **SKIP** this GSA creation step.
 
   ```bash
   task general:01-create-GSA
@@ -492,7 +492,7 @@ Set up **GCP Cloud Pub/Sub** and **GCP Cloud Storage** services authorization fo
 - Create a **VAPI** account.
 - Note down the `public Key` from the **Vapi API Keys** tab in your **VAPI account dashboard** as `VITE_VAPI_PUBLIC_KEY` env variable - you'll need it later in the **⭐ Set Up Environment Variables** step.
 
-  > **⚠️ Warning Note**: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
+  > **⚠️ Important Note**: Vapi requires `HTTPS` to start a call (the access microphone and camera), so make sure you set up a `SSL/TLS` certificate for the deployed app.
 
 ### <a name="set-up-clerk">⭐ Set up Clerk & Clerk Billing</a>
 
@@ -524,7 +524,7 @@ Set up **payment in Clerk Billing**
 
 ### <a name="set-up-kafka">⭐ Set up Kafka in Redpanda Cloud (DEPRECATED)</a>
 
-**⚠️⚠️ DEPRECATED NOTE ⚠️⚠️**: 
+**⛔⛔ DEPRECATED NOTE ⛔⛔**: 
 
 > This step is DEPRECATED because `Kafka` in **Redpanda Cloud** is not free, so I switched to use **CloudAMQP RabbitMQ** for the communication between **Node.js service and Python service**.
 
@@ -549,7 +549,7 @@ VITE_VAPI_PUBLIC_KEY=
 
 Create a `.env` file under **node-backend** folder of your project and add the following content:
 
-> **⚠️ Warning Note**: The `DATABASE_URL` of **node-backend** is from **Supabase**. Also, the `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
+> **⚠️ Important Note**: The `DATABASE_URL` of **node-backend** is from **Supabase**. Also, the `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
 
 ```env
 DATABASE_URL=
@@ -567,7 +567,7 @@ KAFKA_SASL_USER_PASSWORD=
 
 Create a `.env` file under **go-backend** folder of your project and add the following content:
 
-> **⚠️ Warning Note**: The `DATABASE_URL` of **go-backend** is from **Neon**.
+> **⚠️ Important Note**: The `DATABASE_URL` of **go-backend** is from **Neon**.
 
 ```env
 DATABASE_URL=
@@ -584,7 +584,7 @@ CLERK_SECRET_KEY=
 
 Create a `.env` file under **python-backend** folder of your project and add the following content:
 
-> **⚠️ Warning Note**: The `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
+> **⚠️ Important Note**: The `Kafka` credentials are no longer required because Kafka in Redpanda Cloud is **deprecated**.
 
 ```env
 REDIS_URL=
@@ -701,7 +701,7 @@ flask run --reload --port=8088
 
 ### <a name="deploy-app-gce-vm">⭐ Deploy app in GCE VM</a>
 
-**🚨 Important Note**:
+**⚠️ Important Note**:
 
 > The CLI to **update user permissions for accessing Docker** must be **run again** for the user connected VM to access Docker whenever the **VM reboots and Docker auto-restarts**.
 
@@ -769,7 +769,7 @@ flask run --reload --port=8088
   >
   > Alternatively, you can change to **expose container’s port 8080 on the VM’s default port 80** by changing the `ports` of `frontend` to be `- 80:8080` in `docker-compose.yml` file and redeploy the app containers to try again.
 
-- **📌 Useful Docker CLIs**: 
+- **🔍 Useful Docker CLIs for debug**: 
   - turn down the containers 
   - list running containers 
   - list all containers (running + stopped)
@@ -823,7 +823,7 @@ flask run --reload --port=8088
 
 Get a free subdomain in **Duck DNS** and **bind it to your VM static external IP address**
 
-**🚨 Important Note**: 
+**⚠️ Important Note**: 
 
 > **if you own a custom domain**, you can easily bind your domain with VM static external IP address with a free SSL certificate by using `Cloudflare`. 
 >
@@ -1108,7 +1108,7 @@ If you run into **a new error**, `Job for nginx.service failed because the contr
 - You still can use `docker ps` CLI to view Docker container status in **Docker Swarm**.
 - **Docker Swarm uses more VM CPU and memory than Docker Compose** beucase running Docker Swarm orchestrator use around 200MB memory.
 
-**🚨Important Step**: 
+**🚨 Important Step**: 
 
 The previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section is required to be finished first before starting this section, **IF YOU DIDN'T FINISH** this previous section yet.
 
@@ -1222,7 +1222,7 @@ The previous **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** sec
 
 ### <a name="potential-app-latency-issue-in-swarm">⭐ Potential App Latency Issue in Swarm</a>
 
-**🚨 Potential Issue**:
+**❌ Potential Issue**:
 
 If your **GCE VM is free** `e2-micro` type, your app may becomes **much slower** including accessing the web page and internal api calls **after deploying via Docker Swarm**, **comparing to** running the same containers with **Docker Compose**.
 
@@ -1377,7 +1377,7 @@ devbox shell
 
 - Deploy **Traefik ingress controller with Load Balancer serivce**
 
-  > **🚨 Important Note**: It will provision a **Load Balancer with an ExternalIP** assigned by Traefik default setting, so it will cause **Load Balancer and ExternalIP fee 💸💸** if you run it in **GKE Cluster**.
+  > **⚠️ Important Note**: It will provision a **Load Balancer with an ExternalIP** assigned by Traefik default setting, so it will cause **Load Balancer and ExternalIP fee 💸💸** if you run it in **GKE Cluster**.
 
   ```bash
   task common:deploy-traefik
@@ -1397,7 +1397,7 @@ devbox shell
 
 **3 -** Deploy **external secrets** for app services to consume
 
-**🚨 Important Note**: 
+**⚠️ Important Note**: 
 
 > Please change all the usages of `GCP project ID` in `external-secrets-k8s-resource-defins` folder to be your own GCP project ID before starting this step.
 >
@@ -1456,7 +1456,7 @@ devbox shell
 
 **1 -** Deploy all app services to GKE cluster
 
-**🚨 Important Note**: 
+**⚠️ Important Note**: 
 
 > Please update all secret values palceholder to your own secret values in `Secret.yaml` files of those `k8s-resource-defins` folders before starting this step.
 
@@ -1510,7 +1510,7 @@ devbox shell
 
 - 🎉 Now, You can access your app via `https` (eg. `https://yourDomainName`) in browser.
 
-**2 - 📌 Useful kubectl CLIs for debug**:
+**2 - 🔍 Useful kubectl CLIs for debug**:
   - Print the logs of pod
   - Show the details of pod. You can view the liveness, Readiness and all conditions of pod
 
@@ -1531,7 +1531,7 @@ devbox shell
   kubectl get all -n ai-tools
   ```
 
-**3 - 🚨🚨💸💸 Clean up to aviod cost 💸💸🚨🚨**
+**3 - 💸💸 Clean up to aviod cost 💸💸**
 
 Remember to **remove the cluster** after you **finish testing or development** because a running cluster with K8s resource **charges you by running time**. You can use **new GCP user 300$ free credit to cover the fee for first 3 months if you are new GCP user**, but you will need to **💸 PAY 💸** after 3 months.
 
@@ -1545,7 +1545,7 @@ task gcp:09-clean-up
 
 ## <a name="deploy-app-on-staging-and-pro">🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod Environments</a>
 
-**🚨 Important Note**:
+**⚠️ Important Note**:
 
 > Please make sure to update the K8s cluster `context` both for **Staging** and **Production** envs in `.kluctl.yaml` file to your own clusters first.
 >
@@ -1559,7 +1559,7 @@ task gcp:09-clean-up
 
 **1 -** Create a **seperate new cluster** for deploying app to `Staging` environment **IF YOU ONLY have 1 cluster** running for deploying `Production` environment.
 
-**🚨 Important Note**:
+**⚠️ Important Note**:
 
 > Change the cluster name of `gcp:06-create-cluster` task CLI to `ai-tools-staging` in `Taskfile.yaml` first if you alreay created a `ai-tools` cluster.
 
@@ -1692,7 +1692,7 @@ For safer option, you can still fix it easily by **redeploying the app with runn
 
 - 🎉 Now, You can access your `production` app via `https` (eg. `https://yourDomainName`) in browser.
 
-**3 - 🚨🚨💸💸 Clean up to aviod cost 💸💸🚨🚨**
+**3 - 💸💸 Clean up to aviod cost 💸💸**
 
 Remember to **remove ALL clusters** after you **finish testing or development** because the running clusters with K8s resource **charges you by running time**. You can use **new GCP user 300$ free credit to cover the fee for first 3 months if you are new GCP user**, but you will need to **💸 PAY 💸** after 3 months.
 
@@ -1710,7 +1710,7 @@ Remember to **remove ALL clusters** after you **finish testing or development** 
 
 - Delete **everything** including the GCP network, subnet, firewall rules, and **ONLY Production cluster** by running:
 
-  > **🚨 Important Note**: This task CLi **ONLY delete `ai-tools` Production cluster**, so you have to update this task CLI to include a CLI for deleting **Staging cluster**.
+  > **⚠️ Important Note**: This task CLi **ONLY delete `ai-tools` Production cluster**, so you have to update this task CLI to include a CLI for deleting **Staging cluster**.
 
   ```bash
   task gcp:09-clean-up
@@ -1724,7 +1724,7 @@ We will use `GitHub actions` for **Continuous Integrataion (CI)** and `Kluctl Gi
 
 > **📌 Note**: The concept of `GitOps` is to have a **controller** running in K8s cluster. The controller is able to **automatically pull updates from Git**, which can be triggered via a webhook. This keep those updates in sync with the deployed state of cluster.
 
-**🚨Important Step**: 
+**🚨 Important Step**: 
 
 The previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Prod Environments** section is required to be finished first before starting this section, **IF YOU DIDN'T FINISH** this previous section yet.
 
@@ -1739,7 +1739,7 @@ The previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Pro
 
 **2 -** Verify the **Continuous Integrataion** process
 
-**🚨 Important Note**:
+**⚠️ Important Note**:
 
 > You need to **uncomment out** 2 lines `main branches` code in `image-ci.yml` file (`image-ci-docker-vm.yml` file is for **GCE VM with Docker**) first in order to trigger a **Git Action workflow for your frontend code change**
 >
@@ -1753,7 +1753,7 @@ The previous **🏗️☸️ GKE (GCP): Deploy app on 🛠️Staging and 🚀Pro
 - Check if the code push action **triggers a workflow** in the `Actions` tab of your **GitHub repository**. 
 - Also, it will **create a new PR** including the image tag version change for **ONLY Staging enviroment**.
 
-**🚨 Important Note**:
+**⚠️ Important Note**:
 
 > The GitHub workflow would also update the `new image tag` for **Production environment in the new PR ONLY IF** a **new released tag** matching **0.0.0** format is **pushlised** in **GitHub Repo**. You can test this by trying to publish a tag in your GitHub Repo.
 
@@ -1777,7 +1777,7 @@ We should **delete all K8s resources** in clusters to get 2 fresh `Staging` and 
 
 - **OR** Delete the **entire cluster** and re-create a new one by running
 
-  > **🚨 Important Note**: Make sure the cluster name of `gcp:06-create-cluster` task CLI is `ai-tools-staging` in `Taskfile.yaml` file of `project` folder **when creating cluster for `Staging` environment**.
+  > **⚠️ Important Note**: Make sure the cluster name of `gcp:06-create-cluster` task CLI is `ai-tools-staging` in `Taskfile.yaml` file of `project` folder **when creating cluster for `Staging` environment**.
 
   ```bash
   gcloud container clusters delete ai-tools-staging --zone us-central1-a
@@ -1915,7 +1915,7 @@ For safer option, you can still fix it easily by clicking the **kebab menu butto
   - **Merge the auto-created PR** to update the new image tags for `Staging` and `Production` clusters.
   - Check if there are **new K8s pods created** in `Staging` and `Production` K8s clusters or a deployment process started in `kluctl web ui`.
 
-**3 - 🚨🚨💸💸 Clean up to aviod cost 💸💸🚨🚨**
+**3 - 💸💸 Clean up to aviod cost 💸💸**
 
 Remember to **remove ALL clusters** after you **finish testing or development** because the running clusters with K8s resource **charges you by running time**. You can use **new GCP user 300$ free credit to cover the fee for first 3 months if you are new GCP user**, but you will need to **💸 PAY 💸** after 3 months.
 
@@ -1933,7 +1933,7 @@ Remember to **remove ALL clusters** after you **finish testing or development** 
 
 - Delete **everything** including the GCP network, subnet, firewall rules, and **ONLY Production cluster** by running:
 
-  > **🚨 Important Note**: This task CLi **ONLY delete `ai-tools` Production cluster**, so you have to update this task CLI to include a CLI for deleting **Staging cluster**.
+  > **⚠️ Important Note**: This task CLi **ONLY delete `ai-tools` Production cluster**, so you have to update this task CLI to include a CLI for deleting **Staging cluster**.
 
   ```bash
   task gcp:09-clean-up
@@ -1943,7 +1943,7 @@ Remember to **remove ALL clusters** after you **finish testing or development** 
 
 ## <a name="set-up-ci-cd-in-docker">🔁🐳 GCE(GCP) VM: Set up CI&CD for App Deployment in Docker</a>
 
-**🚨Important Step**: 
+**🚨 Important Step**: 
 
 The **☁️🐳 GCE(GCP) VM: Deploy App with Docker Compose 🐳** section or **☁️🐳🐳 GCE(GCP) VM: Deploy App with 🐳🐳 Docker Swarm 🐳🐳** section is required to be finished first before starting this section, **IF YOU DIDN'T FINISH** 1 of these section yet.
 
@@ -2015,7 +2015,7 @@ Build **container images of app services** and **upload to Docker hub**, so that
 
 - Build container images and push them to Docker hub for `frontend` serivce
 
-  > **⚠️ Warning Note**: You should update `VITE_CLERK_PUBLISHABLE_KEY` and `VITE_VAPI_PUBLIC_KEY` environment variable values in the `build-container-image-multi-arch` task CLI of `Taskfile.yaml` file of `frontend` folder to your own secret values from **Clerk and Vapi**
+  > **⚠️ Important Note**: You should update `VITE_CLERK_PUBLISHABLE_KEY` and `VITE_VAPI_PUBLIC_KEY` environment variable values in the `build-container-image-multi-arch` task CLI of `Taskfile.yaml` file of `frontend` folder to your own secret values from **Clerk and Vapi**
 
   ```bash
   task frontend:build-container-image-multi-arch
@@ -2146,7 +2146,7 @@ Build **container images of app services** and **upload to Docker hub**, so that
 
 - **🚨 Important Step**: Set up **Authorization for running app in local machine** by following the steps in **⭐ Set up GCP services authorization for app** subsection.
 
-**4 - 📌 Useful kubectl CLIs for debug**:
+**4 - 🔍 Useful kubectl CLIs for debug**:
 
 - Print the logs of pod
 - Show the details of pod. You can view the liveness, Readiness and all conditions of pod
@@ -2174,7 +2174,7 @@ Deploy apps by using `Tilt` to better **detact file changes and auto rebuild and
 
 Use `Tilt`, we can **develop against a K8s config that will match as close as possbile to what we are going to run in production**, which will allow us to **identify and debug issues** that live not only at application layer but also at **K8s layer or maybe in ingress controller**.
 
-**🚨Important Step**: 
+**🚨 Important Step**: 
 
 The previous **⚙️ Run App in Kind Cluster Locally** section is required to be finished first before starting this section, **IF YOU DIDN'T FINISH** this previous section yet.
 
