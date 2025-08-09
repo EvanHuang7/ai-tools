@@ -2,7 +2,9 @@
   <h3 align="center">🌟 AI Tools Studio</h3>
   <p align="center">
     🚀 <a href="https://aitools-evanhuang.duckdns.org/" target="_blank"><b>Live App</b></a> &nbsp;|&nbsp;
-    📂 <a href="https://github.com/EvanHuang7/ai-tools" target="_blank"><b>Source Code</b></a>
+    📂 <a href="https://github.com/EvanHuang7/ai-tools" target="_blank"><b>Source Code</b></a> &nbsp;|&nbsp;
+    🐈‍⬛ <a href="https://github.com/EvanHuang7" target="_blank"><b>Author GitHub</b></a> &nbsp;|&nbsp;
+    🅸🅽 <a href="https://www.linkedin.com/in/evan-huang-97336b1a9/" target="_blank"><b>Author LinkedIn</b></a>
   </p>
 </div>
 
