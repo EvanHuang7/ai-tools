@@ -15,24 +15,24 @@
 3. 🚀 [Features](#features)
 4. 🧩 [Diagram and Screenshots](#diagram-screenshots)
 5. ⚙️ [Installation & Setups for Project](#installation-setups-project)
-   - ⭐ [Prerequisites](#prerequisites)
-   - ⭐ [Clone the Repository](#clone-repo)
-   - ⭐ [Set up gcloud CLI](#set-up-gcloud-cli)
-   - ⭐ [Packages Installation](#install-packages)
-   - ⭐ [Create a Cluster and DB in MongoDB](#create-mongodb-cluster)
-   - ⭐ [Create a PostgreSql DB in Supabase](#create-postgre-db-in-supabase)
-   - ⭐ [Create a PostgreSql DB in Neon](#create-postgre-db-in-neon)
-   - ⭐ [Create a Redis DB in Upstash](#create-redis-in-upstash)
-   - ⭐ [Set up GCP Pub/Sub & Google Cloud Storage](#set-up-gcp-pubsub-and-gcs)
-   - ⭐ [Get Google Gemini API Key](#get-google-gemini-api-key)
-   - ⭐ [Set up GCP services authorization for app](#set-up-gcp-services-authorization)
-   - ⭐ [Set up Imagekit.io](#set-up-imagekit)
-   - ⭐ [Set up VAPI](#set-up-vapi)
-   - ⭐ [Set up Clerk & Clerk Billing](#set-up-clerk)
-   - ⭐ [Set up RabbitMQ in CloudAMQP](#set-up-rabbitmq)
-   - ⭐ [Set up Kafka in Redpanda Cloud (DEPRECATED)](#set-up-kafka)
-   - ⭐ [Set Up Environment Variables](#set-up-env-variables)
-   - ⭐ [Running the Project](#running-project)
+    - ⭐ [Prerequisites](#prerequisites)
+    - ⭐ [Clone the Repository](#clone-repo)
+    - ⭐ [Set up gcloud CLI](#set-up-gcloud-cli)
+    - ⭐ [Packages Installation](#install-packages)
+    - ⭐ [Create a Cluster and DB in MongoDB](#create-mongodb-cluster)
+    - ⭐ [Create a PostgreSql DB in Supabase](#create-postgre-db-in-supabase)
+    - ⭐ [Create a PostgreSql DB in Neon](#create-postgre-db-in-neon)
+    - ⭐ [Create a Redis DB in Upstash](#create-redis-in-upstash)
+    - ⭐ [Set up GCP Pub/Sub & Google Cloud Storage](#set-up-gcp-pubsub-and-gcs)
+    - ⭐ [Get Google Gemini API Key](#get-google-gemini-api-key)
+    - ⭐ [Set up GCP services authorization for app](#set-up-gcp-services-authorization)
+    - ⭐ [Set up Imagekit.io](#set-up-imagekit)
+    - ⭐ [Set up VAPI](#set-up-vapi)
+    - ⭐ [Set up Clerk & Clerk Billing](#set-up-clerk)
+    - ⭐ [Set up RabbitMQ in CloudAMQP](#set-up-rabbitmq)
+    - ⭐ [Set up Kafka in Redpanda Cloud (DEPRECATED)](#set-up-kafka)
+    - ⭐ [Set Up Environment Variables](#set-up-env-variables)
+    - ⭐ [Running the Project](#running-project)
 6. ☁️🐳 [GCE(GCP) VM: Deploy App with Docker Compose 🐳](#deploy-app-in-gce-with-docker-compose)
     - ⭐ [Set up GCE VM](#set-up-gce-vm)
     - ⭐ [Deploy app in GCE VM](#deploy-app-gce-vm)
@@ -2204,9 +2204,9 @@ task tilt-up
 
 ## <a name="about-the-author">👨‍💼 About the Author</a>
 
-Hi! I'm **Evan Huang — a full-stack software developer with 4+ years of experience** in web applications, real-time systems, and cloud integration. I’m passionate about building scalable products with clean architecture, elegant UI/UX, and modern technologies like **Google Cloud Platform, React, Node.js, Go, Python and different AI technologies**.
+Hi! I'm **Evan Huang — a full-stack software developer with 4+ years of experience** in web applications and cloud integration. I’m passionate about building scalable products with clean architecture, elegant UI/UX, and modern technologies like **React, Node.js, Go, Python, Google Cloud Platform, Kubernate and different AI technologies**.
 
-This **AI Tools Studio app** project was completed on **August 8, 2025**, and reflects my focus on full stack development, cloud infrastructure, and responsive design into real-world solutions.
+This **AI Tools Studio app** project was completed on **August 9, 2025**, and reflects my focus on full stack development, cloud infrastructure, and responsive design into real-world solutions.
 
 Feel free to connect with me in LinkedIn or GitHub!
 
