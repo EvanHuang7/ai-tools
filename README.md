@@ -13,7 +13,7 @@
 1. 📋 [Introduction](#introduction)
 2. 🛠️ [Tech Stack](#tech-stack)
 3. 🚀 [Features](#features)
-4. 🧩 [Diagram and Screenshots](#diagram-screenshots)
+4. 🧩 [Architecture Diagrams and Screenshots](#diagram-screenshots)
 5. ⚙️ [Installation & Setups for Project](#installation-setups-project)
     - ⭐ [Prerequisites](#prerequisites)
     - ⭐ [Clone the Repository](#clone-repo)
@@ -137,7 +137,7 @@
 
 **📱 Responsive Design** – Optimized for any screen size or device for a consistent experience everywhere.
 
-## <a name="diagram-screenshots">🧩 Diagrams and 📸 Screenshots</a>
+## <a name="diagram-screenshots">🧩 Architecture Diagrams and 📸 Screenshots</a>
 
 - **☸️ Architecture Diagram for GKE K8S cluster case**: [Lucidchart Diagram Link](https://lucid.app/lucidchart/56444643-849b-4db6-8393-2f806552c943/edit?viewport_loc=-1753%2C-523%2C4235%2C2044%2C0_0&invitationId=inv_511bf5d6-c44a-4abf-bcfb-c04c923ab683)
 - **🐳 Architecture Diagram for GCE VM with Docker Swarm case**: [Lucidchart Diagram Link](https://lucid.app/lucidchart/efc15287-24d3-4033-96e3-6fa14c29b91e/edit?viewport_loc=-2379%2C-774%2C5425%2C2618%2C0_0&invitationId=inv_15990ffa-2a86-4063-9d67-055a522f95dc)
