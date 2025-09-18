@@ -145,9 +145,9 @@
 - **🧩 Database Tables Diagram**: [drawSQL Diagram Link](https://drawsql.app/teams/evans-projects/diagrams/ai-tools-studio-app)
 - **📸 Screenshots**: [Miro Link](https://miro.com/app/board/uXjVJV2hNxk=/?share_link_id=100486836660)
 
-  ![🖼️ Architecture Diagram Screenshot Preview, GKE K8S cluster case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GKE-K8S-cluster.png)
-  ![🖼️ Architecture Diagram Screenshot Preview, GCE VM with Docker Swarm case](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/GCE-VM-with%20Docker-Swarm.png)
-  ![🖼️ Screenshots Preview](https://storage.googleapis.com/ai-tools-gcs-bucket/App%20README%20Diagram%20Screenshots/Miro-Board.png)
+  ![🖼️ Architecture Diagram Screenshot Preview, GKE K8S cluster case](https://res.cloudinary.com/dapo3wc6o/image/upload/v1758168946/GKE-K8S-cluster_zjvfij.png)
+  ![🖼️ Architecture Diagram Screenshot Preview, GCE VM with Docker Swarm case](https://res.cloudinary.com/dapo3wc6o/image/upload/v1758169092/GCE-VM-with-Docker-Swarm_tipe5g.png)
+  ![🖼️ Screenshots Preview](https://res.cloudinary.com/dapo3wc6o/image/upload/v1758169199/AI-Tools-Studio-Miro-Board_hvsk97.png)
 
 ## <a name="installation-setups-project">⚙️ Installation & Setups for Project</a>
 
